@@ -85,13 +85,36 @@ function transformSource(content, fromFilePath, componentsDir) {
   return out;
 }
 
+/** e.g. button, my-button, myButton -> Button, MyButton */
+function toPascalCaseStem(stem) {
+  const withBoundaries = stem.replace(/([a-z\d])([A-Z])/g, "$1-$2");
+  return withBoundaries
+    .split(/[-_\s]+/)
+    .filter(Boolean)
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+    .join("");
+}
+
+/** Component files (.ts/.tsx) are saved with a PascalCase basename. */
+function normalizeComponentFileName(filePath) {
+  const ext = path.extname(filePath);
+  if (!/\.tsx?$/i.test(ext)) return filePath;
+  const dir = path.dirname(filePath);
+  const stem = path.basename(filePath, ext);
+  const pascal = toPascalCaseStem(stem);
+  return path.join(dir, pascal + ext);
+}
+
 function targetPathForFile(projectRoot, fileMeta) {
+  let full;
   if (fileMeta.target) {
-    return path.join(projectRoot, fileMeta.target.replace(/^\~\//, ""));
+    full = path.join(projectRoot, fileMeta.target.replace(/^\~\//, ""));
+  } else {
+    const p = fileMeta.path || "";
+    const baseName = path.basename(p);
+    full = path.join(projectRoot, "src/ui", baseName);
   }
-  const p = fileMeta.path || "";
-  const baseName = path.basename(p);
-  return path.join(projectRoot, "src/ui", baseName);
+  return normalizeComponentFileName(full);
 }
 
 function npmInstall(projectRoot, deps, dev) {
@@ -211,10 +234,11 @@ function processRegistryUrl(url, projectRoot, visited, summary) {
       continue;
     }
     const baseName = path.basename(depUrl, ".json");
-    const tsx = path.join(componentsDir, `${baseName}.tsx`);
-    const ts = path.join(componentsDir, `${baseName}.ts`);
+    const pascalBase = toPascalCaseStem(baseName);
+    const tsx = path.join(componentsDir, `${pascalBase}.tsx`);
+    const ts = path.join(componentsDir, `${pascalBase}.ts`);
     if (fs.existsSync(tsx) || fs.existsSync(ts)) {
-      console.error(`[add-registry-component] skip existing ${baseName} in src/ui`);
+      console.error(`[add-registry-component] skip existing ${pascalBase} in src/ui`);
       continue;
     }
     processRegistryUrl(depUrl, projectRoot, visited, summary);
