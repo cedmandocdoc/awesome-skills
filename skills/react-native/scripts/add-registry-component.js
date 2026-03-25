@@ -1,0 +1,246 @@
+#!/usr/bin/env node
+/**
+ * Add a registry UI component from a registry-item JSON URL (e.g. React Native Reusables).
+ *
+ * Usage (from your Expo app root):
+ *   node <path-to-skill>/scripts/add-registry-component.js <registry-url>
+ *
+ * Options:
+ *   --root <dir>   Project root (default: cwd)
+ *
+ * Uses: npx shadcn@latest view <url>
+ * Schema: https://ui.shadcn.com/schema/registry-item.json
+ */
+
+const { execFileSync } = require("child_process");
+const fs = require("fs");
+const path = require("path");
+
+const DEFAULT_NATIVEWIND_BASE = "https://reactnativereusables.com/r/nativewind/";
+
+function parseArgs(argv) {
+  const args = { root: process.cwd(), urls: [] };
+  for (let i = 2; i < argv.length; i += 1) {
+    const a = argv[i];
+    if (a === "--root") {
+      args.root = path.resolve(argv[i + 1] || "");
+      i += 1;
+    } else if (!a.startsWith("-")) {
+      args.urls.push(a);
+    }
+  }
+  return args;
+}
+
+function parseRegistryJson(raw) {
+  const trimmed = raw.trim();
+  const fence = trimmed.match(/^```(?:json)?\s*([\s\S]*?)```$/m);
+  const jsonText = fence ? fence[1].trim() : trimmed;
+  return JSON.parse(jsonText);
+}
+
+function runView(url, cwd) {
+  return execFileSync("npx", ["shadcn@latest", "view", url], {
+    cwd,
+    encoding: "utf8",
+    maxBuffer: 20 * 1024 * 1024,
+    stdio: ["ignore", "pipe", "pipe"],
+  });
+}
+
+function resolveDependencyUrl(dep) {
+  if (/^https?:\/\//i.test(dep)) return dep;
+  if (dep.startsWith("@")) {
+    throw new Error(
+      `Namespaced registry dependency "${dep}" needs an explicit URL mapping; add it manually.`,
+    );
+  }
+  const slug = dep.endsWith(".json") ? dep : `${dep}.json`;
+  return `${DEFAULT_NATIVEWIND_BASE}${slug.replace(/^\//, "")}`;
+}
+
+function transformSource(content, fromFilePath, componentsDir) {
+  let out = content;
+
+  // cn -> cx (import + calls)
+  out = out.replace(
+    /import\s*\{\s*cn\s*\}\s*from\s*['"][^'"]+['"]\s*;/g,
+    "import { cx } from 'class-variance-authority';",
+  );
+  out = out.replace(/\bcn\s*\(/g, "cx(");
+
+  // Registry UI imports -> relative
+  const relDir = path.dirname(fromFilePath);
+  out = out.replace(
+    /from\s*['"]@\/registry\/nativewind\/components\/ui\/([^'"]+)['"]/g,
+    (_, spec) => {
+      const clean = spec.replace(/\.tsx?$/, "");
+      const target = path.join(componentsDir, clean);
+      let rel = path.relative(relDir, target);
+      if (!rel.startsWith(".")) rel = `./${rel}`;
+      return `from '${rel.replace(/\\/g, "/")}'`;
+    },
+  );
+
+  return out;
+}
+
+function targetPathForFile(projectRoot, fileMeta) {
+  if (fileMeta.target) {
+    return path.join(projectRoot, fileMeta.target.replace(/^\~\//, ""));
+  }
+  const p = fileMeta.path || "";
+  const baseName = path.basename(p);
+  return path.join(projectRoot, "src/ui", baseName);
+}
+
+function npmInstall(projectRoot, deps, dev) {
+  if (!deps || deps.length === 0) return;
+  const cmd = dev
+    ? ["npm", "install", "--save-dev", ...deps]
+    : ["npm", "install", ...deps];
+  execFileSync(cmd[0], cmd.slice(1), {
+    cwd: projectRoot,
+    stdio: "inherit",
+  });
+}
+
+function appendCssVars(projectRoot, cssVars) {
+  if (!cssVars) return;
+  const themePath = path.join(projectRoot, "src/theme.css");
+  const blocks = [];
+  if (cssVars.theme && Object.keys(cssVars.theme).length) {
+    blocks.push(
+      `/* registry merge: theme */\n  :root {\n${Object.entries(cssVars.theme)
+        .map(([k, v]) => `    --${k}: ${v};`)
+        .join("\n")}\n  }`,
+    );
+  }
+  if (cssVars.light && Object.keys(cssVars.light).length) {
+    blocks.push(
+      `/* registry merge: light */\n  :root {\n${Object.entries(cssVars.light)
+        .map(([k, v]) => `    --${k}: ${v};`)
+        .join("\n")}\n  }`,
+    );
+  }
+  if (cssVars.dark && Object.keys(cssVars.dark).length) {
+    blocks.push(
+      `/* registry merge: dark */\n  .dark:root {\n${Object.entries(cssVars.dark)
+        .map(([k, v]) => `    --${k}: ${v};`)
+        .join("\n")}\n  }`,
+    );
+  }
+  if (blocks.length === 0) return;
+  const banner = "\n\n@layer base {\n" + blocks.join("\n\n") + "\n}\n";
+  fs.mkdirSync(path.dirname(themePath), { recursive: true });
+  if (fs.existsSync(themePath)) {
+    fs.appendFileSync(themePath, banner, "utf8");
+  } else {
+    fs.writeFileSync(
+      themePath,
+      `@tailwind base;\n@tailwind components;\n@tailwind utilities;\n${banner}`,
+      "utf8",
+    );
+  }
+}
+
+function logTailwindPatch(projectRoot, item) {
+  if (!item.tailwind && !item.css) return;
+  const patchDir = path.join(projectRoot, "src/.registry-patches");
+  fs.mkdirSync(patchDir, { recursive: true });
+  const safeName = String(item.name || "item").replace(/[^a-z0-9-_]/gi, "_");
+  const out = path.join(patchDir, `${safeName}.json`);
+  fs.writeFileSync(
+    out,
+    JSON.stringify({ tailwind: item.tailwind, css: item.css }, null, 2),
+    "utf8",
+  );
+  console.warn(
+    `[add-registry-component] Wrote tailwind/css fragment to ${out} — merge into root tailwind.config.js / src/theme.css if needed.`,
+  );
+}
+
+function processRegistryUrl(url, projectRoot, visited, summary) {
+  if (visited.has(url)) return;
+  visited.add(url);
+
+  console.error(`[add-registry-component] view ${url}`);
+  let raw;
+  try {
+    raw = runView(url, projectRoot);
+  } catch (e) {
+    console.error(e.stderr?.toString?.() || e.message);
+    throw new Error(`shadcn view failed for ${url}`);
+  }
+
+  const item = parseRegistryJson(raw);
+  summary.items.push(item.name || url);
+
+  npmInstall(projectRoot, item.dependencies, false);
+  npmInstall(projectRoot, item.devDependencies, true);
+  appendCssVars(projectRoot, item.cssVars);
+  logTailwindPatch(projectRoot, item);
+
+  const componentsDir = path.join(projectRoot, "src/ui");
+
+  if (Array.isArray(item.files)) {
+    for (const file of item.files) {
+      const content = file.content;
+      if (!content) {
+        console.warn(
+          `[add-registry-component] Skip file without content: ${file.path || file.target || "?"}`,
+        );
+        continue;
+      }
+      const dest = targetPathForFile(projectRoot, file);
+      const transformed = transformSource(content, dest, componentsDir);
+      fs.mkdirSync(path.dirname(dest), { recursive: true });
+      fs.writeFileSync(dest, transformed, "utf8");
+      summary.filesWritten.push(dest);
+    }
+  }
+
+  const deps = item.registryDependencies || [];
+  for (const dep of deps) {
+    let depUrl;
+    try {
+      depUrl = resolveDependencyUrl(dep);
+    } catch (err) {
+      console.warn(`[add-registry-component] ${err.message}`);
+      summary.skippedDeps.push(dep);
+      continue;
+    }
+    const baseName = path.basename(depUrl, ".json");
+    const tsx = path.join(componentsDir, `${baseName}.tsx`);
+    const ts = path.join(componentsDir, `${baseName}.ts`);
+    if (fs.existsSync(tsx) || fs.existsSync(ts)) {
+      console.error(`[add-registry-component] skip existing ${baseName} in src/ui`);
+      continue;
+    }
+    processRegistryUrl(depUrl, projectRoot, visited, summary);
+  }
+}
+
+function main() {
+  const { root, urls } = parseArgs(process.argv);
+  if (urls.length === 0) {
+    console.error(
+      "Usage: node add-registry-component.js <registry-url> [more-urls...] [--root <project-dir>]",
+    );
+    process.exit(1);
+  }
+
+  const visited = new Set();
+  const summary = { items: [], filesWritten: [], skippedDeps: [] };
+
+  for (const u of urls) {
+    const url = /^https?:\/\//i.test(u)
+      ? u
+      : `${DEFAULT_NATIVEWIND_BASE}${u.replace(/^\//, "").replace(/\.json$/i, "")}.json`;
+    processRegistryUrl(url, path.resolve(root), visited, summary);
+  }
+
+  console.log(JSON.stringify(summary, null, 2));
+}
+
+main();
