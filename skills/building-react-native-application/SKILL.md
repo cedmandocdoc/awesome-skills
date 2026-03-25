@@ -1,6 +1,6 @@
 ---
-name: react-native
-description: Opinionated React Native ecosystem for building apps with a consistent architecture, library stack, and UI patterns
+name: building-react-native-application
+description: Opinionated React Native ecosystem for building apps with a consistent architecture, library stack, and UI patterns.
 version: 1.0.0
 ---
 
@@ -19,7 +19,7 @@ Opinionated ecosystem for building React Native apps with a consistent architect
 | Server state        | TanStack Query                                     |
 | Client global state | Zustand                                            |
 | HTTP                | Axios                                              |
-| Presentational UI   | shadcn/ui                                          |
+| Presentational UI   | React Native Reusables-style primitives in `src/ui/` |
 
 ## When to use
 
@@ -39,6 +39,6 @@ Opinionated ecosystem for building React Native apps with a consistent architect
 | **State management**     | [state.md](./references/state.md)               | Choosing between Query, Zustand, or local state; data fetching patterns |
 | **API clients**          | [api.md](./references/api.md)                   | Creating or updating Axios clients and feature hooks under `src/api/`   |
 | **Routing & navigation** | [routing.md](./references/routing.md)           | Adding screens, configuring stacks, typing route params                 |
-| **Keyboard handling**    | [keyboard.md](./references/keyboard.md)         | `react-native-keyboard-controller` (`KeyboardAwareScrollView`, `KeyboardToolbar`); see doc for Expo guide links     |
-| **Splash screen**        | [splash-screen.md](./references/splash-screen.md) | `expo-splash-screen`: config plugin, delay hide, fade options; test on release builds (SDK 52+)                |
+| **Keyboard handling**    | [keyboard.md](./references/keyboard.md)         | Avoidance, scroll sync, input toolbars; install and Expo notes in doc   |
+| **Splash screen**        | [splash-screen.md](./references/splash-screen.md) | Native splash, config plugin, delayed hide; verify on release (SDK 52+) |
 | **Linting & formatting** | [linting.md](./references/linting.md)           | Configuring ESLint, Prettier, or fixing lint errors                     |

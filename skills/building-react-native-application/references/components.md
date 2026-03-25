@@ -121,7 +121,7 @@ Keep design tokens in `src/theme.css` only. Put shared color, radius, and chart 
 
 ### Import theme tokens
 
-Keep `global.css` as the Metro entry file and import `src/theme.css` before the Tailwind directives.
+Keep `global.css` as the Metro entry file. List the Tailwind layers first, then import `src/theme.css` for design tokens.
 
 ```css
 @tailwind base;
@@ -359,6 +359,7 @@ Use explicit parts such as `Button`, `ButtonText`, and `ButtonIcon` instead of s
 ```ts
 import type { ReactNode } from "react";
 import { Pressable, Text, View } from "react-native";
+import { buttonStyles } from "./button.styles";
 
 interface ButtonRootProps {
   children: ReactNode;
@@ -384,9 +385,13 @@ export function ButtonText({ children }: ButtonTextProps) {
 export function ButtonIcon({ children }: ButtonIconProps) {
   return <View>{children}</View>;
 }
+```
 
+Usage in a screen or feature:
+
+```tsx
 <Button>
   <ButtonIcon>{/* icon */}</ButtonIcon>
   <ButtonText>Save</ButtonText>
-</Button>;
+</Button>
 ```
