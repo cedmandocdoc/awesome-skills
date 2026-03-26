@@ -33,7 +33,9 @@ Opinionated ecosystem for building React Native apps with a consistent architect
 | Task/Scenario            | Doc                                               | When to Use                                                             |
 | ------------------------ | ------------------------------------------------- | ----------------------------------------------------------------------- |
 | **Project structure**    | [architecture.md](./references/architecture.md)   | Organizing folders, defining module boundaries, refactoring imports     |
+| **Feature modules**      | [feature.md](./references/feature.md)             | `src/features/` layout, barrels, isolated vs grouped features, promotion to `src/ui/` |
 | **Components & UI**      | [components.md](./references/components.md)       | Adding or updating UI components, theme tokens, registry components     |
+| **Component naming**     | [component-naming-guidelines.md](./references/component-naming-guidelines.md) | Choosing consistent component names across `src/ui/` and `src/features/` |
 | **Styling**              | [styling.md](./references/styling.md)             | Applying NativeWind utilities, CVA variants, design tokens              |
 | **State management**     | [state.md](./references/state.md)                 | Choosing between Query, Zustand, or local state; data fetching patterns |
 | **API clients**          | [api.md](./references/api.md)                     | Creating or updating Axios clients and feature hooks under `src/api/`   |

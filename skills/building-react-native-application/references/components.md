@@ -4,6 +4,8 @@
 
 Use this guide to place components in the right layer and keep reusable UI simple. Put domain-specific UI in features, and keep shared primitives flat in `src/ui/`.
 
+For consistent component names, see [component-naming-guidelines.md](./component-naming-guidelines.md).
+
 ## Guidelines
 
 ### Structure
