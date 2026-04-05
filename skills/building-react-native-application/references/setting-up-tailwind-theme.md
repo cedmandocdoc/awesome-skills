@@ -2,7 +2,7 @@
 
 ## Overview
 
-Extend `tailwind.config.js` with design-token colors, border radius, and animation keyframes so Tailwind utilities map to the CSS variables defined in [setting-up-theming.md](./setting-up-theming.md).
+Wires Tailwind theme keys to the CSS variables in [setting-up-theming.md](./setting-up-theming.md) so utilities track light/dark and token updates. NativeWind and those variables must exist first.
 
 ## Prerequisites
 

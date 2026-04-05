@@ -2,7 +2,7 @@
 
 ## Overview
 
-Create `src/theme.ts` to keep React Navigation colors aligned with the design tokens from [setting-up-theming.md](./setting-up-theming.md).
+Maps [setting-up-theming.md](./setting-up-theming.md) tokens into React Navigation so stack and tab chrome matches light and dark. After base tokens exist.
 
 ## Prerequisites
 

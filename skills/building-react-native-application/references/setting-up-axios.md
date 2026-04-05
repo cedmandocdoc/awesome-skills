@@ -2,7 +2,7 @@
 
 ## Overview
 
-Install Axios, create a reusable HTTP client factory, and configure environment variables for an Expo project.
+Axios for Expo via a small client factory and env-based base URL and options—one place to grow auth, timeouts, and interceptors.
 
 ## Steps
 

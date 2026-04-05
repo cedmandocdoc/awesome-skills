@@ -2,7 +2,7 @@
 
 ## Overview
 
-Install component helpers and create the design token layer in `src/theme.css`. After this, continue with [setting-up-tailwind-theme.md](./setting-up-tailwind-theme.md) and [setting-up-navigation-theme.md](./setting-up-navigation-theme.md).
+Shared design tokens and light/dark variables as the single source for NativeWind, React Navigation, and registry UI. Do this before Tailwind or navigation theme wiring.
 
 ## Prerequisites
 
