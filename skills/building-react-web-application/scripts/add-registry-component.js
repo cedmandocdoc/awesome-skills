@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Add or inspect a shadcn/ui registry component for a Vite React web app (primitives in src/ui).
- * Extra cssVars from the registry append to src/theme.css (see setting-up-theming.md); no components.json.
+ * Extra cssVars from the registry append to src/theme.css (see setting-up-theming.md).
  *
  * Usage (from your project root):
  *   node <path-to-skill>/scripts/add-registry-component.js <component-name-or-url> [more...] [--root <project-dir>]
@@ -67,10 +67,10 @@ function resolveDependencyRef(dep) {
 function transformSource(content, fromFilePath, componentsDir) {
   let out = content;
 
-  // cn -> cx (import + calls); shadcn uses @/lib/utils — this stack uses cx there
+  // cn -> cx (import + calls); registry snippets import cn from a utils module — this stack uses CVA's cx
   out = out.replace(
     /import\s*\{\s*cn\s*\}\s*from\s*['"][^'"]+['"]\s*;/g,
-    'import { cx } from "@/lib/utils";',
+    'import { cx } from "class-variance-authority";',
   );
   out = out.replace(/\bcn\s*\(/g, "cx(");
 

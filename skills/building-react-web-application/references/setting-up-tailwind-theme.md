@@ -32,7 +32,7 @@ After [setting-up-theming.md](./setting-up-theming.md), utilities like `bg-backg
 ## Examples
 
 ```tsx
-import { cx } from "@/lib/utils";
+import { cx } from "class-variance-authority";
 
 export function Panel({ className, ...props }: React.ComponentProps<"section">) {
   return (

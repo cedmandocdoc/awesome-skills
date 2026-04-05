@@ -4,7 +4,7 @@
 
 Shared design tokens and light/dark variables as the single source for Tailwind, registry UI, and the rest of the app. Use the **same two-file pattern as the React Native skill**: project-root **`global.css`** (Tailwind entry + upstream imports) and **`src/theme.css`** (token wiring). Pull **only** the [shadcn manual **Configure styles**](https://ui.shadcn.com/docs/installation/manual.md) *content* into `theme.css`—split so Tailwind’s `@import "tailwindcss"` lives in `global.css` only.
 
-**Do not add `components.json`.** This stack is opinionated (`src/ui`, `cx` in `src/lib/utils.ts`, `tailwind-merge`) and does not follow the default shadcn project layout. Add primitives with [`add-registry-component.js`](../scripts/add-registry-component.js) (and `npx shadcn@latest view` under the hood), not `shadcn init` / CLI add that expect `components.json`.
+This stack uses **`src/ui`** and **`cx`** from **`class-variance-authority`** (same as **`cva`**; no custom `cn` merge helper file and no **`tailwind-merge`**). Add primitives with [`add-registry-component.js`](../scripts/add-registry-component.js) (uses `npx shadcn@latest view` under the hood), not `shadcn init` or `shadcn add`.
 
 ## Prerequisites
 
@@ -18,22 +18,9 @@ Follow [Installing Tailwind CSS as a Vite plugin](https://tailwindcss.com/docs/i
 
 ### 2. Install registry-related dependencies
 
-From [Manual installation — Add dependencies](https://ui.shadcn.com/docs/installation/manual.md), install the packages the doc lists for styling and components (for example `class-variance-authority`, `clsx`, `tailwind-merge`, `lucide-react`, `tw-animate-css`, and any `shadcn` package your tooling expects). You do **not** need to complete the manual’s `components.json` or default `lib/utils.ts` **cn** setup—use the next step instead.
+From [Manual installation — Add dependencies](https://ui.shadcn.com/docs/installation/manual.md), install the packages the doc lists for styling and components (for example `class-variance-authority`, `lucide-react`, `tw-animate-css`, and any `shadcn` package your tooling expects). **Skip `tailwind-merge`** and skip the manual’s **`cn`** utility file—use **`import { cx } from "class-variance-authority"`** wherever you need to merge `className` strings (CVA re-exports `clsx` as **`cx`**).
 
-### 3. Add the `cx` utility
-
-Create **`src/lib/utils.ts`** (path is fixed for this stack; the manual’s `lib/utils.ts` at repo root is optional):
-
-```ts
-import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
-
-export function cx(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
-```
-
-### 4. Create `global.css` (project root)
+### 3. Create `global.css` (project root)
 
 Keep **`global.css` at the project root** as the only CSS entry imported from `main.tsx` (mirrors keeping `global.css` at the project root in the React Native skill). It loads Tailwind and shadcn’s Tailwind layer, then pulls in tokens:
 
@@ -53,7 +40,7 @@ import "../global.css";
 
 (Adjust the relative path if your entry file lives somewhere other than `src/main.tsx`.)
 
-### 5. Create `src/theme.css`
+### 4. Create `src/theme.css`
 
 Keep **design tokens and theme wiring in `src/theme.css` only**, like [setting-up-theming.md](../../building-react-native-application/references/setting-up-theming.md) does for the Native app.
 

@@ -2,7 +2,7 @@
 
 ## Overview
 
-Use this guide to apply Tailwind utility classes in React via `className`, with **Tailwind CSS v4** and the Vite plugin. Keep styling token-driven; use **CVA** for variants and **`cx`** from `@/lib/utils` for merging classes.
+Use this guide to apply Tailwind utility classes in React via `className`, with **Tailwind CSS v4** and the Vite plugin. Keep styling token-driven; use **`cva`** and **`cx`** from **`class-variance-authority`** for variants and merging `className` values (no custom `cn` merge file or **`tailwind-merge`**).
 
 ## Prerequisites
 
@@ -19,14 +19,13 @@ Use this guide to apply Tailwind utility classes in React via `className`, with 
 
 ### The `cx` helper
 
-- Define **`cx`** in `src/lib/utils.ts` using `clsx` + `tailwind-merge` so conflicting utilities resolve predictably.
-- Use **`cx`** (not `cn`) for all new code and when adapting shadcn output—see [abstracting-component.md](./abstracting-component.md) and the add-registry script.
+- Import **`cx`** from **`class-variance-authority`** (it is `clsx` under the same API CVA uses internally). Use **`cx`** (not `cn`) for new code and when adapting shadcn output—see [abstracting-component.md](./abstracting-component.md) and the add-registry script.
 
 ### Styling rules
 
 - Use `className` for layout and visuals; avoid inline `style` except for truly dynamic values that utilities cannot express.
 - Use **`cva`** for variant-heavy components.
-- Use **`cx`** from `@/lib/utils` to merge base classes, variant output, and a consumer `className` prop.
+- Use **`cx`** from **`class-variance-authority`** to merge base classes, variant output, and a consumer `className` prop.
 - Prefer shared tokens and semantic classes before arbitrary values.
 - Use responsive utilities (`sm:`, `md:`, `lg:`, `xl:`) as needed.
 - Use `gap` on flex/grid parents instead of margin chains on children.
@@ -48,7 +47,6 @@ Use this guide to apply Tailwind utility classes in React via `className`, with 
 
 ```tsx
 import { cva } from "class-variance-authority";
-import { cx } from "@/lib/utils";
 
 const pill = cva("rounded-full px-3 py-1", {
   variants: {
@@ -64,7 +62,7 @@ const pill = cva("rounded-full px-3 py-1", {
 ### Merge classes with `cx`
 
 ```tsx
-import { cx } from "@/lib/utils";
+import { cx } from "class-variance-authority";
 
 export function Card({
   className,

@@ -22,8 +22,7 @@ For naming conventions, see [naming-component.md](./naming-component.md).
 
 ```tsx
 import type { ReactNode } from "react";
-import { cva } from "class-variance-authority";
-import { cx } from "@/lib/utils";
+import { cva, cx } from "class-variance-authority";
 
 const buttonVariants = cva(
   "inline-flex items-center justify-center rounded-md font-medium transition-colors",
@@ -68,8 +67,7 @@ Use explicit parts such as `Button`, `ButtonText`, and `ButtonIcon` instead of s
 
 ```tsx
 import type { ReactNode } from "react";
-import { cva } from "class-variance-authority";
-import { cx } from "@/lib/utils";
+import { cva, cx } from "class-variance-authority";
 
 const rootVariants = cva("inline-flex items-center gap-2 rounded-md px-4 py-2");
 

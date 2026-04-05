@@ -11,7 +11,7 @@ For utility merging, see [styling.md](./styling.md). For how primitives accept `
 ### Prefer one wrapper
 
 - Merge layout, spacing, and visual classes onto one element when they apply to the same box.
-- Use **`cx`** from `@/lib/utils` to combine base styles, variants, and a caller `className` prop on that single node.
+- Use **`cx`** from **`class-variance-authority`** to combine base styles, variants, and a caller `className` prop on that single node.
 - Avoid a chain of nested `div` elements whose only job is to attach separate `className` strings.
 
 ### When extra wrappers are justified
@@ -49,7 +49,7 @@ Add another wrapper only when layout or accessibility requires a distinct box, f
 
 ```tsx
 import type { ReactNode } from "react";
-import { cx } from "@/lib/utils";
+import { cx } from "class-variance-authority";
 
 interface CardProps {
   children: ReactNode;

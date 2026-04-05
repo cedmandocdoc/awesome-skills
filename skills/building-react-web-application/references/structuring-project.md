@@ -22,11 +22,10 @@ Use this guide to organize the Vite + React SPA by responsibility. Keep routing,
 | `src/features/<feature-name>/` | Domain logic and feature UI                                            |
 | `src/api/`                     | Framework-agnostic HTTP code                                            |
 | `src/stores/`                  | Zustand stores                                                          |
-| `src/lib/`                     | Shared utilities (`utils.ts` with `cx`)                                 |
 
-### Registry and `src/ui` (no `components.json`)
+### Registry and `src/ui`
 
-Primitives are added with **[`add-registry-component.js`](../scripts/add-registry-component.js)** (or `npx shadcn@latest view` for inspection). The script writes under **`src/ui/`**, rewrites imports for that layout, and normalizes **`cn` → `cx`** to match **`src/lib/utils.ts`**. You do **not** maintain **`components.json`** for this workflow—the default shadcn install paths (`@/components/ui`, root `lib/utils`) are intentionally not used.
+Primitives are added with **[`add-registry-component.js`](../scripts/add-registry-component.js)** (or `npx shadcn@latest view` for inspection). The script writes under **`src/ui/`**, rewrites imports for that layout, and normalizes **`cn` → `cx`** to **`class-variance-authority`**. Default shadcn install paths (`@/components/ui` and the manual’s `cn` utility module) are intentionally not used.
 
 ### Root providers
 
