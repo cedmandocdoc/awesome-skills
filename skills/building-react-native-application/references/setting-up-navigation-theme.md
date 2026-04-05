@@ -2,7 +2,7 @@
 
 ## Overview
 
-Create `src/theme.ts` to keep React Navigation colors aligned with the design tokens from [setting-up-theming.md](./setting-up-theming.md), and add the portal host for overlay components.
+Create `src/theme.ts` to keep React Navigation colors aligned with the design tokens from [setting-up-theming.md](./setting-up-theming.md).
 
 ## Prerequisites
 
@@ -84,14 +84,4 @@ export const NAV_THEME: Record<"light" | "dark", Theme> = {
     },
   },
 };
-```
-
-### Add the portal host
-
-Render `PortalHost` as the last child inside your root providers.
-
-```tsx
-import { PortalHost } from "@rn-primitives/portal";
-
-<PortalHost />;
 ```

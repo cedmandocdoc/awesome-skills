@@ -6,7 +6,7 @@ Use this guide to configure React Navigation with the static API. Keep navigator
 
 ## Prerequisites
 
-- [setting-up-react-navigation.md](./setting-up-react-navigation.md)
+- [React Navigation — Hello React Navigation (static)](https://reactnavigation.org/docs/hello-react-navigation.md?config=static)
 
 ## Guidelines
 

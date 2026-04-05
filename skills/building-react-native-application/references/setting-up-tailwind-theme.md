@@ -12,7 +12,7 @@ Extend `tailwind.config.js` with design-token colors, border radius, and animati
 
 ### Extend `tailwind.config.js`
 
-Merge these values into the existing config from [setting-up-nativewind.md](./setting-up-nativewind.md). Do not replace the whole file if the project already has one.
+Merge these values into the existing config from [NativeWind — Installation](https://www.nativewind.dev/docs/getting-started/installation). Do not replace the whole file if the project already has one.
 
 ```js
 const { hairlineWidth } = require("nativewind/theme");

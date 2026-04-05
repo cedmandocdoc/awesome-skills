@@ -6,20 +6,14 @@ Install component helpers and create the design token layer in `src/theme.css`. 
 
 ## Prerequisites
 
-- [setting-up-nativewind.md](./setting-up-nativewind.md)
+- [NativeWind — Installation](https://www.nativewind.dev/docs/getting-started/installation)
 
 ## Steps
 
 ### Install component helpers
 
 ```bash
-npx expo install tailwindcss-animate @rn-primitives/portal
-```
-
-If you use Lucide icons:
-
-```bash
-npx expo install lucide-react-native
+npx expo install tailwindcss-animate
 ```
 
 ### Create `src/theme.css`
@@ -90,9 +84,9 @@ Keep design tokens in `src/theme.css` only. Put shared color, radius, and chart 
 Keep `global.css` as the Metro entry file. List the Tailwind layers first, then import `src/theme.css` for design tokens.
 
 ```css
+@import "./src/theme.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import "./src/theme.css";
 ```

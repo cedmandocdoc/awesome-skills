@@ -6,7 +6,7 @@ Use this guide to apply Tailwind utilities through `className` with NativeWind. 
 
 ## Prerequisites
 
-- [setting-up-nativewind.md](./setting-up-nativewind.md)
+- [NativeWind — Installation](https://www.nativewind.dev/docs/getting-started/installation)
 
 ## Guidelines
 
