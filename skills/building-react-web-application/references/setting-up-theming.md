@@ -4,7 +4,7 @@
 
 Shared design tokens and light/dark variables as the single source for Tailwind, registry UI, and the rest of the app. Use the **same two-file pattern as the React Native skill**: project-root **`global.css`** (Tailwind entry + upstream imports) and **`src/theme.css`** (token wiring). Pull **only** the [shadcn manual **Configure styles**](https://ui.shadcn.com/docs/installation/manual.md) *content* into `theme.css`—split so Tailwind’s `@import "tailwindcss"` lives in `global.css` only.
 
-This stack uses **`src/ui`** and **`cx`** from **`class-variance-authority`** (same as **`cva`**; no custom `cn` merge helper file and no **`tailwind-merge`**). Add primitives with [`add-registry-component.js`](../scripts/add-registry-component.js) (uses `npx shadcn@latest view` under the hood), not `shadcn init` or `shadcn add`.
+**Class merging and primitives:** use **`cva`** and **`cx`** from **`class-variance-authority`**, with shared components under **`src/ui/`** (see [structuring-project.md](./structuring-project.md)). **Add registry output** with [`add-registry-component.js`](../scripts/add-registry-component.js); it wraps `npx shadcn@latest view` and aligns paths and **`cn` → `cx`** for this layout.
 
 ## Prerequisites
 
@@ -18,7 +18,7 @@ Follow [Installing Tailwind CSS as a Vite plugin](https://tailwindcss.com/docs/i
 
 ### 2. Install registry-related dependencies
 
-From [Manual installation — Add dependencies](https://ui.shadcn.com/docs/installation/manual.md), install the packages the doc lists for styling and components (for example `class-variance-authority`, `lucide-react`, `tw-animate-css`, and any `shadcn` package your tooling expects). **Skip `tailwind-merge`** and skip the manual’s **`cn`** utility file—use **`import { cx } from "class-variance-authority"`** wherever you need to merge `className` strings (CVA re-exports `clsx` as **`cx`**).
+From [Manual installation — Add dependencies](https://ui.shadcn.com/docs/installation/manual.md), install the packages the doc lists for styling and components (for example `class-variance-authority`, `lucide-react`, `tw-animate-css`, and any `shadcn` package your tooling expects). Merge `className` strings with **`import { cx } from "class-variance-authority"`** (CVA re-exports `clsx` as **`cx`**); omit **`tailwind-merge`** and the manual’s standalone **`cn`** utility file for this stack.
 
 ### 3. Create `global.css` (project root)
 
@@ -44,7 +44,7 @@ import "../global.css";
 
 Keep **design tokens and theme wiring in `src/theme.css` only**, like [setting-up-theming.md](../../building-react-native-application/references/setting-up-theming.md) does for the Native app.
 
-Open [Manual installation — Configure styles](https://ui.shadcn.com/docs/installation/manual.md) and copy the **Configure styles** block into **`src/theme.css`**, but **omit** these lines (they already live in `global.css`):
+Open [Manual installation — Configure styles](https://ui.shadcn.com/docs/installation/manual.md) and copy the **Configure styles** block into **`src/theme.css`**. **Leave out** the lines that **`global.css` already imports** (duplicate imports break the split):
 
 - `@import "tailwindcss";`
 - `@import "tw-animate-css";`
@@ -58,7 +58,7 @@ Keep everything else from that section in order—for example:
 - `.dark { ... }`
 - `@layer base { ... }`
 
-That keeps **one** place for semantic variables and `@theme` mapping, without duplicating the manual’s full file as a single `globals.css`.
+**`global.css`** stays the Tailwind + shadcn import entry; **`src/theme.css`** holds semantic variables and `@theme` mapping (two files replace pasting the manual’s styles into a single `globals.css`).
 
 **Optional (cross-platform parity):** If you want CSS variables to match the React Native skill’s HSL-style tokens exactly, you can instead define variables in `@layer base` in `src/theme.css` the same way as the Native [setting-up-theming.md](../../building-react-native-application/references/setting-up-theming.md) snippet, then map them to Tailwind utilities via `@theme inline` as needed. Prefer one approach per app and stay consistent.
 

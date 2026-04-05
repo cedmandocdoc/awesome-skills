@@ -67,7 +67,7 @@ function resolveDependencyRef(dep) {
 function transformSource(content, fromFilePath, componentsDir) {
   let out = content;
 
-  // cn -> cx (import + calls); registry snippets import cn from a utils module — this stack uses CVA's cx
+  // cn → cx on imports and calls; registry targets a utils `cn` module, this stack uses CVA `cx`
   out = out.replace(
     /import\s*\{\s*cn\s*\}\s*from\s*['"][^'"]+['"]\s*;/g,
     'import { cx } from "class-variance-authority";',

@@ -23,7 +23,7 @@ Use this guide to decide where state belongs. Use TanStack Query for server data
 
 - Derive values in render when possible.
 - Copy props or query data into local state only when there is a clear reason.
-- Store semantic state such as `isOpen` or `step`, not visual output such as `opacity`.
+- Store semantic state such as `isOpen` or `step`; handle values like `opacity` with utilities and CVA unless interaction logic truly needs them in JS.
 - Use selectors with Zustand to reduce re-renders.
 
 ## Setup

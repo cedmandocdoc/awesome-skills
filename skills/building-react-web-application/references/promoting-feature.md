@@ -22,7 +22,7 @@ Promote when the component:
 
 - Is presentation-only.
 - Accepts props and renders UI.
-- Does not decide routing, fetch data, or manage feature state.
+- Leaves routing, data fetching, and feature state to callers (routes, hooks, parent features).
 
 ### When to extract into a new `src/features/` module
 
@@ -30,7 +30,7 @@ Extract when the shared part:
 
 - Encapsulates domain behavior that multiple routes use.
 - Includes hooks/state/derived behavior that callers would otherwise duplicate.
-- Needs its own feature boundary so it does not leak internal complexity into routes.
+- Benefits from a feature boundary so routes compose stable exports without internal detail.
 
 ### How to keep boundaries consistent after extraction
 

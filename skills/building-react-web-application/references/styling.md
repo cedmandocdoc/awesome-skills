@@ -19,7 +19,7 @@ Use this guide to apply Tailwind utility classes in React via `className`, with 
 
 ### The `cx` helper
 
-- Import **`cx`** from **`class-variance-authority`** (it is `clsx` under the same API CVA uses internally). Use **`cx`** (not `cn`) for new code and when adapting shadcn output—see [abstracting-component.md](./abstracting-component.md) and the add-registry script.
+- Import **`cx`** from **`class-variance-authority`** (same merge API as `clsx`). Registry snippets often say **`cn`**; this stack standardizes on **`cx`**—see [abstracting-component.md](./abstracting-component.md) and the add-registry script.
 
 ### Styling rules
 
