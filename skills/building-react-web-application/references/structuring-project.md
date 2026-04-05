@@ -9,37 +9,24 @@ Use this guide to organize the Vite + React SPA by responsibility. Keep routing,
 ### Structure
 
 - Keep app code in `src/`.
-- Keep Vite entry (`main.tsx`) at the project root (or `src/` per Vite template) and import global CSS once.
+- Keep Vite entry (`main.tsx`) at the project root or under `src/` per your Vite template and import **one** root stylesheet.
 - Use kebab-case for feature folders.
 
 | Area                           | Purpose                                                                  |
 | ------------------------------ | ------------------------------------------------------------------------ |
+| `global.css`                   | Project root: Tailwind + shadcn Tailwind imports; `@import` of `theme.css` |
+| `src/theme.css`                | Design tokens and `@theme` / `:root` / `.dark` (see setting-up-theming.md) |
 | `src/routes/`                  | TanStack Router file-based route modules (see configuring-routing.md)   |
 | `src/routeTree.gen.ts`         | Generated route tree (do not edit by hand)                               |
-| `src/ui/`                      | Flat presentational primitives (shadcn-style registry output)          |
+| `src/ui/`                      | Flat presentational primitives (registry output from the add script)     |
 | `src/features/<feature-name>/` | Domain logic and feature UI                                            |
 | `src/api/`                     | Framework-agnostic HTTP code                                            |
 | `src/stores/`                  | Zustand stores                                                          |
-| `src/lib/`                     | Shared utilities (e.g. `utils.ts` with `cx`)                            |
-| `src/styles/globals.css`     | Tailwind import + design tokens (see setting-up-theming.md)             |
+| `src/lib/`                     | Shared utilities (`utils.ts` with `cx`)                                 |
 
-### `components.json` and `src/ui`
+### Registry and `src/ui` (no `components.json`)
 
-shadcn defaults target `@/components/ui`. To keep primitives in **`src/ui`**, set aliases in `components.json` (and mirror them in `tsconfig.json` paths), for example:
-
-```json
-{
-  "aliases": {
-    "components": "@/ui",
-    "ui": "@/ui",
-    "lib": "@/lib",
-    "utils": "@/lib/utils",
-    "hooks": "@/hooks"
-  }
-}
-```
-
-Align `"tailwind": { "css": "src/styles/globals.css" }` with where your global stylesheet lives.
+Primitives are added with **[`add-registry-component.js`](../scripts/add-registry-component.js)** (or `npx shadcn@latest view` for inspection). The script writes under **`src/ui/`**, rewrites imports for that layout, and normalizes **`cn` → `cx`** to match **`src/lib/utils.ts`**. You do **not** maintain **`components.json`** for this workflow—the default shadcn install paths (`@/components/ui`, root `lib/utils`) are intentionally not used.
 
 ### Root providers
 
@@ -47,9 +34,9 @@ Wire cross-cutting providers once, above the router:
 
 1. **`QueryClientProvider`** (TanStack Query) — see [managing-state.md](./managing-state.md).
 2. **`RouterProvider`** — from TanStack Router, using the generated route tree (see [configuring-routing.md](./configuring-routing.md)).
-3. **Theme / document class** — if using class-based dark mode (e.g. `.dark` on `<html>`), set it from a small root component or layout route effect; keep token CSS in `globals.css` per [setting-up-theming.md](./setting-up-theming.md).
+3. **Theme / document class** — if using class-based dark mode (e.g. `.dark` on `<html>`), set it from a small root component or layout route effect; keep tokens in **`src/theme.css`** per [setting-up-theming.md](./setting-up-theming.md).
 
-Typical shape: `main.tsx` imports `./src/styles/globals.css`, creates `queryClient`, renders `QueryClientProvider` → `RouterProvider`.
+Typical shape: `main.tsx` imports **`../global.css`** (or the correct relative path), creates `queryClient`, renders `QueryClientProvider` → `RouterProvider`.
 
 ### Dependency flow
 
@@ -91,10 +78,10 @@ Add `@/*` → `./src/*` in `tsconfig.json` and keep `vite.config.ts` `resolve.al
 
 ### Global CSS entry
 
-Import the global stylesheet from `main.tsx` (or the Vite entry file):
+Import the root stylesheet from `main.tsx` (or the Vite entry file):
 
 ```tsx
-import "./styles/globals.css";
+import "../global.css";
 ```
 
 Ensure `index.html` references the JS entry; Vite injects CSS from that import.

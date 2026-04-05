@@ -16,7 +16,7 @@ For utilities and `cx` / CVA, see [styling.md](./styling.md). For wiring tokens 
 ### Design tokens over raw values
 
 - Use theme-backed Tailwind classes (for example `bg-primary`, `text-muted-foreground`, spacing scale keys) instead of arbitrary hex, `rgb()`, or repeated magic numbers.
-- Add or extend variables in `globals.css` (`@theme` / `:root` / `.dark`) when a value repeats; reserve arbitrary utilities and inline styles for genuine one-offs.
+- Add or extend variables in **`src/theme.css`** (`@theme` / `:root` / `.dark`) when a value repeats; reserve arbitrary utilities and inline styles for genuine one-offs.
 - Prefer semantic token names (intent) over literal names (exact shade) when the project defines them.
 
 ### When exceptions are reasonable

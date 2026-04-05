@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /**
  * Add or inspect a shadcn/ui registry component for a Vite React web app (primitives in src/ui).
+ * Extra cssVars from the registry append to src/theme.css (see setting-up-theming.md); no components.json.
  *
  * Usage (from your project root):
  *   node <path-to-skill>/scripts/add-registry-component.js <component-name-or-url> [more...] [--root <project-dir>]
@@ -147,21 +148,14 @@ function npmInstall(projectRoot, deps, dev) {
   });
 }
 
-function globalCssPath(projectRoot) {
-  const candidates = [
-    path.join(projectRoot, "src/styles/globals.css"),
-    path.join(projectRoot, "src/styles/global.css"),
-    path.join(projectRoot, "src/theme.css"),
-  ];
-  for (const p of candidates) {
-    if (fs.existsSync(p)) return p;
-  }
-  return path.join(projectRoot, "src/styles/globals.css");
+/** Registry cssVars merges append to src/theme.css (same as RN skill’s theme.css). */
+function themeCssPath(projectRoot) {
+  return path.join(projectRoot, "src/theme.css");
 }
 
 function appendCssVars(projectRoot, cssVars) {
   if (!cssVars) return;
-  const themePath = globalCssPath(projectRoot);
+  const themePath = themeCssPath(projectRoot);
   const blocks = [];
   if (cssVars.theme && Object.keys(cssVars.theme).length) {
     blocks.push(
@@ -190,7 +184,11 @@ function appendCssVars(projectRoot, cssVars) {
   if (fs.existsSync(themePath)) {
     fs.appendFileSync(themePath, banner, "utf8");
   } else {
-    fs.writeFileSync(themePath, `@import "tailwindcss";\n${banner}`, "utf8");
+    fs.writeFileSync(
+      themePath,
+      `/* Registry merge — review and fold into src/theme.css per setting-up-theming.md */\n${banner}`,
+      "utf8",
+    );
   }
 }
 
@@ -206,7 +204,7 @@ function logTailwindPatch(projectRoot, item) {
     "utf8",
   );
   console.warn(
-    `[add-registry-component] Wrote tailwind/css fragment to ${out} — merge into globals.css / Vite+Tailwind config if needed.`,
+    `[add-registry-component] Wrote tailwind/css fragment to ${out} — merge into src/theme.css or global.css / Vite+Tailwind if needed.`,
   );
 }
 

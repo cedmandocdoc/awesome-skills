@@ -2,7 +2,7 @@
 
 ## Overview
 
-After [setting-up-theming.md](./setting-up-theming.md), utilities like `bg-background`, `text-primary`, and `rounded-lg` resolve through the **`@theme inline`** block and CSS variables defined in `globals.css` (per the shadcn manual **Configure styles** section). This file describes **conventions** for using those tokens in components—**do not duplicate** the large variable block here; change tokens in one place (`globals.css`).
+After [setting-up-theming.md](./setting-up-theming.md), utilities like `bg-background`, `text-primary`, and `rounded-lg` resolve through the **`@theme inline`** block and CSS variables defined in **`src/theme.css`** (content aligned with the shadcn manual **Configure styles** section, split from root `global.css`). This file describes **conventions** for using those tokens in components—**do not duplicate** the large variable block here; change tokens in one place (`src/theme.css`).
 
 ## Prerequisites
 
@@ -47,4 +47,4 @@ export function Panel({ className, ...props }: React.ComponentProps<"section">) 
 }
 ```
 
-If a utility is missing after editing variables, confirm the `@theme inline` mapping in `globals.css` matches the shadcn manual pattern and that Tailwind content paths include `src/`.
+If a utility is missing after editing variables, confirm the `@theme inline` mapping in `src/theme.css` matches the shadcn manual pattern and that Tailwind content paths include `src/`.

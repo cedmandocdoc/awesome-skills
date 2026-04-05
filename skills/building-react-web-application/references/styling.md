@@ -7,14 +7,14 @@ Use this guide to apply Tailwind utility classes in React via `className`, with 
 ## Prerequisites
 
 - [Tailwind CSS — Using Vite](https://tailwindcss.com/docs/installation/using-vite)
-- [setting-up-theming.md](./setting-up-theming.md) for global CSS and tokens
+- [setting-up-theming.md](./setting-up-theming.md) for `global.css`, `src/theme.css`, and tokens
 
 ## Guidelines
 
 ### Structure
 
 - Configure Tailwind as the Vite plugin (`@tailwindcss/vite`) per the official guide.
-- Keep a single global stylesheet (for example `src/styles/globals.css`) that imports Tailwind and theme layers; import it once from the app entry (e.g. `main.tsx`).
+- Keep **project-root `global.css`** as the only entry: it imports Tailwind (v4), shadcn’s Tailwind imports, then **`./src/theme.css`**. Import `global.css` once from the app entry (e.g. `main.tsx`).
 - Prefer **semantic utilities** backed by CSS variables from the theme setup (`bg-background`, `text-foreground`, etc.) when the project defines them.
 
 ### The `cx` helper

@@ -7,15 +7,15 @@ Use this guide to decide whether a component should be a shared UI primitive in 
 ## Prerequisites
 
 - [placing-component.md](./placing-component.md)
-- [setting-up-theming.md](./setting-up-theming.md) and [structuring-project.md](./structuring-project.md) for `components.json` + `src/ui` alignment
+- [setting-up-theming.md](./setting-up-theming.md) and [structuring-project.md](./structuring-project.md) for `global.css` / `src/theme.css` and `src/ui`
 
 ## Guidelines
 
 ### When building UI components
 
-- Use **registry / shadcn components first** before creating a custom one from scratch.
+- Use **registry-backed primitives first** before creating a custom one from scratch.
   - Check `src/ui/` for an existing shared primitive.
-  - If it is missing, add it with the shadcn CLI (`npx shadcn@latest add <name>`) after `components.json` points **`ui`** at `@/ui`, **or** inspect registry output with the skill script (pass a component name such as `button` or `dialog` so the script runs `npx shadcn@latest view <name>`; full registry URLs still work when needed):
+  - If it is missing, vendor it with the skill script (runs `npx shadcn@latest view` and writes into **`src/ui/`**). Pass a component name such as `button` or `dialog`; full registry URLs still work when needed. **Do not rely on `components.json` or `shadcn add`**—this stack manages registry output manually to match opinionated paths and **`cx`**.
 
     ```bash
     node path/to/building-react-web-application/scripts/add-registry-component.js button
@@ -27,7 +27,7 @@ Use this guide to decide whether a component should be a shared UI primitive in 
   - No feature-specific hooks/state that determine product behavior.
   - Accept props and render UI; move "what to show" decisions to callers.
 
-- Normalize **`cn` → `cx`**: shadcn snippets often use `cn` from `lib/utils`. This stack uses **`cx`** in `@/lib/utils`; the add-registry script rewrites imports and calls when vendoring files.
+- Normalize **`cn` → `cx`**: registry snippets often use `cn`. This stack uses **`cx`** in **`src/lib/utils.ts`**; the add-registry script rewrites imports and calls when vendoring files.
 
 ### When building feature components
 

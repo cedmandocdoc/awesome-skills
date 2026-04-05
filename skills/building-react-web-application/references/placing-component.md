@@ -12,7 +12,7 @@ Use this guide to place components in the right layer. Put domain-specific UI in
 | --------------------------------- | ------------------------------------------------------------------------ |
 | Feature components                | `src/features/<feature-name>/components/`                               |
 | Shared UI components (primitives) | `src/ui/`                                                                |
-| Design tokens and global base CSS | `src/styles/globals.css` (see setting-up-theming.md)                      |
+| Design tokens and theme wiring    | `src/theme.css`; root `global.css` imports Tailwind + theme (see setting-up-theming.md) |
 | Utilities (`cx`, etc.)            | `src/lib/utils.ts`                                                       |
 
 ### Placement rules
