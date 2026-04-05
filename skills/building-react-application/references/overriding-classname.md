@@ -6,7 +6,7 @@ Use this guide when a **consumer** passes Tailwind utilities through a component
 
 When that happens, the consumer should prefix the conflicting utilities with Tailwind’s **important modifier** (`!`) so the override applies reliably.
 
-This stack assumes **Tailwind CSS** and merged class names (for example via `cn()` helper). The `!` prefix compiles to CSS `!important` on that utility’s declarations.
+This stack assumes **Tailwind CSS** and merged class names (for example via `cx()` helper). The `!` prefix compiles to CSS `!important` on that utility’s declarations.
 
 ## Guidelines
 
