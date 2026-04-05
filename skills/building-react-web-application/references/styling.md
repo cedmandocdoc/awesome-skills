@@ -23,7 +23,7 @@ Use this guide to apply Tailwind utility classes in React via `className`, with 
 
 ### Styling rules
 
-- Use `className` for layout and visuals; avoid inline `style` except for truly dynamic values that utilities cannot express.
+- Use `className` for layout and visuals; reserve inline `style` for dynamic values that utilities cannot express.
 - Use **`cva`** for variant-heavy components.
 - Use **`cx`** from **`class-variance-authority`** to merge base classes, variant output, and a consumer `className` prop.
 - Prefer shared tokens and semantic classes before arbitrary values.

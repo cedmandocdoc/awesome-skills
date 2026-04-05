@@ -10,7 +10,7 @@ A feature module packages domain logic with the feature UI, and exposes a small 
 
 ### Mental model
 
-Feature categorization is intentionally predictable, even though real features can be grouped in different ways.
+Keep feature categories predictable; real features can still be grouped in different ways.
 
 **Isolated vs grouped features**
 
@@ -27,8 +27,7 @@ This guide favors isolated features first, but it allows grouped features when i
 
 **Isolation is about dependency boundaries**
 
-- Callers should not need internal knowledge of the module to use it correctly.
-- Other features/routes should depend on the feature's public exports (via the feature's barrel), not by reaching into internal files.
+- Internal files stay private to the feature; the barrel is the only surface other modules depend on.
 
 **Respect the team's categorization when it helps**
 
@@ -53,11 +52,9 @@ Some teams categorize features based on product language (e.g. "billing", "onboa
 
 ### Export contract
 
-- Each feature folder must expose a barrel (commonly `src/features/<feature-name>/index.ts`).
-- Callers should import from `@/features/<feature-name>` rather than importing internal files directly.
-- An isolated feature should export one primary component/value plus supporting hooks/types.
-- A grouped feature should clearly name its exported parts.
-- The export contract should stay stable: avoid exporting internal helpers.
+- Each feature folder exposes a barrel (commonly `src/features/<feature-name>/index.ts`).
+- Callers import from `@/features/<feature-name>` only; keep the barrel stable over time.
+- Isolated features: one primary component or value plus the hooks and types callers need. Grouped features: name each exported part clearly. Internal helpers stay off the barrel.
 
 ## Examples
 

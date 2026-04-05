@@ -16,20 +16,20 @@ Use this guide when a *feature*, *API backend folder*, or other module reads con
   - `src/features/<feature-name>/env.ts` when only that feature reads those variables.
   - `src/api/<backend-name>/env.ts` when the API client layer for that backend reads them.
   - Another folder may use the same pattern when a cohesive module has its own env surface.
-- List every key that module reads from **`import.meta.env`** in that single `env.ts`. Do not scatter raw `import.meta.env` reads across files inside the same module.
+- List every key that module reads from **`import.meta.env`** in that single `env.ts`; other files in the same module import the parsed `env` (or equivalent) only.
 
 ### Validation rules
 
 - Define one Zod object schema that describes all required (and optional) variables for the module.
 - Parse once when the module loads. Export:
   - `parseSchema`: the Zod object schema for this module (tests, composition, or reuse).
-  - The parsed, typed result (convention: `env` or a module-specific name such as `appApiEnv`). **The parsed export is the source of truth** for runtime values—import it instead of reading `import.meta.env` again elsewhere in the module.
+  - The parsed, typed result (convention: `env` or a module-specific name such as `appApiEnv`). **The parsed export is the source of truth** for runtime values elsewhere in the module.
 - Prefer `.safeParse` at the app root if the app should show a controlled startup error; inside leaf modules, failing fast with `.parse` is acceptable when misconfiguration should crash during development or CI.
 
 ### Vite and public variables
 
 - Client-visible values must be defined in `.env` with the **`VITE_`** prefix so Vite exposes them on `import.meta.env` (see [Vite — Env variables](https://vitejs.dev/guide/env-and-mode.html)).
-- **Never** put secrets in `VITE_*` variables; they ship in the client bundle. Use server-side config, auth, or proxy patterns for sensitive values.
+- `VITE_*` values ship in the client bundle; store secrets in server-side config, auth, or proxy patterns instead.
 
 ### TypeScript
 
@@ -65,7 +65,10 @@ export const env = parseSchema.parse({
 import { env } from "./env";
 
 export function trackEvent(name: string) {
-  // use env.VITE_ANALYTICS_KEY — do not read import.meta.env here
+  return fetch("/analytics", {
+    method: "POST",
+    body: JSON.stringify({ name, key: env.VITE_ANALYTICS_KEY }),
+  });
 }
 ```
 

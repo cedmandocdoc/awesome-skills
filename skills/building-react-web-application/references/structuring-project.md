@@ -17,7 +17,7 @@ Use this guide to organize the Vite + React SPA by responsibility. Keep routing,
 | `global.css`                   | Project root: Tailwind + shadcn Tailwind imports; `@import` of `theme.css` |
 | `src/theme.css`                | Design tokens and `@theme` / `:root` / `.dark` (see setting-up-theming.md) |
 | `src/routes/`                  | TanStack Router file-based route modules (see configuring-routing.md)   |
-| `src/routeTree.gen.ts`         | Generated route tree (do not edit by hand)                               |
+| `src/routeTree.gen.ts`         | Generated route tree (from `src/routes/`; edit route modules)            |
 | `src/ui/`                      | Flat presentational primitives (registry output from the add script)     |
 | `src/features/<feature-name>/` | Domain logic and feature UI                                            |
 | `src/api/`                     | Framework-agnostic HTTP code                                            |
@@ -25,7 +25,7 @@ Use this guide to organize the Vite + React SPA by responsibility. Keep routing,
 
 ### Registry and `src/ui`
 
-Primitives are added with **[`add-registry-component.js`](../scripts/add-registry-component.js)** (or `npx shadcn@latest view` for inspection). The script writes under **`src/ui/`**, rewrites imports for that layout, and normalizes **`cn` → `cx`** to **`class-variance-authority`**. Default shadcn install paths (`@/components/ui` and the manual’s `cn` utility module) are intentionally not used.
+Primitives are added with **[`add-registry-component.js`](../scripts/add-registry-component.js)** (or `npx shadcn@latest view` for inspection). The script writes under **`src/ui/`**, rewrites imports for that layout, and normalizes **`cn` → `cx`** from **`class-variance-authority`**. Stock shadcn docs assume **`@/components/ui`** and a **`cn`** utility; this stack standardizes on **`src/ui/`** and **`cx`**.
 
 ### Root providers
 
@@ -42,7 +42,7 @@ Typical shape: `main.tsx` imports **`../global.css`** (or the correct relative p
 - Let route modules compose features, `ui`, API hooks, and stores.
 - Let features import other features through their barrel file.
 - Keep `src/ui/` free of feature, API, and store imports.
-- Keep route files focused on routing concerns (layouts, loaders where used); avoid bloating them with domain logic—delegate to features.
+- Keep route files focused on routing concerns (layouts, loaders where used); delegate domain logic to features.
 - Keep `src/api/` independent from React and Zustand.
 
 ### Imports

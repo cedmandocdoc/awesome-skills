@@ -40,7 +40,7 @@ export async function responseData<T>(
 ### Add environment variables
 
 - Use **`VITE_`** for public API base URLs and similar client config only.
-- Do not store secrets in `VITE_*` variables.
+- Keep secrets out of `VITE_*`; they ship in the client bundle—use server-side config, auth, or proxy patterns instead.
 
 ```bash
 VITE_API_URL=http://localhost:3000

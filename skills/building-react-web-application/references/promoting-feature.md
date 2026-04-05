@@ -36,7 +36,7 @@ Extract when the shared part:
 
 - Routes compose features; features compose smaller features.
 - Internal modules inside `src/features/<feature-name>/` may import each other freely.
-- Other modules should import through the feature barrel to avoid coupling to internal file paths.
+- Other modules import through the feature barrel so internal paths stay encapsulated.
 
 ### Route interaction (typical flow)
 

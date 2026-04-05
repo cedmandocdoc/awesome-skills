@@ -22,7 +22,7 @@ Use this guide to decide where state belongs. Use TanStack Query for server data
 ### State rules
 
 - Derive values in render when possible.
-- Do not copy props or query data into local state without a clear reason.
+- Copy props or query data into local state only when there is a clear reason.
 - Store semantic state such as `isOpen` or `step`, not visual output such as `opacity`.
 - Use selectors with Zustand to reduce re-renders.
 
@@ -59,7 +59,7 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
 
 ### Create a query hook
 
-Read the API base URL from that backend’s parsed `env` export (see [managing-environment.md](./managing-environment.md)); do not read `import.meta.env` inside feature hooks.
+Read the API base URL from that backend’s parsed `env` export (see [managing-environment.md](./managing-environment.md)); feature hooks import that `env` module.
 
 ```ts
 import { useQuery } from "@tanstack/react-query";

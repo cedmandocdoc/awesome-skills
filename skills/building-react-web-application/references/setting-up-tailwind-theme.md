@@ -2,7 +2,7 @@
 
 ## Overview
 
-After [setting-up-theming.md](./setting-up-theming.md), utilities like `bg-background`, `text-primary`, and `rounded-lg` resolve through the **`@theme inline`** block and CSS variables defined in **`src/theme.css`** (content aligned with the shadcn manual **Configure styles** section, split from root `global.css`). This file describes **conventions** for using those tokens in components—**do not duplicate** the large variable block here; change tokens in one place (`src/theme.css`).
+After [setting-up-theming.md](./setting-up-theming.md), utilities like `bg-background`, `text-primary`, and `rounded-lg` resolve through the **`@theme inline`** block and CSS variables defined in **`src/theme.css`** (content aligned with the shadcn manual **Configure styles** section, split from root `global.css`). This file covers **conventions** for using those tokens in components; **edit the variable definitions only in `src/theme.css`** (no second copy of the block here).
 
 ## Prerequisites
 
@@ -18,7 +18,7 @@ After [setting-up-theming.md](./setting-up-theming.md), utilities like `bg-backg
 
 ### Light and dark
 
-- Dark mode is driven by the **`.dark`** class (or the variant defined in the manual). Components should not hard-code separate light/dark hex pairs unless there is no token; prefer `dark:` variants that still reference semantic tokens when needed.
+- Dark mode follows the **`.dark`** class (or the variant from the manual). Use semantic tokens with `dark:` variants; reach for separate light/dark hex only when no token covers the case.
 
 ### Extending the theme
 
@@ -27,7 +27,7 @@ After [setting-up-theming.md](./setting-up-theming.md), utilities like `bg-backg
 
 ### Relation to CVA
 
-- Map CVA variants to **semantic utilities** (`primary`, `secondary`, `destructive`, `ghost`, …) that align with your `src/ui` primitives so features do not reintroduce raw palette classes.
+- Map CVA variants to **semantic utilities** (`primary`, `secondary`, `destructive`, `ghost`, …) aligned with `src/ui` primitives so features stay on the same token set.
 
 ## Examples
 

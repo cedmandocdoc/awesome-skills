@@ -11,11 +11,11 @@ For utilities and `cx` / CVA, see [styling.md](./styling.md). For wiring tokens 
 ### Style guide first
 
 - When the repo or team documents layout, components, or tokens, follow that guide before inventing new patterns.
-- Reuse existing primitives in `src/ui/` and established utility patterns instead of one-off styling.
+- Reuse primitives in `src/ui/` and established utility patterns before adding one-off styling.
 
 ### Design tokens over raw values
 
-- Use theme-backed Tailwind classes (for example `bg-primary`, `text-muted-foreground`, spacing scale keys) instead of arbitrary hex, `rgb()`, or repeated magic numbers.
+- Prefer theme-backed Tailwind classes (for example `bg-primary`, `text-muted-foreground`, spacing scale keys) over arbitrary hex, `rgb()`, or repeated magic numbers.
 - Add or extend variables in **`src/theme.css`** (`@theme` / `:root` / `.dark`) when a value repeats; reserve arbitrary utilities and inline styles for genuine one-offs.
 - Prefer semantic token names (intent) over literal names (exact shade) when the project defines them.
 

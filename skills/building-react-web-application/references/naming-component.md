@@ -57,7 +57,7 @@ When a feature splits UI into smaller parts, keep naming grouped with a shared p
 - Hooks: `useAuth`, `useCart`
 - Utilities: `formatCurrency`, `calculateDiscount`
 
-### Do not encode state in names
+### Keep state in props and variants
 
 Use props or CVA variants for state, not separate component names.
 

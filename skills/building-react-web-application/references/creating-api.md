@@ -28,7 +28,7 @@ src/api/<backend-name>/
 
 ### Client rules
 
-- Do not import React, features, or stores inside `src/api/`.
+- Keep `src/api/` free of React, feature modules, and Zustand stores.
 - Use Axios with `createClient` and `responseData`.
 - Keep one shared `AxiosInstance` per backend.
 - Use explicit return types on exported functions.
@@ -37,7 +37,7 @@ src/api/<backend-name>/
 
 - Use `axios.isAxiosError(err)` for request errors.
 - Read status and payload from `err.response`.
-- Do not create a custom API error class unless the app needs one.
+- Add a custom API error type only when the product needs one.
 
 ## Examples
 
@@ -73,5 +73,4 @@ export function useWorkshops() {
 
 ### Keep components unaware of Axios
 
-- Let components use feature hooks.
-- Do not call Axios directly from presentational components.
+- Presentational components use feature hooks; HTTP stays in hooks and `src/api/`.

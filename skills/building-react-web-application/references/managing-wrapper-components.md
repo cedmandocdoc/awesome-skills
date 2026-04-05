@@ -12,7 +12,7 @@ For utility merging, see [styling.md](./styling.md). For how primitives accept `
 
 - Merge layout, spacing, and visual classes onto one element when they apply to the same box.
 - Use **`cx`** from **`class-variance-authority`** to combine base styles, variants, and a caller `className` prop on that single node.
-- Avoid a chain of nested `div` elements whose only job is to attach separate `className` strings.
+- Merge classes onto one node instead of nesting `div` elements that only carry separate `className` strings.
 
 ### When extra wrappers are justified
 
@@ -29,10 +29,10 @@ Add another wrapper only when layout or accessibility requires a distinct box, f
 
 ## Examples
 
-### Avoid redundant nesting
+### Shallow tree example
 
 ```tsx
-// Avoid: three divs only to layer classes
+// Three divs only to layer classes — prefer merging
 <div className="flex min-h-screen flex-col">
   <div className="flex-1 bg-background p-4">
     <div className="flex flex-col gap-2">{children}</div>
@@ -68,7 +68,7 @@ export function Card({ children, className }: CardProps) {
 ### Keep a second wrapper when layout requires it
 
 ```tsx
-// Row for actions, column for content — intentional split
+// Row for actions, column for content — layout needs two boxes
 <div className="flex flex-col gap-4 p-4">
   <div className="flex flex-row items-center justify-between gap-2">
     <h2 className="text-lg font-semibold">Title</h2>

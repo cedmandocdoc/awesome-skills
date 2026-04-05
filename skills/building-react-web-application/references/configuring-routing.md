@@ -20,7 +20,7 @@ src/routes/
 ├── __root.tsx          # root layout
 ├── index.tsx           # example: /
 └── ...                 # nested routes follow file naming conventions
-src/routeTree.gen.ts    # generated — do not edit
+src/routeTree.gen.ts    # generated from src/routes/
 ```
 
 - Add route modules under `src/routes/` using the file-based routing conventions from the TanStack Router docs.
@@ -36,9 +36,9 @@ See the full snippet in [Installation with Vite](https://tanstack.com/router/lat
 
 ### Generated route tree
 
-- `routeTree.gen.ts` is **generated**. Do not hand-edit it.
-- **Lint / format ignore:** exclude it from ESLint and Prettier (or Biome) so generated code is not rewritten. The TanStack doc links patterns for [Prettier ignore](https://prettier.io/docs/en/ignore.html#ignoring-files) and [ESLint ignore](https://eslint.org/docs/latest/use/configure/ignore#ignoring-files).
-- **VS Code:** optionally mark the file readonly and exclude from search/watch, as recommended in the same installation doc, to avoid noisy diffs after renames.
+- `routeTree.gen.ts` is **generated** from `src/routes/`; change route modules, not this file.
+- **Lint / format ignore:** exclude it from ESLint and Prettier (or Biome) so generated code stays untouched. The TanStack doc links patterns for [Prettier ignore](https://prettier.io/docs/en/ignore.html#ignoring-files) and [ESLint ignore](https://eslint.org/docs/latest/use/configure/ignore#ignoring-files).
+- **VS Code:** optionally mark the file readonly and exclude from search/watch, as recommended in the same installation doc, for quieter diffs after renames.
 
 ### Choosing layout patterns
 
@@ -83,7 +83,7 @@ Adjust to match the current TanStack Router API for your version (see upstream q
 
 ### Navigate from a component
 
-Use the framework’s navigation hooks (e.g. `Link`, `useNavigate`) from `@tanstack/react-router` rather than manipulating `history` directly. Prefer typed route APIs when the project enables them.
+Use `Link`, `useNavigate`, and related APIs from `@tanstack/react-router` for navigation. Prefer typed route APIs when the project enables them.
 
 ```tsx
 import { Link } from "@tanstack/react-router";
