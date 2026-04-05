@@ -7,6 +7,7 @@ Use this guide to decide whether a component should be a shared UI primitive in 
 ## Prerequisites
 
 - [placing-component.md](./placing-component.md)
+- [setting-up-registry-components.md](./setting-up-registry-components.md)
 
 ## Guidelines
 
@@ -14,13 +15,13 @@ Use this guide to decide whether a component should be a shared UI primitive in 
 
 - Use registry components first before creating a custom one.
   - Check `src/ui/` for an existing shared primitive.
-  - If it is missing, add it from the registry:
+  - If it is missing, add it from the registry. Follow [setting-up-registry-components.md](./setting-up-registry-components.md) if the app has not had registry shell setup yet; then run:
 
 ```bash
 node path/to/react-native/scripts/add-registry-component.js "https://reactnativereusables.com/r/nativewind/button.json"
 ```
 
-- Keep UI components *presentation-only*.
+- Keep UI components _presentation-only_.
   - No business logic.
   - No data fetching, mutations, or navigation decisions.
   - No feature-specific hooks/state that determine product behavior.
@@ -42,7 +43,7 @@ Use this workflow when you are building a screen or feature:
 1. Identify blocks in the UI for the current task.
    - Split the UI you are manually composing into the smallest recurring "rendering blocks" you can name.
 2. Check for reuse and presentation-only fit.
-   - If a block is likely reusable *and* can stay presentation-only, categorize it as a **UI component** and place it in `src/ui/`.
+   - If a block is likely reusable _and_ can stay presentation-only, categorize it as a **UI component** and place it in `src/ui/`.
    - If it is not a UI component, ask whether it is still worth extracting inside the feature.
 3. Extract only if it stays reasonably small.
    - Aim for components under 200 lines (not restricted, but recommended).
