@@ -2,10 +2,11 @@
 
 ## Overview
 
-Use this guide to configure React Navigation with the static API. Keep navigator files focused on route registration and type your screens from the navigator definition.
+Use this guide to set up React Navigation with the static API, pick stack, tabs, or drawer by how people move through the app, and keep navigation files focused on routes and options.
 
 ## Prerequisites
 
+- [structuring-project.md](./structuring-project.md)
 - [React Navigation — Hello React Navigation (static)](https://reactnavigation.org/docs/hello-react-navigation.md?config=static)
 
 ## Guidelines
@@ -20,26 +21,38 @@ src/navigation/
 ```
 
 - Put screens in `src/screens/`.
-- Let navigators register screens and define options only.
-- Split stacks into multiple files when the tree grows.
+- Register routes and screen options in `src/navigation/`.
+- Split navigators into more files when the tree grows.
 
-### Navigation rules
+### Choosing navigators
 
-- Use `@react-navigation/native-stack`.
-- Use `createStaticNavigation` at the root.
-- Do not add `NavigationContainer` when you use the static API.
-- Prefer navigator `options` over custom headers.
+Compose as needed (for example, a stack inside each tab).
 
-### Typing rules
+| Pattern         | Use it when                                                                                                                                                                                  |
+| --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Stack**       | Linear flow: list → detail, auth, onboarding, anything that pushes and pops.                                                                                                                 |
+| **Bottom tabs** | A few peer sections users switch between often. Native bottom tabs are experimental and mobile-only in the docs; use the classic bottom tab navigator from the same package if you need web. |
+| **Drawer**      | Many destinations, secondary navigation, or a slide-out menu fits the product.                                                                                                               |
 
-- Infer the param list with `StaticParamList<typeof MainStack>`.
-- Use `StaticScreenProps` in each screen.
-- Use `useNavigation()` instead of a `navigation` prop.
-- Keep `declare global` in a file that always compiles.
+Copy setup from each doc’s **Usage** section:
+
+- [Native stack — Usage](https://reactnavigation.org/docs/native-stack-navigator/#usage)
+- [Native bottom tabs — Usage](https://reactnavigation.org/docs/native-bottom-tab-navigator/#usage)
+- [Drawer — Usage](https://reactnavigation.org/docs/drawer-navigator/#usage)
+
+## Setup
+
+### Install packages
+
+Install `@react-navigation/native` and shared dependencies from [React Navigation — Getting started](https://reactnavigation.org/docs/getting-started). For each navigator you use, follow that navigator’s **Installation** section:
+
+- [Native stack — Installation](https://reactnavigation.org/docs/native-stack-navigator/#installation)
+- [Native bottom tabs — Installation](https://reactnavigation.org/docs/native-bottom-tab-navigator/#installation)
+- [Drawer — Installation](https://reactnavigation.org/docs/drawer-navigator/#installation)
 
 ## Examples
 
-### Render navigation once in `App.tsx`
+### Render navigation in `App.tsx`
 
 ```tsx
 export default function App() {
@@ -47,27 +60,18 @@ export default function App() {
 }
 ```
 
-### Type screen params
-
-```tsx
-import type { StaticScreenProps } from "@react-navigation/native";
-
-type WorkshopDetailProps = StaticScreenProps<{ workshopId: string }>;
-
-export function WorkshopDetailScreen({ route }: WorkshopDetailProps) {
-  return null;
-}
-```
-
-### Navigate with typed route names
+### Navigate from a screen
 
 ```tsx
 import { useNavigation } from "@react-navigation/native";
 
 export function HomeScreen() {
   const navigation = useNavigation();
-  const open = () =>
+
+  const openDetail = () => {
     navigation.navigate("WorkshopDetail", { workshopId: "123" });
+  };
+
   return null;
 }
 ```
