@@ -1,0 +1,298 @@
+#!/usr/bin/env node
+/**
+ * Add or inspect a shadcn/ui registry component for a Vite React web app (primitives in src/ui).
+ *
+ * Usage (from your project root):
+ *   node <path-to-skill>/scripts/add-registry-component.js <component-name-or-url> [more...] [--root <project-dir>]
+ *
+ * Examples:
+ *   node .../add-registry-component.js button
+ *   node .../add-registry-component.js https://ui.shadcn.com/r/styles/new-york/button.json
+ *
+ * Options:
+ *   --root <dir>   Project root (default: cwd)
+ *
+ * Uses: npx shadcn@latest view <name-or-url>
+ * Schema: https://ui.shadcn.com/schema/registry-item.json
+ */
+
+const { execFileSync } = require("child_process");
+const fs = require("fs");
+const path = require("path");
+
+function parseArgs(argv) {
+  const args = { root: process.cwd(), urls: [] };
+  for (let i = 2; i < argv.length; i += 1) {
+    const a = argv[i];
+    if (a === "--root") {
+      args.root = path.resolve(argv[i + 1] || "");
+      i += 1;
+    } else if (!a.startsWith("-")) {
+      args.urls.push(a);
+    }
+  }
+  return args;
+}
+
+function parseRegistryJson(raw) {
+  const trimmed = raw.trim();
+  const fence = trimmed.match(/^```(?:json)?\s*([\s\S]*?)```$/m);
+  const jsonText = fence ? fence[1].trim() : trimmed;
+  return JSON.parse(jsonText);
+}
+
+function runView(nameOrUrl, cwd) {
+  return execFileSync("npx", ["shadcn@latest", "view", nameOrUrl], {
+    cwd,
+    encoding: "utf8",
+    maxBuffer: 20 * 1024 * 1024,
+    stdio: ["ignore", "pipe", "pipe"],
+  });
+}
+
+/**
+ * Registry dependency slug from shadcn metadata: pass through URLs; otherwise treat as component name for `shadcn view`.
+ */
+function resolveDependencyRef(dep) {
+  if (/^https?:\/\//i.test(dep)) return dep;
+  if (dep.startsWith("@")) {
+    throw new Error(
+      `Namespaced registry dependency "${dep}" needs an explicit URL; add it manually.`,
+    );
+  }
+  return dep.replace(/\.json$/i, "").replace(/^\//, "");
+}
+
+function transformSource(content, fromFilePath, componentsDir) {
+  let out = content;
+
+  // cn -> cx (import + calls); shadcn uses @/lib/utils — this stack uses cx there
+  out = out.replace(
+    /import\s*\{\s*cn\s*\}\s*from\s*['"][^'"]+['"]\s*;/g,
+    'import { cx } from "@/lib/utils";',
+  );
+  out = out.replace(/\bcn\s*\(/g, "cx(");
+
+  const relDir = path.dirname(fromFilePath);
+
+  function toRelativeImport(spec) {
+    const clean = spec.replace(/\.tsx?$/, "");
+    const target = path.join(componentsDir, clean);
+    let rel = path.relative(relDir, target);
+    if (!rel.startsWith(".")) rel = `./${rel}`;
+    return rel.replace(/\\/g, "/");
+  }
+
+  // Legacy RN registry paths
+  out = out.replace(
+    /from\s*['"]@\/registry\/nativewind\/components\/ui\/([^'"]+)['"]/g,
+    (_, spec) => `from '${toRelativeImport(spec)}'`,
+  );
+
+  // Default shadcn: @/components/ui/* -> relative under src/ui
+  out = out.replace(
+    /from\s*['"]@\/components\/ui\/([^'"]+)['"]/g,
+    (_, spec) => `from '${toRelativeImport(spec)}'`,
+  );
+
+  // Projects that alias ui to @/ui/* already
+  out = out.replace(
+    /from\s*['"]@\/ui\/([^'"]+)['"]/g,
+    (_, spec) => `from '${toRelativeImport(spec)}'`,
+  );
+
+  return out;
+}
+
+/** e.g. button, my-button, myButton -> Button, MyButton */
+function toPascalCaseStem(stem) {
+  const withBoundaries = stem.replace(/([a-z\d])([A-Z])/g, "$1-$2");
+  return withBoundaries
+    .split(/[-_\s]+/)
+    .filter(Boolean)
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+    .join("");
+}
+
+/** Component files (.ts/.tsx) are saved with a PascalCase basename. */
+function normalizeComponentFileName(filePath) {
+  const ext = path.extname(filePath);
+  if (!/\.tsx?$/i.test(ext)) return filePath;
+  const dir = path.dirname(filePath);
+  const stem = path.basename(filePath, ext);
+  const pascal = toPascalCaseStem(stem);
+  return path.join(dir, pascal + ext);
+}
+
+function targetPathForFile(projectRoot, fileMeta) {
+  let full;
+  if (fileMeta.target) {
+    full = path.join(projectRoot, fileMeta.target.replace(/^\~\//, ""));
+  } else {
+    const p = fileMeta.path || "";
+    const baseName = path.basename(p);
+    full = path.join(projectRoot, "src/ui", baseName);
+  }
+  return normalizeComponentFileName(full);
+}
+
+function npmInstall(projectRoot, deps, dev) {
+  if (!deps || deps.length === 0) return;
+  const cmd = dev
+    ? ["npm", "install", "--save-dev", ...deps]
+    : ["npm", "install", ...deps];
+  execFileSync(cmd[0], cmd.slice(1), {
+    cwd: projectRoot,
+    stdio: "inherit",
+  });
+}
+
+function globalCssPath(projectRoot) {
+  const candidates = [
+    path.join(projectRoot, "src/styles/globals.css"),
+    path.join(projectRoot, "src/styles/global.css"),
+    path.join(projectRoot, "src/theme.css"),
+  ];
+  for (const p of candidates) {
+    if (fs.existsSync(p)) return p;
+  }
+  return path.join(projectRoot, "src/styles/globals.css");
+}
+
+function appendCssVars(projectRoot, cssVars) {
+  if (!cssVars) return;
+  const themePath = globalCssPath(projectRoot);
+  const blocks = [];
+  if (cssVars.theme && Object.keys(cssVars.theme).length) {
+    blocks.push(
+      `/* registry merge: theme */\n  :root {\n${Object.entries(cssVars.theme)
+        .map(([k, v]) => `    --${k}: ${v};`)
+        .join("\n")}\n  }`,
+    );
+  }
+  if (cssVars.light && Object.keys(cssVars.light).length) {
+    blocks.push(
+      `/* registry merge: light */\n  :root {\n${Object.entries(cssVars.light)
+        .map(([k, v]) => `    --${k}: ${v};`)
+        .join("\n")}\n  }`,
+    );
+  }
+  if (cssVars.dark && Object.keys(cssVars.dark).length) {
+    blocks.push(
+      `/* registry merge: dark */\n  .dark {\n${Object.entries(cssVars.dark)
+        .map(([k, v]) => `    --${k}: ${v};`)
+        .join("\n")}\n  }`,
+    );
+  }
+  if (blocks.length === 0) return;
+  const banner = "\n\n@layer base {\n" + blocks.join("\n\n") + "\n}\n";
+  fs.mkdirSync(path.dirname(themePath), { recursive: true });
+  if (fs.existsSync(themePath)) {
+    fs.appendFileSync(themePath, banner, "utf8");
+  } else {
+    fs.writeFileSync(themePath, `@import "tailwindcss";\n${banner}`, "utf8");
+  }
+}
+
+function logTailwindPatch(projectRoot, item) {
+  if (!item.tailwind && !item.css) return;
+  const patchDir = path.join(projectRoot, "src/.registry-patches");
+  fs.mkdirSync(patchDir, { recursive: true });
+  const safeName = String(item.name || "item").replace(/[^a-z0-9-_]/gi, "_");
+  const out = path.join(patchDir, `${safeName}.json`);
+  fs.writeFileSync(
+    out,
+    JSON.stringify({ tailwind: item.tailwind, css: item.css }, null, 2),
+    "utf8",
+  );
+  console.warn(
+    `[add-registry-component] Wrote tailwind/css fragment to ${out} — merge into globals.css / Vite+Tailwind config if needed.`,
+  );
+}
+
+function processRegistryRef(ref, projectRoot, visited, summary) {
+  if (visited.has(ref)) return;
+  visited.add(ref);
+
+  console.error(`[add-registry-component] view ${ref}`);
+  let raw;
+  try {
+    raw = runView(ref, projectRoot);
+  } catch (e) {
+    console.error(e.stderr?.toString?.() || e.message);
+    throw new Error(`shadcn view failed for ${ref}`);
+  }
+
+  const item = parseRegistryJson(raw);
+  summary.items.push(item.name || ref);
+
+  npmInstall(projectRoot, item.dependencies, false);
+  npmInstall(projectRoot, item.devDependencies, true);
+  appendCssVars(projectRoot, item.cssVars);
+  logTailwindPatch(projectRoot, item);
+
+  const componentsDir = path.join(projectRoot, "src/ui");
+
+  if (Array.isArray(item.files)) {
+    for (const file of item.files) {
+      const content = file.content;
+      if (!content) {
+        console.warn(
+          `[add-registry-component] Skip file without content: ${file.path || file.target || "?"}`,
+        );
+        continue;
+      }
+      const dest = targetPathForFile(projectRoot, file);
+      const transformed = transformSource(content, dest, componentsDir);
+      fs.mkdirSync(path.dirname(dest), { recursive: true });
+      fs.writeFileSync(dest, transformed, "utf8");
+      summary.filesWritten.push(dest);
+    }
+  }
+
+  const deps = item.registryDependencies || [];
+  for (const dep of deps) {
+    let depRef;
+    try {
+      depRef = resolveDependencyRef(dep);
+    } catch (err) {
+      console.warn(`[add-registry-component] ${err.message}`);
+      summary.skippedDeps.push(dep);
+      continue;
+    }
+    const baseName = path.basename(depRef, ".json");
+    const pascalBase = toPascalCaseStem(baseName.split("/").pop() || baseName);
+    const tsx = path.join(componentsDir, `${pascalBase}.tsx`);
+    const ts = path.join(componentsDir, `${pascalBase}.ts`);
+    if (fs.existsSync(tsx) || fs.existsSync(ts)) {
+      console.error(`[add-registry-component] skip existing ${pascalBase} in src/ui`);
+      continue;
+    }
+    processRegistryRef(depRef, projectRoot, visited, summary);
+  }
+}
+
+function main() {
+  const { root, urls } = parseArgs(process.argv);
+  if (urls.length === 0) {
+    console.error(
+      "Usage: node add-registry-component.js <component-name|url> [more...] [--root <project-dir>]",
+    );
+    process.exit(1);
+  }
+
+  const visited = new Set();
+  const summary = { items: [], filesWritten: [], skippedDeps: [] };
+  const projectRoot = path.resolve(root);
+
+  for (const u of urls) {
+    const ref = /^https?:\/\//i.test(u)
+      ? u
+      : u.replace(/\.json$/i, "").replace(/^\//, "");
+    processRegistryRef(ref, projectRoot, visited, summary);
+  }
+
+  console.log(JSON.stringify(summary, null, 2));
+}
+
+main();

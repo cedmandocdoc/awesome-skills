@@ -28,6 +28,16 @@ Opinionated ecosystem for building React Native apps with a consistent architect
 - Architecture, library, or folder-structure decisions for Expo React Native apps
 - UI, state, API, routing/navigation stacks (screens + route params), or styling work that should follow this skill's conventions
 
+## Companion skill
+
+For **async `useEffect`**, **TanStack Form**, **es-toolkit / date-fns**, and **overriding `className`** (NativeWind / Tailwind), use together with [building-react-application](../building-react-application/SKILL.md).
+
+Install it:
+
+```bash
+npx skills add cedmandocdoc/awesome-skills/skills/building-react-application
+```
+
 ## References
 
 | Task / Scenario           | Doc                                                                                                                                                                                                                   | When to use                                                     |
