@@ -2,7 +2,7 @@
 
 ## Overview
 
-Use this guide to set up ESLint and Prettier for Expo and React Native TypeScript projects. Let ESLint catch correctness issues and let Prettier handle formatting.
+Use this guide to set up ESLint and Prettier for **React TypeScript** projects (Vite web apps or Expo / React Native). Let ESLint catch correctness issues and let Prettier handle formatting.
 
 ## Guidelines
 
@@ -23,14 +23,15 @@ Use this guide to set up ESLint and Prettier for Expo and React Native TypeScrip
 - Enable `react/jsx-no-leaked-render`.
 - Enforce `@typescript-eslint/consistent-type-imports`.
 - Ignore intentionally unused arguments with a leading `_`.
-- Use `react-native/no-inline-styles` and `react-native/no-unused-styles` as warnings.
 
-## Setup
+## Setup — React web (Vite)
+
+Add React Hooks linting on top of the baseline.
 
 ### Install dependencies
 
 ```bash
-npm install --save-dev eslint prettier @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint-plugin-react eslint-plugin-react-native
+npm install --save-dev eslint prettier @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint-plugin-react eslint-plugin-react-hooks
 ```
 
 ### Add a Prettier config
@@ -44,6 +45,53 @@ npm install --save-dev eslint prettier @typescript-eslint/eslint-plugin @typescr
   "tabWidth": 2
 }
 ```
+
+### Add ESLint rules (example)
+
+```json
+{
+  "rules": {
+    "react/jsx-no-leaked-render": [
+      "error",
+      { "validStrategies": ["ternary", "coerce"] }
+    ],
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "@typescript-eslint/consistent-type-imports": "error",
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      { "argsIgnorePattern": "^_" }
+    ]
+  }
+}
+```
+
+### Add package scripts
+
+```json
+{
+  "scripts": {
+    "lint": "eslint src/ --ext .ts,.tsx",
+    "format": "prettier --write src/"
+  }
+}
+```
+
+**TanStack Router:** ignore generated `routeTree.gen.ts` in ESLint and Prettier. See [linting.md](../../building-react-web-application/references/linting.md) in **building-react-web-application** when that file exists in the project.
+
+## Setup — React Native (Expo)
+
+Add React Native–specific rules on top of the baseline.
+
+### Install dependencies
+
+```bash
+npm install --save-dev eslint prettier @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint-plugin-react eslint-plugin-react-native
+```
+
+### Add a Prettier config
+
+Use the same Prettier config as in the React web section above.
 
 ### Add ESLint rules
 

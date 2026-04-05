@@ -2,100 +2,31 @@
 
 ## Overview
 
-Use this guide to set up ESLint and Prettier for **Vite + React** TypeScript projects. Let ESLint catch correctness issues and let Prettier handle formatting.
+Use this guide for **TanStack Router** specifics in this stack: keep the generated route tree out of ESLint and Prettier so tooling does not rewrite generated code. For **baseline** ESLint, Prettier, React rules, and React Hooks, follow the companion skill doc linked below.
+
+## Prerequisites
+
+- [linting.md](../../building-react-application/references/linting.md) in **building-react-application** (ESLint, Prettier, Vite + React web setup)
+- [configuring-routing.md](./configuring-routing.md) for where `routeTree.gen.ts` comes from
+- [TanStack Router — Installation with Vite](https://tanstack.com/router/latest/docs/installation/with-vite.md) for official ignore patterns and plugin setup
 
 ## Guidelines
 
-### Structure
+### Generated route tree
 
-- Keep ESLint and Prettier config at the project root.
-- Point scripts at the real source directory, usually `src/`.
-- Use the same file extensions in scripts and editor tooling.
-
-### Generated files
-
-- **Ignore** TanStack Router’s generated route tree (for example `src/routeTree.gen.ts`) in ESLint and Prettier so tooling does not rewrite generated code. See [TanStack Router — Installation with Vite](https://tanstack.com/router/latest/docs/installation/with-vite.md) for links to ignore patterns.
-
-### Tool ownership
-
-- Let Prettier own formatting.
-- Let ESLint own correctness, React rules, and TypeScript rules.
-- Do not duplicate Prettier rules in ESLint.
-
-### Baseline rules
-
-- Enable `react/jsx-no-leaked-render`.
-- Enforce `@typescript-eslint/consistent-type-imports`.
-- Ignore intentionally unused arguments with a leading `_`.
-- Add `eslint-plugin-react-hooks` and enforce the rules of hooks.
+- `routeTree.gen.ts` (typical path: `src/routeTree.gen.ts`) is **generated**. Do not hand-edit it.
+- **Lint / format ignore:** exclude it from ESLint and Prettier (or Biome) so generated code is not rewritten. The TanStack doc links patterns for [Prettier ignore](https://prettier.io/docs/en/ignore.html#ignoring-files) and [ESLint ignore](https://eslint.org/docs/latest/use/configure/ignore#ignoring-files).
+- **VS Code:** optionally mark the file readonly and exclude from search/watch, as recommended in the installation doc, to avoid noisy diffs after renames.
 
 ## Setup
-
-### Install dependencies
-
-```bash
-npm install --save-dev eslint prettier @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint-plugin-react eslint-plugin-react-hooks
-```
-
-### Add a Prettier config
-
-```json
-{
-  "semi": true,
-  "singleQuote": true,
-  "trailingComma": "all",
-  "printWidth": 100,
-  "tabWidth": 2
-}
-```
-
-### Add ESLint rules (example)
-
-```json
-{
-  "rules": {
-    "react/jsx-no-leaked-render": [
-      "error",
-      { "validStrategies": ["ternary", "coerce"] }
-    ],
-    "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": "warn",
-    "@typescript-eslint/consistent-type-imports": "error",
-    "@typescript-eslint/no-unused-vars": [
-      "error",
-      { "argsIgnorePattern": "^_" }
-    ]
-  }
-}
-```
 
 ### Ignore generated routes
 
 In `eslint.config` or `.eslintignore`, exclude `**/routeTree.gen.ts`. Add the same pattern to `.prettierignore`.
 
-### Add package scripts
-
-```json
-{
-  "scripts": {
-    "lint": "eslint src/ --ext .ts,.tsx",
-    "format": "prettier --write src/"
-  }
-}
-```
-
 ## Usage
 
-### Run checks locally
+### CI and editors
 
-```bash
-npm run lint
-npm run lint -- --fix
-npm run format
-```
-
-### Use the same rules in CI and editors
-
-- Run `npm run lint` in CI without `--fix`.
-- Optionally add `prettier --check src/` to CI.
-- Enable ESLint and Prettier in the editor so local behavior matches CI.
+- Apply the same ignore patterns in CI as locally so `npm run lint` and Prettier checks do not touch the generated file.
+- After changing route files, regenerate (or let the dev server regenerate) and confirm the generated file stays ignored.

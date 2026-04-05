@@ -30,7 +30,7 @@ Opinionated ecosystem for building React Native apps with a consistent architect
 
 ## Companion skill
 
-For **async `useEffect`**, **TanStack Form**, **es-toolkit / date-fns**, and **overriding `className`** (NativeWind / Tailwind), use together with [building-react-application](../building-react-application/SKILL.md).
+For **async `useEffect`**, **TanStack Form**, **ESLint / Prettier**, **es-toolkit / date-fns**, and **overriding `className`** (NativeWind / Tailwind), use together with [building-react-application](../building-react-application/SKILL.md).
 
 Install it:
 
@@ -60,4 +60,4 @@ npx skills add cedmandocdoc/awesome-skills/skills/building-react-application
 | **Drawer navigation**     | [React Navigation — Drawer Navigator](https://reactnavigation.org/docs/drawer-navigator.md)                                                                                                                           | `@react-navigation/drawer`, gestures, Reanimated, custom drawer               |
 | **Keyboard handling**     | [react-native-keyboard-controller — Components overview](https://kirillzyusko.github.io/react-native-keyboard-controller/docs/guides/components-overview)                                                             | Avoidance, sticky views, scroll sync, toolbars                  |
 | **Splash screen**         | [Expo SplashScreen](https://docs.expo.dev/versions/latest/sdk/splash-screen/)                                                                                                                                         | Config plugin, assets, `preventAutoHideAsync`, testing          |
-| **Linting & formatting**  | [linting.md](./references/linting.md)                                                                                                                                                                                 | ESLint, Prettier, lint errors                                   |
+| **Linting & formatting**  | [linting.md](../building-react-application/references/linting.md)                                                                                                                                                   | ESLint, Prettier, React Native rules                            |

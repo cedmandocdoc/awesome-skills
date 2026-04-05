@@ -29,7 +29,7 @@ Opinionated ecosystem for building Vite-based React SPAs with a consistent archi
 
 ## Companion skill
 
-For **async `useEffect`**, **TanStack Form**, **es-toolkit / date-fns**, and **overriding `className`** with Tailwind, use together with [building-react-application](../building-react-application/SKILL.md).
+For **async `useEffect`**, **TanStack Form**, **ESLint / Prettier**, **es-toolkit / date-fns**, and **overriding `className`** with Tailwind, use together with [building-react-application](../building-react-application/SKILL.md).
 
 Install it:
 
@@ -57,4 +57,4 @@ npx skills add cedmandocdoc/awesome-skills/skills/building-react-application
 | **State management**        | [managing-state.md](./references/managing-state.md)                                                                                                                                                                                                                       | Query vs Zustand vs local vs route state                                |
 | **API clients**             | [creating-api.md](./references/creating-api.md), [setting-up-axios.md](./references/setting-up-axios.md)                                                                                                                                                                  | Axios, feature hooks, `src/api/`                                        |
 | **Adding UI from registry** | [scripts/add-registry-component.js](./scripts/add-registry-component.js) (`npx shadcn@latest view` under the hood; no `components.json`)                                                                                                                                   | Vendor registry output into `src/ui/` with `cx` + path fixes            |
-| **Linting & formatting**    | [linting.md](./references/linting.md)                                                                                                                                                                                                                                     | ESLint, Prettier, generated `routeTree.gen.ts`                          |
+| **Linting & formatting**    | [linting.md](./references/linting.md)                                                                                                                                                                                                                                     | Ignore `routeTree.gen.ts`; baseline ESLint/Prettier via companion doc     |
