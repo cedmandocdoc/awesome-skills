@@ -1,4 +1,4 @@
-# Architecture
+# Structuring Project
 
 ## Overview
 
@@ -60,7 +60,7 @@ Add `@/*` to `tsconfig.json` and keep your bundler config aligned.
 }
 ```
 
-## Usage
+## Examples
 
 ### Export a feature barrel
 

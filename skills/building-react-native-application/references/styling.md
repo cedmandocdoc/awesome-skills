@@ -2,7 +2,11 @@
 
 ## Overview
 
-Use this guide to set up NativeWind with Expo and apply Tailwind utilities through `className`. Keep styling token-driven and extend the theme when a value is shared.
+Use this guide to apply Tailwind utilities through `className` with NativeWind. Keep styling token-driven and extend the theme when a value is shared.
+
+## Prerequisites
+
+- [setting-up-nativewind.md](./setting-up-nativewind.md)
 
 ## Guidelines
 
@@ -22,82 +26,11 @@ Use this guide to set up NativeWind with Expo and apply Tailwind utilities throu
 - Use mobile-first responsive utilities such as `sm:`, `md:`, `lg:`, and `xl:` when NativeWind supports them.
 - Use `gap` on parent layouts instead of margin chains on children.
 - Use `@media ios { }` and `@media android { }` in `global.css` when you need platform-specific CSS.
+- Keep `global.css` as the only CSS file imported by `App.tsx`.
+- Put token layers in `src/theme.css` and import that file from `global.css`.
+- Extend `tailwind.config.js`; do not replace an existing config.
 
-## Setup
-
-### Install NativeWind
-
-```bash
-npm install nativewind react-native-reanimated react-native-safe-area-context
-npm install --save-dev tailwindcss@^3.4.17 prettier-plugin-tailwindcss@^0.5.11 babel-preset-expo
-```
-
-### Install class utilities
-
-Install `class-variance-authority` when you use variants or class merging with `cva` and `cx`.
-
-```bash
-npx expo install class-variance-authority clsx tailwind-merge
-```
-
-### Create `tailwind.config.js`
-
-```js
-/** @type {import('tailwindcss').Config} */
-module.exports = {
-  content: ["./App.tsx", "./src/**/*.{ts,tsx}"],
-  presets: [require("nativewind/preset")],
-  theme: {
-    extend: {},
-  },
-  plugins: [],
-};
-```
-
-### Create `global.css`
-
-```css
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-```
-
-### Configure Babel and Metro
-
-```js
-module.exports = function (api) {
-  api.cache(true);
-  return {
-    presets: [
-      ["babel-preset-expo", { jsxImportSource: "nativewind" }],
-      "nativewind/babel",
-    ],
-  };
-};
-```
-
-```js
-const { getDefaultConfig } = require("expo/metro-config");
-const { withNativeWind } = require("nativewind/metro");
-
-const config = getDefaultConfig(__dirname);
-
-module.exports = withNativeWind(config, { input: "./global.css" });
-```
-
-### Import the stylesheet
-
-```tsx
-import "./global.css";
-```
-
-### Add NativeWind types if needed
-
-```ts
-/// <reference types="nativewind/types" />
-```
-
-## Usage
+## Examples
 
 ### Start with utility classes
 

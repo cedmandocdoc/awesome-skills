@@ -1,4 +1,4 @@
-# State
+# Managing State
 
 ## Overview
 
@@ -55,7 +55,7 @@ export default function App() {
 }
 ```
 
-## Usage
+## Examples
 
 ### Create a query hook
 

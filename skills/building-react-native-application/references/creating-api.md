@@ -1,8 +1,12 @@
-# API
+# Creating API
 
 ## Overview
 
 Use this guide to keep API code small, typed, and independent from React. Put HTTP clients and request functions in `src/api/`, then call them from feature hooks.
+
+## Prerequisites
+
+- [setting-up-axios.md](./setting-up-axios.md)
 
 ## Guidelines
 
@@ -34,49 +38,7 @@ src/api/<backend-name>/
 - Read status and payload from `err.response`.
 - Do not create a custom API error class unless the app needs one.
 
-## Setup
-
-### Install Axios
-
-```bash
-npm install axios
-```
-
-### Create a client
-
-```ts
-import axios from "axios";
-import type { AxiosInstance, AxiosResponse } from "axios";
-
-interface ClientConfig {
-  baseURL: string;
-  withCredentials?: boolean;
-}
-
-export function createClient({
-  baseURL,
-  withCredentials = true,
-}: ClientConfig): AxiosInstance {
-  return axios.create({ baseURL, timeout: 30000, withCredentials });
-}
-
-export async function responseData<T>(
-  promise: Promise<AxiosResponse<T>>,
-): Promise<T> {
-  return (await promise).data;
-}
-```
-
-### Add environment variables
-
-- Use `EXPO_PUBLIC_*` for public API config only.
-- Do not store secrets in `EXPO_PUBLIC_*` variables.
-
-```bash
-EXPO_PUBLIC_API_URL=http://localhost:3000
-```
-
-## Usage
+## Examples
 
 ### Write typed API functions
 

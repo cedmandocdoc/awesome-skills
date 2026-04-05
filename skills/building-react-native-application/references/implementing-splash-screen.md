@@ -1,10 +1,14 @@
-# Splash screen
+# Implementing Splash Screen
 
 ## Overview
 
 Use this guide to control the native splash screen with [`expo-splash-screen`](https://docs.expo.dev/versions/latest/sdk/splash-screen/). The module hides the splash automatically when the app is ready; use manual control only when loading must finish before first paint.
 
 For assets and sizing, see [Splash screen and app icon](https://docs.expo.dev/develop/user-interface/splash-screen-and-app-icon/#splash-screen) in the Expo docs.
+
+## Prerequisites
+
+- [setting-up-splash-screen.md](./setting-up-splash-screen.md)
 
 ## Guidelines
 
@@ -30,54 +34,7 @@ From SDK 52, Android splash behavior changed. [Expo Go](https://docs.expo.dev/ve
 
 - Optional fade-out uses `SplashScreen.setOptions({ fade, duration })`. **Fade is iOS-only** in the documented API; set options where the app boots (for example root layout).
 
-## Setup
-
-### Install
-
-```bash
-npx expo install expo-splash-screen
-```
-
-In an existing bare React Native app, install [Expo modules](https://docs.expo.dev/bare/installing-expo-modules) first if the project is not already Expo-enabled. For native project edits without CNG, see the [package README](https://github.com/expo/expo/tree/main/packages/expo-splash-screen#-installation-in-bare-react-native-projects).
-
-### Config plugin (recommended)
-
-```json
-{
-  "expo": {
-    "plugins": [
-      [
-        "expo-splash-screen",
-        {
-          "backgroundColor": "#232323",
-          "image": "./assets/splash-icon.png",
-          "dark": {
-            "image": "./assets/splash-icon-dark.png",
-            "backgroundColor": "#000000"
-          },
-          "imageWidth": 200
-        }
-      ]
-    ]
-  }
-}
-```
-
-Common plugin options:
-
-| Property | Default | Notes |
-| -------- | ------- | ----- |
-| `backgroundColor` | `#ffffff` | Hex background. |
-| `image` | — | Path to logo or icon art. |
-| `imageWidth` | `100` | Logical width of the image. |
-| `resizeMode` | — | `contain`, `cover`, or `native`. |
-| `dark` | — | Same shape for dark mode. |
-| `android` / `ios` | — | Platform-specific overrides. |
-| `enableFullScreenImage_legacy` | `false` | iOS only; migration helper; avoid for new work. |
-
-Rebuild the native app after changing plugin output.
-
-## Usage
+## Examples
 
 ### Optional fade animation
 
