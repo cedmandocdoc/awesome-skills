@@ -90,4 +90,4 @@ npm run format
 
 - Run `npm run lint` in CI without `--fix`.
 - Optionally add `prettier --check src/` to CI.
-- Enable ESLint and Prettier in your editor so local behavior matches CI.
+- Enable ESLint and Prettier in the editor so local behavior matches CI.

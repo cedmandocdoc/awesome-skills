@@ -38,10 +38,10 @@ node path/to/react-native/scripts/add-registry-component.js "https://reactnative
 
 ### Mental model for categorization and extraction
 
-Use this workflow when you are building a screen or feature:
+Use this workflow when building a screen or feature:
 
 1. Identify blocks in the UI for the current task.
-   - Split the UI you are manually composing into the smallest recurring "rendering blocks" you can name.
+   - Split the UI being manually composed into the smallest recurring "rendering blocks" that can be named.
 2. Check for reuse and presentation-only fit.
    - If a block is likely reusable _and_ can stay presentation-only, categorize it as a **UI component** and place it in `src/ui/`.
    - If it is not a UI component, ask whether it is still worth extracting inside the feature.

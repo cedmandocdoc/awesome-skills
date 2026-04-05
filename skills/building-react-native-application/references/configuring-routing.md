@@ -31,7 +31,7 @@ Compose as needed (for example, a stack inside each tab).
 | Pattern         | Use it when                                                                                                                                                                                  |
 | --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Stack**       | Linear flow: list → detail, auth, onboarding, anything that pushes and pops.                                                                                                                 |
-| **Bottom tabs** | A few peer sections users switch between often. Native bottom tabs are experimental and mobile-only in the docs; use the classic bottom tab navigator from the same package if you need web. |
+| **Bottom tabs** | A few peer sections users switch between often. Native bottom tabs are experimental and mobile-only in the docs; use the classic bottom tab navigator from the same package if web support is required. |
 | **Drawer**      | Many destinations, secondary navigation, or a slide-out menu fits the product.                                                                                                               |
 
 Copy setup from each doc’s **Usage** section:
@@ -44,7 +44,7 @@ Copy setup from each doc’s **Usage** section:
 
 ### Install packages
 
-Install `@react-navigation/native` and shared dependencies from [React Navigation — Getting started](https://reactnavigation.org/docs/getting-started). For each navigator you use, follow that navigator’s **Installation** section:
+Install `@react-navigation/native` and shared dependencies from [React Navigation — Getting started](https://reactnavigation.org/docs/getting-started). For each navigator in use, follow that navigator’s **Installation** section:
 
 - [Native stack — Installation](https://reactnavigation.org/docs/native-stack-navigator/#installation)
 - [Native bottom tabs — Installation](https://reactnavigation.org/docs/native-bottom-tab-navigator/#installation)

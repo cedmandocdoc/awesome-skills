@@ -2,7 +2,7 @@
 
 ## Overview
 
-Use this guide to organize your React Native app by responsibility. Keep routing, UI, features, API code, and state separate so each layer stays easy to change.
+Use this guide to organize the React Native app by responsibility. Keep routing, UI, features, API code, and state separate so each layer stays easy to change.
 
 ## Guidelines
 
@@ -10,7 +10,7 @@ Use this guide to organize your React Native app by responsibility. Keep routing
 
 - Keep app code in `src/`.
 - Keep `App.tsx` at the project root and import app modules from `src/`.
-- Use hyphen-case for feature folders.
+- Use kebab-case for feature folders.
 
 | Area                           | Purpose                                  |
 | ------------------------------ | ---------------------------------------- |
@@ -47,7 +47,7 @@ Use this guide to organize your React Native app by responsibility. Keep routing
 
 ### Configure the path alias
 
-Add `@/*` to `tsconfig.json` and keep your bundler config aligned.
+Add `@/*` to `tsconfig.json` and keep the bundler config aligned.
 
 ```json
 {

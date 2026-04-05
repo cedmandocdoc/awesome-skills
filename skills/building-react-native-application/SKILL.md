@@ -24,7 +24,7 @@ Opinionated ecosystem for building React Native apps with a consistent architect
 ## When to use
 
 - New Expo-based React Native projects (TypeScript + NativeWind + React Navigation + TanStack Query)
-- React Native tasks in an existing project that already follows [references/structuring-project.md](references/structuring-project.md)
+- React Native tasks in an existing project that already follows [structuring-project.md](./references/structuring-project.md)
 - Architecture, library, or folder-structure decisions for Expo React Native apps
 - UI, state, API, routing/navigation stacks (screens + route params), or styling work that should follow this skill's conventions
 
@@ -34,7 +34,7 @@ Opinionated ecosystem for building React Native apps with a consistent architect
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
 | **Project structure**     | [structuring-project.md](./references/structuring-project.md)                                                                                                                                                         | Organizing folders, module boundaries, imports                  |
 | **Environment variables** | [managing-environment.md](./references/managing-environment.md)                                                                                                                                                       | Per-module `env.ts`, Zod validation, Expo `EXPO_PUBLIC_*`       |
-| **Styling**               | [styling.md](./references/styling.md), [styling-preference.md](./references/styling-preference.md), [NativeWind — Installation](https://www.nativewind.dev/docs/getting-started/installation)                                                                                      | NativeWind install, Metro/Babel; utilities & tokens; prefer style guide and design tokens |
+| **Styling**               | [styling.md](./references/styling.md), [styling-preference.md](./references/styling-preference.md), [NativeWind — Installation](https://www.nativewind.dev/docs/getting-started/installation) | NativeWind install, Metro/Babel; utilities & tokens; prefer style guide and design tokens |
 | **Theming**               | [setting-up-theming.md](./references/setting-up-theming.md), [setting-up-tailwind-theme.md](./references/setting-up-tailwind-theme.md), [setting-up-navigation-theme.md](./references/setting-up-navigation-theme.md), [reusing-navigation-background.md](./references/reusing-navigation-background.md) | Tokens, Tailwind extend, nav theme; avoid duplicate `bg-background` on screens |
 | **Fonts**                 | [Expo — Fonts](https://docs.expo.dev/develop/user-interface/fonts/index.md)                                                                                                                                           | Local/Google fonts, `expo-font` plugin vs `useFonts`            |
 | **Component placement**   | [placing-component.md](./references/placing-component.md)                                                                                                                                                             | Deciding `src/ui/` vs `src/features/`                           |

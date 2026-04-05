@@ -49,7 +49,7 @@ Some teams categorize features based on product language (e.g. "billing", "onboa
 ### Module size heuristic
 
 - If a feature folder becomes hard to reason about, split it into smaller feature modules and compose them from the screen feature.
-- If you repeatedly compose the same pieces in multiple screens, that repetition is usually a signal to extract a reusable feature module.
+- When the same pieces are repeatedly composed across multiple screens, that repetition is usually a signal to extract a reusable feature module.
 
 ### Export contract
 

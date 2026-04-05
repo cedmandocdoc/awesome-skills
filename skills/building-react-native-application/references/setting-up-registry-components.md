@@ -18,7 +18,7 @@ npx expo install lucide-react-native
 
 ### Update the default inlined `rem` value
 
-Change the default rem value by setting `inlineRem` in your `metro.config.js`:
+Change the default rem value by setting `inlineRem` in the project’s `metro.config.js`:
 
 ```js
 withNativeWind(config, { input: "./global.css", inlineRem: 16 });
@@ -26,7 +26,7 @@ withNativeWind(config, { input: "./global.css", inlineRem: 16 });
 
 ### Add the portal host
 
-Render `PortalHost` as the last child inside your root providers.
+Render `PortalHost` as the last child inside the root providers.
 
 ```tsx
 import { PortalHost } from "@rn-primitives/portal";

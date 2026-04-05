@@ -25,7 +25,7 @@ Use this guide to apply Tailwind utilities through `className` with NativeWind. 
 - Extend `tailwind.config.js` when a value is reused.
 - Use mobile-first responsive utilities such as `sm:`, `md:`, `lg:`, and `xl:` when NativeWind supports them.
 - Use `gap` on parent layouts instead of margin chains on children.
-- Use `@media ios { }` and `@media android { }` in `global.css` when you need platform-specific CSS.
+- Use `@media ios { }` and `@media android { }` in `global.css` when platform-specific CSS is required.
 - Keep `global.css` as the only CSS file imported by `App.tsx`.
 - Put token layers in `src/theme.css` and import that file from `global.css`.
 - Extend `tailwind.config.js`; do not replace an existing config.
@@ -58,7 +58,7 @@ const pill = cva("rounded-full px-3 py-1", {
 
 ### Merge classes with `cx`
 
-Use `cx` when you combine base classes, variants, and overrides.
+Use `cx` when combining base classes, variants, and overrides.
 
 ```tsx
 import { cx } from "class-variance-authority";

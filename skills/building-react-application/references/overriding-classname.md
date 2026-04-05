@@ -1,4 +1,4 @@
-# Overriding component `className`
+# Overriding `className` on shared components
 
 ## Overview
 

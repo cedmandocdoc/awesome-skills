@@ -1,4 +1,4 @@
-# Handling Async in useEffect
+# Handling async in `useEffect`
 
 ## Overview
 
