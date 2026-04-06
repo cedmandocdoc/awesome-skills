@@ -6,6 +6,10 @@ Use this guide to write UI and feature components. Keep reusable UI simple and p
 
 For naming conventions, see [naming-component.md](./naming-component.md).
 
+## Prerequisites
+
+- [abstracting-component.md](./abstracting-component.md) — `src/ui/` vs feature components, registry-first UI, presentation-only rules
+
 ## Guidelines
 
 ### Component rules

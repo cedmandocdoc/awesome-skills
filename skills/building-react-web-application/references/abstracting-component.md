@@ -15,11 +15,7 @@ Use this guide to decide whether a component should be a shared UI primitive in 
 
 - Use **registry-backed primitives first** before creating a custom one from scratch.
   - Check `src/ui/` for an existing shared primitive.
-  - If it is missing, add it with **[`add-registry-component.js`](../scripts/add-registry-component.js)** (uses `npx shadcn@latest view` under the hood and writes into **`src/ui/`** with **`cx`** and path fixes). Pass a component name such as `button` or `dialog`, or a full registry URL when needed.
-
-    ```bash
-    node path/to/building-react-web-application/scripts/add-registry-component.js button
-    ```
+  - If it is missing, follow [adding-registry-components.md](./adding-registry-components.md): validate with `npx shadcn@latest view`, run the add script when the registry item checks out, or create the UI manually when it does not. That flow writes into **`src/ui/`** with **`cx`** and path fixes.
 
 - Keep UI components _presentation-only_.
   - No business logic.
@@ -27,7 +23,7 @@ Use this guide to decide whether a component should be a shared UI primitive in 
   - No feature-specific hooks/state that determine product behavior.
   - Accept props and render UI; move "what to show" decisions to callers.
 
-- Normalize **`cn` → `cx`**: registry snippets often use `cn`. This stack imports **`cx`** from **`class-variance-authority`**; the add-registry script rewrites imports and calls when vendoring files.
+- Normalize **`cn` → `cx`**: registry snippets often use `cn`. This stack imports **`cx`** from **`class-variance-authority`**; the add script in [adding-registry-components.md](./adding-registry-components.md) rewrites imports and calls when vendoring files.
 
 ### When building feature components
 

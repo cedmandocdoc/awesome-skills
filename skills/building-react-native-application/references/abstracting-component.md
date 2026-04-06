@@ -13,19 +13,17 @@ Use this guide to decide whether a component should be a shared UI primitive in 
 
 ### When building UI components
 
-- Use registry components first before creating a custom one.
+- Use **registry-backed primitives first** before creating a custom one from scratch.
   - Check `src/ui/` for an existing shared primitive.
-  - If it is missing, add it from the registry. Follow [setting-up-registry-components.md](./setting-up-registry-components.md) if the app has not had registry shell setup yet; then run:
-
-```bash
-node path/to/react-native/scripts/add-registry-component.js "https://reactnativereusables.com/r/nativewind/button.json"
-```
+  - If it is missing, follow [setting-up-registry-components.md](./setting-up-registry-components.md) if the app has not had registry shell setup yet. Then follow [adding-registry-components.md](./adding-registry-components.md): validate with `npx shadcn@latest view`, run the add script when the registry item checks out, or create the UI manually when it does not. That flow writes into **`src/ui/`** with **`cx`** and path fixes.
 
 - Keep UI components _presentation-only_.
   - No business logic.
   - No data fetching, mutations, or navigation decisions.
   - No feature-specific hooks/state that determine product behavior.
   - Accept props and render UI; move "what to show" decisions to callers.
+
+- Normalize **`cn` → `cx`**: registry snippets often use `cn`. This stack imports **`cx`** from **`class-variance-authority`**; the add script in [adding-registry-components.md](./adding-registry-components.md) rewrites imports and calls when vendoring files.
 
 ### When building feature components
 
