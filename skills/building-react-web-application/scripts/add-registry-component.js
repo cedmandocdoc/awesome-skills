@@ -91,7 +91,10 @@ function shadcnViewArgs(pm, projectRoot, nameOrUrl) {
   }
   if (pm === "yarn") {
     if (isYarnBerry(projectRoot)) {
-      return { file: "yarn", args: ["dlx", "shadcn@latest", "view", nameOrUrl] };
+      return {
+        file: "yarn",
+        args: ["dlx", "shadcn@latest", "view", nameOrUrl],
+      };
     }
     return { file: "npx", args: ["shadcn@latest", "view", nameOrUrl] };
   }
@@ -113,9 +116,7 @@ function packageInstall(projectRoot, deps, dev, pm) {
     args = dev ? ["add", "-d", ...deps] : ["add", ...deps];
   } else {
     file = "npm";
-    args = dev
-      ? ["install", "--save-dev", ...deps]
-      : ["install", ...deps];
+    args = dev ? ["install", "--save-dev", ...deps] : ["install", ...deps];
   }
   execFileSync(file, args, {
     cwd: projectRoot,
@@ -299,34 +300,43 @@ function processRegistryRef(ref, projectRoot, visited, summary, pm) {
     throw new Error(`shadcn view failed for ${ref}`);
   }
 
-  const item = parseRegistryJson(raw);
-  summary.items.push(item.name || ref);
-
-  packageInstall(projectRoot, item.dependencies, false, pm);
-  packageInstall(projectRoot, item.devDependencies, true, pm);
-  appendCssVars(projectRoot, item.cssVars);
-  logTailwindPatch(projectRoot, item);
-
+  const parsed = parseRegistryJson(raw);
+  const registryItems = Array.isArray(parsed) ? parsed : [parsed];
   const componentsDir = path.join(projectRoot, "src/ui");
 
-  if (Array.isArray(item.files)) {
-    for (const file of item.files) {
-      const content = file.content;
-      if (!content) {
-        console.warn(
-          `[add-registry-component] Skip file without content: ${file.path || file.target || "?"}`,
-        );
-        continue;
+  for (const item of registryItems) {
+    if (!item || typeof item !== "object") continue;
+    summary.items.push(item.name || ref);
+
+    packageInstall(projectRoot, item.dependencies, false, pm);
+    packageInstall(projectRoot, item.devDependencies, true, pm);
+    appendCssVars(projectRoot, item.cssVars);
+    logTailwindPatch(projectRoot, item);
+
+    if (Array.isArray(item.files)) {
+      for (const file of item.files) {
+        const content = file.content;
+        if (!content) {
+          console.warn(
+            `[add-registry-component] Skip file without content: ${file.path || file.target || "?"}`,
+          );
+          continue;
+        }
+        const dest = targetPathForFile(projectRoot, file);
+        const transformed = transformSource(content, dest, componentsDir);
+        fs.mkdirSync(path.dirname(dest), { recursive: true });
+        fs.writeFileSync(dest, transformed, "utf8");
+        summary.filesWritten.push(dest);
       }
-      const dest = targetPathForFile(projectRoot, file);
-      const transformed = transformSource(content, dest, componentsDir);
-      fs.mkdirSync(path.dirname(dest), { recursive: true });
-      fs.writeFileSync(dest, transformed, "utf8");
-      summary.filesWritten.push(dest);
     }
   }
 
-  const deps = item.registryDependencies || [];
+  const depSet = new Set();
+  for (const it of registryItems) {
+    if (!it || typeof it !== "object") continue;
+    for (const d of it.registryDependencies || []) depSet.add(d);
+  }
+  const deps = [...depSet];
   for (const dep of deps) {
     let depRef;
     try {
@@ -341,7 +351,9 @@ function processRegistryRef(ref, projectRoot, visited, summary, pm) {
     const tsx = path.join(componentsDir, `${pascalBase}.tsx`);
     const ts = path.join(componentsDir, `${pascalBase}.ts`);
     if (fs.existsSync(tsx) || fs.existsSync(ts)) {
-      console.error(`[add-registry-component] skip existing ${pascalBase} in src/ui`);
+      console.error(
+        `[add-registry-component] skip existing ${pascalBase} in src/ui`,
+      );
       continue;
     }
     processRegistryRef(depRef, projectRoot, visited, summary, pm);
