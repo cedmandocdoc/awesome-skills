@@ -9,6 +9,7 @@ For naming conventions, see [naming-component.md](./naming-component.md).
 ## Prerequisites
 
 - [abstracting-component.md](./abstracting-component.md) — `src/ui/` vs feature components, registry-first UI, presentation-only rules
+- [adding-registry-components.md](./adding-registry-components.md) — validate with `shadcn view`, run `add-registry-component.js`, manual fallback
 
 ## Guidelines
 
@@ -22,7 +23,32 @@ For naming conventions, see [naming-component.md](./naming-component.md).
 
 ## Examples
 
-### Create a shared primitive
+Prefer a registry-backed primitive when one exists; see [abstracting-component.md](./abstracting-component.md) and the full flow in [adding-registry-components.md](./adding-registry-components.md). Use hand-written `src/ui/` examples below when there is **no** suitable registry item (validation fails, no equivalent component, or you are composing patterns the registry does not ship).
+
+### Add a registry-backed primitive
+
+Validate the registry name or URL, then run the add script from the **app project root** (see [adding-registry-components.md](./adding-registry-components.md) for failure cases and `--root`).
+
+```bash
+npx shadcn@latest view button
+node path/to/building-react-web-application/scripts/add-registry-component.js button
+```
+
+You can pass a full registry item URL instead of a slug when your registry requires it. The script vendors files into `src/ui/` (for example `button.tsx`). Import with `@/ui/button` in routes and features.
+
+### Use primitives inside a feature
+
+```tsx
+import { Button } from "@/ui/button";
+
+export function WorkshopCta() {
+  return <Button>Join workshop</Button>;
+}
+```
+
+### Add a custom `src/ui/` primitive (no registry item)
+
+Use this shape when **no registry primitive fits** (or after you deliberately skip the registry path). Keep the component presentation-only.
 
 ```tsx
 import type { ReactNode } from "react";
@@ -55,19 +81,9 @@ export function Button({ tone, className, children, ...props }: ButtonProps) {
 }
 ```
 
-### Use primitives inside a feature
+### Split complex controls into parts (custom primitive)
 
-```tsx
-import { Button } from "@/ui/button";
-
-export function WorkshopCta() {
-  return <Button>Join workshop</Button>;
-}
-```
-
-### Split complex controls into parts
-
-Use explicit parts such as `Button`, `ButtonText`, and `ButtonIcon` instead of switching on `typeof children`.
+Use explicit parts such as `Button`, `ButtonText`, and `ButtonIcon` instead of switching on `typeof children`. Same as above: prefer registry-backed pieces when they exist; the compound layout below is for a **custom** primitive when the registry does not provide a match.
 
 ```tsx
 import type { ReactNode } from "react";
