@@ -3,12 +3,14 @@
  * Add a registry UI component from a registry-item JSON URL (e.g. React Native Reusables).
  *
  * Usage (from your Expo app root):
- *   node <path-to-skill>/scripts/add-registry-component.js <registry-url>
+ *   node <path-to-skill>/scripts/add-registry-component.js <registry-url> [more...] [--root <dir>] [--pm npm|pnpm|yarn|bun]
  *
  * Options:
- *   --root <dir>   Project root (default: cwd)
+ *   --root <dir>              Project root (default: cwd)
+ *   --pm <npm|pnpm|yarn|bun>  Package manager (default: detect from lockfile or package.json#packageManager)
  *
- * Uses: npx shadcn@latest view <url>
+ * Uses: npx | pnpm dlx | yarn dlx | bunx — shadcn@latest view <url>
+ * Yarn 1 (no .yarnrc.yml): view uses npx; installs still use yarn add.
  * Schema: https://ui.shadcn.com/schema/registry-item.json
  */
 
@@ -18,18 +20,104 @@ const path = require("path");
 
 const DEFAULT_NATIVEWIND_BASE = "https://reactnativereusables.com/r/nativewind/";
 
+const VALID_PM = new Set(["npm", "pnpm", "yarn", "bun"]);
+
 function parseArgs(argv) {
-  const args = { root: process.cwd(), urls: [] };
+  const args = { root: process.cwd(), urls: [], pm: null };
   for (let i = 2; i < argv.length; i += 1) {
     const a = argv[i];
     if (a === "--root") {
       args.root = path.resolve(argv[i + 1] || "");
       i += 1;
+    } else if (a === "--pm") {
+      const v = (argv[i + 1] || "").toLowerCase();
+      i += 1;
+      if (!VALID_PM.has(v)) {
+        console.error(
+          `Invalid --pm "${v}". Use one of: ${[...VALID_PM].join(", ")}`,
+        );
+        process.exit(1);
+      }
+      args.pm = v;
     } else if (!a.startsWith("-")) {
       args.urls.push(a);
     }
   }
   return args;
+}
+
+function readPackageManagerField(projectRoot) {
+  try {
+    const pkgPath = path.join(projectRoot, "package.json");
+    const raw = fs.readFileSync(pkgPath, "utf8");
+    const pkg = JSON.parse(raw);
+    const spec = pkg.packageManager;
+    if (typeof spec !== "string") return null;
+    const name = spec.split("@")[0];
+    return VALID_PM.has(name) ? name : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Prefer explicit --pm, then package.json#packageManager, then lockfiles. */
+function detectPackageManager(projectRoot) {
+  const fromPkg = readPackageManagerField(projectRoot);
+  if (fromPkg) return fromPkg;
+  if (fs.existsSync(path.join(projectRoot, "pnpm-lock.yaml"))) return "pnpm";
+  if (fs.existsSync(path.join(projectRoot, "yarn.lock"))) return "yarn";
+  if (
+    fs.existsSync(path.join(projectRoot, "bun.lockb")) ||
+    fs.existsSync(path.join(projectRoot, "bun.lock"))
+  ) {
+    return "bun";
+  }
+  return "npm";
+}
+
+function isYarnBerry(projectRoot) {
+  return fs.existsSync(path.join(projectRoot, ".yarnrc.yml"));
+}
+
+function shadcnViewArgs(pm, projectRoot, nameOrUrl) {
+  if (pm === "pnpm") {
+    return { file: "pnpm", args: ["dlx", "shadcn@latest", "view", nameOrUrl] };
+  }
+  if (pm === "bun") {
+    return { file: "bunx", args: ["shadcn@latest", "view", nameOrUrl] };
+  }
+  if (pm === "yarn") {
+    if (isYarnBerry(projectRoot)) {
+      return { file: "yarn", args: ["dlx", "shadcn@latest", "view", nameOrUrl] };
+    }
+    return { file: "npx", args: ["shadcn@latest", "view", nameOrUrl] };
+  }
+  return { file: "npx", args: ["shadcn@latest", "view", nameOrUrl] };
+}
+
+function packageInstall(projectRoot, deps, dev, pm) {
+  if (!deps || deps.length === 0) return;
+  let file;
+  let args;
+  if (pm === "pnpm") {
+    file = "pnpm";
+    args = dev ? ["add", "-D", ...deps] : ["add", ...deps];
+  } else if (pm === "yarn") {
+    file = "yarn";
+    args = dev ? ["add", "-D", ...deps] : ["add", ...deps];
+  } else if (pm === "bun") {
+    file = "bun";
+    args = dev ? ["add", "-d", ...deps] : ["add", ...deps];
+  } else {
+    file = "npm";
+    args = dev
+      ? ["install", "--save-dev", ...deps]
+      : ["install", ...deps];
+  }
+  execFileSync(file, args, {
+    cwd: projectRoot,
+    stdio: "inherit",
+  });
 }
 
 function parseRegistryJson(raw) {
@@ -39,8 +127,9 @@ function parseRegistryJson(raw) {
   return JSON.parse(jsonText);
 }
 
-function runView(url, cwd) {
-  return execFileSync("npx", ["shadcn@latest", "view", url], {
+function runView(url, cwd, pm) {
+  const { file, args } = shadcnViewArgs(pm, cwd, url);
+  return execFileSync(file, args, {
     cwd,
     encoding: "utf8",
     maxBuffer: 20 * 1024 * 1024,
@@ -117,17 +206,6 @@ function targetPathForFile(projectRoot, fileMeta) {
   return normalizeComponentFileName(full);
 }
 
-function npmInstall(projectRoot, deps, dev) {
-  if (!deps || deps.length === 0) return;
-  const cmd = dev
-    ? ["npm", "install", "--save-dev", ...deps]
-    : ["npm", "install", ...deps];
-  execFileSync(cmd[0], cmd.slice(1), {
-    cwd: projectRoot,
-    stdio: "inherit",
-  });
-}
-
 function appendCssVars(projectRoot, cssVars) {
   if (!cssVars) return;
   const themePath = path.join(projectRoot, "src/theme.css");
@@ -183,14 +261,14 @@ function logTailwindPatch(projectRoot, item) {
   );
 }
 
-function processRegistryUrl(url, projectRoot, visited, summary) {
+function processRegistryUrl(url, projectRoot, visited, summary, pm) {
   if (visited.has(url)) return;
   visited.add(url);
 
   console.error(`[add-registry-component] view ${url}`);
   let raw;
   try {
-    raw = runView(url, projectRoot);
+    raw = runView(url, projectRoot, pm);
   } catch (e) {
     console.error(e.stderr?.toString?.() || e.message);
     throw new Error(`shadcn view failed for ${url}`);
@@ -199,8 +277,8 @@ function processRegistryUrl(url, projectRoot, visited, summary) {
   const item = parseRegistryJson(raw);
   summary.items.push(item.name || url);
 
-  npmInstall(projectRoot, item.dependencies, false);
-  npmInstall(projectRoot, item.devDependencies, true);
+  packageInstall(projectRoot, item.dependencies, false, pm);
+  packageInstall(projectRoot, item.devDependencies, true, pm);
   appendCssVars(projectRoot, item.cssVars);
   logTailwindPatch(projectRoot, item);
 
@@ -241,27 +319,30 @@ function processRegistryUrl(url, projectRoot, visited, summary) {
       console.error(`[add-registry-component] skip existing ${pascalBase} in src/ui`);
       continue;
     }
-    processRegistryUrl(depUrl, projectRoot, visited, summary);
+    processRegistryUrl(depUrl, projectRoot, visited, summary, pm);
   }
 }
 
 function main() {
-  const { root, urls } = parseArgs(process.argv);
+  const { root, urls, pm: pmFlag } = parseArgs(process.argv);
   if (urls.length === 0) {
     console.error(
-      "Usage: node add-registry-component.js <registry-url> [more-urls...] [--root <project-dir>]",
+      "Usage: node add-registry-component.js <registry-url> [more-urls...] [--root <project-dir>] [--pm npm|pnpm|yarn|bun]",
     );
     process.exit(1);
   }
 
   const visited = new Set();
   const summary = { items: [], filesWritten: [], skippedDeps: [] };
+  const projectRoot = path.resolve(root);
+  const pm = pmFlag || detectPackageManager(projectRoot);
+  console.error(`[add-registry-component] package manager: ${pm}`);
 
   for (const u of urls) {
     const url = /^https?:\/\//i.test(u)
       ? u
       : `${DEFAULT_NATIVEWIND_BASE}${u.replace(/^\//, "").replace(/\.json$/i, "")}.json`;
-    processRegistryUrl(url, path.resolve(root), visited, summary);
+    processRegistryUrl(url, projectRoot, visited, summary, pm);
   }
 
   console.log(JSON.stringify(summary, null, 2));
