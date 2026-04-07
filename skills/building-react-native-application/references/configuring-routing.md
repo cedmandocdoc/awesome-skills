@@ -2,7 +2,7 @@
 
 ## Overview
 
-Use this guide to set up React Navigation with the static API, pick stack, tabs, or drawer by how people move through the app, and keep navigation files focused on routes and options.
+Use this guide to set up React Navigation with the static API, pick stack, tabs, or drawer by how people move through the app, and keep navigation files focused on route configuration and options.
 
 ## Prerequisites
 
@@ -15,13 +15,20 @@ Use this guide to set up React Navigation with the static API, pick stack, tabs,
 
 ```text
 src/navigation/
+├── components/
+│   ├── CustomHeader.tsx
+│   └── CustomTabBar.tsx
+├── hooks/
+│   └── useNavigationHeader.ts
 ├── MainStack.tsx
 ├── index.tsx
 └── RootStack.tsx
 ```
 
-- Register routes and screen options in `src/navigation/`. Import **feature exports** as each screen’s `component` so route bodies live in **`src/features/`** and are composed in the navigator files.
+- Register routes and route options in `src/navigation/`. Import **feature exports** as each route's `component` so screen behavior and UI live in **`src/features/`** and are composed in the navigator files.
 - Keep each navigator file focused on the tree, types, and options; domain UI stays in `src/features/`.
+- Put custom navigation UI components (for example, custom headers or custom bottom bars) in `src/navigation/components/`.
+- Put navigation-related hooks in `src/navigation/hooks/`.
 - Split navigators into more files when the tree grows.
 
 ### Choosing navigators
@@ -60,7 +67,7 @@ export default function App() {
 }
 ```
 
-### Register a feature component as a screen
+### Register a screen component for a route
 
 ```tsx
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -77,9 +84,9 @@ export function MainStack() {
 }
 ```
 
-Prefer exporting a **route-ready** component from the feature (it can call `useRoute` / `useNavigation` when it needs params or navigation). When you need a thin adapter for props or params, place it **beside the navigator** (same file or adjacent module) so bridging stays next to the `Stack.Screen` registration.
+Prefer exporting a **route-ready screen component** from the feature (it can call `useRoute` / `useNavigation` when it needs params or navigation). When you need a thin adapter for props or params, place it **beside the navigator** (same file or adjacent module) so bridging stays next to the `Stack.Screen` registration.
 
-### Navigate from a screen
+### Navigate from a screen component
 
 ```tsx
 import { useNavigation } from "@react-navigation/native";

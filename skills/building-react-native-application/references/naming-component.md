@@ -29,8 +29,8 @@ Use consistent suffixes to signal the component's role:
 
 | Suffix | Role |
 | --- | --- |
-| `Page` | Route-level / screen-level component |
-| `Layout` | Structural wrapper used across routes |
+| `Page` | Screen component rendered for a route |
+| `Layout` | Structural wrapper shared across route entries |
 | `Card` | Grouped content |
 | `Item` / `Row` | List element |
 | `Form` | Form |

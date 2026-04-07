@@ -11,7 +11,7 @@ Use this guide to decide when and how to recategorize a feature component — ei
 When a "feature component" grows into something reusable, the module often needs to be recategorized:
 
 - If it becomes **presentation-only**, promote it to a shared UI primitive in `src/ui/`.
-- If it becomes **domain behavior used across multiple screens**, extract it into a new feature module under `src/features/`.
+- If it becomes **domain behavior used across multiple screens (or route entries)**, extract it into a new feature module under `src/features/`.
 - If it stays tightly coupled to one screen flow, keep it inside the screen's feature module.
 
 Promotion should be reflected in folder placement *and* in the feature's export contract.
@@ -28,23 +28,23 @@ Promote when the component:
 
 Extract when the shared part:
 
-- Encapsulates domain behavior that multiple screens use.
+- Encapsulates domain behavior that multiple screens (or route entries) use.
 - Includes hooks/state/derived behavior that callers would otherwise duplicate.
 - Benefits from its own feature boundary so callers interact with a small, stable surface.
 
 ### How to keep boundaries consistent after extraction
 
-- Navigators wire feature exports as screen components; those exports compose smaller features internally.
+- Navigators map routes to feature-exported screen components; those exports compose smaller features internally.
 - Internal modules inside `src/features/<feature-name>/` may import each other freely.
 - Other modules import through the feature barrel so they track the published API as it evolves.
 
 ### Route interaction (typical flow)
 
-1. `src/navigation/` registers screens with `component={...}` pointing at feature exports. Keep that wiring thin—only param bridges or options belong here.
+1. `src/navigation/` registers routes with `component={...}` pointing at feature exports. Keep that wiring thin—only param bridges or options belong here.
 2. `src/features/<feature-name>/` owns the behavior: hooks, derived state, event handlers, and feature-specific UI composition (including reading route params inside the exported component when needed).
 3. `src/ui/` provides shared primitives used by feature components when presentation-only reuse is needed.
 
-If the same composition repeats across multiple navigators or routes, consolidate it in a reusable feature module shared by those registrations.
+If the same composition repeats across multiple routes or screen flows, consolidate it in a reusable feature module shared by those registrations.
 
 ## Examples
 

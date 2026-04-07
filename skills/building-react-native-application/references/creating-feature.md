@@ -4,7 +4,7 @@
 
 Use this guide to write *feature modules* in `src/features/<feature-name>/`.
 
-A feature module packages domain logic with the feature UI, and exposes a small export surface so **navigators** can register those exports as screen components. This keeps reusable primitives in `src/ui/` and keeps data fetching/API code in `src/api/` (usually via feature hooks).
+A feature module packages domain logic with the feature UI, and exposes a small export surface so **navigators** can map routes to those exported screen components. This keeps reusable primitives in `src/ui/` and keeps data fetching/API code in `src/api/` (usually via feature hooks).
 
 ## Guidelines
 
@@ -15,7 +15,7 @@ Feature categorization is intentionally predictable, even though real features c
 **Isolated vs grouped features**
 
 - **Isolated features**: one complete "package" that typically exports one primary thing (for example, `WorkshopList`) plus only what the primary thing needs (types/hooks used by the package).
-- **Grouped features**: a feature exports multiple related pieces when the pieces are meant to be used together (for example, a navigation-oriented feature exporting route helpers + related screens/components).
+- **Grouped features**: a feature exports multiple related pieces when the pieces are meant to be used together (for example, a navigation-oriented feature exporting route helpers + related screen components).
 
 This guide favors isolated features first, but it allows grouped features when it improves clarity.
 

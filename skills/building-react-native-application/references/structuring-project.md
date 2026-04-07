@@ -14,7 +14,7 @@ Use this guide to organize the React Native app by responsibility. Keep routing,
 
 | Area                           | Purpose                                                                 |
 | ------------------------------ | ----------------------------------------------------------------------- |
-| `src/navigation/`              | Navigator setup, route types, and **screen registration** that composes exported feature components |
+| `src/navigation/`              | Navigator setup, route types, and route registration that maps routes to exported screen components |
 | `src/ui/`                      | Flat presentational primitives           |
 | `src/features/<feature-name>/` | Domain logic and feature UI              |
 | `src/api/`                     | Framework-agnostic HTTP code             |

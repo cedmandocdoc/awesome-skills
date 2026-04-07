@@ -38,6 +38,15 @@ Install it:
 npx skills add cedmandocdoc/awesome-skills/skills/building-react-application
 ```
 
+## Terminology
+
+Use these terms consistently across this skill and its references:
+
+- **Route**: navigation identity and configuration (for example route `name`, params type, options, deep-link path, and registration in `src/navigation/`).
+- **Screen**: React component rendered for a route (commonly exported from `src/features/<feature-name>/` and passed to `Stack.Screen component={...}`).
+- **Navigator**: container that maps routes to screens (for example stack, tabs, drawer).
+- Keep **route config** in `src/navigation/`; keep **screen behavior and UI** in `src/features/`.
+
 ## References
 
 | Task / Scenario           | Doc                                                                                                                                                                                                                   | When to use                                                     |
@@ -56,7 +65,7 @@ npx skills add cedmandocdoc/awesome-skills/skills/building-react-application
 | **Feature promotion**     | [promoting-feature.md](./references/promoting-feature.md)                                                                                                                                                             | Promotion to `src/ui/`, extraction to new feature               |
 | **State management**      | [managing-state.md](./references/managing-state.md)                                                                                                                                                                   | Query vs Zustand vs local state                                 |
 | **API clients**           | [creating-api.md](./references/creating-api.md), [setting-up-axios.md](./references/setting-up-axios.md)                                                                                                              | Axios clients, feature hooks, `src/api/`                        |
-| **Routing & navigation**  | [configuring-routing.md](./references/configuring-routing.md), [React Navigation — Hello React Navigation (static)](https://reactnavigation.org/docs/hello-react-navigation.md?config=static), [Native Stack Navigator](https://reactnavigation.org/docs/native-stack-navigator/), [Native Bottom Tabs Navigator](https://reactnavigation.org/docs/native-bottom-tab-navigator/) | When to use stack vs tabs vs drawer, static API, typed params, screen options |
+| **Routing & navigation**  | [configuring-routing.md](./references/configuring-routing.md), [React Navigation — Hello React Navigation (static)](https://reactnavigation.org/docs/hello-react-navigation.md?config=static), [Native Stack Navigator](https://reactnavigation.org/docs/native-stack-navigator/), [Native Bottom Tabs Navigator](https://reactnavigation.org/docs/native-bottom-tab-navigator/) | When to use stack vs tabs vs drawer, static API, typed params, screen options, and `src/navigation/components` / `src/navigation/hooks` placement |
 | **Drawer navigation**     | [React Navigation — Drawer Navigator](https://reactnavigation.org/docs/drawer-navigator.md)                                                                                                                           | `@react-navigation/drawer`, gestures, Reanimated, custom drawer               |
 | **Keyboard handling**     | [react-native-keyboard-controller — Components overview](https://kirillzyusko.github.io/react-native-keyboard-controller/docs/guides/components-overview)                                                             | Avoidance, sticky views, scroll sync, toolbars                  |
 | **Splash screen**         | [Expo SplashScreen](https://docs.expo.dev/versions/latest/sdk/splash-screen/)                                                                                                                                         | Config plugin, assets, `preventAutoHideAsync`, testing          |
