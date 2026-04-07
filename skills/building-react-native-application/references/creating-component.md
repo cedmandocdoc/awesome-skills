@@ -36,12 +36,12 @@ npx shadcn@latest view "https://reactnativereusables.com/r/nativewind/button.jso
 node path/to/building-react-native-application/scripts/add-registry-component.js "https://reactnativereusables.com/r/nativewind/button.json"
 ```
 
-The script vendors files into `src/ui/` (for example `button.tsx`). Import with `@/ui/button` in navigation modules and features.
+The script vendors files into `src/ui/` (for example `Button.tsx`). Import with `@/ui/Button` in navigation modules and features.
 
 ### Use primitives inside a feature
 
 ```ts
-import { Button } from "@/ui/button";
+import { Button } from "@/ui/Button";
 
 export function WorkshopCta() {
   return <Button>Join workshop</Button>;

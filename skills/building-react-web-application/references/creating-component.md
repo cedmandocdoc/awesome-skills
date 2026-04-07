@@ -36,12 +36,12 @@ npx shadcn@latest view button
 node path/to/building-react-web-application/scripts/add-registry-component.js button
 ```
 
-You can pass a full registry item URL instead of a slug when your registry requires it. The script vendors files into `src/ui/` (for example `button.tsx`). Import with `@/ui/button` in routes and features.
+You can pass a full registry item URL instead of a slug when your registry requires it. The script vendors files into `src/ui/` (for example `Button.tsx`). Import with `@/ui/Button` in routes and features.
 
 ### Use primitives inside a feature
 
 ```tsx
-import { Button } from "@/ui/button";
+import { Button } from "@/ui/Button";
 
 export function WorkshopCta() {
   return <Button>Join workshop</Button>;

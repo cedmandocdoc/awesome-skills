@@ -99,5 +99,5 @@ export type { Workshop } from "./types/workshop";
 
 ```ts
 import { WorkshopList } from "@/features/workshop-list";
-import { Button } from "@/ui/button";
+import { Button } from "@/ui/Button";
 ```
