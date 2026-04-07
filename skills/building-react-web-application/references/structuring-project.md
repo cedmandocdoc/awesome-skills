@@ -21,7 +21,6 @@ Use this guide to organize the Vite + React SPA by responsibility. Keep routing,
 | `src/ui/`                      | Flat presentational primitives (registry output from the add script)     |
 | `src/features/<feature-name>/` | Domain logic and feature UI                                            |
 | `src/api/`                     | Framework-agnostic HTTP code                                            |
-| `src/stores/`                  | Zustand stores                                                          |
 
 ### Registry and `src/ui`
 
@@ -44,6 +43,7 @@ Typical shape: `main.tsx` imports **`../global.css`** (or the correct relative p
 - Keep `src/ui/` free of feature, API, and store imports.
 - Keep route files focused on routing concerns (layouts, loaders where used); delegate domain logic to features.
 - Keep `src/api/` independent from React and Zustand.
+- Keep Zustand stores inside feature hooks (`src/features/<feature-name>/hooks/use<Feature>Store.ts`), even when other features consume them.
 
 ### Imports
 

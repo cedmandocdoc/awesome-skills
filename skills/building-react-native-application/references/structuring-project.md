@@ -18,7 +18,6 @@ Use this guide to organize the React Native app by responsibility. Keep routing,
 | `src/ui/`                      | Flat presentational primitives           |
 | `src/features/<feature-name>/` | Domain logic and feature UI              |
 | `src/api/`                     | Framework-agnostic HTTP code             |
-| `src/stores/`                  | Zustand stores                           |
 | `src/theme.css`                | Design tokens                            |
 | `src/theme.ts`                 | React Navigation theme objects           |
 
@@ -29,6 +28,7 @@ Use this guide to organize the React Native app by responsibility. Keep routing,
 - Keep `src/ui/` limited to presentation-only primitives; wire features, API hooks, and stores from feature modules and their hooks.
 - Keep `src/navigation/` focused on route config.
 - Keep `src/api/` as plain TypeScript HTTP helpers; React components and Zustand stores call into them from feature code and hooks.
+- Keep Zustand stores inside feature hooks (`src/features/<feature-name>/hooks/use<Feature>Store.ts`), even when other features consume them.
 
 ### Imports
 

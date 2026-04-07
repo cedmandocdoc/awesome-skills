@@ -2,20 +2,20 @@
 
 ## Overview
 
-Use this guide to decide where state belongs. Use TanStack Query for server data, Zustand for shared client state, navigation params for route state, and local React state for UI owned by one component.
+Use this guide to decide where state belongs. Use TanStack Query for server data, Zustand for feature-owned client state, navigation params for route state, and local React state for UI owned by one component.
 
 ## Guidelines
 
 ### Structure
 
-- Put shared stores in `src/stores/`.
+- Put Zustand stores in `src/features/<feature-name>/hooks/use<Feature>Store.ts`.
 - Put query hooks in `src/features/<feature-name>/hooks/`.
 - Keep API calls in `src/api/`.
 
 ### Choose the right state tool
 
 1. Use TanStack Query for data fetched from an API.
-2. Use Zustand for shared client-only state.
+2. Use Zustand for client-only state owned by a feature (including stores consumed by multiple features, such as auth).
 3. Use navigation params for route state that should survive back navigation and deep links.
 4. Use `useState` or `useReducer` for local component state.
 
@@ -25,6 +25,7 @@ Use this guide to decide where state belongs. Use TanStack Query for server data
 - Do not copy props or query data into local state without a clear reason.
 - Store semantic state such as `isOpen` or `step`, not visual output such as `opacity`.
 - Use selectors with Zustand to reduce re-renders.
+- Name store hooks with the `useXStore` pattern and keep the file name aligned.
 
 ## Setup
 
@@ -78,6 +79,8 @@ export function useWorkshops() {
 ```
 
 ### Create a Zustand store
+
+Example path: `src/features/auth/hooks/useAuthStore.ts`
 
 ```ts
 import { create } from "zustand";

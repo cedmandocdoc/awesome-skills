@@ -38,6 +38,7 @@ Some teams categorize features based on product language (e.g. "billing", "onboa
 - Place domain-specific behavior and feature UI in `src/features/<feature-name>/`.
 - Place shared presentation-only primitives in `src/ui/`.
 - Keep HTTP clients and request functions in `src/api/` and call them from feature hooks.
+- Keep feature-owned Zustand stores in `src/features/<feature-name>/hooks/use<Feature>Store.ts`, including stores consumed by other features (for example `useAuthStore`).
 
 ### Grouping rules
 
