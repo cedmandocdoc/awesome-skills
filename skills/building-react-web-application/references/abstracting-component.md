@@ -44,8 +44,8 @@ Use this workflow when building a route or feature:
    - If a block is likely reusable _and_ can stay presentation-only, categorize it as a **UI component** and place it in `src/ui/`.
    - When the block carries domain behavior, extract inside the feature if a named subcomponent still clarifies the tree.
 3. Extract only if it stays reasonably small.
-   - Aim for components under ~200 lines when practical.
-   - If a candidate is much larger, split it into smaller components or parts.
+   - Keep components at **200 lines or fewer**.
+   - If a candidate would exceed 200 lines, split it into smaller components or parts before implementation.
 4. Look for repeated manual composition.
    - If the same rendering structure is repeated in multiple places (or would be in the near future), that pattern is a good candidate for abstraction.
    - When the pattern is still single-use inside one feature, keep it there until reuse appears.

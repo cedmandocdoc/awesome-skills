@@ -44,8 +44,8 @@ Use this workflow when building a screen or feature:
    - If a block is likely reusable _and_ can stay presentation-only, categorize it as a **UI component** and place it in `src/ui/`.
    - If it is not a UI component, ask whether it is still worth extracting inside the feature.
 3. Extract only if it stays reasonably small.
-   - Aim for components under 200 lines (not restricted, but recommended).
-   - If a candidate is much larger, split it into smaller components or parts.
+   - Keep components at **200 lines or fewer**.
+   - If a candidate would exceed 200 lines, split it into smaller components or parts before implementation.
 4. Look for repeated manual composition.
    - If the same rendering structure is repeated in multiple places (or would be in the near future), that pattern is a good candidate for abstraction.
    - If repetition is not happening and the candidate is feature-specific, keep it as a feature component.

@@ -20,6 +20,8 @@ For naming conventions, see [naming-component.md](./naming-component.md).
 - Use native HTML elements or `@/ui/*` primitives.
 - Keep domain logic out of presentational components.
 - Prefer compound parts over components that accept raw string or node unions.
+- Keep every component at **200 lines or fewer**.
+- If a component would exceed 200 lines, stop and follow [abstracting-component.md](./abstracting-component.md) to split it into smaller components or parts before implementing.
 
 ## Examples
 
