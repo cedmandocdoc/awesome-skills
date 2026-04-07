@@ -4,7 +4,7 @@
 
 Use this guide to write *feature modules* in `src/features/<feature-name>/`.
 
-A feature module packages domain logic with the feature UI, and exposes a small export surface so screens can compose it. This keeps reusable primitives in `src/ui/` and keeps data fetching/API code in `src/api/` (usually via feature hooks).
+A feature module packages domain logic with the feature UI, and exposes a small export surface so **navigators** can register those exports as screen components. This keeps reusable primitives in `src/ui/` and keeps data fetching/API code in `src/api/` (usually via feature hooks).
 
 ## Guidelines
 
@@ -19,16 +19,16 @@ Feature categorization is intentionally predictable, even though real features c
 
 This guide favors isolated features first, but it allows grouped features when it improves clarity.
 
-**Per-screen is the most common grouping**
+**Per-route is the most common grouping**
 
-- A screen lives in `src/screens/` and stays thin.
-- The screen composes one or more feature components to complete its behavior.
-- The feature folder owns the behavior that would otherwise bloat the screen file.
+- Navigators in `src/navigation/` point `Stack.Screen` (and similar) `component` props at feature exports.
+- The feature export should be **route-ready** (read params with React Navigation hooks when needed) so registration stays a one-line import.
+- The feature folder owns the behavior so navigator files stay focused on registration and options.
 
 **Isolation is about dependency boundaries**
 
-- Callers should not need internal knowledge of the module to use it correctly.
-- Other features/screens should depend on the feature's public exports (via the feature's barrel), not by reaching into internal files.
+- Callers use the module through its barrel; the folder layout can change behind that stable surface.
+- Other features and navigation modules use the barrel as the only import path for that feature’s public API.
 
 **Respect the team's categorization when it helps**
 
@@ -48,16 +48,15 @@ Some teams categorize features based on product language (e.g. "billing", "onboa
 
 ### Module size heuristic
 
-- If a feature folder becomes hard to reason about, split it into smaller feature modules and compose them from the screen feature.
+- If a feature folder becomes hard to reason about, split it into smaller feature modules and compose them from the parent feature or from navigation registration.
 - When the same pieces are repeatedly composed across multiple screens, that repetition is usually a signal to extract a reusable feature module.
 
 ### Export contract
 
-- Each feature folder must expose a barrel (commonly `src/features/<feature-name>/index.ts`).
-- Callers should import from `@/features/<feature-name>` rather than importing internal files directly.
+- Each feature folder must expose a barrel (commonly `src/features/<feature-name>/index.ts`). Import it from other modules (`@/features/...`, `@/navigation/...`, app shells) whenever you use that feature from outside its folder.
 - An isolated feature should export one primary component/value plus supporting hooks/types.
 - A grouped feature should clearly name its exported parts.
-- The export contract should stay stable: avoid exporting internal helpers.
+- The export contract should stay stable: publish primary components, hooks, and types that belong in the public API.
 
 ## Examples
 

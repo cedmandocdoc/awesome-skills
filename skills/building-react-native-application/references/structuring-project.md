@@ -12,10 +12,9 @@ Use this guide to organize the React Native app by responsibility. Keep routing,
 - Keep `App.tsx` at the project root and import app modules from `src/`.
 - Use kebab-case for feature folders.
 
-| Area                           | Purpose                                  |
-| ------------------------------ | ---------------------------------------- |
-| `src/screens/`                 | Thin route screens that compose features |
-| `src/navigation/`              | Navigator setup and route types          |
+| Area                           | Purpose                                                                 |
+| ------------------------------ | ----------------------------------------------------------------------- |
+| `src/navigation/`              | Navigator setup, route types, and **screen registration** that composes exported feature components |
 | `src/ui/`                      | Flat presentational primitives           |
 | `src/features/<feature-name>/` | Domain logic and feature UI              |
 | `src/api/`                     | Framework-agnostic HTTP code             |
@@ -25,11 +24,11 @@ Use this guide to organize the React Native app by responsibility. Keep routing,
 
 ### Dependency flow
 
-- Let screens compose features, `ui`, API hooks, and stores.
+- Let navigators (route registration in `src/navigation/`) compose features, `ui`, API hooks, and stores.
 - Let features import other features through their barrel file.
-- Keep `src/ui/` free of feature, API, and store imports.
+- Keep `src/ui/` limited to presentation-only primitives; wire features, API hooks, and stores from feature modules and their hooks.
 - Keep `src/navigation/` focused on route config.
-- Keep `src/api/` independent from React and Zustand.
+- Keep `src/api/` as plain TypeScript HTTP helpers; React components and Zustand stores call into them from feature code and hooks.
 
 ### Imports
 

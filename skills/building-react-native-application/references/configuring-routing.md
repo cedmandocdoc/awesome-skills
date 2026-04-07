@@ -20,8 +20,8 @@ src/navigation/
 └── RootStack.tsx
 ```
 
-- Put screens in `src/screens/`.
-- Register routes and screen options in `src/navigation/`.
+- Register routes and screen options in `src/navigation/`. Import **feature exports** as each screen’s `component` so route bodies live in **`src/features/`** and are composed in the navigator files.
+- Keep each navigator file focused on the tree, types, and options; domain UI stays in `src/features/`.
 - Split navigators into more files when the tree grows.
 
 ### Choosing navigators
@@ -59,6 +59,25 @@ export default function App() {
   return <Navigation />;
 }
 ```
+
+### Register a feature component as a screen
+
+```tsx
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { WorkshopList } from "@/features/workshop-list";
+
+const Stack = createNativeStackNavigator();
+
+export function MainStack() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="Workshops" component={WorkshopList} />
+    </Stack.Navigator>
+  );
+}
+```
+
+Prefer exporting a **route-ready** component from the feature (it can call `useRoute` / `useNavigation` when it needs params or navigation). When you need a thin adapter for props or params, place it **beside the navigator** (same file or adjacent module) so bridging stays next to the `Stack.Screen` registration.
 
 ### Navigate from a screen
 

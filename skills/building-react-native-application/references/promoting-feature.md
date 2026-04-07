@@ -22,7 +22,7 @@ Promote when the component:
 
 - Is presentation-only.
 - Accepts props and renders UI.
-- Does not decide navigation, fetch data, or manage feature state.
+- Leaves navigation, data fetching, and feature state to parents, hooks, or sibling feature code.
 
 ### When to extract into a new `src/features/` module
 
@@ -30,21 +30,21 @@ Extract when the shared part:
 
 - Encapsulates domain behavior that multiple screens use.
 - Includes hooks/state/derived behavior that callers would otherwise duplicate.
-- Needs its own feature boundary so it does not leak internal complexity into screens.
+- Benefits from its own feature boundary so callers interact with a small, stable surface.
 
 ### How to keep boundaries consistent after extraction
 
-- Screens compose features; features compose smaller features.
+- Navigators wire feature exports as screen components; those exports compose smaller features internally.
 - Internal modules inside `src/features/<feature-name>/` may import each other freely.
-- Other modules should import through the feature barrel to avoid coupling to internal file paths.
+- Other modules import through the feature barrel so they track the published API as it evolves.
 
-### Screen interaction (typical flow)
+### Route interaction (typical flow)
 
-1. `src/screens/<ScreenName>.tsx` stays thin: it reads route params (if any) and composes feature exports.
-2. `src/features/<feature-name>/` owns the behavior: hooks, derived state, event handlers, and feature-specific UI composition.
+1. `src/navigation/` registers screens with `component={...}` pointing at feature exports. Keep that wiring thin—only param bridges or options belong here.
+2. `src/features/<feature-name>/` owns the behavior: hooks, derived state, event handlers, and feature-specific UI composition (including reading route params inside the exported component when needed).
 3. `src/ui/` provides shared primitives used by feature components when presentation-only reuse is needed.
 
-If the screen ends up repeating the same composition in multiple places, that repetition usually belongs in a reusable feature module.
+If the same composition repeats across multiple navigators or routes, consolidate it in a reusable feature module shared by those registrations.
 
 ## Examples
 
@@ -52,7 +52,7 @@ If the screen ends up repeating the same composition in multiple places, that re
 
 - Feature: `src/features/workshop-list/`
 - Exports: `WorkshopList` as the primary component, plus supporting `useWorkshops` and `Workshop` type.
-- Screen: `src/screens/WorkshopsScreen.tsx` composes `<WorkshopList />`.
+- Navigation: `MainStack.tsx` (or equivalent) registers `<Stack.Screen name="Workshops" component={WorkshopList} />`.
 
 ### Navigation/workflow grouping (grouped feature)
 
@@ -64,4 +64,4 @@ If the screen ends up repeating the same composition in multiple places, that re
 
 - Initially: the block lives inside a per-screen feature module.
 - When reuse starts appearing: extract the shared behavior into `src/features/<new-shared-feature>/`.
-- If the extracted part is presentation-only, promote it to `src/ui/` instead.
+- If the extracted part is presentation-only, promote it to `src/ui/` as a shared primitive.
