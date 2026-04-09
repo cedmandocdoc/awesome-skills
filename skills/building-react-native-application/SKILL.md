@@ -1,6 +1,6 @@
 ---
 name: building-react-native-application
-description: Guides building Expo/React Native apps with TypeScript using a consistent architecture and library stack (NativeWind, React Navigation, TanStack Query, Zustand, Axios). Use when creating a new React Native project or updating architecture/UI/state/API/routing/styling to follow these conventions.
+description: Guides building Expo/React Native apps with TypeScript using a consistent architecture and library stack (NativeWind, React Navigation, TanStack Query, Zustand, Axios). Use for all React Native application work.
 version: 1.0.0
 ---
 
@@ -23,10 +23,7 @@ Opinionated ecosystem for building React Native apps with a consistent architect
 
 ## When to use
 
-- New Expo-based React Native projects (TypeScript + NativeWind + React Navigation + TanStack Query)
-- React Native tasks in an existing project that already follows [structuring-project.md](./references/structuring-project.md)
-- Architecture, library, or folder-structure decisions for Expo React Native apps
-- UI, state, API, async loading/error/refresh/list UI ([managing-async-view.md](./references/managing-async-view.md)), forms ([managing-form-components.md](./references/managing-form-components.md)), routing/navigation stacks (screens + route params), or styling work that should follow this skill's conventions
+Follow this skill for every task that touches this project's React Native (Expo) app: features, screens, navigation, APIs, state, styling, forms, async and list UI, config, theming, layout, and tooling choices for the app.
 
 ## Companion skill
 
