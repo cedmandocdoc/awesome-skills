@@ -25,6 +25,9 @@ src/navigation/
 └── RootStack.tsx
 ```
 
+- Prefer **static navigation config** for route registration:
+  - Static config defines routes in a config object passed to `createNativeStackNavigator` / `createBottomTabNavigator` / etc., then wraps the root with `createStaticNavigation(...)`.
+  - Dynamic config defines routes with `<Stack.Navigator>` and `<Stack.Screen>`.
 - Register routes and route options in `src/navigation/`. Import **feature exports** as each route's `component` so screen behavior and UI live in **`src/features/`** and are composed in the navigator files.
 - Keep each navigator file focused on the tree, types, and options; domain UI stays in `src/features/`.
 - Put custom navigation UI components (for example, custom headers or custom bottom bars) in `src/navigation/components/`.
@@ -70,21 +73,27 @@ export default function App() {
 ### Register a screen component for a route
 
 ```tsx
+import { createStaticNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { WorkshopList } from "@/features/workshop-list";
 
-const Stack = createNativeStackNavigator();
+const MainStack = createNativeStackNavigator({
+  screens: {
+    Workshops: {
+      screen: WorkshopList,
+      options: {
+        title: "Workshops",
+      },
+    },
+  },
+});
 
-export function MainStack() {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen name="Workshops" component={WorkshopList} />
-    </Stack.Navigator>
-  );
-}
+export const Navigation = createStaticNavigation(MainStack);
 ```
 
-Prefer exporting a **route-ready screen component** from the feature (it can call `useRoute` / `useNavigation` when it needs params or navigation). When you need a thin adapter for props or params, place it **beside the navigator** (same file or adjacent module) so bridging stays next to the `Stack.Screen` registration.
+Use static config to keep route definitions declarative and centralized in one object. Avoid adding new dynamic `<Stack.Navigator>` / `<Stack.Screen>` route registration unless a specific runtime composition need requires it.
+
+Prefer exporting a **route-ready screen component** from the feature (it can call `useRoute` / `useNavigation` when it needs params or navigation). When you need a thin adapter for props or params, place it **beside the navigator** (same file or adjacent module) so bridging stays next to the static `screens` config entry.
 
 ### Navigate from a screen component
 

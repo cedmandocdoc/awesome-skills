@@ -11,6 +11,15 @@ Use this guide to decide whether a component should be a shared UI primitive in 
 
 ## Guidelines
 
+### File export rule (strict)
+
+- Export exactly **one component per file**.
+  - Do not export multiple components from the same file.
+  - Name the file after the exported component (for example, `profile-card.tsx` exports `ProfileCard`).
+- Keep private helpers non-component only.
+  - Local utility functions, constants, and types are allowed when they only support that file's component.
+  - If a second component is needed, move it to its own file and import it.
+
 ### When building UI components
 
 - Use **registry-backed primitives first** before creating a custom one from scratch.
