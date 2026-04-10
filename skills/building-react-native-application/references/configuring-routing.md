@@ -35,27 +35,27 @@ src/navigation/
 
 Compose as needed (for example, a stack inside each tab).
 
-| Pattern         | Use it when                                                                                                                                                                                  |
-| --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Stack**       | Linear flow: list → detail, auth, onboarding, anything that pushes and pops.                                                                                                                 |
+| Pattern         | Use it when                                                                                                                                                                                             |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Stack**       | Linear flow: list → detail, auth, onboarding, anything that pushes and pops.                                                                                                                            |
 | **Bottom tabs** | A few peer sections users switch between often. Native bottom tabs are experimental and mobile-only in the docs; use the classic bottom tab navigator from the same package if web support is required. |
-| **Drawer**      | Many destinations, secondary navigation, or a slide-out menu fits the product.                                                                                                               |
+| **Drawer**      | Many destinations, secondary navigation, or a slide-out menu fits the product.                                                                                                                          |
 
 Copy setup from each doc’s **Usage** section:
 
-- [Native stack — Usage](https://reactnavigation.org/docs/native-stack-navigator/#usage)
-- [Native bottom tabs — Usage](https://reactnavigation.org/docs/native-bottom-tab-navigator/#usage)
-- [Drawer — Usage](https://reactnavigation.org/docs/drawer-navigator/#usage)
+- [Native stack — Usage](https://reactnavigation.org/docs/native-stack-navigator.md)
+- [Native bottom tabs — Usage](https://reactnavigation.org/docs/native-bottom-tab-navigator.md)
+- [Drawer — Usage](https://reactnavigation.org/docs/drawer-navigator.md)
 
 ## Setup
 
 ### Install packages
 
-Install `@react-navigation/native` and shared dependencies from [React Navigation — Getting started](https://reactnavigation.org/docs/getting-started). For each navigator in use, follow that navigator’s **Installation** section:
+Install `@react-navigation/native` and shared dependencies from [React Navigation — Getting started](https://reactnavigation.org/docs/getting-started.md). For each navigator in use, follow that navigator’s **Installation** section:
 
-- [Native stack — Installation](https://reactnavigation.org/docs/native-stack-navigator/#installation)
-- [Native bottom tabs — Installation](https://reactnavigation.org/docs/native-bottom-tab-navigator/#installation)
-- [Drawer — Installation](https://reactnavigation.org/docs/drawer-navigator/#installation)
+- [Native stack — Installation](https://reactnavigation.org/docs/native-stack-navigator.md)
+- [Native bottom tabs — Installation](https://reactnavigation.org/docs/native-bottom-tab-navigator.md)
+- [Drawer — Installation](https://reactnavigation.org/docs/drawer-navigator.md)
 
 ## Examples
 

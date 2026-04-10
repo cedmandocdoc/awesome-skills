@@ -9,8 +9,8 @@ For field-level layout and presentational rules, align with [creating-component.
 ## Prerequisites
 
 - [building-react-application](../../building-react-application/SKILL.md) — TanStack Form overview and shared reference table (install `@tanstack/react-form`)
-- [TanStack Form — Basic concepts](https://tanstack.com/form/latest/docs/framework/react/guides/basic-concepts) — form instances, fields, meta, subscribers
-- [TanStack Form — Form composition](https://tanstack.com/form/latest/docs/framework/react/guides/form-composition) — `createFormHook`, pre-bound components, contexts
+- [TanStack Form — Basic concepts](https://tanstack.com/form/latest/docs/framework/react/guides/basic-concepts.md) — form instances, fields, meta, subscribers
+- [TanStack Form — Form composition](https://tanstack.com/form/latest/docs/framework/react/guides/form-composition.md) — `createFormHook`, pre-bound components, contexts
 
 ## Guidelines
 
@@ -39,11 +39,11 @@ For field-level layout and presentational rules, align with [creating-component.
 
 Use these for validation timing, submit lifecycle, and fine-grained reactivity. This skill does not duplicate those pages.
 
-| Topic          | Doc                                                                                                     |
-| -------------- | ------------------------------------------------------------------------------------------------------- |
-| **Validation** | [Form and field validation](https://tanstack.com/form/latest/docs/framework/react/guides/validation)    |
-| **Submission** | [Submission handling](https://tanstack.com/form/latest/docs/framework/react/guides/submission-handling) |
-| **Reactivity** | [Reactivity](https://tanstack.com/form/latest/docs/framework/react/guides/reactivity)                   |
+| Topic          | Doc                                                                                                        |
+| -------------- | ---------------------------------------------------------------------------------------------------------- |
+| **Validation** | [Form and field validation](https://tanstack.com/form/latest/docs/framework/react/guides/validation.md)    |
+| **Submission** | [Submission handling](https://tanstack.com/form/latest/docs/framework/react/guides/submission-handling.md) |
+| **Reactivity** | [Reactivity](https://tanstack.com/form/latest/docs/framework/react/guides/reactivity.md)                   |
 
 ## Setup
 
@@ -116,7 +116,7 @@ const { useAppForm } = createFormHook({
 
 Declare **`FieldComponent`** and **`Button`** above this call, or assign with aliases (for example `FieldComponent: TextField`) when the implementation keeps a different local name.
 
-Registered field components appear on the **`field`** object inside **`form.AppField`** (for example `<field.TextField label="…" />`). Registered form components appear on **`form`** (for example `<form.SubscribeButton label="…" />` inside **`form.AppForm`**). See [Form composition](https://tanstack.com/form/latest/docs/framework/react/guides/form-composition) for `withForm`, lazy loading, and tree-shaking.
+Registered field components appear on the **`field`** object inside **`form.AppField`** (for example `<field.TextField label="…" />`). Registered form components appear on **`form`** (for example `<form.SubscribeButton label="…" />` inside **`form.AppForm`**). See [Form composition](https://tanstack.com/form/latest/docs/framework/react/guides/form-composition.md) for `withForm`, lazy loading, and tree-shaking.
 
 ## Examples
 
