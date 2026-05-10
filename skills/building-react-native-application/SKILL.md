@@ -27,7 +27,7 @@ Follow this skill for every task that touches this project's React Native (Expo)
 
 ## Companion skill
 
-For **async `useEffect`**, **TanStack Form**, **ESLint / Prettier**, **es-toolkit / date-fns**, and **overriding `className`** (NativeWind / Tailwind), use together with [building-react-application](../building-react-application/SKILL.md).
+For **async `useEffect`**, **TanStack Form**, and **es-toolkit / date-fns**, use together with [building-react-application](../building-react-application/SKILL.md).
 
 Install it:
 
@@ -83,4 +83,5 @@ Use these terms consistently across this skill and its references:
 | [React Navigation — Drawer Navigator](https://reactnavigation.org/docs/drawer-navigator.md)                                                                  | Add drawer navigation with gestures, Reanimated, and custom drawer content.         |
 | [react-native-keyboard-controller — Components overview](https://kirillzyusko.github.io/react-native-keyboard-controller/docs/guides/components-overview.md) | Handle keyboard avoidance, sticky views, and scroll synchronization.                |
 | [Expo SplashScreen](https://docs.expo.dev/versions/latest/sdk/splash-screen.md)                                                                              | Configure splash assets/plugin and control hide timing at app startup.              |
-| [linting.md](../building-react-application/references/linting.md)                                                                                            | Apply ESLint/Prettier baseline and React Native lint conventions.                   |
+| [linting.md](./references/linting.md)                                                                                                                       | Apply ESLint/Prettier setup and React Native lint conventions.                      |
+| [overriding-classname.md](./references/overriding-classname.md)                                                                                             | Resolve NativeWind `className` conflicts on shared components using targeted `!`.   |

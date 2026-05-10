@@ -13,7 +13,6 @@ Opinionated patterns for React web apps: effects, async work, and conventions th
 - New or existing React web projects (TypeScript) where side effects and async flows should follow shared conventions
 - Code review or implementation questions about `useEffect` and promise-based work
 - Choosing or reviewing general-purpose JS utilities (debounce, chunk, object picks, lodash-style helpers) or date/time handling alongside React code
-- ESLint and Prettier setup for React web (Vite) or React Native (Expo) TypeScript projects
 - Adding or extending reference docs for topics this skill covers (routing, forms, data fetching libraries, etc.)
 
 ## Utilities
@@ -33,23 +32,11 @@ npx skills add toss/es-toolkit
 
 Use that skill together with this one when adding or refactoring utilities (imports, compat migration, or picking functions over hand-rolled helpers).
 
-## Tooling
-
-| Task / scenario          | Doc                                   | When to use                                                             |
-| ------------------------ | ------------------------------------- | ----------------------------------------------------------------------- |
-| **Linting & formatting** | [linting.md](./references/linting.md) | ESLint, Prettier; React web (Vite + Hooks) or React Native (Expo) setup |
-
 ## Hook implementation references
 
 | Task / scenario                   | Doc                                                                             | When to use                                                         |
 | --------------------------------- | ------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
 | **Handling async in `useEffect`** | [handling-async-in-use-effect.md](./references/handling-async-in-use-effect.md) | Promises in effects; `.then` / `.catch` vs `async` effect callbacks |
-
-## Styling and components
-
-| Task / scenario                                 | Doc                                                             | When to use                                                                                                                |
-| ----------------------------------------------- | --------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| **Overriding `className` on shared components** | [overriding-classname.md](./references/overriding-classname.md) | Tailwind utilities passed via `className` conflict with base classes; use `!` on the consumer utility so the override wins |
 
 ### Managing forms (TanStack Form)
 

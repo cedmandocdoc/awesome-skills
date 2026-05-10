@@ -29,7 +29,7 @@ Opinionated ecosystem for building Vite-based React SPAs with a consistent archi
 
 ## Companion skill
 
-For **async `useEffect`**, **TanStack Form**, **ESLint / Prettier**, **es-toolkit / date-fns**, and **overriding `className`** with Tailwind, use together with [building-react-application](../building-react-application/SKILL.md).
+For **async `useEffect`**, **TanStack Form**, and **es-toolkit / date-fns**, use together with [building-react-application](../building-react-application/SKILL.md).
 
 Install it:
 
@@ -66,3 +66,4 @@ npx skills add cedmandocdoc/awesome-skills/skills/building-react-application
 | [adding-registry-components.md](./references/adding-registry-components.md) | Add components from registry into `src/ui/` with project conventions. |
 | [add-registry-component.js](./scripts/add-registry-component.js) | Run the helper script to vendor registry components and apply path/class fixes. |
 | [linting.md](./references/linting.md) | Apply linting/formatting rules, including `routeTree.gen.ts` handling. |
+| [overriding-classname.md](./references/overriding-classname.md) | Resolve Tailwind `className` conflicts on shared components using targeted `!` overrides. |
