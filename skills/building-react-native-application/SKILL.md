@@ -23,7 +23,7 @@ Opinionated ecosystem for building React Native apps with a consistent architect
 
 ## When to use
 
-Follow this skill for every task that touches this project's React Native (Expo) app: features, screens, navigation, APIs, state, styling, forms, async and list UI, config, theming, layout, and tooling choices for the app.
+Follow this skill for every task that touches this project's React Native (Expo) app: features, screens, navigation, APIs, state, styling, forms, async and list UI, bottom sheets, config, theming, layout, and tooling choices for the app.
 
 ## Companion skill
 
@@ -61,6 +61,7 @@ Use these terms consistently across this skill and its references:
 | [Expo — Fonts](https://docs.expo.dev/develop/user-interface/fonts/index.md)                                                                                  | Add local/Google fonts and choose between config plugin or `useFonts`.              |
 | [placing-component.md](./references/placing-component.md)                                                                                                    | Decide whether components live in `src/ui/` or `src/features/`.                     |
 | [creating-component.md](./references/creating-component.md)                                                                                                  | Create UI components with clear props and composition patterns.                     |
+| [creating-bottom-sheet.md](./references/creating-bottom-sheet.md)                                                                                            | Build bottom sheets with shared `src/ui/BottomSheet` wrappers; use gorhom only when the wrapper is insufficient. |
 | [managing-wrapper-components.md](./references/managing-wrapper-components.md)                                                                                | Flatten `View` trees and merge `className` unless layout needs split wrappers.      |
 | [managing-async-view.md](./references/managing-async-view.md)                                                                                                | Build async/loading, reloading, error, refresh, and pagination UI states.           |
 | [managing-form-components.md](./references/managing-form-components.md)                                                                                      | Set up `src/ui/Form.tsx`, `createFormHook`, and reusable field primitives.          |
