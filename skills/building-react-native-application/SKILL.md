@@ -25,16 +25,6 @@ Opinionated ecosystem for building React Native apps with a consistent architect
 
 Follow this skill for every task that touches this project's React Native (Expo) app: features, screens, navigation, APIs, state, styling, forms, async and list UI, bottom sheets, config, theming, layout, and tooling choices for the app.
 
-## Companion skill
-
-For **async `useEffect`**, **TanStack Form**, and **es-toolkit / date-fns**, use together with [building-react-application](../building-react-application/SKILL.md).
-
-Install it:
-
-```bash
-npx skills add cedmandocdoc/awesome-skills/skills/building-react-application
-```
-
 ## Terminology
 
 Use these terms consistently across this skill and its references:
@@ -75,6 +65,7 @@ Use these terms consistently across this skill and its references:
 | [promoting-feature.md](./references/promoting-feature.md)                                                                                                    | Promote feature-local pieces into shared UI or separate features.                   |
 | [managing-state.md](./references/managing-state.md)                                                                                                          | Choose Query, Zustand, or local state based on ownership and lifetime.              |
 | [creating-api.md](./references/creating-api.md)                                                                                                              | Structure API clients and feature-specific data hooks.                              |
+| [managing-api-error.md](./references/managing-api-error.md)                                                                                                  | Map API failures to `ApiError`; consume `error.message` in TanStack Query and UI.   |
 | [setting-up-axios.md](./references/setting-up-axios.md)                                                                                                      | Configure Axios defaults/interceptors for RN API access.                            |
 | [configuring-routing.md](./references/configuring-routing.md)                                                                                                | Implement navigation structure, typed params, and route registration.               |
 | [managing-navigation-component.md](./references/managing-navigation-component.md)                                                                            | Configure shared header, drawer, and tab UI through navigator options.              |

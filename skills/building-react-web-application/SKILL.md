@@ -27,16 +27,6 @@ Opinionated ecosystem for building Vite-based React SPAs with a consistent archi
 - Architecture, library, or folder-structure decisions aligned with [structuring-project.md](./references/structuring-project.md)
 - UI, state, API, routing (layouts, path params, search params), or styling work that should follow this skill’s conventions
 
-## Companion skill
-
-For **async `useEffect`**, **TanStack Form**, and **es-toolkit / date-fns**, use together with [building-react-application](../building-react-application/SKILL.md).
-
-Install it:
-
-```bash
-npx skills add cedmandocdoc/awesome-skills/skills/building-react-application
-```
-
 ## References
 
 | Doc | When to use |
@@ -62,6 +52,7 @@ npx skills add cedmandocdoc/awesome-skills/skills/building-react-application
 | [promoting-feature.md](./references/promoting-feature.md) | Promote feature-local components into `src/ui/` when reuse grows. |
 | [managing-state.md](./references/managing-state.md) | Choose between Query, Zustand, local state, or route state. |
 | [creating-api.md](./references/creating-api.md) | Structure API clients and feature-facing data hooks. |
+| [managing-api-error.md](./references/managing-api-error.md) | Map API failures to `ApiError`; consume `error.message` in TanStack Query and UI. |
 | [setting-up-axios.md](./references/setting-up-axios.md) | Configure Axios instance defaults, interceptors, and API boundaries. |
 | [adding-registry-components.md](./references/adding-registry-components.md) | Add components from registry into `src/ui/` with project conventions. |
 | [add-registry-component.js](./scripts/add-registry-component.js) | Run the helper script to vendor registry components and apply path/class fixes. |

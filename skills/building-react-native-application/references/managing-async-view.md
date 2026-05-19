@@ -32,7 +32,7 @@ Names are suggestions; align with your codebase. Map booleans from TanStack Quer
 | Prop | Role |
 | ---- | ---- |
 | `isLoading` | True during **initial** load (no data yet). |
-| `error` | Truthy when the **initial** load failed (Error object, message string, or boolean—pick one convention project-wide). |
+| `error` | Truthy when the **initial** load failed; pass `query.error` from TanStack Query (`ApiError` — display `error.message`; see [managing-api-error.md](./managing-api-error.md)). |
 | `reload` | Retry after error; also used as `RefreshControl` `onRefresh` on **AsyncScrollView** / **AsyncFlatList**. |
 | `isReloading` | True while pull-to-refresh is in flight (scroll/list variants). Ignored by **AsyncView** for UI unless you add an optional subtle indicator. |
 | `loader` | Optional custom node for **initial** loading only (replaces default spinner layout). |
@@ -49,6 +49,18 @@ Use these assignments when wiring an `useQuery` / `useInfiniteQuery` result into
 | `isLoading` | `query.isLoading` |
 | `isReloading` | `query.isRefetching` |
 | `isLoadingMore` | `query.isFetchingNextPage` (**infinite query**; **AsyncFlatList** only — property does not exist on a plain `useQuery` result) |
+
+## Error display
+
+Read user-facing copy from `error.message` (`ApiError` from the API layer). See [managing-api-error.md](./managing-api-error.md).
+
+```tsx
+function ErrorMessage({ error }: { error: unknown }) {
+  const message =
+    error instanceof Error ? error.message : "Something went wrong.";
+  return <Text className="text-center text-destructive">{message}</Text>;
+}
+```
 
 ## AsyncView
 
@@ -91,7 +103,7 @@ export function AsyncView({
         className="flex-1 items-center justify-center gap-4 p-4"
         {...viewProps}
       >
-        <Text className="text-center text-destructive">Something went wrong.</Text>
+        <ErrorMessage error={error} />
         <Pressable onPress={reload}>
           <Text className="font-semibold text-primary">Try again</Text>
         </Pressable>
@@ -151,7 +163,7 @@ export function AsyncScrollView({
   if (error) {
     return (
       <View className="flex-1 items-center justify-center gap-4 p-4">
-        <Text className="text-center text-destructive">Something went wrong.</Text>
+        <ErrorMessage error={error} />
         <Pressable onPress={reload}>
           <Text className="font-semibold text-primary">Try again</Text>
         </Pressable>
@@ -237,7 +249,7 @@ export function AsyncFlatList<T>({
   if (error) {
     return (
       <View className="flex-1 items-center justify-center gap-4 p-4">
-        <Text className="text-center text-destructive">Something went wrong.</Text>
+        <ErrorMessage error={error} />
         <Pressable onPress={reload}>
           <Text className="font-semibold text-primary">Try again</Text>
         </Pressable>

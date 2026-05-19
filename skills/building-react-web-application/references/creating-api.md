@@ -7,6 +7,7 @@ Use this guide to keep API code small, typed, and independent from React. Put HT
 ## Prerequisites
 
 - [setting-up-axios.md](./setting-up-axios.md)
+- [managing-api-error.md](./managing-api-error.md)
 
 ## Guidelines
 
@@ -20,10 +21,12 @@ Use this guide to keep API code small, typed, and independent from React. Put HT
 src/api/<backend-name>/
 ├── client.ts
 ├── env.ts
-├── modules/
-│   └── workshops.ts
-└── models/
-    └── Workshop.ts
+├── utils.ts
+├── models/
+│   ├── ApiError.ts
+│   └── Workshop.ts
+└── modules/
+    └── workshops.ts
 ```
 
 ### Client rules
@@ -35,9 +38,8 @@ src/api/<backend-name>/
 
 ### Error handling
 
-- Use `axios.isAxiosError(err)` for request errors.
-- Read status and payload from `err.response`.
-- Add a custom API error type only when the product needs one.
+- Map failures to **`ApiError`** in `src/api/`; see [managing-api-error.md](./managing-api-error.md).
+- Do not parse Axios or invent user-facing copy in feature hooks or components.
 
 ## Examples
 
@@ -47,9 +49,14 @@ src/api/<backend-name>/
 import type { AxiosInstance } from "axios";
 import type { Workshop } from "../models/Workshop";
 import { responseData } from "../client";
+import { toApiError } from "../utils";
 
 export async function getWorkshops(client: AxiosInstance): Promise<Workshop[]> {
-  return responseData(client.get<Workshop[]>("/workshops"));
+  try {
+    return await responseData(client.get<Workshop[]>("/workshops"));
+  } catch (err) {
+    throw toApiError(err);
+  }
 }
 ```
 

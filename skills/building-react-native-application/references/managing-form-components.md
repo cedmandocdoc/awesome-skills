@@ -8,7 +8,6 @@ For field-level layout and presentational rules, align with [creating-component.
 
 ## Prerequisites
 
-- [building-react-application](../../building-react-application/SKILL.md) — TanStack Form overview and shared reference table (install `@tanstack/react-form`)
 - [TanStack Form — Basic concepts](https://tanstack.com/form/latest/docs/framework/react/guides/basic-concepts.md) — form instances, fields, meta, subscribers
 - [TanStack Form — Form composition](https://tanstack.com/form/latest/docs/framework/react/guides/form-composition.md) — `createFormHook`, pre-bound components, contexts
 
