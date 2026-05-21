@@ -2,57 +2,71 @@
 
 ## Overview
 
-Use this guide to present **server-backed UI** consistently: initial load, errors, refresh, and pagination. Model the experience with three wrappers—**AsyncView**, **AsyncScrollView**, and **AsyncFlatList**—that share the same state machine and differ only in scroll refresh and list pagination.
+Use this guide to present **server-backed UI** consistently with three shared wrappers—**AsyncView**, **AsyncScrollView**, and **AsyncFlatList**—that share the same state machine and differ only in scroll refresh and list pagination. Implement them under `src/ui/`; feature screens compose them around TanStack Query results.
 
-For where data fetching lives (TanStack Query, hooks), see [managing-state.md](./managing-state.md). For component shape and `src/ui/` vs features, see [creating-component.md](./creating-component.md) and [placing-component.md](./placing-component.md).
+For fetching and hooks, see [managing-state.md](./managing-state.md). For error copy, see [managing-api-error.md](./managing-api-error.md). For component placement, see [creating-component.md](./creating-component.md) and [placing-component.md](./placing-component.md).
 
-## UI states (async dependency)
+## Prerequisites
 
-| State | Meaning | Typical presentation |
-| ----- | ------- | -------------------- |
-| **Loading** | No cached data yet; first request in flight | Full-area loader (or custom `loader`); **do not** render `children` |
-| **Error** | First request failed; no data to show | Full-area error message + **Try again** (calls `reload` / `refetch`) |
-| **Data** | Successful load (may be stale while background refetch runs) | Render `children` (or list `renderItem` content) |
-| **Reloading** | User pulled to refresh **or** equivalent; data already on screen | Native pull indicator via `RefreshControl`; **keep showing existing data** |
-| **Loading more** | Pagination / infinite scroll loading next page | **AsyncFlatList** only: a **small** `ActivityIndicator` at the bottom of the list; **keep showing existing items** |
+- [managing-state.md](./managing-state.md)
+- [managing-api-error.md](./managing-api-error.md)
 
-Treat **`isReloading`** and **`isLoadingMore`** as overlays on top of the data state, not replacements for the whole screen—unless the product explicitly wants a blocking second load (unusual).
+## Guidelines
 
-## Shared behavior (all three components)
+### UI states
 
-1. **Initial loading** — While `isLoading` is true and there is no successful data yet, show only the initial loader (default centered `ActivityIndicator` or the optional `loader` prop). Do not mount meaningful `children` / list data rows for the main query.
-2. **Initial error** — If the first load fails, show only the error UI with a **Try again** control wired to `reload` (or the same function the query uses for `refetch`).
-3. **Data** — When data is available, render `children` (**AsyncView** / **AsyncScrollView**) or the list’s normal rendering (**AsyncFlatList**).
-4. **Inherited props** — Forward remaining props to the underlying primitive: `View` (**AsyncView**), `ScrollView` (**AsyncScrollView**), `FlatList` (**AsyncFlatList**).
+| State | Meaning | Presentation |
+| ----- | ------- | -------------- |
+| **Loading** | First request in flight; no cached data | Full-area loader (or custom `loader`); do not render main content |
+| **Error** | First request failed | Full-area message + **Try again** → `reload` |
+| **Data** | Successful load (may be stale during refetch) | Render `children` or list items |
+| **Reloading** | Pull-to-refresh in flight | `RefreshControl`; **keep existing data** |
+| **Loading more** | Next page fetching (**AsyncFlatList** only) | Small footer spinner; **keep existing items** |
 
-## Suggested props
+Treat **`isReloading`** and **`isLoadingMore`** as overlays on data, not full-screen replacements.
 
-Names are suggestions; align with your codebase. Map booleans from TanStack Query as in [TanStack Query mapping](#tanstack-query-mapping) below.
+### Shared behavior (all three)
+
+1. **Initial loading** — While `isLoading` is true, show only the loader. Do not mount meaningful content for the main query.
+2. **Initial error** — Show error UI with **Try again** wired to `reload` / `refetch`.
+3. **Data** — Render `children` or list content when data is available.
+4. **Inherited props** — Forward remaining props to `View`, `ScrollView`, or `FlatList`.
+
+### Suggested props
 
 | Prop | Role |
 | ---- | ---- |
 | `isLoading` | True during **initial** load (no data yet). |
-| `error` | Truthy when the **initial** load failed; pass `query.error` from TanStack Query (`ApiError` — display `error.message`; see [managing-api-error.md](./managing-api-error.md)). |
-| `reload` | Retry after error; also used as `RefreshControl` `onRefresh` on **AsyncScrollView** / **AsyncFlatList**. |
-| `isReloading` | True while pull-to-refresh is in flight (scroll/list variants). Ignored by **AsyncView** for UI unless you add an optional subtle indicator. |
-| `loader` | Optional custom node for **initial** loading only (replaces default spinner layout). |
-| `isLoadingMore` | (**AsyncFlatList** only.) True while the next page is loading. |
-| `loadMore` | (**AsyncFlatList** only.) Called from the list’s **`onEndReached`** to fetch the next page (e.g. `fetchNextPage`). Guard idempotency in the hook (no `hasNextPage`, debounce, etc.). |
-| `...props` | Passed through to `View`, `ScrollView`, or `FlatList` (`style`, `className`, `contentContainerStyle`, `data`, `renderItem`, etc.). |
+| `error` | Truthy when **initial** load failed; pass `query.error` (`ApiError` — use `error.message`). |
+| `reload` | Retry after error; `RefreshControl` `onRefresh` on scroll/list variants. |
+| `isReloading` | Pull-to-refresh in flight (**AsyncScrollView** / **AsyncFlatList**). |
+| `loader` | Optional node for **initial** loading only. |
+| `isLoadingMore` | (**AsyncFlatList** only.) Next page in flight. |
+| `loadMore` | (**AsyncFlatList** only.) Called from `onEndReached`; guard in the hook (`hasNextPage`, in-flight flags). |
 
 ### TanStack Query mapping
-
-Use these assignments when wiring an `useQuery` / `useInfiniteQuery` result into the async wrappers:
 
 | Prop | Source |
 | ---- | ------ |
 | `isLoading` | `query.isLoading` |
 | `isReloading` | `query.isRefetching` |
-| `isLoadingMore` | `query.isFetchingNextPage` (**infinite query**; **AsyncFlatList** only — property does not exist on a plain `useQuery` result) |
+| `isLoadingMore` | `query.isFetchingNextPage` (infinite query only) |
 
-## Error display
+### Error display
 
-Read user-facing copy from `error.message` (`ApiError` from the API layer). See [managing-api-error.md](./managing-api-error.md).
+Read user-facing copy from `error.message`. See [managing-api-error.md](./managing-api-error.md). If refresh fails, **do not** replace the data UI with the full error state.
+
+### When to use which wrapper
+
+| Wrapper | Use when |
+| ------- | -------- |
+| **AsyncView** | Non-scroll content (forms, dashboards). No pull-to-refresh; recovery via **Try again** only. |
+| **AsyncScrollView** | Scrollable content with pull-to-refresh (`RefreshControl` + `isReloading` / `reload`). |
+| **AsyncFlatList** | Long lists with virtualization; optional infinite scroll via `loadMore` + `isLoadingMore` footer. |
+
+## Examples
+
+### ErrorMessage
 
 ```tsx
 function ErrorMessage({ error }: { error: unknown }) {
@@ -62,13 +76,9 @@ function ErrorMessage({ error }: { error: unknown }) {
 }
 ```
 
-## AsyncView
+### AsyncView
 
-**Use when:** one-off or non-scroll content (forms headers, dashboards, static layouts) where pull-to-refresh is not desired.
-
-- **No pull-to-refresh.** There is no `isReloading` UI pattern from the user gesture; only **initial error** + **Try again**.
-- If a background refetch runs while data is on screen, either do nothing visually or use a minimal non-blocking hint (optional; not required by this pattern).
-- Compose screen content as `children` inside the wrapper once `isLoading` is false and `error` is clear.
+**Use when:** one-off or non-scroll content where pull-to-refresh is not desired. No `isReloading` UI from a user gesture; only **initial error** + **Try again**.
 
 ```tsx
 import type { ComponentProps, ReactNode } from "react";
@@ -114,14 +124,9 @@ export function AsyncView({
 }
 ```
 
-## AsyncScrollView
+### AsyncScrollView
 
-**Use when:** scrollable content should support **pull-to-refresh**.
-
-- Wrap a `ScrollView` (or project primitive that exposes the same API).
-- Attach React Native **`RefreshControl`**: `refreshing={isReloading}`, `onRefresh={reload}` (or a thin wrapper that calls `reload`).
-- **Reload error handling** — If refresh fails, **do not** swap the screen to the full error state; keep showing the last successful `children`. Optionally log or toast; the default per this guide is to **ignore** refresh failure for the main layout.
-- Initial load and initial error behave like the shared rules above.
+**Use when:** scrollable content should support **pull-to-refresh**. If refresh fails, keep showing the last successful `children`.
 
 ```tsx
 import type { ComponentProps, ReactNode } from "react";
@@ -185,14 +190,9 @@ export function AsyncScrollView({
 }
 ```
 
-## AsyncFlatList
+### AsyncFlatList
 
-**Use when:** long lists, virtualization, and optional **infinite scroll**.
-
-- Same **RefreshControl** rules as **AsyncScrollView**: `isReloading` + `reload`; **ignore** refresh failure for full-screen error UI.
-- **`loadMore`** — Required for pagination: the wrapper calls it from **`onEndReached`** (after any caller-supplied `onEndReached`). Implement with `fetchNextPage` (or equivalent) and guard in the hook (`hasNextPage`, in-flight flags, etc.).
-- **`isLoadingMore`** — When true, show a **compact** footer: centered **`ActivityIndicator`** with `size="small"` (and minimal vertical padding). Do not clear the list.
-- Pass FlatList-specific props through `...props` (`data`, `renderItem`, `keyExtractor`, etc.). You may still pass your own `onEndReached`; it runs **before** `loadMore`.
+**Use when:** long lists, virtualization, and optional **infinite scroll**. Caller `onEndReached` runs before `loadMore`. Merge a custom `ListFooterComponent` with the `isLoadingMore` footer when both are needed.
 
 ```tsx
 import type { ComponentProps, ReactElement, ReactNode } from "react";
@@ -282,13 +282,34 @@ export function AsyncFlatList<T>({
 }
 ```
 
-If the caller passes a custom `ListFooterComponent`, merge with `isLoadingMore` so both can appear (for example render a fragment or column with the caller footer above the small spinner).
+### Screen with AsyncView
 
-## Checklist
+```tsx
+const workshops = useWorkshops();
 
-- [ ] Initial load: only loader or `loader`, no main content.
-- [ ] Initial error: full-area error + Try again → `reload`.
-- [ ] Data: `children` or list items visible.
-- [ ] **AsyncScrollView** / **AsyncFlatList**: `RefreshControl` with `isReloading` / `reload`; refresh errors do not replace the data UI.
-- [ ] **AsyncFlatList**: `loadMore` from `onEndReached`; small bottom indicator when `isLoadingMore`; list stays visible.
-- [ ] **AsyncView**: no pull-to-refresh; error recovery via Try again only.
+return (
+  <AsyncView
+    isLoading={workshops.isLoading}
+    error={workshops.isError ? workshops.error : undefined}
+    reload={() => void workshops.refetch()}
+  >
+    <WorkshopList data={workshops.data} />
+  </AsyncView>
+);
+```
+
+### Screen with AsyncFlatList
+
+```tsx
+<AsyncFlatList
+  isLoading={query.isLoading}
+  isReloading={query.isRefetching}
+  isLoadingMore={query.isFetchingNextPage}
+  loadMore={() => void query.fetchNextPage()}
+  reload={() => void query.refetch()}
+  error={query.isError ? query.error : undefined}
+  data={items}
+  renderItem={renderItem}
+  keyExtractor={(item) => item.id}
+/>
+```

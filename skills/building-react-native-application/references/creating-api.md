@@ -18,12 +18,14 @@ Use this guide to keep API code small, typed, and independent from React. Put HT
 - Group request functions by domain.
 
 ```text
+src/libs/
+└── ApiError.ts
+
 src/api/<backend-name>/
 ├── client.ts
 ├── env.ts
-├── utils.ts
+├── utils.ts        # toApiError imports ApiError from @/libs/ApiError
 ├── models/
-│   ├── ApiError.ts
 │   └── Workshop.ts
 └── modules/
     └── workshops.ts
@@ -38,7 +40,7 @@ src/api/<backend-name>/
 
 ### Error handling
 
-- Map failures to **`ApiError`** in `src/api/`; see [managing-api-error.md](./managing-api-error.md).
+- Import **`ApiError`** from `@/libs/ApiError`; map failures to it in `src/api/` (see [managing-api-error.md](./managing-api-error.md)).
 - Do not parse Axios or invent user-facing copy in feature hooks or components.
 
 ## Examples
