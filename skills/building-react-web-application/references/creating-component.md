@@ -87,6 +87,10 @@ export function Button({ tone, className, children, ...props }: ButtonProps) {
 
 Use explicit parts such as `Button`, `ButtonText`, and `ButtonIcon` instead of switching on `typeof children`. Same as above: prefer registry-backed pieces when they exist; the compound layout below is for a **custom** primitive when the registry does not provide a match.
 
+Put **each part in its own file** (see [naming-component.md](./naming-component.md) and [abstracting-component.md](./abstracting-component.md)).
+
+`src/ui/Button.tsx`:
+
 ```tsx
 import type { ComponentProps, ReactNode } from "react";
 import { cva, cx } from "class-variance-authority";
@@ -100,10 +104,22 @@ export function Button({ children, className, ...props }: ComponentProps<"button
     </button>
   );
 }
+```
+
+`src/ui/ButtonText.tsx`:
+
+```tsx
+import type { ReactNode } from "react";
 
 export function ButtonText({ children }: { children: ReactNode }) {
   return <span className="font-medium">{children}</span>;
 }
+```
+
+`src/ui/ButtonIcon.tsx`:
+
+```tsx
+import type { ReactNode } from "react";
 
 export function ButtonIcon({ children }: { children: ReactNode }) {
   return <span className="inline-flex shrink-0">{children}</span>;

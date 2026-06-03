@@ -20,5 +20,6 @@ Use this guide to place components in the right layer. Put domain-specific UI in
 - Put product rules and domain behavior in `src/features/<feature-name>/` (including `components/` for feature components).
 - Put reusable, presentation-only primitives in `src/ui/`.
 - Keep `src/ui/` flat unless a tool requires a nested structure.
+- Composition roots such as `src/ui/Form/`, `src/ui/Async/`, and `src/ui/BottomSheet/` are allowed when a subsystem owns multiple related files (see the matching reference guides).
 - Import primitives with `@/ui/<file>`.
 - Use relative imports between files inside `src/ui/`.

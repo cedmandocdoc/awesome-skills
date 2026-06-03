@@ -29,7 +29,7 @@ Use consistent suffixes to signal the component's role:
 
 | Suffix | Role |
 | --- | --- |
-| `Page` | Screen component rendered for a route |
+| `Screen` | Screen component rendered for a route |
 | `Layout` | Structural wrapper shared across route entries |
 | `Card` | Grouped content |
 | `Item` / `Row` | List element |

@@ -45,8 +45,8 @@ import { View } from "react-native";
 ```tsx
 import { View } from "react-native";
 
-// Prefer: one wrapper with merged classes
-<View className="flex-1 gap-2 bg-background p-4">{children}</View>
+// Prefer: one wrapper with merged classes (omit bg-background on screen roots; see managing-screen-background.md)
+<View className="flex-1 gap-2 p-4">{children}</View>
 ```
 
 ### Merge variant and override classes on one node

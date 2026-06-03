@@ -21,7 +21,7 @@ This guide favors isolated features first, but it allows grouped features when i
 
 **Per-route is the most common grouping**
 
-- Navigators in `src/navigation/` point `Stack.Screen` (and similar) `component` props at feature exports.
+- Navigators in `src/navigation/` map static `screens` entries to feature exports (see [configuring-routing.md](./configuring-routing.md)).
 - The feature export should be **route-ready** (read params with React Navigation hooks when needed) so registration stays a one-line import.
 - The feature folder owns the behavior so navigator files stay focused on registration and options.
 

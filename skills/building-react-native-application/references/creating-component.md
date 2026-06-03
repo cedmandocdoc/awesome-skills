@@ -77,33 +77,38 @@ export function Button({ tone, className, label }: ButtonProps) {
 
 Use explicit parts such as `Button`, `ButtonText`, and `ButtonIcon` instead of switching on `typeof children`. Same as above: prefer registry-backed pieces when they exist; the compound layout below is for a **custom** primitive when the registry does not provide a match.
 
+Put **each part in its own file** (see [naming-component.md](./naming-component.md) and [abstracting-component.md](./abstracting-component.md)).
+
+`src/ui/Button.tsx`:
+
 ```ts
 import type { ReactNode } from "react";
-import { Pressable, Text, View } from "react-native";
+import { Pressable } from "react-native";
 import { buttonStyles } from "./button.styles";
 
-interface ButtonRootProps {
-  children: ReactNode;
-  className?: string;
-}
-
-interface ButtonTextProps {
-  children: ReactNode;
-}
-
-interface ButtonIconProps {
-  children: ReactNode;
-}
-
-export function Button({ children, className }: ButtonRootProps) {
+export function Button({ children, className }: { children: ReactNode; className?: string }) {
   return <Pressable className={buttonStyles({ className })}>{children}</Pressable>;
 }
+```
 
-export function ButtonText({ children }: ButtonTextProps) {
+`src/ui/ButtonText.tsx`:
+
+```ts
+import type { ReactNode } from "react";
+import { Text } from "react-native";
+
+export function ButtonText({ children }: { children: ReactNode }) {
   return <Text>{children}</Text>;
 }
+```
 
-export function ButtonIcon({ children }: ButtonIconProps) {
+`src/ui/ButtonIcon.tsx`:
+
+```ts
+import type { ReactNode } from "react";
+import { View } from "react-native";
+
+export function ButtonIcon({ children }: { children: ReactNode }) {
   return <View>{children}</View>;
 }
 ```

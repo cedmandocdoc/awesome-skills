@@ -102,11 +102,11 @@ export function CheckoutStepForm() {
           <div>
             <form.AppField
               name="name"
-              children={(field) => <field.TextField label="Name" />}
+              children={(field) => <field.InputField label="Name" />}
             />
             <form.AppField
               name="email"
-              children={(field) => <field.TextField label="Email" />}
+              children={(field) => <field.InputField label="Email" />}
             />
           </div>
         ),
@@ -114,11 +114,11 @@ export function CheckoutStepForm() {
           <div>
             <form.AppField
               name="street"
-              children={(field) => <field.TextField label="Street" />}
+              children={(field) => <field.InputField label="Street" />}
             />
             <form.AppField
               name="city"
-              children={(field) => <field.TextField label="City" />}
+              children={(field) => <field.InputField label="City" />}
             />
           </div>
         ),
@@ -129,7 +129,14 @@ export function CheckoutStepForm() {
         <button type="button" onClick={() => stepper.navigation.prev()} disabled={stepper.state.isFirst}>
           Back
         </button>
-        <button type="submit">{stepper.state.isLast ? "Submit" : "Next"}</button>
+        <button
+          type="button"
+          onClick={() => {
+            void form.handleSubmit();
+          }}
+        >
+          {stepper.state.isLast ? "Submit" : "Next"}
+        </button>
       </div>
     </form.AppForm>
   );

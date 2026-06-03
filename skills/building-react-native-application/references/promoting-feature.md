@@ -40,7 +40,7 @@ Extract when the shared part:
 
 ### Route interaction (typical flow)
 
-1. `src/navigation/` registers routes with `component={...}` pointing at feature exports. Keep that wiring thin—only param bridges or options belong here.
+1. `src/navigation/` registers routes in static `screens` config pointing at feature exports. Keep that wiring thin—only param bridges or options belong here.
 2. `src/features/<feature-name>/` owns the behavior: hooks, derived state, event handlers, and feature-specific UI composition (including reading route params inside the exported component when needed).
 3. `src/ui/` provides shared primitives used by feature components when presentation-only reuse is needed.
 
@@ -52,7 +52,7 @@ If the same composition repeats across multiple routes or screen flows, consolid
 
 - Feature: `src/features/workshop-list/`
 - Exports: `WorkshopList` as the primary component, plus supporting `useWorkshops` and `Workshop` type.
-- Navigation: `MainStack.tsx` (or equivalent) registers `<Stack.Screen name="Workshops" component={WorkshopList} />`.
+- Navigation: `MainStack.tsx` (or equivalent) registers `Workshops` in static `screens` config (for example `screens: { Workshops: WorkshopList }`).
 
 ### Navigation/workflow grouping (grouped feature)
 

@@ -29,7 +29,7 @@ Use consistent suffixes to signal the component's role:
 
 | Suffix | Role |
 | --- | --- |
-| `Page` | Route-level page shell |
+| `Screen` | Route-level screen component |
 | `Layout` | Structural wrapper used across routes |
 | `Card` | Grouped content |
 | `Item` / `Row` | List element |
@@ -63,7 +63,7 @@ Use props or CVA variants for state, not separate component names.
 
 | Bad | Good | Why |
 | --- | --- | --- |
-| `PrimaryButton` | `Button` with `variant="default"` | State belongs in props |
+| `PrimaryButton` | `Button` with `tone="primary"` | State belongs in props |
 | `DisabledInput` | `Input` with `disabled` | State belongs in props |
 
 ## Anti-patterns

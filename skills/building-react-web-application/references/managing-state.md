@@ -105,3 +105,12 @@ export const useAuthStore = create<AuthState>((set) => ({
 const [raw, setRaw] = useState<string | undefined>(undefined);
 const value = raw ?? serverDefault;
 ```
+
+### Stepper and wizard state
+
+For multi-step flows built with Stepperize (see [managing-stepper-hook.md](./managing-stepper-hook.md)):
+
+- Keep **active step index and step navigation** in the stepper hook (`useXStepper`) when the wizard is scoped to one route or feature flow.
+- Keep **field values and validation** in TanStack Form (see [managing-stepper-form.md](./managing-stepper-form.md)); do not mirror form fields in Zustand.
+- Use **Zustand** only when step progress or draft data must survive leaving the route or be shared across features.
+- Use **route or search params** when a step or sub-flow should be bookmarkable or restored on refresh.

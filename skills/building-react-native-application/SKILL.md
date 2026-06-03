@@ -30,7 +30,7 @@ Follow this skill for every task that touches this project's React Native (Expo)
 Use these terms consistently across this skill and its references:
 
 - **Route**: navigation identity and configuration (for example route `name`, params type, options, deep-link path, and registration in `src/navigation/`).
-- **Screen**: React component rendered for a route (commonly exported from `src/features/<feature-name>/` and passed to `Stack.Screen component={...}`).
+- **Screen**: React component rendered for a route (commonly exported from `src/features/<feature-name>/` and registered in static `screens` config).
 - **Navigator**: container that maps routes to screens (for example stack, tabs, drawer).
 - Keep **route config** in `src/navigation/`; keep **screen behavior and UI** in `src/features/`.
 

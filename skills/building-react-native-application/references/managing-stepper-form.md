@@ -104,11 +104,11 @@ export function CheckoutStepFormScreen() {
           <View>
             <form.AppField
               name="name"
-              children={(field) => <field.TextField label="Name" />}
+              children={(field) => <field.InputField label="Name" />}
             />
             <form.AppField
               name="email"
-              children={(field) => <field.TextField label="Email" />}
+              children={(field) => <field.InputField label="Email" />}
             />
           </View>
         ),
@@ -116,11 +116,11 @@ export function CheckoutStepFormScreen() {
           <View>
             <form.AppField
               name="street"
-              children={(field) => <field.TextField label="Street" />}
+              children={(field) => <field.InputField label="Street" />}
             />
             <form.AppField
               name="city"
-              children={(field) => <field.TextField label="City" />}
+              children={(field) => <field.InputField label="City" />}
             />
           </View>
         ),

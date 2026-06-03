@@ -81,7 +81,7 @@ Keep design tokens in `src/theme.css` only. Put shared color, radius, and chart 
 
 ### Import theme tokens
 
-Keep `global.css` as the Metro entry file. List the Tailwind layers first, then import `src/theme.css` for design tokens.
+Keep `global.css` as the Metro entry file. Import `src/theme.css` first so design tokens are available, then list the Tailwind layers.
 
 ```css
 @import "./src/theme.css";

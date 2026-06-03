@@ -96,9 +96,14 @@ Read user-facing copy from `error.message`. See [managing-api-error.md](./managi
 `src/ui/Async/ErrorMessage.tsx` — internal helper used by all three wrappers.
 
 ```tsx
+import { Text } from "react-native";
+
+import { FALLBACK_MESSAGE } from "@/api/app-api/utils";
+import { ApiError } from "@/libs/ApiError";
+
 export function ErrorMessage({ error }: { error: unknown }) {
   const message =
-    error instanceof Error ? error.message : "Something went wrong.";
+    error instanceof ApiError ? error.message : FALLBACK_MESSAGE;
   return <Text className="text-center text-destructive">{message}</Text>;
 }
 ```
