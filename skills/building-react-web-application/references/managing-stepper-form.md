@@ -138,6 +138,6 @@ export function CheckoutStepForm() {
 
 ## Related
 
-- [managing-form-components.md](./managing-form-components.md) — pre-bound TanStack Form composition in `src/ui/Form.tsx`
+- [managing-form-components.md](./managing-form-components.md) — pre-bound TanStack Form composition in `src/ui/Form/`
 - [managing-stepper-hook.md](./managing-stepper-hook.md) — base hook/provider pattern for Stepperize
 - [managing-state.md](./managing-state.md) — decide local/store/server responsibilities around forms

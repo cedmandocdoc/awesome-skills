@@ -147,5 +147,5 @@ export function CheckoutStepFormScreen() {
 ## Related
 
 - [managing-stepper-hook.md](./managing-stepper-hook.md) — base Stepperize hook/provider pattern
-- [managing-form-components.md](./managing-form-components.md) — pre-bound TanStack Form composition in `src/ui/Form.tsx`
+- [managing-form-components.md](./managing-form-components.md) — pre-bound TanStack Form composition in `src/ui/Form/`
 - [managing-state.md](./managing-state.md) — state ownership around multi-step flows

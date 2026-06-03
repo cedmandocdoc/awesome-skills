@@ -51,8 +51,8 @@ Opinionated ecosystem for building Vite-based React SPAs with a consistent archi
 | [creating-feature.md](./references/creating-feature.md) | Create new feature modules, barrels, and internal structure. |
 | [promoting-feature.md](./references/promoting-feature.md) | Promote feature-local components into `src/ui/` when reuse grows. |
 | [managing-state.md](./references/managing-state.md) | Choose between Query, Zustand, local state, or route state. |
-| [managing-form-components.md](./references/managing-form-components.md) | Set up `src/ui/Form.tsx`, `createFormHook`, and reusable field primitives. |
-| [managing-form-error.md](./references/managing-form-error.md) | Handle server and local form errors with pre-bound components and `ApiError`. |
+| [managing-form-components.md](./references/managing-form-components.md) | Set up `src/ui/Form/`, `createFormHook`, `FieldShell`, and pre-bound `*Field` components. |
+| [managing-form-error.md](./references/managing-form-error.md) | Handle `onServer` and field errors with `ApiError`; wire into existing form UI. |
 | [managing-stepper-hook.md](./references/managing-stepper-hook.md) | Create feature stepper hooks (`useXStepper`) with Stepperize `defineStepper`, `useStepper`, and `Scoped`. |
 | [managing-stepper-form.md](./references/managing-stepper-form.md) | Build multi-step forms using Stepperize + TanStack Form + Zod step schemas. |
 | [creating-api.md](./references/creating-api.md) | Structure API clients and feature-facing data hooks. |

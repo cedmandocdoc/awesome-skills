@@ -2,7 +2,7 @@
 
 ## Overview
 
-Use this guide to present **server-backed UI** consistently with three shared wrappers—**AsyncView**, **AsyncScrollView**, and **AsyncFlatList**—that share the same state machine and differ only in scroll refresh and list pagination. Implement them under `src/ui/`; feature screens compose them around TanStack Query results.
+Use this guide to present **server-backed UI** consistently with three shared wrappers—**AsyncView**, **AsyncScrollView**, and **AsyncFlatList**—that share the same state machine and differ only in scroll refresh and list pagination. Keep **all async wrappers** under **`src/ui/Async/`** and export them from **`src/ui/Async/index.tsx`** so screens import **`@/ui/Async`**. Feature screens compose them around TanStack Query results.
 
 For fetching and hooks, see [managing-state.md](./managing-state.md). For error copy, see [managing-api-error.md](./managing-api-error.md). For component placement, see [creating-component.md](./creating-component.md) and [placing-component.md](./placing-component.md).
 
@@ -12,6 +12,31 @@ For fetching and hooks, see [managing-state.md](./managing-state.md). For error 
 - [managing-api-error.md](./managing-api-error.md)
 
 ## Guidelines
+
+### Folder placement
+
+- Keep **AsyncView**, **AsyncScrollView**, **AsyncFlatList**, and shared helpers (for example **ErrorMessage**) under **`src/ui/Async/`**.
+- Export the public API from **`src/ui/Async/index.tsx`** so features import **`@/ui/Async`** — not individual files under the folder.
+- Put **one wrapper per file** when it grows beyond a few lines. Keep small shared pieces such as **`ErrorMessage.tsx`** alongside the wrappers.
+
+Expected layout:
+
+```text
+src/ui/Async/
+  ErrorMessage.tsx    — shared error copy helper (internal to Async)
+  AsyncView.tsx
+  AsyncScrollView.tsx
+  AsyncFlatList.tsx
+  index.tsx           — re-exports AsyncView, AsyncScrollView, AsyncFlatList
+```
+
+| Area | Typical location |
+| ---- | ---------------- |
+| Barrel exports | `src/ui/Async/index.tsx` |
+| Non-scroll wrapper | `src/ui/Async/AsyncView.tsx` |
+| Scroll + refresh | `src/ui/Async/AsyncScrollView.tsx` |
+| Virtualized list + pagination | `src/ui/Async/AsyncFlatList.tsx` |
+| Error copy helper | `src/ui/Async/ErrorMessage.tsx` |
 
 ### UI states
 
@@ -68,8 +93,10 @@ Read user-facing copy from `error.message`. See [managing-api-error.md](./managi
 
 ### ErrorMessage
 
+`src/ui/Async/ErrorMessage.tsx` — internal helper used by all three wrappers.
+
 ```tsx
-function ErrorMessage({ error }: { error: unknown }) {
+export function ErrorMessage({ error }: { error: unknown }) {
   const message =
     error instanceof Error ? error.message : "Something went wrong.";
   return <Text className="text-center text-destructive">{message}</Text>;
@@ -80,9 +107,13 @@ function ErrorMessage({ error }: { error: unknown }) {
 
 **Use when:** one-off or non-scroll content where pull-to-refresh is not desired. No `isReloading` UI from a user gesture; only **initial error** + **Try again**.
 
+`src/ui/Async/AsyncView.tsx`
+
 ```tsx
 import type { ComponentProps, ReactNode } from "react";
 import { ActivityIndicator, Pressable, Text, View } from "react-native";
+
+import { ErrorMessage } from "./ErrorMessage";
 
 interface AsyncViewProps extends ComponentProps<typeof View> {
   isLoading: boolean;
@@ -128,6 +159,8 @@ export function AsyncView({
 
 **Use when:** scrollable content should support **pull-to-refresh**. If refresh fails, keep showing the last successful `children`.
 
+`src/ui/Async/AsyncScrollView.tsx`
+
 ```tsx
 import type { ComponentProps, ReactNode } from "react";
 import {
@@ -138,6 +171,8 @@ import {
   Text,
   View,
 } from "react-native";
+
+import { ErrorMessage } from "./ErrorMessage";
 
 interface AsyncScrollViewProps extends ComponentProps<typeof ScrollView> {
   isLoading: boolean;
@@ -194,6 +229,8 @@ export function AsyncScrollView({
 
 **Use when:** long lists, virtualization, and optional **infinite scroll**. Caller `onEndReached` runs before `loadMore`. Merge a custom `ListFooterComponent` with the `isLoadingMore` footer when both are needed.
 
+`src/ui/Async/AsyncFlatList.tsx`
+
 ```tsx
 import type { ComponentProps, ReactElement, ReactNode } from "react";
 import {
@@ -204,6 +241,8 @@ import {
   Text,
   View,
 } from "react-native";
+
+import { ErrorMessage } from "./ErrorMessage";
 
 interface AsyncFlatListProps<T>
   extends Omit<
@@ -282,9 +321,21 @@ export function AsyncFlatList<T>({
 }
 ```
 
+### Barrel export
+
+`src/ui/Async/index.tsx`
+
+```tsx
+export { AsyncView } from "./AsyncView";
+export { AsyncScrollView } from "./AsyncScrollView";
+export { AsyncFlatList } from "./AsyncFlatList";
+```
+
 ### Screen with AsyncView
 
 ```tsx
+import { AsyncView } from "@/ui/Async";
+
 const workshops = useWorkshops();
 
 return (
@@ -301,6 +352,8 @@ return (
 ### Screen with AsyncFlatList
 
 ```tsx
+import { AsyncFlatList } from "@/ui/Async";
+
 <AsyncFlatList
   isLoading={query.isLoading}
   isReloading={query.isRefetching}
