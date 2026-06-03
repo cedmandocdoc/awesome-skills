@@ -38,14 +38,17 @@ At runtime `onServer` holds `ApiError` from typed mutations (`useMutation<…, A
 Create a pre-bound form component that subscribes to `errorMap.onServer`, then use it as `form.TransientServerError`. Place the implementation in `src/ui/Form/` (for example `TransientServerError.tsx`) and register it in `formComponents` from `index.tsx`:
 
 ```tsx
+import { useCallback } from "react";
+import type { ReactElement } from "react";
+
 /**
  * Pre-bound form component that subscribes to server-time form errors
  * and shows a transient bottom toast when the error is an Error instance.
  */
-export function TransientServerError(): React.JSX.Element {
+export function TransientServerError(): ReactElement {
   const form = useFormContext();
 
-  const retrySubmit = React.useCallback(async (): Promise<void> => {
+  const retrySubmit = useCallback(async (): Promise<void> => {
     form.setErrorMap({ onServer: undefined });
     await form.handleSubmit();
   }, [form]);

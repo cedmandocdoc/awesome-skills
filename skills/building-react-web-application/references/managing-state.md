@@ -40,6 +40,7 @@ npm install @tanstack/react-query zustand
 Mount **inside** the same root tree as the router (typically wrapping `RouterProvider` or wrapped by it—pick one order and keep it consistent). Example:
 
 ```tsx
+import type { ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const queryClient = new QueryClient({
@@ -51,7 +52,7 @@ const queryClient = new QueryClient({
   },
 });
 
-export function AppProviders({ children }: { children: React.ReactNode }) {
+export function AppProviders({ children }: { children: ReactNode }) {
   return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
 }
 ```

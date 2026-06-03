@@ -115,6 +115,7 @@ Create **`FieldShell.tsx`** so every field gets consistent label and error rende
 ```tsx
 // src/ui/Form/FieldShell.tsx
 
+import type { ReactNode } from "react";
 import { View } from "react-native";
 import type { ApiError } from "@/lib/api-error";
 import type { ZodError } from "zod";
@@ -126,7 +127,7 @@ export function FieldShell({
   error,
   label,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
   error?: ApiError | ZodError | string;
   label?: string;
 }) {

@@ -100,7 +100,7 @@ function BookingStepActions() {
   const stepper = useBookingStepper();
 
   return (
-    <View style={{ flexDirection: "row", gap: 8 }}>
+    <View className="flex-row gap-2">
       <Pressable onPress={() => stepper.navigation.prev()} disabled={stepper.state.isFirst}>
         <Text>Back</Text>
       </Pressable>

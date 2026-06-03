@@ -86,12 +86,13 @@ const pill = cva("rounded-full px-3 py-1", {
 ### Merge classes with `cx`
 
 ```tsx
+import type { ComponentProps } from "react";
 import { cx } from "class-variance-authority";
 
 export function Card({
   className,
   ...props
-}: React.ComponentProps<"div">) {
+}: ComponentProps<"div">) {
   return (
     <div
       className={cx("rounded-xl border border-border bg-card p-4 text-card-foreground", className)}

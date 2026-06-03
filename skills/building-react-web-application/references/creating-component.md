@@ -53,7 +53,7 @@ export function WorkshopCta() {
 Use this shape when **no registry primitive fits** (or after you deliberately skip the registry path). Keep the component presentation-only.
 
 ```tsx
-import type { ReactNode } from "react";
+import type { ComponentProps, ReactNode } from "react";
 import { cva, cx } from "class-variance-authority";
 
 const buttonVariants = cva(
@@ -69,7 +69,7 @@ const buttonVariants = cva(
   },
 );
 
-interface ButtonProps extends React.ComponentProps<"button"> {
+interface ButtonProps extends ComponentProps<"button"> {
   tone?: "primary" | "secondary";
   children: ReactNode;
 }
@@ -88,12 +88,12 @@ export function Button({ tone, className, children, ...props }: ButtonProps) {
 Use explicit parts such as `Button`, `ButtonText`, and `ButtonIcon` instead of switching on `typeof children`. Same as above: prefer registry-backed pieces when they exist; the compound layout below is for a **custom** primitive when the registry does not provide a match.
 
 ```tsx
-import type { ReactNode } from "react";
+import type { ComponentProps, ReactNode } from "react";
 import { cva, cx } from "class-variance-authority";
 
 const rootVariants = cva("inline-flex items-center gap-2 rounded-md px-4 py-2");
 
-export function Button({ children, className, ...props }: React.ComponentProps<"button">) {
+export function Button({ children, className, ...props }: ComponentProps<"button">) {
   return (
     <button type="button" className={cx(rootVariants(), className)} {...props}>
       {children}
