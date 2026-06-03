@@ -28,10 +28,12 @@ In form submit handlers, catch API or mutation failures and write them to `onSer
 ```tsx
 try {
   await mutation.mutateAsync(value);
-} catch (error) {
-  formApi.setErrorMap({ onServer: error });
+} catch (error: unknown) {
+  formApi.setErrorMap({ onServer: error as never });
 }
 ```
+
+At runtime `onServer` holds `ApiError` from typed mutations (`useMutation<…, ApiError, …>`) and the API layer in [managing-api-error.md](./managing-api-error.md). Use `as never` because TanStack Form’s `setErrorMap` typing does not accept `ApiError` on `onServer` directly.
 
 Create a pre-bound form component that subscribes to `errorMap.onServer`, then use it as `form.TransientServerError`:
 

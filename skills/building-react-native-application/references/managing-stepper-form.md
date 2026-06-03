@@ -2,7 +2,7 @@
 
 ## Overview
 
-Use this guide to build **multi-step forms** in React Native with **Stepperize + TanStack Form + Zod**. Attach per-step schemas to step definitions, read the active schema from `stepper.state.current.data`, and apply it to TanStack Form validators so each step validates only its own inputs.
+Use this guide to build **multi-step forms** in React Native with **Stepperize + `useAppForm` + Zod**. Attach per-step schemas to step definitions, read the active schema from `stepper.state.current.data`, and apply it to form validators so each step validates only its own inputs. Compose step UI with **`form.AppField`** and pre-bound **`field.*`** components from `@/ui/Form`.
 
 ## Prerequisites
 
@@ -31,10 +31,10 @@ Use this guide to build **multi-step forms** in React Native with **Stepperize +
 
 ### Form flow
 
-- Build one TanStack Form instance for the full flow and keep values across steps.
+- Build one form instance with **`useAppForm`** from `@/ui/Form` (see [managing-form-components.md](./managing-form-components.md)) and keep values across steps.
 - Use `validators.onChange` (or another chosen timing) with the active step schema.
 - In `onSubmit`, advance with `stepper.navigation.next()` until the last step.
-- Render step fields using `stepper.flow.switch(...)`.
+- Render step fields using `stepper.flow.switch(...)` and compose inputs via **`form.AppField`** + pre-bound **`field.*`** components.
 - Render completion state with `stepper.flow.is("done")` (or your final step id).
 
 ## Setup
@@ -48,8 +48,8 @@ npm install @stepperize/react @tanstack/react-form zod
 ## Example
 
 ```tsx
-import { Pressable, Text, TextInput, View } from "react-native";
-import { useForm } from "@tanstack/react-form";
+import { Pressable, Text, View } from "react-native";
+import { useAppForm } from "@/ui/Form";
 import { z } from "zod";
 import { defineStepper } from "@stepperize/react";
 
@@ -87,7 +87,7 @@ export function CheckoutStepFormScreen() {
       ? (stepData.schema as z.ZodType<FormValues>)
       : z.object({});
 
-  const form = useForm<FormValues>({
+  const form = useAppForm({
     defaultValues: { name: "", email: "", street: "", city: "" },
     validators: { onChange: schema },
     onSubmit: () => {
@@ -98,67 +98,29 @@ export function CheckoutStepFormScreen() {
   if (stepper.flow.is("done")) return <Text>All done!</Text>;
 
   return (
-    <View>
+    <form.AppForm>
       {stepper.flow.switch({
         personal: () => (
           <View>
-            <form.Field
+            <form.AppField
               name="name"
-              children={(field) => (
-                <View>
-                  <Text>Name</Text>
-                  <TextInput
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChangeText={field.handleChange}
-                  />
-                </View>
-              )}
+              children={(field) => <field.TextField label="Name" />}
             />
-            <form.Field
+            <form.AppField
               name="email"
-              children={(field) => (
-                <View>
-                  <Text>Email</Text>
-                  <TextInput
-                    keyboardType="email-address"
-                    autoCapitalize="none"
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChangeText={field.handleChange}
-                  />
-                </View>
-              )}
+              children={(field) => <field.TextField label="Email" />}
             />
           </View>
         ),
         address: () => (
           <View>
-            <form.Field
+            <form.AppField
               name="street"
-              children={(field) => (
-                <View>
-                  <Text>Street</Text>
-                  <TextInput
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChangeText={field.handleChange}
-                  />
-                </View>
-              )}
+              children={(field) => <field.TextField label="Street" />}
             />
-            <form.Field
+            <form.AppField
               name="city"
-              children={(field) => (
-                <View>
-                  <Text>City</Text>
-                  <TextInput
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChangeText={field.handleChange}
-                  />
-                </View>
-              )}
+              children={(field) => <field.TextField label="City" />}
             />
           </View>
         ),
@@ -177,7 +139,7 @@ export function CheckoutStepFormScreen() {
           <Text>{stepper.state.isLast ? "Submit" : "Next"}</Text>
         </Pressable>
       </View>
-    </View>
+    </form.AppForm>
   );
 }
 ```

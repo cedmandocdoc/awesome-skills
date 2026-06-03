@@ -2,7 +2,7 @@
 
 ## Overview
 
-Use this guide to build **multi-step forms** with **Stepperize + TanStack Form + Zod**. Define per-step schemas on the step objects, read the current step schema from `stepper.state.current.data`, and wire it into TanStack Form validators so each step validates only its own fields.
+Use this guide to build **multi-step forms** with **Stepperize + `useAppForm` + Zod**. Define per-step schemas on the step objects, read the current step schema from `stepper.state.current.data`, and wire it into form validators so each step validates only its own fields. Compose step UI with **`form.AppField`** and pre-bound **`field.*`** components from `@/ui/Form`.
 
 ## Prerequisites
 
@@ -30,10 +30,10 @@ Use this guide to build **multi-step forms** with **Stepperize + TanStack Form +
 
 ### Form flow
 
-- Build one TanStack Form instance for the whole flow and persist values across steps.
+- Build one form instance with **`useAppForm`** from `@/ui/Form` (see [managing-form-components.md](./managing-form-components.md)) and persist values across steps.
 - Use `validators.onChange` (or the chosen validator timing) with the **current step schema**.
 - In `onSubmit`, call `stepper.navigation.next()` when not on the last step.
-- Render per-step fields with `stepper.flow.switch(...)`.
+- Render per-step fields with `stepper.flow.switch(...)` and compose inputs via **`form.AppField`** + pre-bound **`field.*`** components.
 - Use `stepper.flow.is("done")` (or final step ID) for completion state.
 
 ## Setup
@@ -47,7 +47,7 @@ npm install @stepperize/react @tanstack/react-form zod
 ## Example
 
 ```tsx
-import { useForm } from "@tanstack/react-form";
+import { useAppForm } from "@/ui/Form";
 import { z } from "zod";
 import { defineStepper } from "@stepperize/react";
 
@@ -85,7 +85,7 @@ export function CheckoutStepForm() {
       ? (stepData.schema as z.ZodType<FormValues>)
       : z.object({});
 
-  const form = useForm<FormValues>({
+  const form = useAppForm({
     defaultValues: { name: "", email: "", street: "", city: "" },
     validators: { onChange: schema },
     onSubmit: () => {
@@ -96,80 +96,29 @@ export function CheckoutStepForm() {
   if (stepper.flow.is("done")) return <p>All done!</p>;
 
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        form.handleSubmit();
-      }}
-    >
+    <form.AppForm>
       {stepper.flow.switch({
         personal: () => (
           <div>
-            <form.Field
+            <form.AppField
               name="name"
-              children={(field) => (
-                <div>
-                  <label htmlFor={field.name}>Name</label>
-                  <input
-                    id={field.name}
-                    name={field.name}
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                  />
-                </div>
-              )}
+              children={(field) => <field.TextField label="Name" />}
             />
-            <form.Field
+            <form.AppField
               name="email"
-              children={(field) => (
-                <div>
-                  <label htmlFor={field.name}>Email</label>
-                  <input
-                    id={field.name}
-                    name={field.name}
-                    type="email"
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                  />
-                </div>
-              )}
+              children={(field) => <field.TextField label="Email" />}
             />
           </div>
         ),
         address: () => (
           <div>
-            <form.Field
+            <form.AppField
               name="street"
-              children={(field) => (
-                <div>
-                  <label htmlFor={field.name}>Street</label>
-                  <input
-                    id={field.name}
-                    name={field.name}
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                  />
-                </div>
-              )}
+              children={(field) => <field.TextField label="Street" />}
             />
-            <form.Field
+            <form.AppField
               name="city"
-              children={(field) => (
-                <div>
-                  <label htmlFor={field.name}>City</label>
-                  <input
-                    id={field.name}
-                    name={field.name}
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                  />
-                </div>
-              )}
+              children={(field) => <field.TextField label="City" />}
             />
           </div>
         ),
@@ -182,12 +131,13 @@ export function CheckoutStepForm() {
         </button>
         <button type="submit">{stepper.state.isLast ? "Submit" : "Next"}</button>
       </div>
-    </form>
+    </form.AppForm>
   );
 }
 ```
 
 ## Related
 
+- [managing-form-components.md](./managing-form-components.md) — pre-bound TanStack Form composition in `src/ui/Form.tsx`
 - [managing-stepper-hook.md](./managing-stepper-hook.md) — base hook/provider pattern for Stepperize
 - [managing-state.md](./managing-state.md) — decide local/store/server responsibilities around forms
