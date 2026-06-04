@@ -1,6 +1,6 @@
 ---
 name: creating-tasks
-description: Creates structured task folders with plan.md and status.md for cross-session agent handoff. Gathers project context, writes an implementation plan, and initializes execution status. Use when the user wants to create or plan a task, start structured work with a written spec, or resume work from an existing task folder.
+description: Creates structured task folders with plan.md and status.md for cross-session agent handoff. Discovers project skills from agent IDE roots (.agents, .claude, .cursor, etc.) and reference docs, writes an implementation plan, and initializes execution status. Use when the user wants to create or plan a task, start structured work with a written spec, or resume work from an existing task folder.
 ---
 
 # Creating Tasks
@@ -83,10 +83,48 @@ Before writing the plan, build context from the project and the user's request:
 | `README.md`, `AGENTS.md` | Conventions, skill references, architecture notes |
 | Project structure | Monorepo layout, app/package boundaries, key directories |
 | Mentioned files | **Read them** — patterns, dependencies, related code |
-| Project skills | Relevant skills under `skills/`, `.agents/skills/`, tool-specific skill dirs, or paths listed in `AGENTS.md` |
+| Project skills | Discover applicable skills (see **Discovering skills and references** below) |
 | Existing tasks | Related plans under the tasks root (reference, do not duplicate) |
 
 Ask **at most one** clarifying question if scope or target area is ambiguous.
+
+### Discovering skills and references
+
+Each skill is `<skill-name>/SKILL.md` with optional `references/`, `scripts/`, and `assets/` ([Agent Skills](https://agentskills.io)).
+
+**Find skills:**
+
+1. **Explicit pointers** — `AGENTS.md`, the user request, `@`-mentioned or attached skills
+2. **Project skill roots** — glob `<root>/<skill-name>/SKILL.md` under each existing root:
+
+| Root | Tool / environment |
+| --- | --- |
+| `.agents/skills/` | Agent Skills (portable / multi-agent) |
+| `.claude/skills/` | Claude Code |
+| `.cursor/skills/` | Cursor |
+| `.codex/skills/` | OpenAI Codex |
+| `.windsurf/skills/` | Windsurf |
+| `.gemini/skills/` | Gemini CLI |
+| `.github/skills/` | GitHub Copilot (project skills) |
+| `.agent/skills/` | Google Antigravity |
+| `.cline/skills/` | Cline |
+| `.continue/skills/` | Continue |
+| `.roo/skills/` | Roo Code |
+
+3. **Custom roots** — additional paths named in `AGENTS.md` or by the user
+
+**Deduplicate** — one copy per skill `name` in frontmatter; prefer `AGENTS.md` path, else first matching root in the table order.
+
+**Choose skills to load** — include every skill whose `description` (frontmatter) or scope clearly governs the work area (stack, folder, doc type, workflow). Read each chosen skill’s `SKILL.md` before picking references.
+
+**Choose references for the plan** — per skill, in order:
+
+1. **Task recipes** — if `SKILL.md` has a `## Task recipes` (or equivalent) table, copy the closest row’s reference basenames.
+2. **Reference index** — if `SKILL.md` has a reference table or categorized index (`## Reference index`, `## References`, etc.), pick the rows whose “When to use” matches the task; add at most 1–2 extras if needed.
+3. **`references/` folder** — if neither table exists, list `<skill-dir>/references/*.md` and select basenames that match the task from filenames and a quick read of intros.
+4. **Linked root docs** — include `reference.md`, `examples.md`, or scripts only when `SKILL.md` points to them for this task type.
+
+Record basenames without `.md`. Use `skill-name/reference-basename` when names collide across skills.
 
 ### 4. Write `plan.md`
 
@@ -97,12 +135,14 @@ Use [`templates/plan.md`](templates/plan.md). Required sections:
 | YAML frontmatter | `name`, `overview`, `generated_by`, `todos` (id + content + status: pending) |
 | Goal | One paragraph outcome |
 | Non-goals | Explicit out-of-scope items |
-| Context | Links to files, related tasks, skills to load during execution |
-| Phases | Ordered steps with concrete file paths |
+| Context | Links to files, related tasks, **skills to load**, and **references** |
+| Phases | Ordered steps with concrete file paths; optional per-phase `References:` when a step needs a different doc set |
 | Verification checklist | How to confirm done |
 | Risks | Non-obvious decisions or blockers |
 
 Keep phases implementation-ready: file paths, patterns to follow, acceptance criteria per phase.
+
+**Skills and references** — when conventions apply, fill both Context fields using **Discovering skills and references** above. Include reference basenames, not skill names alone (~6 references max unless scope requires more).
 
 ### 5. Write `status.md`
 
@@ -127,22 +167,25 @@ Reply with:
 
 ## Workflow (continue)
 
-When the user wants to resume an existing task:
-
-1. Resolve `<task-folder>` from the user's message or ask which folder under the tasks root
-2. Read `<task-folder>/status.md` first, then `plan.md` for step details
-3. Execute `next_step_id` unless `overall_status` is `Blocked`
-4. Update `status.md` (execution pointer, checkboxes, handoff note) before stopping
-5. Load skills listed in `plan.md` → Context
+Resolve `<task-folder>` from the user's message (or ask under the tasks root), then follow **Executor handoff**.
 
 ## Executor handoff
 
-Any agent or session continuing work must:
+1. Read `<task-folder>/status.md`, then `plan.md`
+2. Load Context **skills**; read **references** per **Resolving references**
+3. Execute `next_step_id` unless `overall_status` is `Blocked`
+4. Update `status.md` before stopping
 
-1. Read `<task-folder>/status.md` first
-2. Execute `next_step_id` from the step queue
-3. Update `status.md` before stopping
-4. Load skills listed in `plan.md` → Context
+### Resolving references (continue / execute)
+
+For each entry in `plan.md` → Context → **References**:
+
+| Plan entry | Resolve to |
+| --- | --- |
+| `reference-basename` | For each skill in **Skills to load**, try `<skill-dir>/references/reference-basename.md`; use the first match, or every match if the plan implies all skills share that doc name |
+| `skill-name/reference-basename` | `<skill-dir>/references/reference-basename.md` for that skill only |
+
+`<skill-dir>` is the folder containing that skill’s `SKILL.md` (per **Discovering skills and references**). If missing under `references/`, use the link in that skill’s `SKILL.md` index.
 
 ## Examples
 
@@ -153,8 +196,8 @@ Any agent or session continuing work must:
 1. Search for `generated_by: creating-tasks` → none found → propose `tasks/`, user confirms
 2. Next id → scan `tasks/` → e.g. `001`
 3. Slug → `dark-mode-toggle`
-4. Read `src/theme.css`, related theme/provider files
-5. Write `tasks/001-dark-mode-toggle/plan.md` + `status.md`
+4. Read `src/theme.css`, related files; discover skill + references per **Discovering skills and references**
+5. Write `plan.md` + `status.md` with Context **Skills to load** and **References**
 6. Stop without implementing; suggest continuing `tasks/001-dark-mode-toggle`
 
 **User:** Create another task after several exist under `docs/tasks/`.
@@ -167,4 +210,4 @@ Any agent or session continuing work must:
 
 **User:** Continue `tasks/001-dark-mode-toggle`.
 
-**Agent actions:** Read `status.md` → run `next_step_id` → update `status.md`.
+**Agent actions:** Follow **Executor handoff**.

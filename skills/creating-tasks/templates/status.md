@@ -8,7 +8,7 @@ Execution source of truth for [`plan.md`](./plan.md). **Read this file first** i
 2. Open `plan.md` for step details and acceptance criteria
 3. Execute `next_step_id` unless status is `Blocked`
 4. Update this file before ending the session (pointer, queue, handoff note)
-5. Load skills listed in `plan.md` → Context
+5. Follow `creating-tasks` → **Executor handoff**
 
 ## Execution pointer
 

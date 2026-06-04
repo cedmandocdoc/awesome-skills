@@ -30,6 +30,7 @@ todos:
 - **Area:** {{package, app, or subsystem}}
 - **Primary files:** {{paths}}
 - **Skills to load:** {{skill names, or "none"}}
+- **References:** {{basenames from chosen skill(s) — recipes, index, or references/ — e.g. creating-feature or skill-name/creating-feature — or "none"}}
 - **Related tasks:** {{links to sibling task folders, or "none"}}
 
 ## Current vs target
