@@ -1,9 +1,6 @@
----
-name: writing-documentation
-description: Guides creating and updating concise, clear Markdown documentation with consistent structure and tone. Use when writing or editing .md files, Cursor skills (SKILL.md), rules (e.g. .cursor/rules), AGENTS.md, or other AI-facing documentation.
----
+# Creating documentation
 
-# Writing documentation
+**Authoring mode.** Apply when creating or updating Markdown documentation in the project.
 
 ## When to apply
 
@@ -43,4 +40,4 @@ Updates to existing docs do not require this step unless the user is effectively
 ## Skills and rules-specific notes
 
 - **Skills**: Include YAML frontmatter with `name` and `description` when authoring `SKILL.md`; keep the body focused; use progressive disclosure (link to `reference.md` / `examples.md` only when needed).
-- **Rules**: Match the project’s rule format (e.g. frontmatter if used); keep instructions actionable and scoped.
+- **Rules**: Match the project's rule format (e.g. frontmatter if used); keep instructions actionable and scoped.

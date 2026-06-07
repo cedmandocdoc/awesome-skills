@@ -1,9 +1,6 @@
----
-name: reviewing-documentation
-description: Reviews Markdown and AI-facing documentation for clarity, structure, style, and formatting against project writing standards. Use when reviewing docs, doc PRs, SKILL.md or rules, or when the user asks whether documentation is well written or needs improvement.
----
-
 # Reviewing documentation
+
+**Review mode.** Read-only unless the user asks you to apply edits.
 
 ## When to apply
 
@@ -11,7 +8,7 @@ description: Reviews Markdown and AI-facing documentation for clarity, structure
 - Answering whether documentation reads well or meets quality expectations
 - Suggesting edits before merge or publication
 
-**Authoring standards** (full detail): [writing-documentation](../writing-documentation/SKILL.md). This skill turns those expectations into a review workflow.
+**Authoring standards** (full detail): [creating-documentation.md](./creating-documentation.md). This recipe turns those expectations into a review workflow.
 
 ## Review workflow
 
@@ -20,13 +17,13 @@ description: Reviews Markdown and AI-facing documentation for clarity, structure
 3. **Run the checklist** below. Cite concrete locations (headings, bullets, or short quotes) when flagging issues.
 4. **Deliver feedback** using the output format in the next section.
 
-## Checklist (aligned with writing-documentation)
+## Checklist (aligned with creating-documentation)
 
 ### Core principles
 
 - **Clarity** — Main ideas obvious; steps and terms understandable on first read.
 - **Conciseness** — No filler, repetition, or vague throat-clearing; every section earns its place.
-- **Structure** — Logical heading hierarchy; sections match the doc’s goal; scannable flow.
+- **Structure** — Logical heading hierarchy; sections match the doc's goal; scannable flow.
 - **Consistency** — Same terms for the same concepts; parallel structure in lists; tone stable throughout.
 
 ### Writing style
@@ -87,7 +84,7 @@ Severity names are guidance: **Must fix** blocks correctness or standards; **Sho
 
 **Input:** User pastes a skill draft and asks if it is well written.
 
-**Output:** Summary states whether it meets writing-documentation; checklist results; Must fix if `description` is vague or body is a wall of text without reference split; Should fix for passive voice or missing backticks on paths.
+**Output:** Summary states whether it meets creating-documentation standards; checklist results; Must fix if `description` is vague or body is a wall of text without reference split; Should fix for passive voice or missing backticks on paths.
 
 **Input:** PR that only tweaks one section.
 
