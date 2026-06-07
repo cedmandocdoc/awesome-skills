@@ -1,7 +1,8 @@
 ---
 name: {{TASK_TITLE}}
 overview: {{ONE_LINE_OVERVIEW}}
-generated_by: creating-tasks
+generated_by: managing-tasks
+plan_revision: 1
 todos:
   - id: {{STEP_ID_1}}
     content: "{{STEP_DESCRIPTION_1}}"

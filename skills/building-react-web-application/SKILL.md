@@ -29,7 +29,7 @@ Opinionated ecosystem for building Vite-based React SPAs with a consistent archi
 
 ## Task recipes
 
-Use these sets when planning (`creating-tasks`) or executing work. Read **all** listed references under `references/` before coding. Copy basenames into task `plan.md` → Context (no `.md` suffix).
+Use these sets when planning or executing work managed by `managing-tasks`. Read **all** listed references under `references/` before coding. Copy basenames into task `plan.md` → Context (no `.md` suffix).
 
 | Task type | References |
 | --- | --- |
