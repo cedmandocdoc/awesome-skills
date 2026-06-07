@@ -4,7 +4,7 @@ Read this file when drafting a Figma Make prompt. The markdown block below is th
 
 ## Filling rules
 
-The final prompt must be **complete and copy-ready**. The user pastes it directly into Figma Make.
+The final prompt is a **plain markdown file** on disk — not wrapped in chat code fences. The user copies the entire file into Figma Make.
 
 1. **Replace every `[...]` placeholder** with concrete names, routes, components, states, and variants from the UI spec and style guide.
 2. **Never ship bracket placeholders** (`[Component list from spec]`, `[Repeat ### ...]`, etc.) in the output.
@@ -13,6 +13,7 @@ The final prompt must be **complete and copy-ready**. The user pastes it directl
 5. **Be exhaustive** — every screen, validation state, error state, and edge case in the UI spec must appear by name.
 6. **Be specific** — use hierarchical component names (`Input/Text/Error`, `Button/Primary/Hover`) derived from the spec.
 7. **Include timing rows** only for interactions the spec defines; omit the table if there is no motion detail.
+8. **Write to the agreed path** — save as `.md` with valid markdown only (headings, lists, tables, blockquotes). No outer code-fence wrapper in the file.
 
 ## Extraction checklist
 
