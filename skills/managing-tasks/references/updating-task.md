@@ -10,7 +10,7 @@ Same as [executing-task.md](./executing-task.md) → step 1.
 
 1. Read `status.md`, then `plan.md`
 2. Note `overall_status`, completed steps, and `next_step_id`
-3. If `overall_status` is `Cancelled` → confirm with the user before replanning
+3. If `overall_status` is `Cancelled` → confirm with the user before replanning; to restore execution state, prefer [reopening-task.md](./reopening-task.md)
 
 ## 3. Gather changes
 

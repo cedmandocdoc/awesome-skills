@@ -1,0 +1,33 @@
+# Unblocking a task
+
+Clear a blocker and restore execution. No implementation unless the user also asks to continue.
+
+## 1. Resolve task folder
+
+Resolve `<task-folder>` from the user's message. Read `status.md`, then `plan.md`.
+
+If `overall_status` is not `Blocked` → stop; tell the user the task is not blocked (offer [checking-task.md](./checking-task.md) for status).
+
+If `overall_status` is `Cancelled` or `Done` → stop and tell the user.
+
+## 2. Confirm resolution
+
+Capture how the blocker was resolved (from the user or context). Optional one-line note for the session log.
+
+## 3. Update `status.md`
+
+1. Set `blocking_reason`: `None`
+2. Set `overall_status`: `In Progress` (or `Review` if only `verify` remains unchecked and was already in review)
+3. Confirm `next_step_id` still exists in the step queue and is pending; if not, set to the first unchecked pending step
+4. Update `handoff_note` for the executor
+5. Append session log: date, `next_step_id`, `Unblocked`, resolution note
+
+## 4. Confirm to the user
+
+Reply with:
+
+- Task folder and resolution summary
+- Restored `overall_status` and `next_step_id`
+- Suggested follow-up: _"Continue `<task-folder>`"_ → [executing-task.md](./executing-task.md) if work should resume now
+
+Do not implement application code unless the user also asked to continue in the same message.

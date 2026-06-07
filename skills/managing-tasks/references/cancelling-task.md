@@ -33,10 +33,7 @@ Capture `cancel_reason` from the user or context (e.g. duplicate task, wrong app
 
 ## 5. Archive (optional)
 
-If the user asks to archive or the tasks root uses `archive/`:
-
-1. Move `<tasks-root>/<NNN>-<slug>/` → `<tasks-root>/archive/<NNN>-<slug>/`
-2. Update `task_folder` in `status.md` if the file moves with the folder
+If the user asks to archive or the tasks root uses `archive/`, follow [archiving-task.md](./archiving-task.md).
 
 Do not delete task folders unless the user explicitly requests deletion.
 
@@ -46,6 +43,6 @@ Reply with:
 
 - Task folder and `cancel_reason`
 - Archive path if moved
-- How to start fresh (new task via [creating-task.md](./creating-task.md)) or revive (via [updating-task.md](./updating-task.md))
+- How to start fresh (new task via [creating-task.md](./creating-task.md)) or reopen (via [reopening-task.md](./reopening-task.md))
 
 Do not implement application code in this workflow.

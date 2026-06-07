@@ -12,7 +12,7 @@ Resolve `<task-folder>` from the user's message. If unclear, list folders under 
 2. Read `<task-folder>/plan.md` for step details and acceptance criteria
 3. If `overall_status` is `Cancelled` → stop; tell the user the task was cancelled
 4. If `overall_status` is `Blocked` → stop unless the user says to unblock; address `blocking_reason` first
-5. If `overall_status` is `Done` → stop; confirm completion or offer archive
+5. If `overall_status` is `Done` → stop; confirm completion or offer [archiving-task.md](./archiving-task.md)
 6. Set `overall_status` to `In Progress` if it was `Not Started` or `Review`
 
 ## 3. Execute `next_step_id`
@@ -39,12 +39,14 @@ Always update:
 
 ## 5. Blocked workflow
 
-If a blocker prevents finishing the step:
+If a blocker prevents finishing the step, follow [blocking-task.md](./blocking-task.md) (or apply the same updates inline):
 
 - Set `overall_status`: `Blocked`
 - Set `blocking_reason` to a concrete description
 - Do **not** advance `next_step_id` or check off the step
 - Log the attempt in the session log
+
+If the user only wants to unblock without implementing, use [unblocking-task.md](./unblocking-task.md).
 
 ## 6. Confirm to the user
 

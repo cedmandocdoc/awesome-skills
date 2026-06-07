@@ -41,6 +41,7 @@ For each match, the tasks root is the parent of the numbered task folder (e.g. `
 | `current_step_id` | step id or `none` | Step in progress this session |
 | `next_step_id` | step id or `none` | Next step for the executor |
 | `blocking_reason` | text or `None` | Why work is blocked |
+| `cancel_reason` | text or `None` | Why the task was cancelled |
 | `handoff_note` | one sentence | What the next session should do first |
 
 ## Step queue rules
