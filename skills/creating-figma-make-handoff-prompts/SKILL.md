@@ -19,7 +19,7 @@ If either is missing, ask for it or confirm what to infer. Do not invent flows o
 1. **Read inputs** — UI spec (authoritative for behavior/content) and style guide (authoritative for visual system).
 2. **Extract inventory** — flows, screens/steps, component categories, state variants, edge cases, breakpoints, interaction timings, layout patterns.
 3. **Choose scope** — include only what the spec requires: desktop, mobile, tablet, responsive doc, interaction specs, developer handoff pages.
-4. **Draft the prompt** — follow [prompt-template.md](references/prompt-template.md). Adapt sections to the project; omit empty sections.
+4. **Draft the prompt** — read [prompt-template.md](references/prompt-template.md), apply its filling rules, and produce a fully expanded prompt (no bracket placeholders).
 5. **Deliver** — output the full prompt inside one fenced markdown code block so the user can copy it in one action. Do not split across multiple blocks.
 
 ## Authoring rules
@@ -45,44 +45,7 @@ Use this page order unless the project does not need a section:
 | Interaction Specs | Prototype flows and timing (when applicable) |
 | Developer Handoff | Layout specs, component mapping, state docs |
 
-Full section skeleton and placeholders: [prompt-template.md](references/prompt-template.md).
-
-## Component and screen sections
-
-For each component category from the spec:
-
-- List components and required **states/variants** (default, hover, focus, error, loading, etc.).
-- Use hierarchical naming: `Category/Component/State` (e.g. `Input/Text/Error`, `Button/Primary/Hover`).
-
-For each screen or step:
-
-- List **variants** the spec defines (empty, filled, error, loading, etc.).
-- Note **layout** (columns, panels, sticky footers, previews).
-- Call out **edge-case screens** on a dedicated page when the spec lists them.
-
-## Mobile and responsive
-
-Include when the UI spec or user requires it:
-
-- **Mobile flow page** — one step per screen, safe areas, sticky actions, keyboard/error states; name target frames (e.g. iPhone, Android) if specified.
-- **Responsive behavior page** — breakpoints, stacking, collapse rules for previews/cards/bento layouts.
-
-Skip these pages when the spec is desktop-only.
-
-## Final deliverable checklist
-
-End every prompt with a deliverable section confirming:
-
-- 100% of spec screens and states
-- Component library with full variant coverage
-- Design system reference from style guide
-- Edge cases and error states
-- Responsive/mobile coverage (if applicable)
-- Developer annotations and naming conventions
-
-## Example
-
-See [example-output.md](references/example-output.md) for a full registration-wizard example. Match its depth and specificity, adapted to each project.
+Structure, extraction checklist, and filling rules: [prompt-template.md](references/prompt-template.md).
 
 ## Output format
 

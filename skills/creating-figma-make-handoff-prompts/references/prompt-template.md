@@ -1,6 +1,44 @@
 # Prompt template
 
-Copy this skeleton when drafting. Replace bracketed placeholders with spec-derived content. Remove sections that do not apply.
+Read this file when drafting a Figma Make prompt. The markdown block below is the **output shape** — not copy-paste boilerplate.
+
+## Filling rules
+
+The final prompt must be **complete and copy-ready**. The user pastes it directly into Figma Make.
+
+1. **Replace every `[...]` placeholder** with concrete names, routes, components, states, and variants from the UI spec and style guide.
+2. **Never ship bracket placeholders** (`[Component list from spec]`, `[Repeat ### ...]`, etc.) in the output.
+3. **Expand repeat sections fully** — list every component category, every screen/step, and every variant the spec defines. Do not summarize with "repeat for all steps."
+4. **Omit inapplicable sections entirely** — do not include `[Omit if not required]` notes or empty pages. Renumber pages if you drop sections (e.g. skip Mobile Flow → Responsive becomes 05).
+5. **Be exhaustive** — every screen, validation state, error state, and edge case in the UI spec must appear by name.
+6. **Be specific** — use hierarchical component names (`Input/Text/Error`, `Button/Primary/Hover`) derived from the spec.
+7. **Include timing rows** only for interactions the spec defines; omit the table if there is no motion detail.
+
+## Extraction checklist
+
+Before filling the template, confirm you have:
+
+| From UI spec | Maps to |
+| --- | --- |
+| User flows / steps | Cover flow map, screen pages |
+| Screens and routes | Desktop / mobile flow sections |
+| Component inventory | Components page |
+| Validation & error states | Component states, screen variants |
+| Edge cases | Edge case screens |
+| Layout descriptions | Flow layout, layer organization |
+| Interactions & timing | Interaction specs table |
+| Breakpoints | Responsive behavior page |
+
+| From style guide | Maps to |
+| --- | --- |
+| Type scale | Design system — typography |
+| Color palette / tokens | Design system — colors |
+| Spacing, radius, shadow | Design system sections |
+| Component styling rules | Component states, token examples |
+
+## Output template
+
+Fill in and output this structure. Adapt headings and page numbers to the project.
 
 ```markdown
 # Figma AI Prompt — [Product / Feature] Handoff Design
@@ -17,17 +55,16 @@ Copy this skeleton when drafting. Replace bracketed placeholders with spec-deriv
 
 Create a complete Figma handoff file for [feature name / route / product area] including:
 
-* [Desktop flows — if applicable]
-* [Mobile flows — if applicable]
+* [Include only what applies — e.g. Desktop flows, Mobile flows]
 * Component library
 * Design system references
 * State variants
 * Edge cases
-* [Responsive behavior — if applicable]
+* [Responsive behavior — when applicable]
 * Interaction specifications
 * Developer annotations
 
-[Optional aesthetic line: The output should feel like a polished [product type] inspired by [references] while strictly following the attached UI specification and style guide.]
+[Optional: aesthetic direction from user or spec — e.g. polished SaaS inspired by Linear, Stripe while strictly following the attached UI specification and style guide.]
 
 ---
 
@@ -56,9 +93,9 @@ Include:
 * Radius system
 * Spacing system
 * Shadows
-* [Blur treatments — if in style guide]
+* [Blur treatments — when in style guide]
 * Focus ring styles
-* [Motion specifications — if in style guide]
+* [Motion specifications — when in style guide]
 
 Include token usage examples.
 
@@ -68,45 +105,39 @@ Include token usage examples.
 
 Create production-ready components with variants.
 
-Group by category.
+Group by category. For each category:
 
-### [Category — e.g. Navigation]
+### [Category name]
 
-* [Component list from spec]
-
-#### States
-
-* [State list — e.g. Default, Hover, Pressed, Disabled, Focus]
-
----
-
-### [Category — e.g. Inputs]
-
-* [Component list]
+* [Every component in this category]
 
 #### States
 
-* [State list — e.g. Empty, Filled, Focus, Error, Disabled, Loading]
+* [Every state/variant required — e.g. Default, Hover, Pressed, Disabled, Focus]
 
 ---
 
-[Repeat ### categories until all spec components are covered]
+[One ### block per category until the full spec component inventory is covered]
 
 ---
 
-## 04 — [Desktop Flow / Primary Flow]
+## 04 — [Primary flow name — e.g. Desktop Flow]
 
-[Layout description — e.g. two-column with wizard + live preview]
+[Persistent layout for this flow — e.g. two-column: wizard left, live preview right]
 
-### [Step or Screen Name]
+All frames must be properly named.
+
+---
+
+### [Step or screen name — every step in order]
 
 Create:
 
-* [Variant list from spec]
+* [Every variant the spec defines for this step]
 
 ---
 
-[Repeat ### for every step/screen in order]
+[One ### block per step/screen — list all steps explicitly]
 
 ---
 
@@ -114,33 +145,33 @@ Create:
 
 Create dedicated screens:
 
-* [Edge case list from spec]
+* [Every edge case from the spec]
 
 ---
 
 ## 05 — Mobile Flow
 
-[Omit entire section if not required]
+[Include this page only when the spec or user requires mobile]
 
 Design every step for mobile.
 
 ### Requirements
 
-* [Mobile requirements from spec — e.g. one step per screen, safe area, sticky footer]
+* [Mobile layout rules from spec]
 
 Create:
 
-* [Target device frames]
+* [Target device frames from spec or user]
 
 For every step include:
 
-* [Required variants — e.g. Default, Keyboard open, Error]
+* [Every required mobile variant — e.g. Default, Keyboard open, Error]
 
 ---
 
 ## 06 — Responsive Behavior
 
-[Omit if not required]
+[Include only when breakpoints or responsive behavior are specified]
 
 Show:
 
@@ -151,25 +182,25 @@ Show:
 Document:
 
 * Breakpoints
-* [Layout shift rules from spec]
+* [Layout shift rules — preview behavior, stacking, collapse]
 
 ---
 
 ## 07 — Interaction Specs
 
-[Omit if spec has no interaction detail]
+[Include only when the spec defines interactions or motion]
 
 Create annotated prototype flows.
 
 Document:
 
-* [Interaction list from spec]
+* [Every interaction from the spec]
 
 ### Timing Annotations
 
 | Interaction | Duration |
 | ----------- | -------- |
-| [Name]      | [ms]     |
+| [Name from spec] | [Duration from spec] |
 
 ---
 
@@ -213,7 +244,7 @@ Requirements:
 
 ### Naming Examples
 
-* [Category/Component/State examples from this project]
+* [Project-specific examples — e.g. Input/Text/Default, Input/Text/Error, Button/Primary/Hover]
 
 ---
 
@@ -221,7 +252,7 @@ Requirements:
 
 Every frame must be organized as:
 
-[Tree pattern from spec — e.g. Screen → Background → Main Panel → Sections → Actions]
+[Layer tree from spec — e.g. Screen → Background → Main Panel → Section Cards → Inputs → Actions → Preview Panel]
 
 Requirements:
 
@@ -239,31 +270,9 @@ Produce a complete engineering-ready Figma handoff file with:
 * Component library
 * Full variant coverage
 * Edge cases
-* [Motion documentation — if applicable]
-* [Responsive documentation — if applicable]
+* [Motion documentation — when applicable]
+* [Responsive documentation — when applicable]
 * Developer annotations
 
 Treat the attached UI specification as the single source of truth for content, behavior, validation states, layout requirements, and interaction patterns.
 ```
-
-## Extraction checklist
-
-Before filling the template, confirm you have:
-
-| From UI spec | Maps to |
-| --- | --- |
-| User flows / steps | Cover flow map, screen pages |
-| Screens and routes | Desktop / mobile flow sections |
-| Component inventory | Components page |
-| Validation & error states | Component states, screen variants |
-| Edge cases | Edge case screens |
-| Layout descriptions | Flow layout, layer organization |
-| Interactions & timing | Interaction specs table |
-| Breakpoints | Responsive behavior page |
-
-| From style guide | Maps to |
-| --- | --- |
-| Type scale | Design system — typography |
-| Color palette / tokens | Design system — colors |
-| Spacing, radius, shadow | Design system sections |
-| Component styling rules | Component states, token examples |
