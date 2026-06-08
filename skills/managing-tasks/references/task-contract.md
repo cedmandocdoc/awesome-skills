@@ -13,7 +13,7 @@ On-disk layout and field meanings shared by all `managing-tasks` workflows.
     <NNN>-<slug>/
 ```
 
-Templates: [`../templates/plan.md`](../templates/plan.md), [`../templates/status.md`](../templates/status.md).
+Templates: [`../assets/plan.md`](../assets/plan.md), [`../assets/status.md`](../assets/status.md).
 
 ## Plan frontmatter
 

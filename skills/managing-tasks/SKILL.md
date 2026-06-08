@@ -52,8 +52,8 @@ Load this skill when intent matches any row, whether the user @-mentions the ski
 
 ## Templates
 
-- [`templates/plan.md`](templates/plan.md)
-- [`templates/status.md`](templates/status.md)
+- [`assets/plan.md`](assets/plan.md)
+- [`assets/status.md`](assets/status.md)
 
 ## Examples
 

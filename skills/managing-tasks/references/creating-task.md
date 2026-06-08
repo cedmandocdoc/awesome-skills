@@ -41,7 +41,7 @@ Ask **at most one** clarifying question if scope or target area is ambiguous.
 
 ## 4. Write `plan.md`
 
-Use [`../templates/plan.md`](../templates/plan.md). Required sections:
+Use [`../assets/plan.md`](../assets/plan.md). Required sections:
 
 | Section | Content |
 | --- | --- |
@@ -59,7 +59,7 @@ Keep phases implementation-ready: file paths, patterns to follow, acceptance cri
 
 ## 5. Write `status.md`
 
-Use [`../templates/status.md`](../templates/status.md). Initialize:
+Use [`../assets/status.md`](../assets/status.md). Initialize:
 
 - `overall_status`: `Not Started`
 - `next_step_id`: first step id from the plan's todo/step queue

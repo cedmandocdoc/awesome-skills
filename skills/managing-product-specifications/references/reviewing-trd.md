@@ -1,0 +1,60 @@
+# Reviewing a TRD
+
+**Review mode.** Read-only unless the user asks to apply edits.
+
+## When to apply
+
+- Reviewing product or feature TRD before implementation
+- Validating architecture against FRD / PRD
+
+**Standards:** [creating-trd.md](./creating-trd.md) and [spec-contract.md](./spec-contract.md).
+
+## Workflow
+
+1. Resolve TRD path; read `inherits_from` chain fully
+2. Read scope doc (`prd.md` or `frd.md`)
+3. Run checklist; deliver output format
+
+## Checklist
+
+### Structure and frontmatter
+
+- `doc_type: trd`, `scope`, `depends_on`, `inherits_from` correct
+- App baseline vs feature TRD scope is clear (no duplicated baseline prose)
+
+### Technical content
+
+- **Stack** choices justified
+- **Architecture** diagrams match described components
+- **Data model / contracts** align with FRD functional requirements
+- **Communication flows** cover happy path and material error paths
+- **Security** and **environments** addressed when relevant
+- **Tradeoffs** document meaningful decisions
+
+### Consistency
+
+- Feature TRD does not contradict product `trd-<app>.md` baseline
+- Cross-app feature TRDs agree on shared contracts (`trd.md` at feature level)
+
+## Output format
+
+```markdown
+## Summary
+[Implementation readiness and main recommendation]
+
+## Strengths
+- [...]
+
+## Issues
+### Must fix
+- [Architecture gaps, contract mismatches, missing security]
+
+### Should fix
+- [Diagram clarity, weak tradeoffs, incomplete flows]
+
+### Consider
+- [...]
+
+## Suggested next steps
+[...]
+```
