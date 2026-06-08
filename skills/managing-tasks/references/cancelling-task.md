@@ -4,7 +4,9 @@ Mark a task as abandoned. No further execution unless the user explicitly replan
 
 ## 1. Resolve task folder
 
-Resolve `<task-folder>` from the user's message. Read `status.md`, then `plan.md`.
+Per [task-contract.md](./task-contract.md) → **Resolve tasks root** and **Finding tasks root**.
+
+Resolve `<task-folder>` from the user's message under `<tasks-root>/`. If unclear, list folders per **Finding existing tasks** and ask. Read `status.md`, then `plan.md`.
 
 If already `Done` → confirm the user intends to cancel a completed task (unusual); otherwise stop.
 

@@ -20,12 +20,23 @@ On-disk layout, naming, frontmatter, and inheritance shared by all `managing-pro
 
 `<type>` is one of: `trd`, `user-story`, `ui-specs`.
 
+## Author signature
+
+Static UUID identifying docs roots created by this skill:
+
+```text
+7f3a9c2e-1b4d-5e8f-a6c3-2d9e8f1b4c5a
+```
+
+Every `<docs-root>/index.md` must include this value in frontmatter `author`. Search the repository for that field to locate the docs root — do not infer the root from `prd.md`, `frd.md`, or other spec paths alone.
+
 ## Output layout
 
-Default docs root: `docs/` at the repository root. User may override (e.g. `product-docs/`).
+Only this skill may establish a docs root. The root is always marked by `<docs-root>/index.md`.
 
 ```text
 <docs-root>/
+  index.md                          # docs root marker — required; created first
   prd.md
   trd.md                              # optional: platform / system architecture
   trd-<app>.md                        # app baseline (stack, structure, deploy)
@@ -44,24 +55,45 @@ Default docs root: `docs/` at the repository root. User may override (e.g. `prod
       ui-specs-<app>.md
 ```
 
-Templates: [`../assets/`](../assets/).
+Templates: [`../assets/`](../assets/), including [`../assets/index.md`](../assets/index.md) for new docs roots.
 
 ## Resolve docs root
 
-1. Search for existing specs per **Finding existing specs** below.
-2. **One unique root** → use it; no need to ask.
-3. **Multiple roots** → ask the user which root to use.
-4. **No matches** → default to `docs/`; ask the user to confirm or specify a path.
+1. Search per **Finding docs root** below.
+2. **Decide location:**
+   - **One match** → use that folder; no need to ask.
+   - **Multiple matches** → ask the user which root to use (list full paths to each `index.md`).
+   - **No match** → on **create** intent: **ask the user where to create** the specs folder. Do not assume a default path. Then follow **Initialize docs root**. On **update** or **review** intent: stop and report that no docs root exists; do not initialize.
 
-Do not write spec files outside the resolved root unless the user explicitly overrides.
+Do not write spec files outside the resolved root. Do not treat a folder as the docs root unless it contains a valid `index.md` per **Finding docs root**.
 
-## Finding existing specs
+## Finding docs root
 
-Search for `*.md` under candidate docs roots whose frontmatter contains `generated_by: managing-product-specifications`.
+Search the repository for `index.md` files whose YAML frontmatter contains **all** of:
 
-Also treat these as product-level anchors when present (even without frontmatter): `<docs-root>/prd.md`, `<docs-root>/features/*/frd.md`.
+| Field | Value |
+| --- | --- |
+| `doc_type` | `docs-root-index` |
+| `generated_by` | `managing-product-specifications` |
+| `author` | `7f3a9c2e-1b4d-5e8f-a6c3-2d9e8f1b4c5a` (see **Author signature**) |
 
-For each `frd.md` match, the docs root is the parent of `features/` (e.g. `docs/features/checkout/frd.md` → root is `docs/`).
+The docs root is the parent directory of each matching `index.md` (e.g. `docs/index.md` → root is `docs/`).
+
+After resolving the root, list and read spec files only under that directory.
+
+## Initialize docs root
+
+When **no** valid `index.md` exists and the user is creating specs:
+
+1. **Ask the user** for the target folder path (relative to repository root, e.g. `docs/`, `product-docs/`).
+2. **Verify the folder is empty:**
+   - Path does not exist → OK; create the directory.
+   - Path exists and contains **no files and no subdirectories** → OK.
+   - Path exists and is **not empty** → stop. Tell the user the folder must be empty and ask for another path.
+3. Write `<docs-root>/index.md` from [`../assets/index.md`](../assets/index.md) with the **Author signature** in `author`. This is the first file the skill creates in a new root.
+4. Proceed with the requested spec file(s) under that root.
+
+Only this skill may create or replace `index.md`. If the user points at a non-empty folder without a valid `index.md`, do not write specs there.
 
 ## Feature slug
 
@@ -116,7 +148,7 @@ Every file this skill writes includes YAML frontmatter:
 
 | Field | Required | Purpose |
 | --- | --- | --- |
-| `doc_type` | yes | `prd`, `frd`, `trd`, `user-story`, `ui-specs` |
+| `doc_type` | yes | `docs-root-index`, `prd`, `frd`, `trd`, `user-story`, `ui-specs` |
 | `scope` | yes | `product` or `feature` |
 | `feature` | feature scope | Feature slug |
 | `apps` | when known | List of app slugs (e.g. `[web, api]`) |
@@ -124,6 +156,7 @@ Every file this skill writes includes YAML frontmatter:
 | `tier` | on create | `minimal`, `standard`, or `comprehensive` |
 | `spec_revision` | yes | Integer; start at `1`, bump on each update |
 | `generated_by` | yes | `managing-product-specifications` |
+| `author` | `docs-root-index` only | **Author signature** UUID — required on `index.md` for docs root discovery |
 | `depends_on` | when applicable | Relative paths to upstream scope docs |
 | `inherits_from` | companions | Relative paths to parent-tier docs at same or product scope |
 | `related` | FRD hub | Map of sibling doc paths (see creating-frd.md) |

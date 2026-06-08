@@ -11,7 +11,7 @@
 
 ## Workflow
 
-1. Resolve `<docs-root>/prd.md` per [spec-contract.md](./spec-contract.md)
+1. Resolve docs root per [spec-contract.md](./spec-contract.md) → **Finding docs root**; then read `<docs-root>/prd.md`
 2. Read the full document (or scoped sections if the user limited the review)
 3. Run the checklist below
 4. Deliver feedback using the output format

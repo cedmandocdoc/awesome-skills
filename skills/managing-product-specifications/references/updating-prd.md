@@ -4,7 +4,7 @@
 
 ## 1. Resolve path
 
-Per [spec-contract.md](./spec-contract.md) → resolve docs root. Target: `<docs-root>/prd.md`.
+Per [spec-contract.md](./spec-contract.md) → **Resolve docs root** and **Finding docs root**. Target: `<docs-root>/prd.md`.
 
 If missing → direct the user to [creating-prd.md](./creating-prd.md).
 

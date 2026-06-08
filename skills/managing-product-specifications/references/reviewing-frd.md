@@ -11,7 +11,7 @@
 
 ## Workflow
 
-1. Resolve feature `frd.md` per [spec-contract.md](./spec-contract.md)
+1. Resolve docs root per [spec-contract.md](./spec-contract.md) → **Finding docs root**; then resolve feature `frd.md` under `<docs-root>`
 2. Read `prd.md` when linked
 3. Read sibling specs if the user asked for package review
 4. Run checklist; deliver output format

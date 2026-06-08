@@ -11,9 +11,11 @@ Determine what the user wants:
 | Single task | "Status of `tasks/003-…`", "summarize the dark mode task", "what's next on this task?" |
 | All tasks | "List all tasks", "task dashboard", "what's in progress?" |
 
-For a single task, resolve `<task-folder>` from the user's message. If unclear, list folders under the tasks root (per [task-contract.md](./task-contract.md)) and ask.
+Per [task-contract.md](./task-contract.md) → **Resolve tasks root** and **Finding tasks root**.
 
-For all tasks, discover every task folder under each tasks root per [task-contract.md](./task-contract.md) → **Finding existing tasks**.
+For a single task, resolve `<task-folder>` from the user's message under `<tasks-root>/`. If unclear, list folders per **Finding existing tasks** and ask.
+
+For all tasks, discover every task folder under `<tasks-root>/` per **Finding existing tasks**.
 
 ## 2. Read artifacts
 

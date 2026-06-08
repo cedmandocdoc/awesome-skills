@@ -4,7 +4,7 @@
 
 ## 1. Resolve docs root
 
-Per [spec-contract.md](./spec-contract.md) → **Resolve docs root** and **Finding existing specs**.
+Per [spec-contract.md](./spec-contract.md) → **Resolve docs root**, **Finding docs root**, and **Initialize docs root** when no `index.md` marker exists.
 
 If `prd.md` already exists → stop; direct the user to [updating-prd.md](./updating-prd.md) unless they confirm overwrite.
 
@@ -37,7 +37,7 @@ Do not invent metrics, personas, or features unsupported by user input.
 
 Reply with:
 
-- Path to `prd.md`
+- Docs root path (via `index.md`), path to `prd.md`, and whether `index.md` was newly created
 - One-line summary
 - Tier used
 - Suggested next docs (e.g. `ui-specs.md` for visual language, `trd-web.md` for web baseline, first FRD) — **do not create them**

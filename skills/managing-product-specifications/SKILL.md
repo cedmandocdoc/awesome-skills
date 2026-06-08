@@ -13,7 +13,9 @@ Skill collection for pre-implementation product specs on disk. Works in any envi
 
 ## When to use
 
-Follow this skill when creating, updating, or reviewing product specification markdown: PRD, FRD, TRD, user story, or UI specs — at product level (`docs/`) or feature level (`docs/features/<slug>/`). No application code unless the user explicitly asks in the same message.
+Follow this skill when creating, updating, or reviewing product specification markdown: PRD, FRD, TRD, user story, or UI specs — at product level (`<docs-root>/`) or feature level (`<docs-root>/features/<slug>/`). No application code unless the user explicitly asks in the same message.
+
+**Docs root:** Located only via `<docs-root>/index.md` with the static **Author signature** UUID in frontmatter. If none exists, **ask the user** for an empty folder path, then initialize with `index.md` before any spec. See [spec-contract.md](references/spec-contract.md) → **Resolve docs root**.
 
 ## Spec recipes
 
@@ -27,13 +29,13 @@ Follow this skill when creating, updating, or reviewing product specification ma
 
 Load this skill when intent matches any cell, whether the user @-mentions the skill or describes the work in natural language.
 
-**Path resolution:** Product companions (`docs/trd-web.md`, `docs/ui-specs.md`, …) and feature companions (`docs/features/<slug>/trd-api.md`, …) use the same recipe; scope and path come from [spec-contract.md](references/spec-contract.md).
+**Path resolution:** Product companions (`<docs-root>/trd-web.md`, …) and feature companions (`<docs-root>/features/<slug>/trd-api.md`, …) use the same recipe; `<docs-root>` comes from [spec-contract.md](references/spec-contract.md) → **Finding docs root**.
 
 ## Reference index
 
 | Doc | When to use |
 | --- | --- |
-| [spec-contract.md](references/spec-contract.md) | Paths, naming, frontmatter, inheritance, tiers, finding specs |
+| [spec-contract.md](references/spec-contract.md) | Docs root `index.md` marker, author UUID, paths, naming, frontmatter, inheritance, tiers |
 | [creating-prd.md](references/creating-prd.md) | New `prd.md` |
 | [updating-prd.md](references/updating-prd.md) | Amend `prd.md`; sync feature index |
 | [reviewing-prd.md](references/reviewing-prd.md) | Read-only PRD review |
@@ -52,6 +54,7 @@ Load this skill when intent matches any cell, whether the user @-mentions the sk
 
 ## Templates
 
+- [`assets/index.md`](assets/index.md)
 - [`assets/prd.md`](assets/prd.md)
 - [`assets/frd.md`](assets/frd.md)
 - [`assets/trd.md`](assets/trd.md)
@@ -60,11 +63,11 @@ Load this skill when intent matches any cell, whether the user @-mentions the sk
 
 ## Examples
 
-**Create PRD:** User asks for a PRD for a business app. Follow [creating-prd.md](references/creating-prd.md) → write `docs/prd.md` → suggest `ui-specs.md` or first FRD; do not auto-create them.
+**Create PRD (new repo):** No `index.md` found → ask user for an empty folder (e.g. `docs/`) → write `docs/index.md` then `docs/prd.md` → suggest `ui-specs.md` or first FRD; do not auto-create them.
 
-**Create FRD:** User asks for checkout FRD (web + api). Follow [creating-frd.md](references/creating-frd.md) → write `docs/features/checkout/frd.md` with `apps: [web, api]` → link from PRD feature index.
+**Create FRD:** User asks for checkout FRD (web + api). Resolve docs root via `index.md` → write `<docs-root>/features/checkout/frd.md` with `apps: [web, api]` → link from PRD feature index.
 
-**Create feature TRD:** User asks for checkout web TRD. Follow [creating-trd.md](references/creating-trd.md) → read `frd.md` and `docs/trd-web.md` → write `docs/features/checkout/trd-web.md`.
+**Create feature TRD:** User asks for checkout web TRD. Follow [creating-trd.md](references/creating-trd.md) → read `frd.md` and `<docs-root>/trd-web.md` → write `<docs-root>/features/checkout/trd-web.md`.
 
 **Update FRD:** User adds acceptance criteria. Follow [updating-frd.md](references/updating-frd.md) → bump `spec_revision` → note downstream user-story / TRD docs that may need review.
 

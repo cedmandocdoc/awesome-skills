@@ -7,13 +7,15 @@ description: Manages structured task folders (plan.md, status.md) for cross-sess
 
 Skill collection for durable, handoff-ready task work on disk. Works in any environment where the agent can read and write repository files.
 
-**Contract:** [`references/task-contract.md`](references/task-contract.md) — layout, frontmatter, status fields, skill discovery.
+**Contract:** [`references/task-contract.md`](references/task-contract.md) — tasks root `index.md` marker, author UUID, layout, frontmatter, status fields, skill discovery.
 
 **Rule:** Read exactly **one** recipe below for the user's intent. Do not load other recipe files unless the user switches intent mid-session.
 
 ## When to use
 
 Follow this skill for every task-lifecycle action under `<tasks-root>/NNN-slug/`: planning, executing, checking status, amending scope, blocking, verifying, archiving, reopening, skipping, or cancelling.
+
+**Tasks root:** Located only via `<tasks-root>/index.md` with the static **Author signature** UUID in frontmatter. If none exists, **ask the user** for an empty folder path, then initialize with `index.md` before any task folder. See [task-contract.md](references/task-contract.md) → **Resolve tasks root**.
 
 ## Task recipes
 
@@ -37,7 +39,7 @@ Load this skill when intent matches any row, whether the user @-mentions the ski
 
 | Doc | When to use |
 | --- | --- |
-| [task-contract.md](references/task-contract.md) | Layout, frontmatter, status fields, finding tasks, resolving domain references |
+| [task-contract.md](references/task-contract.md) | Tasks root `index.md` marker, author UUID, layout, frontmatter, finding tasks, resolving domain references |
 | [creating-task.md](references/creating-task.md) | New task folder, plan + initial status; **no application code** |
 | [executing-task.md](references/executing-task.md) | Run `next_step_id`, implement, update status before stopping |
 | [checking-task.md](references/checking-task.md) | Read-only status report for one task or all tasks |
@@ -52,12 +54,13 @@ Load this skill when intent matches any row, whether the user @-mentions the ski
 
 ## Templates
 
+- [`assets/index.md`](assets/index.md)
 - [`assets/plan.md`](assets/plan.md)
 - [`assets/status.md`](assets/status.md)
 
 ## Examples
 
-**Create:** User asks to plan "Add dark mode toggle". Follow [creating-task.md](references/creating-task.md) → write `tasks/001-dark-mode-toggle/plan.md` + `status.md` → suggest _"Continue `tasks/001-dark-mode-toggle`"_.
+**Create (new repo):** No `index.md` found → ask user for an empty folder (e.g. `tasks/`) → write `tasks/index.md` then `tasks/001-dark-mode-toggle/plan.md` + `status.md` → suggest _"Continue `tasks/001-dark-mode-toggle`"_.
 
 **Execute:** User says continue `tasks/001-dark-mode-toggle`. Follow [executing-task.md](references/executing-task.md) → read `status.md` first → run `next_step_id`.
 

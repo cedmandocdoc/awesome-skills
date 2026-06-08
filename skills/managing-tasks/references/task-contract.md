@@ -2,10 +2,23 @@
 
 On-disk layout and field meanings shared by all `managing-tasks` workflows.
 
+## Author signature
+
+Static UUID identifying tasks roots created by this skill:
+
+```text
+b2e4f6a8-3c1d-5e7f-9a2b-4d6e8f0c1a3b
+```
+
+Every `<tasks-root>/index.md` must include this value in frontmatter `author`. Search the repository for that field to locate the tasks root — do not infer the root from `plan.md`, `status.md`, or numbered task folders alone.
+
 ## Output layout
+
+Only this skill may establish a tasks root. The root is always marked by `<tasks-root>/index.md`.
 
 ```text
 <tasks-root>/
+  index.md                          # tasks root marker — required; created first
   <NNN>-<slug>/
     plan.md      # Stable spec: goal, phases, files, acceptance criteria
     status.md    # Mutable state: execution pointer, step queue, handoff note
@@ -13,7 +26,7 @@ On-disk layout and field meanings shared by all `managing-tasks` workflows.
     <NNN>-<slug>/
 ```
 
-Templates: [`../assets/plan.md`](../assets/plan.md), [`../assets/status.md`](../assets/status.md).
+Templates: [`../assets/plan.md`](../assets/plan.md), [`../assets/status.md`](../assets/status.md), [`../assets/index.md`](../assets/index.md) for new tasks roots.
 
 ## Plan frontmatter
 
@@ -27,11 +40,49 @@ Every `plan.md` includes YAML frontmatter:
 | `plan_revision` | Integer; start at `1`, bump on each plan amend |
 | `todos` | Step queue: `id`, `content`, `status` (`pending` \| `completed` \| `skipped` \| `cancelled`) |
 
+## Resolve tasks root
+
+1. Search per **Finding tasks root** below.
+2. **Decide location:**
+   - **One match** → use that folder; no need to ask.
+   - **Multiple matches** → ask the user which root to use (list full paths to each `index.md`).
+   - **No match** → on **create** intent: **ask the user where to create** the tasks folder. Do not assume a default path. Then follow **Initialize tasks root**. On any other intent: stop and report that no tasks root exists; do not initialize.
+
+Do not create task folders outside the resolved root. Do not treat a folder as the tasks root unless it contains a valid `index.md` per **Finding tasks root**.
+
+## Finding tasks root
+
+Search the repository for `index.md` files whose YAML frontmatter contains **all** of:
+
+| Field | Value |
+| --- | --- |
+| `doc_type` | `tasks-root-index` |
+| `generated_by` | `managing-tasks` |
+| `author` | `b2e4f6a8-3c1d-5e7f-9a2b-4d6e8f0c1a3b` (see **Author signature**) |
+
+The tasks root is the parent directory of each matching `index.md` (e.g. `tasks/index.md` → root is `tasks/`).
+
+After resolving the root, list and read task folders only under that directory.
+
+## Initialize tasks root
+
+When **no** valid `index.md` exists and the user is creating a task:
+
+1. **Ask the user** for the target folder path (relative to repository root, e.g. `tasks/`, `docs/tasks/`).
+2. **Verify the folder is empty:**
+   - Path does not exist → OK; create the directory.
+   - Path exists and contains **no files and no subdirectories** → OK.
+   - Path exists and is **not empty** → stop. Tell the user the folder must be empty and ask for another path.
+3. Write `<tasks-root>/index.md` from [`../assets/index.md`](../assets/index.md) with the **Author signature** in `author`. This is the first file the skill creates in a new root.
+4. Proceed with the requested task folder(s) under that root.
+
+Only this skill may create or replace `index.md`. If the user points at a non-empty folder without a valid `index.md`, do not write tasks there.
+
 ## Finding existing tasks
 
-Search for `plan.md` files whose frontmatter contains `generated_by: managing-tasks` **or** `generated_by: creating-tasks` (legacy).
+After resolving the tasks root per **Finding tasks root**, search under `<tasks-root>/` and `<tasks-root>/archive/` for directories matching `[0-9][0-9][0-9]-*/` that contain `plan.md`.
 
-For each match, the tasks root is the parent of the numbered task folder (e.g. `tasks/007-foo/plan.md` → root is `tasks/`).
+Treat `plan.md` as a task when frontmatter contains `generated_by: managing-tasks` **or** `generated_by: creating-tasks` (legacy).
 
 ## Status fields
 

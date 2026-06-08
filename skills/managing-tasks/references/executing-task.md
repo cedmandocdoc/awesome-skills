@@ -4,7 +4,9 @@
 
 ## 1. Resolve task folder
 
-Resolve `<task-folder>` from the user's message. If unclear, list folders under the tasks root (per [task-contract.md](./task-contract.md)) and ask.
+Per [task-contract.md](./task-contract.md) → **Resolve tasks root** and **Finding tasks root**.
+
+Resolve `<task-folder>` from the user's message under `<tasks-root>/`. If unclear, list folders per **Finding existing tasks** and ask.
 
 ## 2. Startup protocol
 

@@ -9,7 +9,9 @@ Move completed or cancelled tasks to `archive/`. No implementation in this workf
 | Single task | "Archive `tasks/003-…`", "move this task to archive" |
 | Batch | "Archive all done tasks", "clean up completed tasks" |
 
-Resolve `<task-folder>` for a single task. For batch, discover tasks under each tasks root per [task-contract.md](./task-contract.md) → **Finding existing tasks**, then filter by `overall_status` (`Done` and/or `Cancelled` as the user specifies).
+Per [task-contract.md](./task-contract.md) → **Resolve tasks root** and **Finding tasks root**.
+
+Resolve `<task-folder>` for a single task under `<tasks-root>/`. For batch, discover tasks per **Finding existing tasks**, then filter by `overall_status` (`Done` and/or `Cancelled` as the user specifies).
 
 ## 2. Eligibility
 

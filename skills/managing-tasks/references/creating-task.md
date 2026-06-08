@@ -4,13 +4,7 @@
 
 ## 1. Resolve tasks root
 
-1. Search for existing tasks per [task-contract.md](./task-contract.md) → **Finding existing tasks**.
-2. **Decide location:**
-   - **One unique root** → use it; no need to ask.
-   - **Multiple roots** → ask the user which root to use (list paths).
-   - **No matches** → default to `tasks/` at the repository root, then **ask the user to confirm or specify** a different path (e.g. `docs/tasks/`).
-
-Do not create task folders outside the resolved root unless the user explicitly overrides.
+Per [task-contract.md](./task-contract.md) → **Resolve tasks root**, **Finding tasks root**, and **Initialize tasks root** when no `index.md` marker exists.
 
 ## 2. Assign task id and slug
 
@@ -71,7 +65,7 @@ Use [`../assets/status.md`](../assets/status.md). Initialize:
 
 Reply with:
 
-- Tasks root path and task folder path
+- Tasks root path (via `index.md`), task folder path, and whether `index.md` was newly created
 - One-line summary
 - `next_step_id` for the executor
 - Suggested follow-up: _"Continue `tasks/001-dark-mode-toggle`"_ or _"Read `tasks/001-dark-mode-toggle/status.md` and run the next step"_

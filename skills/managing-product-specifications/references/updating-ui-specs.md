@@ -4,7 +4,7 @@
 
 ## 1. Resolve path
 
-Per [spec-contract.md](./spec-contract.md). If missing → [creating-ui-specs.md](./creating-ui-specs.md).
+Per [spec-contract.md](./spec-contract.md) → **Resolve docs root**, **Finding docs root**, and **Path resolution**. If missing → [creating-ui-specs.md](./creating-ui-specs.md).
 
 ## 2. Read current state
 

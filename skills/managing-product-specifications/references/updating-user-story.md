@@ -4,7 +4,7 @@
 
 ## 1. Resolve path
 
-Per [spec-contract.md](./spec-contract.md). If missing → [creating-user-story.md](./creating-user-story.md).
+Per [spec-contract.md](./spec-contract.md) → **Resolve docs root**, **Finding docs root**, and **Path resolution**. If missing → [creating-user-story.md](./creating-user-story.md).
 
 ## 2. Read current state
 

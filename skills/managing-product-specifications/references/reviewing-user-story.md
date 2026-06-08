@@ -11,7 +11,7 @@
 
 ## Workflow
 
-1. Resolve path; read inheritance chain and scope doc (`prd.md` or `frd.md`)
+1. Resolve docs root per [spec-contract.md](./spec-contract.md) → **Finding docs root**; resolve target path; read inheritance chain and scope doc (`prd.md` or `frd.md`)
 2. Read paired `ui-specs*.md` if user requested end-to-end review
 3. Run checklist; deliver output format
 

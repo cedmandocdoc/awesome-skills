@@ -2,7 +2,11 @@
 
 **Docs only.** Writes product or feature user story: `user-story.md` or `user-story-<app>.md`.
 
-## 1. Resolve target path
+## 1. Resolve docs root
+
+Per [spec-contract.md](./spec-contract.md) → **Resolve docs root**, **Finding docs root**, and **Initialize docs root** (if needed).
+
+## 2. Resolve target path
 
 Per [spec-contract.md](./spec-contract.md) → **Path resolution**.
 
@@ -15,7 +19,7 @@ Per [spec-contract.md](./spec-contract.md) → **Path resolution**.
 
 If file exists → [updating-user-story.md](./updating-user-story.md) unless overwrite confirmed.
 
-## 2. Read prerequisites
+## 3. Read prerequisites
 
 | Target | Read first |
 | --- | --- |
@@ -24,11 +28,11 @@ If file exists → [updating-user-story.md](./updating-user-story.md) unless ove
 
 Shared `user-story.md` holds outcomes and acceptance criteria. `-<app>` files hold step-by-step journeys specific to that app.
 
-## 3. Choose tier
+## 4. Choose tier
 
 Default: **standard**.
 
-## 4. Write user story doc
+## 5. Write user story doc
 
 Use [`../assets/user-story.md`](../assets/user-story.md). Required:
 
@@ -39,12 +43,12 @@ Use [`../assets/user-story.md`](../assets/user-story.md). Required:
 
 Do not invent personas or flows unsupported by PRD / FRD.
 
-## 5. Sync FRD hub
+## 6. Sync FRD hub
 
 If feature-scoped → update `frd.md` `related.user_story` or app-specific keys.
 
-## 6. Confirm to the user
+## 7. Confirm to the user
 
-Reply with path, upstream docs read, suggested next docs (typically `ui-specs*.md`).
+Reply with docs root path, file path, upstream docs read, suggested next docs (typically `ui-specs*.md`).
 
 **Stop without implementing** application code.

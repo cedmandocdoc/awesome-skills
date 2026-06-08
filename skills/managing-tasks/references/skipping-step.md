@@ -4,7 +4,9 @@ Skip the current or named step and advance the execution pointer. Use when the u
 
 ## 1. Resolve task folder and step
 
-1. Resolve `<task-folder>` from the user's message
+Per [task-contract.md](./task-contract.md) → **Resolve tasks root** and **Finding tasks root**.
+
+1. Resolve `<task-folder>` from the user's message under `<tasks-root>/`. If unclear, list folders per **Finding existing tasks** and ask.
 2. Read `status.md`, then `plan.md`
 3. Determine step to skip:
    - Default: `next_step_id` from `status.md`

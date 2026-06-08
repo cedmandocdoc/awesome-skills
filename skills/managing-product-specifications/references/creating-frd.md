@@ -4,7 +4,7 @@
 
 ## 1. Resolve docs root and slug
 
-Per [spec-contract.md](./spec-contract.md) → docs root, **Feature slug**.
+Per [spec-contract.md](./spec-contract.md) → **Resolve docs root**, **Finding docs root**, **Initialize docs root** (if needed), and **Feature slug**.
 
 If `frd.md` already exists → stop; direct to [updating-frd.md](./updating-frd.md) unless the user confirms overwrite.
 
@@ -42,7 +42,7 @@ If `prd.md` exists → add or update the Features table row linking to this FRD.
 
 Reply with:
 
-- Path to `frd.md`
+- Docs root path and path to `frd.md`
 - `apps` list
 - One-line summary
 - Suggested next docs in dependency order: `user-story.md` → `ui-specs.md` / `ui-specs-<app>.md` → `trd.md` / `trd-<app>.md`

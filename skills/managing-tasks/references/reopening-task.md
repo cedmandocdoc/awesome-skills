@@ -4,7 +4,9 @@ Restore a cancelled task for continued work. Replanning optional; this workflow 
 
 ## 1. Resolve task folder
 
-Resolve `<task-folder>` from the user's message. Read `status.md`, then `plan.md`.
+Per [task-contract.md](./task-contract.md) → **Resolve tasks root** and **Finding tasks root**.
+
+Resolve `<task-folder>` from the user's message under `<tasks-root>/`. If unclear, list folders per **Finding existing tasks** and ask. Read `status.md`, then `plan.md`.
 
 If `overall_status` is not `Cancelled` → stop; tell the user (offer [checking-task.md](./checking-task.md) or [executing-task.md](./executing-task.md) as appropriate).
 

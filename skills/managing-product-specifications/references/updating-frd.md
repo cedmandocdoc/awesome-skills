@@ -4,7 +4,7 @@
 
 ## 1. Resolve feature folder
 
-Per [spec-contract.md](./spec-contract.md) → docs root. Target from user message or search `features/*/frd.md`.
+Per [spec-contract.md](./spec-contract.md) → **Resolve docs root** and **Finding docs root**. Target from user message or search `<docs-root>/features/*/frd.md`.
 
 If missing → direct to [creating-frd.md](./creating-frd.md).
 

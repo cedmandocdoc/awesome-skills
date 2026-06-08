@@ -4,7 +4,7 @@
 
 ## 1. Resolve path
 
-Per [spec-contract.md](./spec-contract.md). If missing → [creating-trd.md](./creating-trd.md).
+Per [spec-contract.md](./spec-contract.md) → **Resolve docs root**, **Finding docs root**, and **Path resolution**. If missing → [creating-trd.md](./creating-trd.md).
 
 ## 2. Read current state
 

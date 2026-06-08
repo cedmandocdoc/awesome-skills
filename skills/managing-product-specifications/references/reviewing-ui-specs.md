@@ -11,7 +11,7 @@
 
 ## Workflow
 
-1. Resolve path; read inheritance chain (product `ui-specs.md` first)
+1. Resolve docs root per [spec-contract.md](./spec-contract.md) → **Finding docs root**; resolve target path; read inheritance chain (product `ui-specs.md` first)
 2. Read `user-story*.md` and `frd.md` when feature-scoped
 3. Run checklist; deliver output format
 

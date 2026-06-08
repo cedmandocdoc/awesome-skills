@@ -11,7 +11,7 @@
 
 ## Workflow
 
-1. Resolve TRD path; read `inherits_from` chain fully
+1. Resolve docs root per [spec-contract.md](./spec-contract.md) → **Finding docs root**; resolve TRD path under `<docs-root>`; read `inherits_from` chain fully
 2. Read scope doc (`prd.md` or `frd.md`)
 3. Run checklist; deliver output format
 
