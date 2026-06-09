@@ -15,7 +15,7 @@ Produces two markdown files the user feeds into Google Stitch:
 2. **User story** — roles, goals, behaviors, permissions
 3. **UI specs** — flows, screens, states, validation, edge cases, content, layout
 
-If any input is missing or too thin to produce a sufficient prompt, **stop and gather information** before generating. Do not invent flows, roles, or visual tokens not supported by the inputs.
+If any input is missing or too thin, **stop and gather information** before generating. Mark `[TBD]` for gaps — never fabricate flows, roles, copy, or visual tokens.
 
 ## Gap-filling (when inputs are insufficient)
 
@@ -50,11 +50,11 @@ Ask when UI specs or style guide is missing or vague:
 - Density: compact vs spacious?
 - Mobile-first or desktop-first?
 
-Capture answers in notes. Visual decisions go into `design.md` via [creating-style-guide.md](creating-style-guide.md). Behavioral decisions go into `prompt.md`. If gaps remain, mark `[TBD]` and list them in the delivery summary — do not fabricate detail.
+Capture answers in notes. Visual decisions go into `design.md` via [creating-style-guide.md](creating-style-guide.md). Behavioral decisions go into `prompt.md`. List any remaining gaps as `[TBD]` in the delivery summary.
 
 ## Delivery preference
 
-**Ask before generating** (unless the user already specified). Prompts are long; nested markdown breaks when wrapped in chat code fences.
+**Ask before generating** (unless the user already specified).
 
 | Option | When to use | Action |
 | --- | --- | --- |
@@ -63,20 +63,24 @@ Capture answers in notes. Visual decisions go into `design.md` via [creating-sty
 
 Default if the user has no preference: `stitch/<feature-slug>/` in the project root.
 
+Skip the ask only when the user gives an explicit path (e.g. "write to `docs/design/checkout/`").
+
 On follow-up requests ("add checkout screen", "update color tokens"), **edit the existing files** at the agreed path — do not create duplicates unless the user asks.
 
-Skip the ask only when the user gives an explicit path (e.g. "write to `docs/design/checkout/`").
+**File and chat delivery:**
+
+- Write `design.md` and `prompt.md` as plain markdown on disk at the agreed path.
+- Do not wrap file bodies in chat code fences — nested markdown breaks inside fences.
+- In chat, return paths, summary, and gaps only — not the full file bodies. If the user insists on in-chat delivery, write the files anyway and say copying from the files is the reliable method.
 
 ## Workflow
 
-1. **Assess inputs** — locate or confirm PRD/FRD, user story, and UI specs. If insufficient, run gap-filling above.
+1. **Assess inputs** — prerequisites above; if insufficient, run gap-filling.
 2. **Confirm delivery** — agree on directory path and feature slug.
-3. **Parse PRD/FRD** — extract scope, requirements, acceptance criteria, feature boundaries.
-4. **Parse user story** — extract roles, goals, per-role behavior, permissions.
-5. **Parse UI specs** — extract flows, screens, components, states, validation, edge cases, content, layout.
-6. **Generate `design.md`** — see [Generating `design.md`](#generating-designmd) below.
-7. **Draft `prompt.md`** — use [`prompt.md`](../assets/prompt.md); reference `design.md`; list every component and screen exhaustively; fill the Stitch Generation Plan with numbered build steps.
-8. **Write files** — save `design.md` and `prompt.md` as plain `.md` at the agreed path. Do not wrap file bodies in chat code fences.
+3. **Extract** — map inputs using [Extraction checklist](#extraction-checklist) below.
+4. **Generate `design.md`** — see [Generating `design.md`](#generating-designmd).
+5. **Draft `prompt.md`** — use [`prompt.md`](../assets/prompt.md); see [Filling rules](#filling-rules).
+6. **Write files** — save at agreed path per Delivery preference.
 
 When `design.md` already exists and the user only asks for visual token updates, re-run [Generating `design.md`](#generating-designmd) and sync `prompt.md` token references if needed.
 
@@ -84,33 +88,19 @@ When `design.md` already exists and the user only asks for visual token updates,
 
 This recipe **invokes** [creating-style-guide.md](creating-style-guide.md) for visual content only. That recipe is independent — it does not know about Stitch or `design.md`. This section owns how the handoff uses it.
 
-1. **Read** [creating-style-guide.md](creating-style-guide.md) — conventions, parsing, filling rules, and output contract (all nine sections).
+1. **Read** [creating-style-guide.md](creating-style-guide.md) — conventions, parsing, filling rules, and [output contract](creating-style-guide.md#output-contract).
 2. **Gather visual inputs** — UI specs, gap-filling answers, and any user-supplied style guide.
 3. **Produce content** — follow that recipe's workflow; structure from [`style-guide.md`](../assets/style-guide.md).
 4. **Write to disk** — save as `design.md` at the agreed path. Do **not** paste the full body in chat (override that recipe's default chat delivery for this step only).
 5. **Summarize in chat** — paths, one-line summary, and gaps only.
 
-`design.md` **is** the filled style guide — same structure, no extra sections.
+`design.md` **is** the filled [`style-guide.md`](../assets/style-guide.md) — same nine sections, no extra sections.
 
 ## File contracts
 
 ### `design.md`
 
-Complete visual styling guide. **Same structure as** [`style-guide.md`](../assets/style-guide.md) — produced entirely by [creating-style-guide.md](creating-style-guide.md).
-
-| § | Section |
-| --- | --- |
-| 1 | Visual Theme & Atmosphere |
-| 2 | Color Palette & Roles |
-| 3 | Typography |
-| 4 | Spacing |
-| 5 | Grid |
-| 6 | Alignment & Density |
-| 7 | Depth & Elevation |
-| 8 | Roundness |
-| 9 | Breakpoints & Responsive Behavior |
-
-Do not maintain a separate design template. `design.md` **is** the style guide output.
+Filled [`style-guide.md`](../assets/style-guide.md) produced by [creating-style-guide.md](creating-style-guide.md). See that recipe's [output contract](creating-style-guide.md#output-contract) for section list and required content.
 
 ### `prompt.md`
 
@@ -130,11 +120,9 @@ Generation prompt for Google Stitch. Fixed section order:
 | 9 | Constraints & Non-Goals | What Stitch must not invent or change |
 | 10 | Final Deliverable Checklist | Verification list |
 
-Template: [`prompt.md`](../assets/prompt.md).
+Template: [`prompt.md`](../assets/prompt.md). Populate the header source hierarchy from the template — do not restate it elsewhere in the file.
 
 ## Filling rules
-
-Both files are **plain markdown on disk** — not wrapped in chat code fences.
 
 ### `design.md`
 
@@ -142,15 +130,12 @@ Follow all filling rules in [creating-style-guide.md](creating-style-guide.md). 
 
 ### `prompt.md`
 
-1. **Replace every `[...]` placeholder** with concrete names from PRD/FRD, user story, and UI specs.
-2. **Never ship bracket placeholders** in the output.
-3. **Reference `design.md`** — all visual decisions point to tokens in the design file (§2–§9), not inline hex, px, or font values.
-4. **Expand repeat sections fully** — list every component category, every screen, and every variant. Do not summarize with "repeat for all screens."
-5. **Components before screens** — component library must be complete before screen sections and Stitch Generation Plan reference them.
-6. **Stitch Generation Plan** — numbered steps covering every component category and every screen/state variant from inputs, in build order.
-7. **Be exhaustive** — every screen, validation state, error state, edge case, and role variant from inputs must appear by name.
-8. **Be specific** — use hierarchical component names (`Input/Text/Error`, `Button/Primary/Hover`) derived from specs.
-9. **Source hierarchy** — PRD/FRD and UI specs win for behavior and content; `design.md` wins for visual language.
+1. **Replace every `[...]` placeholder** with concrete names from PRD/FRD, user story, and UI specs. Never ship bracket placeholders in the output.
+2. **Reference `design.md`** — all visual decisions point to tokens in the design file (§2–§9), not inline hex, px, or font values. See [creating-style-guide.md](creating-style-guide.md) color principles for the token-only rule.
+3. **Coverage** — list every component category, screen, variant, validation state, error state, edge case, and role variant from inputs by name. Expand repeat sections fully; do not summarize with "repeat for all screens."
+4. **Components before screens** — component library must be complete before screen sections and Stitch Generation Plan reference them.
+5. **Stitch Generation Plan** — numbered steps covering every component category and every screen/state variant from inputs, in build order.
+6. **Be specific** — use hierarchical component names (`Input/Text/Error`, `Button/Primary/Hover`) derived from specs.
 
 ## Extraction checklist
 
@@ -192,25 +177,17 @@ Before filling templates, confirm you have:
 
 ## Authoring rules
 
-- **PRD/FRD + UI specs are behavior source of truth** — state this in the prompt header.
-- **`design.md` is visual source of truth** — Stitch must not deviate from its tokens.
 - **User story drives role coverage** — every role with distinct behavior gets explicit screen/view coverage.
-- **Be exhaustive for the spec** — every screen, state, and edge case in inputs should appear in the prompt.
 - **Production intent** — named components, full variant coverage, role-aware views.
-- **No chat code fences in files** — write valid markdown only.
 
 ## Output format
 
-Return to the user in chat (not the full file bodies):
+Return to the user in chat per **File and chat delivery** in Delivery preference:
 
 1. **Paths** — absolute or repo-relative paths to `design.md` and `prompt.md`.
 2. **Summary** — one sentence on what the prompt covers.
 3. **Gaps** — any detail marked TBD or missing from inputs.
 4. **Copy instruction** — tell the user to open both files and use them with Google Stitch (`design.md` as visual reference; `prompt.md` as generation prompt).
-
-**Do not** paste the full prompts inside chat code fences.
-
-If the user insists on in-chat delivery, write the files anyway, then say copying from the files is the reliable method.
 
 ## Follow-up updates
 

@@ -2,7 +2,7 @@
 
 **Authoring mode.** Apply when the user needs a complete visual styling guide — theme, color, typography, spacing, grid, alignment, depth, roundness, and breakpoints.
 
-Produces markdown following [`../assets/style-guide.md`](../assets/style-guide.md) — all nine sections, fixed order, concrete token values.
+Produces markdown per [output contract](#output-contract) using [`../assets/style-guide.md`](../assets/style-guide.md).
 
 **Delivery:** Copiable markdown in chat (default). Write a file only when the user asks for a path.
 
@@ -52,7 +52,7 @@ When the user supplies an existing guide (markdown, Figma tokens, CSS variables,
 2. **Parse and normalize** — if a foreign guide exists, run [Parsing custom style guides](#parsing-custom-style-guides).
 3. **Read conventions** — color, typography, and layout sections when defaults apply.
 4. **Map brand inputs** — assign colors to semantic roles; fonts to `font-{group}`; density to spacing scale.
-5. **Draft all nine sections** — use [`style-guide.md`](../assets/style-guide.md); fill every row and bullet with concrete values.
+5. **Draft per output contract** — fill every row and bullet in [`style-guide.md`](../assets/style-guide.md) with concrete values.
 6. **Deliver** — see [Output format](#output-format).
 
 ## Color token convention (shadcn)
@@ -231,12 +231,10 @@ The markdown must include **all nine sections** from [`style-guide.md`](../asset
 ## Filling rules
 
 1. **Normalize foreign names** — map custom guides onto canonical tokens unless the user explicitly requires foreign names preserved.
-2. **Semantic colors over palette slots** — `primary`, not `blue-600`.
-3. **Light and dark pairs** — every surface token needs both mode values when dark mode applies.
-4. **Separate concerns** — size in `text-*`; weight in `font-{weight}`; family in `font-{group}`; spacing in `space-*`; corners in `radius-*`.
-5. **Derive from inputs** — brand values from the user; structural token names from conventions.
-6. **No duplicate naming** — one canonical name per token.
-7. **All nine sections** — do not drop sections; use defaults when inputs are silent.
+2. **Light and dark pairs** — every surface token needs both mode values when dark mode applies.
+3. **Separate concerns** — size in `text-*`; weight in `font-{weight}`; family in `font-{group}`; spacing in `space-*`; corners in `radius-*`.
+4. **Derive from inputs** — brand values from the user; structural token names from conventions.
+5. **No duplicate naming** — one canonical name per token.
 
 ## Output format
 
@@ -248,4 +246,4 @@ Do **not** write a file unless the user explicitly asks for one.
 
 ## Follow-up updates
 
-When the user revises tokens, output updated markdown using the same nine-section contract.
+When the user revises tokens, output updated markdown using the same [output contract](#output-contract).

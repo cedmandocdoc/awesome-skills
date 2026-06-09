@@ -29,8 +29,6 @@
 
 ## 2. Color Palette & Roles
 
-Use **token names** everywhere in downstream specs. Never use raw hex in `prompt.md` — reference tokens only.
-
 ### Color tokens
 
 | Token | Light | Dark | Role / usage |
@@ -48,8 +46,6 @@ Use **token names** everywhere in downstream specs. Never use raw hex in `prompt
 ---
 
 ## 3. Typography
-
-Use **token names** for all type in downstream specs. Do not use raw font sizes in screen specs.
 
 ### Type scale (`text-{variant}-{size}`)
 

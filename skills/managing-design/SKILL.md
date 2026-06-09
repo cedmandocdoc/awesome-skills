@@ -36,19 +36,7 @@ Load this skill when intent matches any row, whether the user @-mentions the ski
 
 ## Style guide structure
 
-[`assets/style-guide.md`](assets/style-guide.md) defines the single canonical structure:
-
-1. Visual Theme & Atmosphere
-2. Color Palette & Roles
-3. Typography
-4. Spacing
-5. Grid
-6. Alignment & Density
-7. Depth & Elevation
-8. Roundness
-9. Breakpoints & Responsive Behavior
-
-Token naming, parsing custom guides, and default values live in [creating-style-guide.md](references/creating-style-guide.md).
+[`assets/style-guide.md`](assets/style-guide.md) defines the single canonical structure (nine fixed sections). Token naming, parsing custom guides, and default values live in [creating-style-guide.md](references/creating-style-guide.md).
 
 ## Templates
 
