@@ -43,6 +43,7 @@ Use these sets when planning or executing work managed by `managing-tasks`. Read
 | Styling / theme | styling, styling-preference, setting-up-theming, setting-up-tailwind-theme, overriding-classname |
 | Project bootstrap | structuring-project, managing-environment, linting |
 | Routing only | configuring-routing |
+| E2E testing | creating-e2e-testing, structuring-project |
 
 Add at most 1–2 extra docs from the index below when the task needs them.
 
@@ -127,3 +128,9 @@ Each doc appears once. External links are official docs for setup and APIs.
 | [creating-api.md](./references/creating-api.md) | Structure API clients and feature-facing data hooks. |
 | [setting-up-axios.md](./references/setting-up-axios.md) | Configure Axios instance defaults, interceptors, and API boundaries. |
 | [managing-api-error.md](./references/managing-api-error.md) | Map API failures to `ApiError`; consume `error.message` in TanStack Query and UI. |
+
+### Testing
+
+| Doc | When to use |
+| --- | --- |
+| [creating-e2e-testing.md](./references/creating-e2e-testing.md) | Add Playwright E2E tests with Page Object Model; choose single page vs flow tests. |

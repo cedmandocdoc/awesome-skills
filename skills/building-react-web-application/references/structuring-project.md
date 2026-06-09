@@ -12,16 +12,17 @@ Use this guide to organize the Vite + React SPA by responsibility. Keep routing,
 - Keep Vite entry (`main.tsx`) at the project root or under `src/` per your Vite template and import **one** root stylesheet.
 - Use kebab-case for feature folders.
 
-| Area                           | Purpose                                                                  |
-| ------------------------------ | ------------------------------------------------------------------------ |
-| `global.css`                   | Project root: Tailwind + shadcn Tailwind imports; `@import` of `theme.css` |
-| `src/theme.css`                | Design tokens and `@theme` / `:root` / `.dark` (see setting-up-theming.md) |
-| `src/routes/`                  | TanStack Router file-based route modules (see configuring-routing.md)   |
-| `src/routeTree.gen.ts`         | Generated route tree (from `src/routes/`; edit route modules)            |
-| `src/ui/`                      | Flat presentational primitives (registry output from the add script)     |
-| `src/features/<feature-name>/` | Domain logic and feature UI                                            |
-| `src/libs/`                    | Global reusable code (any folder may import via `@/libs/...`)          |
-| `src/api/`                     | Framework-agnostic HTTP code                                            |
+| Area                           | Purpose                                                                         |
+| ------------------------------ | ------------------------------------------------------------------------------- |
+| `global.css`                   | Project root: Tailwind + shadcn Tailwind imports; `@import` of `theme.css`      |
+| `src/theme.css`                | Design tokens and `@theme` / `:root` / `.dark` (see setting-up-theming.md)      |
+| `src/routes/`                  | TanStack Router file-based route modules (see configuring-routing.md)           |
+| `src/routeTree.gen.ts`         | Generated route tree (from `src/routes/`; edit route modules)                   |
+| `src/ui/`                      | Flat presentational primitives (registry output from the add script)            |
+| `src/features/<feature-name>/` | Domain logic and feature UI                                                     |
+| `src/libs/`                    | Global reusable code (any folder may import via `@/libs/...`)                   |
+| `src/api/`                     | Framework-agnostic HTTP code                                                    |
+| `tests/`                       | Playwright E2E tests (see [creating-e2e-testing.md](./creating-e2e-testing.md)) |
 
 ### Registry and `src/ui`
 
@@ -53,7 +54,6 @@ Typical shape: `main.tsx` imports **`../global.css`** (or the correct relative p
 - Use relative imports inside the same module.
 - Import features through `index.ts`.
 - Keep this import order:
-
   1. `import type`
   2. `react`
   3. `react-dom` (when needed)
