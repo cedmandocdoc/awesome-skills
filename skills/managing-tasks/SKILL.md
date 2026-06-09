@@ -1,6 +1,6 @@
 ---
 name: managing-tasks
-description: Manages structured task folders (plan.md, status.md) for cross-session agent handoff. Creates, executes, checks, updates, blocks, verifies, archives, reopens, skips, or cancels tasks. Use when the user works with tasks/NNN-slug folders or asks about task status, blockers, or lifecycle.
+description: Manages structured task folders (plan.md, status.md) for cross-session agent handoff. Creates, executes, checks, triages, updates, blocks, verifies, archives, reopens, skips, or cancels tasks. Use when the user works with tasks/NNN-slug folders or asks about task status, blockers, readiness, or lifecycle.
 ---
 
 # Managing Tasks
@@ -24,6 +24,7 @@ Follow this skill for every task-lifecycle action under `<tasks-root>/NNN-slug/`
 | Create | "Create a task: …", "Plan … as a task", "new task" | [creating-task.md](references/creating-task.md) |
 | Execute | "Continue `tasks/001-…`", "Resume the dark mode task", "implement next step" | [executing-task.md](references/executing-task.md) |
 | Check | "Status of `tasks/003-…`", "list all tasks", "what's next?" | [checking-task.md](references/checking-task.md) |
+| Triage | "What can I start?", "Which tasks are ready?", "What's unblocked?" | [triaging-tasks.md](references/triaging-tasks.md) |
 | Update | "Update task scope", "add a phase to `tasks/003-…`", "replan" | [updating-task.md](references/updating-task.md) |
 | Block | "Block this task", "waiting on design review" | [blocking-task.md](references/blocking-task.md) |
 | Unblock | "Unblock `tasks/002-…`", "dependency resolved" | [unblocking-task.md](references/unblocking-task.md) |
@@ -43,6 +44,7 @@ Load this skill when intent matches any row, whether the user @-mentions the ski
 | [creating-task.md](references/creating-task.md) | New task folder, plan + initial status; **no application code** |
 | [executing-task.md](references/executing-task.md) | Run `next_step_id`, implement, update status before stopping |
 | [checking-task.md](references/checking-task.md) | Read-only status report for one task or all tasks |
+| [triaging-tasks.md](references/triaging-tasks.md) | Read-only triage — which tasks can start now vs need deps, assets, design, or plan input |
 | [updating-task.md](references/updating-task.md) | Amend `plan.md` and sync `status.md` when scope changes |
 | [blocking-task.md](references/blocking-task.md) | Mark task blocked with reason; freeze execution pointer |
 | [unblocking-task.md](references/unblocking-task.md) | Clear blocker; restore `In Progress` |
@@ -67,3 +69,5 @@ Load this skill when intent matches any row, whether the user @-mentions the ski
 **Update:** User adds a phase to an in-progress task. Follow [updating-task.md](references/updating-task.md) → bump `plan_revision` → sync step queue.
 
 **Check:** User asks "what's the status of the dark mode task?". Follow [checking-task.md](references/checking-task.md) → read `status.md` → report without mutating files.
+
+**Triage:** User asks "what can I work on?". Follow [triaging-tasks.md](references/triaging-tasks.md) → scan all tasks → split into startable now vs not ready with blocker type and unblock action.
