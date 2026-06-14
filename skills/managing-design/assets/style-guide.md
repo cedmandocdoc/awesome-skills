@@ -1,6 +1,6 @@
 # Style Guide — [Product / Project]
 
-> **Structure only** — used by [creating-style-guide.md](../references/creating-style-guide.md). Filled output is a complete visual styling guide (chat or file).
+> **Structure only** — used by [creating-style-guide.md](../references/creating-style-guide.md). Filled output is a complete visual styling guide (chat or file). For Google Stitch handoff, transform to [`design.md`](design.md) via [creating-stitch-design.md](../references/creating-stitch-design.md).
 >
 > Reference token names in specs and prompts — not raw hex, px literals, or ad-hoc font sizes. Values live in this document only.
 >

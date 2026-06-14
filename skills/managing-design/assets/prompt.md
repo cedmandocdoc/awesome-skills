@@ -4,7 +4,7 @@
 > 1. PRD/FRD — scope, requirements, acceptance criteria
 > 2. User story — roles, goals, behaviors
 > 3. UI specs — flows, screens, states, content, validation
-> 4. `design.md` — visual language, tokens, layout, elevation, breakpoints
+> 4. `design.md` — visual language (YAML tokens + canonical sections per [Stitch DESIGN.md spec](https://stitch.withgoogle.com/docs/design-md/specification.md))
 >
 > Do not reinterpret, simplify, or redesign flows. Follow `design.md` for all visual decisions.
 
@@ -61,26 +61,26 @@ From user stories — define who sees what and how behavior differs.
 
 ## Component Library
 
-Build these components **before** screens. Use token names from `design.md` only — colors (§2), typography (§3), spacing (§4), grid (§5), elevation (§7), roundness (§8).
+Build these components **before** screens. Use token keys from `design.md` YAML front matter only — `colors.*`, `typography.*`, `spacing.*`, `rounded.*`, `components.*` — not inline hex, px, or font values.
 
 ### [Category — e.g. Buttons]
 
 | Component | Variants | States | Token references | Notes |
 | --- | --- | --- | --- | --- |
-| [Component name] | [e.g. Primary, Secondary, Destructive, Ghost] | [Default, Hover, Pressed, Disabled, Focus, Loading] | [e.g. `primary`, `radius-md`, `space-3`] | [Size variants, icon slots, etc.] |
+| [Component name] | [e.g. Primary, Secondary, Destructive, Ghost] | [Default, Hover, Pressed, Disabled, Focus, Loading] | [e.g. `colors.primary`, `rounded.md`, `spacing.sm`] | [Size variants, icon slots, etc.] |
 
 ### [Category — e.g. Inputs]
 
 | Component | Variants | States | Token references | Notes |
 | --- | --- | --- | --- | --- |
-| [Component name] | [e.g. Text, Password, Select, Textarea] | [Default, Focus, Filled, Error, Disabled] | [e.g. `input`, `ring`, `text-label`] | [Validation message slot, etc.] |
+| [Component name] | [e.g. Text, Password, Select, Textarea] | [Default, Focus, Filled, Error, Disabled] | [e.g. `colors.input`, `colors.ring`, `typography.label-md`] | [Validation message slot, etc.] |
 
 [One ### block per category until the full component inventory from UI specs is covered]
 
 ### Shared patterns
 
 - [e.g. All form fields: label above, helper below, error replaces helper]
-- [e.g. Empty states: illustration slot + `text-heading-md` title + `text-body-sm` description + primary CTA]
+- [e.g. Empty states: illustration slot + `typography.headline-md` title + `typography.body-sm` description + primary CTA]
 
 ---
 
@@ -90,7 +90,7 @@ Numbered build order for Google Stitch. Execute in sequence — each step refere
 
 1. **[Step name — e.g. Core buttons]** — [variants and states to generate; token refs]
 2. **[Step name — e.g. Form inputs]** — [variants and states to generate; token refs]
-3. **[Step name — e.g. Navigation shell]** — [layout regions; breakpoint behavior from `design.md` §9]
+3. **[Step name — e.g. Navigation shell]** — [layout regions; breakpoint behavior from `design.md` Layout section]
 4. **[Step name — e.g. Screen: Login]** — [layout, content summary, component refs, states]
 5. [Continue until every screen and state variant from UI specs has a numbered step]
 
@@ -113,7 +113,7 @@ Organize screens into logical sections. Each screen lists layout, content, compo
 
 - [Structure — e.g. centered card, split hero + form, full-width dashboard]
 - [Regions — header, main, sidebar, footer]
-- [Spacing and grid — reference tokens from `design.md` §4–§6]
+- [Spacing and grid — reference `spacing.*` tokens and Layout section in `design.md`]
 
 **Content:**
 
@@ -174,7 +174,7 @@ Apply these patterns consistently across all screens:
 
 ## Responsive Variants
 
-Per `design.md` §9. For each screen that has a distinct mobile layout, generate a mobile variant alongside the desktop frame.
+Per `design.md` Layout section (breakpoints). For each screen that has a distinct mobile layout, generate a mobile variant alongside the desktop frame.
 
 | Screen | Mobile changes |
 | --- | --- |
@@ -186,7 +186,7 @@ Per `design.md` §9. For each screen that has a distinct mobile layout, generate
 
 - Do not add screens, flows, or features not in PRD/FRD or UI specs
 - Do not invent copy — use spec text or mark `[COPY TBD]` only when spec explicitly defers
-- Do not use colors, fonts, spacing, elevation, or radius outside `design.md` tokens
+- Do not use colors, fonts, spacing, elevation, or radius outside `design.md` YAML tokens and prose sections
 - Do not merge or split screens unless the spec defines responsive variants
 - [Project-specific constraints]
 
@@ -198,6 +198,6 @@ Per `design.md` §9. For each screen that has a distinct mobile layout, generate
 - [ ] Every screen from UI specs with named frames
 - [ ] All role-specific views and permission-gated elements
 - [ ] Loading, empty, error, and validation states per spec
-- [ ] Mobile variants where `design.md` §9 or UI specs require them
-- [ ] All visual values traceable to `design.md` tokens
+- [ ] Mobile variants where `design.md` Layout breakpoints or UI specs require them
+- [ ] All visual values traceable to `design.md` YAML tokens
 - [ ] Stitch Generation Plan steps cover every screen and component
