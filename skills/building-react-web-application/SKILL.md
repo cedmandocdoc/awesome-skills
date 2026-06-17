@@ -102,7 +102,7 @@ Each doc appears once. External links are official docs for setup and APIs.
 | Doc | When to use |
 | --- | --- |
 | [adding-registry-components.md](./references/adding-registry-components.md) | Add components from registry into `src/ui/` with project conventions. |
-| [add-registry-component.js](./scripts/add-registry-component.js) | Run the helper script to vendor registry components and apply path/class fixes. |
+| [add-registry-component.cjs](./scripts/add-registry-component.cjs) | Run the helper script to vendor registry components and apply path/class fixes. |
 
 ### State
 

@@ -3,7 +3,7 @@
  * Add a registry UI component from a registry-item JSON URL (e.g. React Native Reusables).
  *
  * Usage (from your Expo app root):
- *   node <path-to-skill>/scripts/add-registry-component.js <registry-url> [more...] [--root <dir>] [--pm npm|pnpm|yarn|bun]
+ *   node <path-to-skill>/scripts/add-registry-component.cjs <registry-url> [more...] [--root <dir>] [--pm npm|pnpm|yarn|bun]
  *
  * Options:
  *   --root <dir>              Project root (default: cwd)
@@ -342,7 +342,7 @@ function main() {
   const { root, urls, pm: pmFlag } = parseArgs(process.argv);
   if (urls.length === 0) {
     console.error(
-      "Usage: node add-registry-component.js <registry-url> [more-urls...] [--root <project-dir>] [--pm npm|pnpm|yarn|bun]",
+      "Usage: node add-registry-component.cjs <registry-url> [more-urls...] [--root <project-dir>] [--pm npm|pnpm|yarn|bun]",
     );
     process.exit(1);
   }

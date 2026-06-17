@@ -9,7 +9,7 @@ For naming conventions, see [naming-component.md](./naming-component.md).
 ## Prerequisites
 
 - [abstracting-component.md](./abstracting-component.md) — `src/ui/` vs feature components, registry-first UI, presentation-only rules
-- [adding-registry-components.md](./adding-registry-components.md) — validate with `shadcn view`, run `add-registry-component.js`, manual fallback
+- [adding-registry-components.md](./adding-registry-components.md) — validate with `shadcn view`, run `add-registry-component.cjs`, manual fallback
 
 ## Guidelines
 
@@ -33,7 +33,7 @@ Validate the registry URL, then run the add script from the **app project root**
 
 ```bash
 npx shadcn@latest view "https://reactnativereusables.com/r/nativewind/button.json"
-node path/to/building-react-native-application/scripts/add-registry-component.js "https://reactnativereusables.com/r/nativewind/button.json"
+node path/to/building-react-native-application/scripts/add-registry-component.cjs "https://reactnativereusables.com/r/nativewind/button.json"
 ```
 
 The script vendors files into `src/ui/` (for example `Button.tsx`). Import with `@/ui/Button` in navigation modules and features.

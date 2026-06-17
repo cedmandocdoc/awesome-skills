@@ -9,7 +9,7 @@ For naming conventions, see [naming-component.md](./naming-component.md).
 ## Prerequisites
 
 - [abstracting-component.md](./abstracting-component.md) — `src/ui/` vs feature components, registry-first UI, presentation-only rules
-- [adding-registry-components.md](./adding-registry-components.md) — validate with `shadcn view`, run `add-registry-component.js`, manual fallback
+- [adding-registry-components.md](./adding-registry-components.md) — validate with `shadcn view`, run `add-registry-component.cjs`, manual fallback
 
 ## Guidelines
 
@@ -33,7 +33,7 @@ Validate the registry name or URL, then run the add script from the **app projec
 
 ```bash
 npx shadcn@latest view button
-node path/to/building-react-web-application/scripts/add-registry-component.js button
+node path/to/building-react-web-application/scripts/add-registry-component.cjs button
 ```
 
 You can pass a full registry item URL instead of a slug when your registry requires it. The script vendors files into `src/ui/` (for example `Button.tsx`). Import with `@/ui/Button` in routes and features.

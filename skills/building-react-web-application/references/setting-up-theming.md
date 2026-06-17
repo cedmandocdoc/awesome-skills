@@ -4,7 +4,7 @@
 
 Shared design tokens and light/dark variables as the single source for Tailwind, registry UI, and the rest of the app. Use the **same two-file pattern as the React Native skill**: project-root **`global.css`** (Tailwind entry + upstream imports) and **`src/theme.css`** (token wiring). Pull **only** the [shadcn manual **Configure styles**](https://ui.shadcn.com/docs/installation/manual.md) *content* into `theme.css`—split so Tailwind’s `@import "tailwindcss"` lives in `global.css` only.
 
-**Class merging and primitives:** use **`cva`** and **`cx`** from **`class-variance-authority`**, with shared components under **`src/ui/`** (see [structuring-project.md](./structuring-project.md)). **Add registry output** with [`add-registry-component.js`](../scripts/add-registry-component.js); it wraps `npx shadcn@latest view` and aligns paths and **`cn` → `cx`** for this layout.
+**Class merging and primitives:** use **`cva`** and **`cx`** from **`class-variance-authority`**, with shared components under **`src/ui/`** (see [structuring-project.md](./structuring-project.md)). **Add registry output** with [`add-registry-component.cjs`](../scripts/add-registry-component.cjs); it wraps `npx shadcn@latest view` and aligns paths and **`cn` → `cx`** for this layout.
 
 ## Prerequisites
 

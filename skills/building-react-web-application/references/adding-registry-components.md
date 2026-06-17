@@ -2,7 +2,7 @@
 
 ## Overview
 
-Use this guide before vendoring a *registry item* (for example shadcn/ui or another registry that exposes `registry-item.json` URLs) into `src/ui/`. Validate output with `npx shadcn@latest view`, then run **add-registry-component.js**—or skip the script and build the UI manually when validation fails.
+Use this guide before vendoring a *registry item* (for example shadcn/ui or another registry that exposes `registry-item.json` URLs) into `src/ui/`. Validate output with `npx shadcn@latest view`, then run **add-registry-component.cjs**—or skip the script and build the UI manually when validation fails.
 
 ## Prerequisites
 
@@ -32,11 +32,11 @@ If the command fails, stdout is not valid JSON, the payload is not a JSON array,
 
 ## Run the add script
 
-From the app **project root**, run [add-registry-component.js](../scripts/add-registry-component.js). Pass a registry name or URL, as supported by `shadcn view`.
+From the app **project root**, run [add-registry-component.cjs](../scripts/add-registry-component.cjs). Pass a registry name or URL, as supported by `shadcn view`.
 
 ```bash
-node path/to/building-react-web-application/scripts/add-registry-component.js button
-node path/to/building-react-web-application/scripts/add-registry-component.js "https://ui.shadcn.com/r/styles/new-york/button.json"
+node path/to/building-react-web-application/scripts/add-registry-component.cjs button
+node path/to/building-react-web-application/scripts/add-registry-component.cjs "https://ui.shadcn.com/r/styles/new-york/button.json"
 ```
 
 Use `--root <project-dir>` when the current working directory is not the app root.

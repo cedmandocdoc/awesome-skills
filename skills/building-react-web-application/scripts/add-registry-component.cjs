@@ -4,11 +4,11 @@
  * Extra cssVars from the registry append to src/theme.css (see setting-up-theming.md).
  *
  * Usage (from your project root):
- *   node <path-to-skill>/scripts/add-registry-component.js <component-name-or-url> [more...] [--root <dir>] [--pm npm|pnpm|yarn|bun]
+ *   node <path-to-skill>/scripts/add-registry-component.cjs <component-name-or-url> [more...] [--root <dir>] [--pm npm|pnpm|yarn|bun]
  *
  * Examples:
- *   node .../add-registry-component.js button
- *   node .../add-registry-component.js https://ui.shadcn.com/r/styles/new-york/button.json
+ *   node .../add-registry-component.cjs button
+ *   node .../add-registry-component.cjs https://ui.shadcn.com/r/styles/new-york/button.json
  *
  * Options:
  *   --root <dir>              Project root (default: cwd)
@@ -364,7 +364,7 @@ function main() {
   const { root, urls, pm: pmFlag } = parseArgs(process.argv);
   if (urls.length === 0) {
     console.error(
-      "Usage: node add-registry-component.js <component-name|url> [more...] [--root <project-dir>] [--pm npm|pnpm|yarn|bun]",
+      "Usage: node add-registry-component.cjs <component-name|url> [more...] [--root <project-dir>] [--pm npm|pnpm|yarn|bun]",
     );
     process.exit(1);
   }

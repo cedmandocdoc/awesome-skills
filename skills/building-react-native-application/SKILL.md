@@ -121,7 +121,7 @@ Each doc appears once. External links are official docs for setup and APIs.
 | --- | --- |
 | [setting-up-registry-components.md](./references/setting-up-registry-components.md) | Configure registry integration for `src/ui` component workflows. |
 | [adding-registry-components.md](./references/adding-registry-components.md) | Add registry components via script or manual integration path. |
-| [add-registry-component.js](./scripts/add-registry-component.js) | Run the helper script to vendor registry components and apply path/class fixes. |
+| [add-registry-component.cjs](./scripts/add-registry-component.cjs) | Run the helper script to vendor registry components and apply path/class fixes. |
 
 ### State
 
