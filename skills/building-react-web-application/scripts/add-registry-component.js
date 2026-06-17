@@ -159,7 +159,7 @@ function transformSource(content, fromFilePath, componentsDir) {
 
   // cn → cx on imports and calls; registry targets a utils `cn` module, this stack uses CVA `cx`
   out = out.replace(
-    /import\s*\{\s*cn\s*\}\s*from\s*['"][^'"]+['"]\s*;/g,
+    /import\s*\{\s*cn\s*\}\s*from\s*['"][^'"]+['"]\s*;?/g,
     'import { cx } from "class-variance-authority";',
   );
   out = out.replace(/\bcn\s*\(/g, "cx(");
