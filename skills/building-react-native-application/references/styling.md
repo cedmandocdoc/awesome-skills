@@ -20,7 +20,7 @@ Use this guide to apply Tailwind utilities through `className` with NativeWind. 
 
 - Use `className` before inline `style` or `StyleSheet.create`.
 - Use `cva` for variant-heavy components.
-- Use `cx` from `class-variance-authority` for class merging.
+- Use **`cx`** to merge base classes, variant output, and a consumer `className` prop.
 - Use shared tokens before arbitrary values.
 - Extend `tailwind.config.js` when a value is reused.
 - Use mobile-first responsive utilities such as `sm:`, `md:`, `lg:`, and `xl:` when NativeWind supports them.
@@ -53,6 +53,10 @@ Tailwind’s default scale is **4px-based** (`1` = 4px). When a spec is off by a
 - Prefer **semantic** utilities from `src/theme.css` / `theme.extend` (`bg-background`, `text-foreground`, `bg-primary`) when the project defines them.
 - Otherwise use **named palette** utilities from `tailwind.config.js` (`bg-neutral-100`, `text-success-700`), not raw hex or RGB in class names.
 - With a linked design (Figma, etc.): pick the **closest** existing token or palette step; if nothing is within ~one step visually, **add the color to `theme.extend` or `src/theme.css` first**, then use the new utility—do not ship one-off bracket colors.
+
+### Overriding `className`
+
+When a consumer passes utilities that overlap classes on a shared component, prefix every conflicting token with `!` (for example `!text-lg`, `sm:!p-0`). See [overriding-classname.md](./overriding-classname.md).
 
 ## Examples
 

@@ -17,15 +17,11 @@ Use this guide to apply Tailwind utility classes in React via `className`, with 
 - Keep **project-root `global.css`** as the only entry: it imports Tailwind (v4), shadcn’s Tailwind imports, then **`./src/theme.css`**. Import `global.css` once from the app entry (e.g. `main.tsx`).
 - Prefer **semantic utilities** backed by CSS variables from the theme setup (`bg-background`, `text-foreground`, etc.) when the project defines them.
 
-### The `cx` helper
-
-- Import **`cx`** from **`class-variance-authority`** (same merge API as `clsx`). Registry snippets often say **`cn`**; this stack standardizes on **`cx`**—see [abstracting-component.md](./abstracting-component.md) and the add-registry script.
-
 ### Styling rules
 
 - Use `className` for layout and visuals; reserve inline `style` for dynamic values that utilities cannot express.
 - Use **`cva`** for variant-heavy components.
-- Use **`cx`** from **`class-variance-authority`** to merge base classes, variant output, and a consumer `className` prop.
+- Use **`cx`** from **`class-variance-authority`** to merge base classes, variant output, and a consumer `className` prop. Registry snippets often say **`cn`**; this stack standardizes on **`cx`**—see [abstracting-component.md](./abstracting-component.md).
 - Prefer shared tokens and semantic classes before arbitrary values.
 - Use responsive utilities (`sm:`, `md:`, `lg:`, `xl:`) as needed.
 - Use `gap` on flex/grid parents instead of margin chains on children.
@@ -53,6 +49,10 @@ Tailwind’s default scale is **4px-based** (`1` = 4px). When a spec is off by a
 - Prefer **semantic** utilities from the theme (`bg-background`, `text-foreground`, `border-border`, `bg-primary`) when defined in [setting-up-theming.md](./setting-up-theming.md).
 - Otherwise use **named palette** utilities from the extended theme (`bg-muted`, `text-destructive`), not raw hex or RGB in class names.
 - With a linked design (Figma, etc.): pick the **closest** existing token or palette step; if nothing is within ~one step visually, **add the color to the theme first** ([setting-up-theming.md](./setting-up-theming.md), [setting-up-tailwind-theme.md](./setting-up-tailwind-theme.md)), then use the new utility—do not ship one-off bracket colors.
+
+### Overriding `className`
+
+When a consumer passes utilities that overlap classes on a shared component, mark every conflicting token with `!` at the end (for example `text-lg!`, `sm:p-0!`). See [overriding-classname.md](./overriding-classname.md).
 
 ## Examples
 
