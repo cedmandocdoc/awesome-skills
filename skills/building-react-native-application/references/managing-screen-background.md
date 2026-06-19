@@ -17,6 +17,6 @@ React Navigation theme already provides the default background. Do not set `bg-b
 
 ## Related
 
-- [configuring-routing.md](./configuring-routing.md)
+- [creating-route-component.md](./creating-route-component.md)
 - [setting-up-navigation-theme.md](./setting-up-navigation-theme.md)
 - [reusing-navigation-background.md](./reusing-navigation-background.md)

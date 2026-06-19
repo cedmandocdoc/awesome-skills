@@ -1,4 +1,4 @@
-# Structuring Project
+# Managing Project Structure
 
 ## Overview
 
@@ -16,13 +16,40 @@ Use this guide to organize the Vite + React SPA by responsibility. Keep routing,
 | ------------------------------ | ------------------------------------------------------------------------------- |
 | `global.css`                   | Project root: Tailwind + shadcn Tailwind imports; `@import` of `theme.css`      |
 | `src/theme.css`                | Design tokens and `@theme` / `:root` / `.dark` (see setting-up-theming.md)      |
-| `src/routes/`                  | TanStack Router file-based route modules (see configuring-routing.md)           |
+| `src/routes/`                  | Route layer: register feature pages and wire navigation components (see creating-route-component.md) |
 | `src/routeTree.gen.ts`         | Generated route tree (from `src/routes/`; edit route modules)                   |
-| `src/ui/`                      | Flat presentational primitives (registry output from the add script)            |
-| `src/features/<feature-name>/` | Domain logic and feature UI                                                     |
+| `src/ui/`                      | Presentation-only primitives — see [creating-ui-component.md](./creating-ui-component.md#folder-layout) |
+| `src/features/navigation/`     | Reusable navigation components (headers, shells, sidebars) and navigation hooks     |
+| `src/features/<feature-name>/` | Domain modules — see [creating-feature.md](./creating-feature.md#feature-folder-layout) |
 | `src/libs/`                    | Global reusable code (any folder may import via `@/libs/...`)                   |
-| `src/api/`                     | Framework-agnostic HTTP code                                                    |
+| `src/api/`                     | Framework-agnostic HTTP code — see [creating-api.md](./creating-api.md)         |
+| `src/assets/`                  | Static assets (images, fonts, icons); mostly flat, group by type when helpful   |
 | `tests/`                       | Playwright E2E tests (see [creating-e2e-testing.md](./creating-e2e-testing.md)) |
+
+### Module internals
+
+Use the owning guide for folder-level detail; this table is the map only.
+
+| Area | Detail in |
+| --- | --- |
+| `src/features/<feature-name>/` | [creating-feature.md](./creating-feature.md#feature-folder-layout) |
+| `src/ui/` | [creating-ui-component.md](./creating-ui-component.md#folder-layout) |
+| `src/api/<backend-name>/` | [creating-api.md](./creating-api.md) |
+| Feature `env.ts` | [managing-environment.md](./managing-environment.md) |
+| Feature hooks and stores | [managing-state.md](./managing-state.md) |
+
+### `src/libs/`
+
+- Keep libs free of React, features, routes, and stores.
+- Prefer a single file when the module is small: `src/libs/ApiError.ts`.
+- Use a folder with `index.ts` when the module grows: `src/libs/date-utils/index.ts`.
+- Import via `@/libs/<name>` regardless of file or folder shape.
+
+### `src/assets/`
+
+- Keep static files under `src/assets/` (or the bundler-supported equivalent).
+- Prefer a flat layout for a handful of files.
+- Group into subfolders when volume or type warrants it (for example `images/`, `fonts/`, `icons/`).
 
 ### Registry and `src/ui`
 
@@ -33,7 +60,7 @@ Primitives are added with **[`add-registry-component.cjs`](../scripts/add-regist
 Wire cross-cutting providers once, above the router:
 
 1. **`QueryClientProvider`** (TanStack Query) — see [managing-state.md](./managing-state.md).
-2. **`RouterProvider`** — from TanStack Router, using the generated route tree (see [configuring-routing.md](./configuring-routing.md)).
+2. **`RouterProvider`** — from TanStack Router, using the generated route tree (see [creating-route-component.md](./creating-route-component.md)).
 3. **Theme / document class** — if using class-based dark mode (e.g. `.dark` on `<html>`), set it from a small root component or layout route effect; keep tokens in **`src/theme.css`** per [setting-up-theming.md](./setting-up-theming.md).
 
 Typical shape: `main.tsx` imports **`../global.css`** (or the correct relative path), creates `queryClient`, renders `QueryClientProvider` → `RouterProvider`.
@@ -92,14 +119,14 @@ Ensure `index.html` references the JS entry; Vite injects CSS from that import.
 ### Export a feature barrel
 
 ```ts
-export { WorkshopList } from "./components/WorkshopList";
+export { WorkshopListPage } from "./WorkshopListPage";
 export { useWorkshops } from "./hooks/useWorkshops";
-export type { Workshop } from "./types/workshop";
+export type { Workshop } from "./types";
 ```
 
 ### Import from module boundaries
 
 ```ts
-import { WorkshopList } from "@/features/workshop-list";
+import { WorkshopListPage } from "@/features/workshop-list";
 import { Button } from "@/ui/Button";
 ```

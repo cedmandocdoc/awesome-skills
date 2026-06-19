@@ -31,7 +31,7 @@ Use this guide to build **multi-step forms** in React Native with **Stepperize +
 
 ### Form flow
 
-- Build one form instance with **`useAppForm`** from `@/ui/Form` (see [managing-form-components.md](./managing-form-components.md)) and keep values across steps.
+- Build one form instance with **`useAppForm`** from `@/ui/Form` (see [creating-form-component.md](./creating-form-component.md)) and keep values across steps.
 - Use `validators.onChange` (or another chosen timing) with the active step schema.
 - In `onSubmit`, advance with `stepper.navigation.next()` until the last step.
 - Render step fields using `stepper.flow.switch(...)` and compose inputs via **`form.AppField`** + pre-bound **`field.*`** components.
@@ -147,5 +147,5 @@ export function CheckoutStepFormScreen() {
 ## Related
 
 - [managing-stepper-hook.md](./managing-stepper-hook.md) — base Stepperize hook/provider pattern
-- [managing-form-components.md](./managing-form-components.md) — pre-bound TanStack Form composition in `src/ui/Form/`
+- [creating-form-component.md](./creating-form-component.md) — pre-bound TanStack Form composition in `src/ui/Form/`
 - [managing-state.md](./managing-state.md) — state ownership around multi-step flows

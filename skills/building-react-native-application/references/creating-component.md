@@ -2,122 +2,81 @@
 
 ## Overview
 
-Use this guide to write UI and feature components. Keep reusable UI simple and presentation-only, and prefer compound parts for complex controls.
+Start here for **any** component work. This guide routes you to the right deep-dive doc. Read the decision tree first, then open **only** the linked creation guide for your case.
 
-For naming conventions, see [naming-component.md](./naming-component.md).
+## Decision tree
 
-## Prerequisites
+| You are building… | Go to |
+| --- | --- |
+| Shared UI primitive (`Button`, `Input`, `Dialog`…) | [creating-ui-component.md](./creating-ui-component.md) |
+| Domain UI block (`CartItemRow`, `CheckoutSummary`…) | [creating-feature-component.md](./creating-feature-component.md) |
+| Route-facing **Screen** or **Layout** for a feature | [creating-screen-component.md](./creating-screen-component.md) → register in [creating-route-component.md](./creating-route-component.md) |
+| Navigation component (`AppHeader`, tab icon renderer…) | [creating-navigation-component.md](./creating-navigation-component.md) → wire in [creating-route-component.md](./creating-route-component.md) |
+| Route layer file under `src/routes/` | [creating-route-component.md](./creating-route-component.md) |
+| Pre-bound form field / form shell (`*Field`, `FieldShell`) | [creating-form-component.md](./creating-form-component.md) |
+| Server-backed loading / error / list UI | [creating-async-component.md](./creating-async-component.md) |
+| Bottom sheet UI | [creating-bottom-sheet-component.md](./creating-bottom-sheet-component.md) |
 
-- [abstracting-component.md](./abstracting-component.md) — `src/ui/` vs feature components, registry-first UI, presentation-only rules
-- [adding-registry-components.md](./adding-registry-components.md) — validate with `shadcn view`, run `add-registry-component.cjs`, manual fallback
+**Already built but wrong layer?** Re-run the tree in [Recategorizing](#recategorizing-an-existing-component).
 
-## Guidelines
+## Placement
 
-### Component rules
+| Kind | Location |
+| --- | --- |
+| Screen component | `src/features/<feature-name>/*Screen.tsx` |
+| Feature components | `src/features/<feature-name>/components/` |
+| Navigation components | `src/features/navigation/components/` |
+| Navigation hooks | `src/features/navigation/hooks/` |
+| Route layer | `src/routes/` |
+| Shared UI primitives | `src/ui/` (flat unless a subsystem owns a folder) |
+| Composition roots | `src/ui/Form/`, `src/ui/Async/`, `src/ui/BottomSheet/` when multiple related files belong together |
+| Tokens / theme | `global.css`, `src/theme.css`, `src/theme.ts` |
+| Tailwind / NativeWind config | `tailwind.config.js` |
+
+- Put product rules and domain behavior in `src/features/<feature-name>/` — queries, stores, and domain logic in `hooks/` per [managing-state.md](./managing-state.md).
+- Put reusable navigation components in `src/features/navigation/`.
+- Put reusable, presentation-only **UI primitives** in `src/ui/`.
+- Put route registration and wiring in `src/routes/`.
+- Import primitives with `@/ui/<file>`; use relative imports inside `src/ui/`.
+
+## Shared rules
 
 - Use functional components and named exports.
 - Prefer `interface` for props.
-- Use React Native primitives or `@/ui/*`.
-- Keep domain logic out of presentational components.
-- Prefer compound parts over components that accept raw string or node unions.
-- Keep every component at **200 lines or fewer**.
-- If a component would exceed 200 lines, stop and follow [abstracting-component.md](./abstracting-component.md) to split it into smaller components or parts before implementing.
+- Export **one component per file**; name the file after the export (`ProfileCard.tsx` → `ProfileCard`).
+- Keep every component at **200 lines or fewer**; split into smaller parts before implementing.
+- Prefer compound parts (`Button`, `ButtonText`, `ButtonIcon`) over `typeof children` switches.
+- UI primitives (`src/ui/`) are **presentation-only** — no business logic, data fetching, mutations, or navigation decisions.
 
-## Examples
+## Naming (baseline)
 
-Prefer a registry-backed primitive when one exists; see [abstracting-component.md](./abstracting-component.md) and the full flow in [adding-registry-components.md](./adding-registry-components.md). Use hand-written `src/ui/` examples below when there is **no** suitable registry item (validation fails, no equivalent component, or you are composing patterns the registry does not ship).
+- PascalCase exports; singular nouns (`UserCard`, not `UsersCard`).
+- Match file name to export name.
+- **`src/ui/`** — generic names: `Button`, `TextInput`, `Modal`.
+- **`src/features/*/components/`** — feature-prefixed when domain-specific: `CheckoutButton`, `CartItemRow`.
+- **`src/features/<feature>/*Screen.tsx`** — route-facing screens: `WorkshopListScreen`, `SettingsScreen`.
+- Use `<Feature><Entity><Type>` for feature components (`AuthLoginForm`, `OrderSummaryCard`).
+- Use props or CVA variants for state — not `PrimaryButton` or `DisabledInput`.
+- Related parts share a prefix: `CartItem`, `CartItemImage`, `CartItemPrice`.
 
-### Add a registry-backed primitive
+Each creation guide adds type-specific naming rules.
 
-Validate the registry URL, then run the add script from the **app project root** (see [adding-registry-components.md](./adding-registry-components.md) for failure cases and `--root`).
+## Recategorizing an existing component
 
-```bash
-npx shadcn@latest view "https://reactnativereusables.com/r/nativewind/button.json"
-node path/to/building-react-native-application/scripts/add-registry-component.cjs "https://reactnativereusables.com/r/nativewind/button.json"
-```
+When reuse grows, re-run the decision tree:
 
-The script vendors files into `src/ui/` (for example `Button.tsx`). Import with `@/ui/Button` in navigation modules and features.
+- **Presentation-only and cross-feature** → move to `src/ui/` per [creating-ui-component.md](./creating-ui-component.md).
+- **Business logic, data access, or stores in `src/ui/`** → extract logic to feature `hooks/` per [managing-state.md](./managing-state.md); leave a presentation-only primitive.
+- **Navigation components reused across screens** → move to `src/features/navigation/` per [creating-navigation-component.md](./creating-navigation-component.md).
+- **Domain behavior used across screens** → extract to a new feature module per [creating-feature.md](./creating-feature.md).
+- **Still tied to one screen flow** → keep in the current feature.
 
-### Use primitives inside a feature
+Update folder placement **and** the feature barrel export contract when moving code.
 
-```ts
-import { Button } from "@/ui/Button";
+## Related
 
-export function WorkshopCta() {
-  return <Button>Join workshop</Button>;
-}
-```
-
-### Add a custom `src/ui/` primitive (no registry item)
-
-Use this shape when **no registry primitive fits** (or after you deliberately skip the registry path). Keep the component presentation-only.
-
-```ts
-import type { ReactNode } from "react";
-import { Pressable, Text } from "react-native";
-import { buttonStyles } from "./button.styles";
-
-interface ButtonProps {
-  label: string;
-  tone?: "primary" | "secondary";
-  className?: string;
-  children?: ReactNode;
-}
-
-export function Button({ tone, className, label }: ButtonProps) {
-  return (
-    <Pressable className={buttonStyles({ tone, className })}>
-      <Text>{label}</Text>
-    </Pressable>
-  );
-}
-```
-
-### Split complex controls into parts (custom primitive)
-
-Use explicit parts such as `Button`, `ButtonText`, and `ButtonIcon` instead of switching on `typeof children`. Same as above: prefer registry-backed pieces when they exist; the compound layout below is for a **custom** primitive when the registry does not provide a match.
-
-Put **each part in its own file** (see [naming-component.md](./naming-component.md) and [abstracting-component.md](./abstracting-component.md)).
-
-`src/ui/Button.tsx`:
-
-```ts
-import type { ReactNode } from "react";
-import { Pressable } from "react-native";
-import { buttonStyles } from "./button.styles";
-
-export function Button({ children, className }: { children: ReactNode; className?: string }) {
-  return <Pressable className={buttonStyles({ className })}>{children}</Pressable>;
-}
-```
-
-`src/ui/ButtonText.tsx`:
-
-```ts
-import type { ReactNode } from "react";
-import { Text } from "react-native";
-
-export function ButtonText({ children }: { children: ReactNode }) {
-  return <Text>{children}</Text>;
-}
-```
-
-`src/ui/ButtonIcon.tsx`:
-
-```ts
-import type { ReactNode } from "react";
-import { View } from "react-native";
-
-export function ButtonIcon({ children }: { children: ReactNode }) {
-  return <View>{children}</View>;
-}
-```
-
-Usage in a screen or feature:
-
-```tsx
-<Button>
-  <ButtonIcon>{/* icon */}</ButtonIcon>
-  <ButtonText>Save</ButtonText>
-</Button>
-```
+- [managing-wrapper-components.md](./managing-wrapper-components.md) — flatten `View` trees and merge `className`
+- [managing-state.md](./managing-state.md) — queries, stores, and where feature logic lives
+- [creating-feature.md](./creating-feature.md) — feature module structure, folder layout, and barrels
+- [creating-route-component.md](./creating-route-component.md) — route layer wiring
+- [setting-up-registry-components.md](./setting-up-registry-components.md) — one-time registry shell (Lucide, `PortalHost`, `inlineRem`)

@@ -2,7 +2,7 @@
 
 ## Overview
 
-Maps [setting-up-theming.md](./setting-up-theming.md) tokens into React Navigation so stack and tab chrome matches light and dark. After base tokens exist.
+Maps [setting-up-theming.md](./setting-up-theming.md) tokens into React Navigation so stack and tab navigation components matches light and dark. After base tokens exist.
 
 ## Prerequisites
 

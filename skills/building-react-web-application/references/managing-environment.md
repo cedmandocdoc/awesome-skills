@@ -6,7 +6,7 @@ Use this guide when a *feature*, *API backend folder*, or other module reads con
 
 ## Prerequisites
 
-- [structuring-project.md](./structuring-project.md)
+- [managing-project-structure.md](./managing-project-structure.md)
 
 ## Guidelines
 

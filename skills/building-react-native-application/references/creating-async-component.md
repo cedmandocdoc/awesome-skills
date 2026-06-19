@@ -1,15 +1,22 @@
-# Managing Async View
+# Creating Async Component
 
 ## Overview
 
-Use this guide to present **server-backed UI** consistently with three shared wrappers—**AsyncView**, **AsyncScrollView**, and **AsyncFlatList**—that share the same state machine and differ only in scroll refresh and list pagination. Keep **all async wrappers** under **`src/ui/Async/`** and export them from **`src/ui/Async/index.tsx`** so screens import **`@/ui/Async`**. Feature screens compose them around TanStack Query results.
+Create and use **server-backed UI wrappers** — **AsyncView**, **AsyncScrollView**, and **AsyncFlatList** — that share the same state machine and differ only in scroll refresh and list pagination. Keep **all async wrappers** under **`src/ui/Async/`** and export them from **`src/ui/Async/index.tsx`** so screens import **`@/ui/Async`**. Feature screens compose them around TanStack Query results.
 
-For fetching and hooks, see [managing-state.md](./managing-state.md). For error copy, see [managing-api-error.md](./managing-api-error.md). For component placement, see [creating-component.md](./creating-component.md) and [placing-component.md](./placing-component.md).
+Start from [creating-component.md](./creating-component.md). For fetching and hooks, see [managing-state.md](./managing-state.md). For error copy, see [managing-api-error.md](./managing-api-error.md).
 
 ## Prerequisites
 
+- [creating-component.md](./creating-component.md)
 - [managing-state.md](./managing-state.md)
 - [managing-api-error.md](./managing-api-error.md)
+
+## Naming
+
+- Wrapper exports: `AsyncView`, `AsyncScrollView`, `AsyncFlatList`.
+- Internal helpers alongside wrappers: `ErrorMessage` (not exported from the public barrel unless needed).
+- Feature screens compose wrappers — do not fork the state machine per screen.
 
 ## Guidelines
 

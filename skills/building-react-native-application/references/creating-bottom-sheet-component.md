@@ -1,13 +1,15 @@
-# Creating Bottom Sheet
+# Creating Bottom Sheet Component
 
 ## Overview
 
-Use this guide to add **bottom sheets** in apps that follow this skill. Default to shared wrappers under `src/ui/BottomSheet`. Do not use raw `@gorhom/bottom-sheet` unless the wrapper does not expose the needed behavior. Before implementing, decide content shape (static, scrollable, or list-driven), whether the shared wrapper is enough, and any dismissal or gesture constraints.
+Create **bottom sheet UI** using shared wrappers under `src/ui/BottomSheet`. Do not use raw `@gorhom/bottom-sheet` unless the wrapper does not expose the needed behavior. Before implementing, decide content shape (static, scrollable, or list-driven), whether the shared wrapper is enough, and any dismissal or gesture constraints.
 
-## Prerequisites
+Start from [creating-component.md](./creating-component.md).
 
-- [creating-component.md](./creating-component.md)
-- [placing-component.md](./placing-component.md)
+## Naming
+
+- Wrapper exports: `BottomSheetView`, `BottomSheetList` from `@/ui/BottomSheet`.
+- Feature sheet components: `<Feature><Purpose>Sheet` (for example `JobFiltersSheet`, `OptionPickerSheet`).
 
 ## Guidelines
 

@@ -4,7 +4,7 @@
 
 Use this guide to keep layout trees shallow. Prefer a single wrapper with merged Tailwind classes over stacked `div` elements that only exist to hold one utility group each.
 
-For utility merging, see [styling.md](./styling.md). For how primitives accept `className`, see [creating-component.md](./creating-component.md).
+For utility merging, see [styling.md](./styling.md). For how primitives accept `className`, see [creating-ui-component.md](./creating-ui-component.md).
 
 ## Guidelines
 

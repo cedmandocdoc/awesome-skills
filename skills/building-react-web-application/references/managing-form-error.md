@@ -5,12 +5,12 @@
 Use this guide to handle form failures in TanStack Form with a clear split:
 
 - **Server submit errors** are stored in `errorMap.onServer` as `ApiError` and shown via a pre-bound form-level component.
-- **Local validation errors** come from validators (for example Zod) and render via pre-bound `*Field` components and **`FieldShell`** (see [managing-form-components.md](./managing-form-components.md)).
+- **Local validation errors** come from validators (for example Zod) and render via pre-bound `*Field` components and **`FieldShell`** (see [creating-form-component.md](./creating-form-component.md)).
 
 ## Prerequisites
 
 - [managing-api-error.md](./managing-api-error.md)
-- [managing-form-components.md](./managing-form-components.md) — `src/ui/Form/` layout, `FieldShell`, and pre-bound `*Field` components
+- [creating-form-component.md](./creating-form-component.md) — `src/ui/Form/` layout, `FieldShell`, and pre-bound `*Field` components
 
 ## Workflow
 
@@ -76,7 +76,7 @@ Render it in form composition:
 ### 3) Handle local validation errors (Zod)
 
 - Add Zod validators on the form so front-end validation runs automatically.
-- Pass the first field meta error (or the mapped submit error) into **`FieldShell`**’s `error` prop from each pre-bound `*Field` in `src/ui/Form/` — see [managing-form-components.md](./managing-form-components.md).
+- Pass the first field meta error (or the mapped submit error) into **`FieldShell`**’s `error` prop from each pre-bound `*Field` in `src/ui/Form/` — see [creating-form-component.md](./creating-form-component.md).
 - Reuse **`FormError`** inside **`FieldShell`** so `ApiError` and Zod errors render consistently.
 
 ### 4) Set field-level API errors on submit
@@ -100,4 +100,4 @@ Map the corresponding error into each pre-bound field’s **`FieldShell`** `erro
 - Keep server-level failures in `onServer`.
 - Keep per-field submit failures in `onSubmit.fields`.
 - Reuse one error UI path (`FormError` via `FieldShell`) so `ApiError` and Zod errors render consistently.
-- Do not redefine `FieldShell` or `*Field` here — extend `src/ui/Form/` per [managing-form-components.md](./managing-form-components.md).
+- Do not redefine `FieldShell` or `*Field` here — extend `src/ui/Form/` per [creating-form-component.md](./creating-form-component.md).

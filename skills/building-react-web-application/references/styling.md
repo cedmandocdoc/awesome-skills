@@ -21,7 +21,7 @@ Use this guide to apply Tailwind utility classes in React via `className`, with 
 
 - Use `className` for layout and visuals; reserve inline `style` for dynamic values that utilities cannot express.
 - Use **`cva`** for variant-heavy components.
-- Use **`cx`** from **`class-variance-authority`** to merge base classes, variant output, and a consumer `className` prop. Registry snippets often say **`cn`**; this stack standardizes on **`cx`**—see [abstracting-component.md](./abstracting-component.md).
+- Use **`cx`** from **`class-variance-authority`** to merge base classes, variant output, and a consumer `className` prop. Registry snippets often say **`cn`**; this stack standardizes on **`cx`**—see [creating-ui-component.md](./creating-ui-component.md).
 - Prefer shared tokens and semantic classes before arbitrary values.
 - Use responsive utilities (`sm:`, `md:`, `lg:`, `xl:`) as needed.
 - Use `gap` on flex/grid parents instead of margin chains on children.

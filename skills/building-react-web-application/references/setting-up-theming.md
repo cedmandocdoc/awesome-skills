@@ -4,7 +4,7 @@
 
 Shared design tokens and light/dark variables as the single source for Tailwind, registry UI, and the rest of the app. Use the **same two-file pattern as the React Native skill**: project-root **`global.css`** (Tailwind entry + upstream imports) and **`src/theme.css`** (token wiring). Pull **only** the [shadcn manual **Configure styles**](https://ui.shadcn.com/docs/installation/manual.md) *content* into `theme.css`—split so Tailwind’s `@import "tailwindcss"` lives in `global.css` only.
 
-**Class merging and primitives:** use **`cva`** and **`cx`** from **`class-variance-authority`**, with shared components under **`src/ui/`** (see [structuring-project.md](./structuring-project.md)). **Add registry output** with [`add-registry-component.cjs`](../scripts/add-registry-component.cjs); it wraps `npx shadcn@latest view` and aligns paths and **`cn` → `cx`** for this layout.
+**Class merging and primitives:** use **`cva`** and **`cx`** from **`class-variance-authority`**, with shared components under **`src/ui/`** (see [managing-project-structure.md](./managing-project-structure.md)). **Add registry output** with [`add-registry-component.cjs`](../scripts/add-registry-component.cjs); it wraps `npx shadcn@latest view` and aligns paths and **`cn` → `cx`** for this layout.
 
 ## Prerequisites
 
@@ -70,4 +70,4 @@ Use the **class-based** pattern from the manual (e.g. `.dark` on `<html>`). Togg
 
 - For how semantic token names map to usage in components, see [setting-up-tailwind-theme.md](./setting-up-tailwind-theme.md).
 - For day-to-day utility rules, see [styling.md](./styling.md).
-- For vendoring registry files into `src/ui/` with `cx` and path fixes, see [abstracting-component.md](./abstracting-component.md).
+- For vendoring registry files into `src/ui/` with `cx` and path fixes, see [creating-ui-component.md](./creating-ui-component.md).

@@ -4,7 +4,38 @@
 
 Use this guide to write *feature modules* in `src/features/<feature-name>/`.
 
-A feature module packages domain logic with the feature UI, and exposes a small export surface so **route modules** can compose it. This keeps reusable primitives in `src/ui/` and keeps data fetching/API code in `src/api/` (usually via feature hooks).
+A feature module packages domain logic with the feature UI, and exposes a small export surface for routes and other features — commonly a page, plus hooks, types, helpers, and components as needed. This keeps reusable primitives in `src/ui/` and keeps data fetching/API code in `src/api/` (usually via feature hooks).
+
+For components inside a feature folder, see [creating-feature-component.md](./creating-feature-component.md). For route-facing pages, see [creating-screen-component.md](./creating-screen-component.md). For navigation components, see [creating-navigation-component.md](./creating-navigation-component.md).
+
+## Feature folder layout
+
+The layout below is the **default starting point**, not a closed set. Add folders when multiple files share the same role (for example `schemas/` for Zod form schemas).
+
+```text
+src/features/<feature-name>/
+├── <Feature>Page.tsx         # route-facing page (see creating-screen-component.md)
+├── index.ts                  # public barrel
+├── components/               # domain UI blocks
+├── hooks/                    # query hooks, stores, feature hooks (see managing-state.md)
+├── types.ts                  # shared types; split to types/ when large
+├── utils.ts                  # shared pure helpers when small (< ~200 lines total)
+├── utils/                    # one file per helper when utils grow (e.g. getUser.ts, formatDate.ts)
+├── constants.ts              # shared constants
+├── env.ts                    # when this feature reads env (see managing-environment.md)
+└── schemas/                  # example extension — form-driven features
+```
+
+### Layout rules
+
+- Place the route-facing page at the feature root (`<Feature>Page.tsx`).
+- Place supporting UI in `components/`.
+- Place hooks in `hooks/` — including Zustand stores (`use<Feature>Store.ts`).
+- Start shared types in `types.ts`; move to `types/<domain>.ts` or a `types/` folder when the file grows.
+- Start shared pure helpers in `utils.ts` (formatters, getters, mappers). Split into `utils/<actionName>.ts` when the file exceeds **~200 lines** or helpers are easier to find by name.
+- Keep shared constants in `constants.ts`.
+- Add `env.ts` when only this feature reads those variables — see [managing-environment.md](./managing-environment.md).
+- Add role-based folders (`schemas/`, `mappers/`, etc.) when grouping improves clarity; keep internal files off the barrel unless they are part of the public API.
 
 ## Guidelines
 
@@ -14,15 +45,17 @@ Keep feature categories predictable; real features can still be grouped in diffe
 
 **Isolated vs grouped features**
 
-- **Isolated features**: one complete "package" that typically exports one primary thing (for example, `WorkshopList`) plus only what the primary thing needs (types/hooks used by the package).
-- **Grouped features**: a feature exports multiple related pieces when the pieces are meant to be used together (for example, a route-oriented feature exporting helpers + related components).
+- **Isolated features**: one complete package that typically exports one primary page (for example, `WorkshopListPage`) plus the hooks, types, and helpers callers need.
+- **Grouped features**: a feature exports multiple related public pieces when they are meant to be used together — for example a page, a toolbar component, and a search helper.
+
+A feature is **not limited to page exports**. The barrel may also publish components, hooks, pure functions, types, and constants that belong in the public API.
 
 This guide favors isolated features first, but it allows grouped features when it improves clarity.
 
 **Per-route is a common grouping**
 
-- A route module under `src/routes/` stays thin.
-- The route composes one or more feature components to complete its behavior.
+- A route module under `src/routes/` stays thin — see [creating-route-component.md](./creating-route-component.md).
+- The route registers the feature page and optionally wires navigation components from `src/features/navigation/`.
 - The feature folder owns the behavior that would otherwise bloat the route file.
 
 **Isolation is about dependency boundaries**
@@ -35,10 +68,9 @@ Some teams categorize features based on product language (e.g. "billing", "onboa
 
 ### Placement rules
 
-- Place domain-specific behavior and feature UI in `src/features/<feature-name>/`.
+- Follow [Feature folder layout](#feature-folder-layout) for internal files.
 - Place shared presentation-only primitives in `src/ui/`.
 - Keep HTTP clients and request functions in `src/api/` and call them from feature hooks.
-- Keep feature-owned Zustand stores in `src/features/<feature-name>/hooks/use<Feature>Store.ts`, including stores consumed by other features (for example `useAuthStore`).
 
 ### Grouping rules
 
@@ -55,21 +87,27 @@ Some teams categorize features based on product language (e.g. "billing", "onboa
 
 - Each feature folder exposes a barrel (commonly `src/features/<feature-name>/index.ts`).
 - Callers import from `@/features/<feature-name>` only; keep the barrel stable over time.
-- Isolated features: one primary component or value plus the hooks and types callers need. Grouped features: name each exported part clearly. Internal helpers stay off the barrel.
+- Export only what other modules need: pages, components, hooks, pure helpers, types, and constants that form the public API.
+- An isolated feature typically exports one primary page plus supporting hooks and types.
+- A grouped feature exports multiple named parts (for example a page, a component, and a helper function).
+- Keep internal implementation files off the barrel.
 
 ## Examples
 
 ### Isolated feature barrel
 
 ```ts
-export { WorkshopList } from "./components/WorkshopList";
+export { WorkshopListPage } from "./WorkshopListPage";
 export { useWorkshops } from "./hooks/useWorkshops";
-export type { Workshop } from "./types/workshop";
+export type { Workshop } from "./types";
 ```
 
 ### Grouped feature barrel
 
+Exports a page plus related components and helpers — not every feature needs a primary page:
+
 ```ts
+export { WorkshopListPage } from "./WorkshopListPage";
 export { WorkshopToolbar } from "./components/WorkshopToolbar";
 export { buildWorkshopSearch } from "./search/buildWorkshopSearch";
 export type { WorkshopSearchParams } from "./search/types";

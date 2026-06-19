@@ -1,10 +1,10 @@
-# Managing Form Components
+# Creating Form Component
 
 ## Overview
 
-Use this guide to wire **TanStack Form** in Expo React Native apps with a **single composition root** in `src/ui/Form/`. Pre-bind field and submit UI there so screens only compose small, typed field components and stay free of repeated wiring (labels, errors, field state).
+Create **pre-bound form fields and shells** under `src/ui/Form/` with TanStack Form. Screens compose `*Field` components and stay free of repeated wiring (labels, errors, field state).
 
-For field-level layout and presentational rules, align with [creating-component.md](./creating-component.md) and [placing-component.md](./placing-component.md). TanStack Form is **headless** — it does not assume DOM or native widgets. This file focuses on **where code lives** and **how to compose and reuse** fields in this stack.
+Start from [creating-component.md](./creating-component.md). TanStack Form is **headless** — this guide covers **where code lives** and **how to compose and reuse** fields in this stack.
 
 ## Prerequisites
 

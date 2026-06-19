@@ -77,7 +77,7 @@ Use only when `toApiError` cannot produce the right `message` or `code` for that
 
 - `queryFn` / `mutationFn` call API functions directly; do not catch and reword for display.
 - On failure, `query.error` / `mutation.error` is `ApiError` in normal operation.
-- **Initial load error:** show `query.error.message` in async wrappers (see [managing-async-view.md](./managing-async-view.md)).
+- **Initial load error:** show `query.error.message` in async wrappers (see [creating-async-component.md](./creating-async-component.md)).
 - **Pull-to-refresh / background refetch:** keep cached data visible; do not replace the screen with a new error layout.
 - **Mutations:** show `mutation.error.message` beside the control or in a toast.
 

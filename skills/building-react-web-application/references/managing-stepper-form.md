@@ -30,7 +30,7 @@ Use this guide to build **multi-step forms** with **Stepperize + `useAppForm` + 
 
 ### Form flow
 
-- Build one form instance with **`useAppForm`** from `@/ui/Form` (see [managing-form-components.md](./managing-form-components.md)) and persist values across steps.
+- Build one form instance with **`useAppForm`** from `@/ui/Form` (see [creating-form-component.md](./creating-form-component.md)) and persist values across steps.
 - Use `validators.onChange` (or the chosen validator timing) with the **current step schema**.
 - In `onSubmit`, call `stepper.navigation.next()` when not on the last step.
 - Render per-step fields with `stepper.flow.switch(...)` and compose inputs via **`form.AppField`** + pre-bound **`field.*`** components.
@@ -145,6 +145,6 @@ export function CheckoutStepForm() {
 
 ## Related
 
-- [managing-form-components.md](./managing-form-components.md) — pre-bound TanStack Form composition in `src/ui/Form/`
+- [creating-form-component.md](./creating-form-component.md) — pre-bound TanStack Form composition in `src/ui/Form/`
 - [managing-stepper-hook.md](./managing-stepper-hook.md) — base hook/provider pattern for Stepperize
 - [managing-state.md](./managing-state.md) — decide local/store/server responsibilities around forms

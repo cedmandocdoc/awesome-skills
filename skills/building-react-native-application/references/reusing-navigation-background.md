@@ -6,7 +6,7 @@ After React Navigation’s theme maps app tokens to `colors.background` (see [se
 
 ## Guidelines
 
-- **Screens**: Omit a root `className="bg-background"` (or equivalent) on the outermost screen container when the default stack/tab background should match the app chrome. The themed navigator background is enough.
+- **Screens**: Omit a root `className="bg-background"` (or equivalent) on the outermost screen container when the default stack/tab background should match the navigation UI. The themed navigator background is enough.
 - **Feature / layout wrappers**: Do not add `bg-background` on a child wrapper “for consistency” if it does not change the visual (same token, full-bleed behind content). Reserve the class for nodes that must explicitly establish a surface (e.g. cards, sheets, inset panels) or when the subtree is not under the usual nav background.
 - **Tokens**: Keep `bg-background` aligned with `NAV_THEME` / `THEME.*.background` in `src/theme.ts` so nav and NativeWind stay one system; the win is avoiding duplicate application of the same fill, not mixing different colors.
 

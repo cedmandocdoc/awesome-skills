@@ -43,7 +43,7 @@ Choose the test type based on what you are protecting.
 
 ### Test organization
 
-Keep E2E code at the project root under `tests/` (see [structuring-project.md](./structuring-project.md)).
+Keep E2E code at the project root under `tests/` (see [managing-project-structure.md](./managing-project-structure.md)).
 
 ```text
 tests/

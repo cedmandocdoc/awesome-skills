@@ -6,7 +6,7 @@ Use this guide to set up ESLint and Prettier for this Vite + React TypeScript st
 
 ## Prerequisites
 
-- [configuring-routing.md](./configuring-routing.md) for where `routeTree.gen.ts` comes from
+- [creating-route-component.md](./creating-route-component.md) for where `routeTree.gen.ts` comes from
 - [TanStack Router — Installation with Vite](https://tanstack.com/router/latest/docs/installation/with-vite.md) for official ignore patterns and plugin setup
 
 ## Guidelines
