@@ -86,7 +86,9 @@ Use only when `toApiError` cannot produce the right `message` or `code` for that
 ### Default module function
 
 ```ts
-export async function getWorkshops(client: AxiosInstance): Promise<Workshop[]> {
+import { client, responseData } from "../client";
+
+export async function getWorkshops(): Promise<Workshop[]> {
   try {
     return await responseData(client.get<Workshop[]>("/workshops"));
   } catch (err) {

@@ -60,20 +60,16 @@ export default function App() {
 
 ### Create a query hook
 
-Read the API base URL from that backend’s parsed `env` export (see [managing-environment.md](./managing-environment.md)); do not read `process.env` inside feature hooks.
+Module functions own the shared client; feature hooks import only the module function (see [creating-api.md](./creating-api.md)).
 
 ```ts
 import { useQuery } from "@tanstack/react-query";
-import { createClient } from "@/api/app-api/client";
-import { env } from "@/api/app-api/env";
 import { getWorkshops } from "@/api/app-api/modules/workshops";
-
-const client = createClient({ baseURL: env.EXPO_PUBLIC_API_URL });
 
 export function useWorkshops() {
   return useQuery({
     queryKey: ["app-api", "workshops", "list"],
-    queryFn: () => getWorkshops(client),
+    queryFn: getWorkshops,
   });
 }
 ```

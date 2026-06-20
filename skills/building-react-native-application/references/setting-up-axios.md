@@ -45,3 +45,5 @@ export async function responseData<T>(
 ```bash
 EXPO_PUBLIC_API_URL=http://localhost:3000
 ```
+
+Export the shared `client` instance from `client.ts` using parsed env (see [managing-environment.md](./managing-environment.md#wire-api-client-to-parsed-env)).

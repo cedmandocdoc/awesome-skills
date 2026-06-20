@@ -46,4 +46,4 @@ export async function responseData<T>(
 VITE_API_URL=http://localhost:3000
 ```
 
-Read values through a parsed `env` module per [managing-environment.md](./managing-environment.md).
+Read values through a parsed `env` module per [managing-environment.md](./managing-environment.md). Export the shared `client` instance from `client.ts` using that parsed env (see [managing-environment.md](./managing-environment.md#wire-api-client-to-parsed-env)).

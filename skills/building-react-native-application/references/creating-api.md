@@ -38,10 +38,10 @@ src/api/<backend-name>/
 | File / folder | Role |
 | ------------- | ---- |
 | `env.ts` | Parse and export environment values for this backend (see [managing-environment.md](./managing-environment.md)). |
-| `client.ts` | Create one shared client instance (or factory) for the backend; read options from `env.ts`. |
+| `client.ts` | Create and export one shared client instance for the backend; read options from `env.ts`. |
 | `utils.ts` / `utils/` | Shared helpers such as `toApiError` and `FALLBACK_MESSAGE`. |
 | `models/` | Request/response types and domain error enums. |
-| `modules/` | Typed functions per domain; accept the client as an argument. |
+| `modules/` | Typed functions per domain; import and use the shared client from `client.ts`. |
 
 ### Layout rules
 
@@ -52,8 +52,8 @@ src/api/<backend-name>/
 ### Client rules
 
 - Do not import React, features, or stores inside `src/api/`.
-- Configure the HTTP client in `client.ts`; keep one shared client per backend.
-- Pass the client into module functions—do not import a global singleton inside `modules/`.
+- Configure the HTTP client in `client.ts`; export one shared `client` instance per backend (see [managing-environment.md](./managing-environment.md#wire-api-client-to-parsed-env)).
+- Module functions import `client` from `client.ts`—do not accept the client as a parameter.
 - Use explicit return types on exported functions.
 
 ### Error handling
@@ -69,12 +69,11 @@ src/api/<backend-name>/
 When using Axios, see [setting-up-axios.md](./setting-up-axios.md) for `createClient` and `responseData`.
 
 ```ts
-import type { AxiosInstance } from "axios";
 import type { Workshop } from "../models/Workshop";
-import { responseData } from "../client";
+import { client, responseData } from "../client";
 import { toApiError } from "../utils";
 
-export async function getWorkshops(client: AxiosInstance): Promise<Workshop[]> {
+export async function getWorkshops(): Promise<Workshop[]> {
   try {
     return await responseData(client.get<Workshop[]>("/workshops"));
   } catch (err) {
@@ -85,16 +84,14 @@ export async function getWorkshops(client: AxiosInstance): Promise<Workshop[]> {
 
 ### Example: Supabase module function
 
-When using Supabase, configure the client in `client.ts` and pass `SupabaseClient` into module functions the same way.
+When using Supabase, configure and export the shared client in `client.ts`; module functions import it the same way.
 
 ```ts
-import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Workshop } from "../models/Workshop";
+import { client } from "../client";
 import { toApiError } from "../utils";
 
-export async function getWorkshops(
-  client: SupabaseClient,
-): Promise<Workshop[]> {
+export async function getWorkshops(): Promise<Workshop[]> {
   try {
     const { data, error } = await client.from("workshops").select("*");
     if (error) throw error;
@@ -107,19 +104,16 @@ export async function getWorkshops(
 
 ### Use API code from a feature hook
 
-Read the API base URL from that backend's parsed `env` export (see [managing-environment.md](./managing-environment.md)); do not read `process.env` inside feature hooks.
+Feature hooks call module functions directly—the shared client stays inside `src/api/`.
 
 ```ts
 import { useQuery } from "@tanstack/react-query";
-import { createClient } from "@/api/app-api/client";
 import { getWorkshops } from "@/api/app-api/modules/workshops";
-
-const client = createClient();
 
 export function useWorkshops() {
   return useQuery({
     queryKey: ["app-api", "workshops", "list"],
-    queryFn: () => getWorkshops(client),
+    queryFn: getWorkshops,
   });
 }
 ```
