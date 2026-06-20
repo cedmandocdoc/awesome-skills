@@ -20,7 +20,6 @@ Use this guide to organize the React Native app by responsibility. Keep routing,
 | `src/features/<feature-name>/` | Domain modules — see [creating-feature.md](./creating-feature.md#feature-folder-layout) |
 | `src/libs/`                    | Global reusable code (any folder may import via `@/libs/...`)           |
 | `src/api/`                     | Framework-agnostic HTTP code — see [creating-api.md](./creating-api.md) |
-| `src/assets/`                  | Static assets (images, fonts, Lottie); mostly flat, group by type when helpful |
 | `src/theme.css`                | Design tokens                                                           |
 | `src/theme.ts`                 | React Navigation theme objects                                          |
 
@@ -42,12 +41,6 @@ Use the owning guide for folder-level detail; this table is the map only.
 - Prefer a single file when the module is small: `src/libs/ApiError.ts`.
 - Use a folder with `index.ts` when the module grows: `src/libs/date-utils/index.ts`.
 - Import via `@/libs/<name>` regardless of file or folder shape.
-
-### `src/assets/`
-
-- Keep static files under `src/assets/` (or the bundler-supported equivalent).
-- Prefer a flat layout for a handful of files.
-- Group into subfolders when volume or type warrants it (for example `images/`, `fonts/`, `lottie/`).
 
 ### Dependency flow
 
