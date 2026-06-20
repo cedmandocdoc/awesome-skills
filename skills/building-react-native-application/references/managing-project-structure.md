@@ -18,7 +18,7 @@ Use this guide to organize the React Native app by responsibility. Keep routing,
 | `src/ui/`                      | Presentation-only primitives — see [creating-ui-component.md](./creating-ui-component.md#folder-layout) |
 | `src/features/navigation/`     | Reusable navigation components (headers, tab icons, drawer) and navigation hooks |
 | `src/features/<feature-name>/` | Domain modules — see [creating-feature.md](./creating-feature.md#feature-folder-layout) |
-| `src/libs/`                    | Global reusable code (any folder may import via `@/libs/...`)           |
+| `src/libs/`                    | Internal library modules — wrapped third-party logic or from-scratch utilities (imported elsewhere via `@/libs/...`) |
 | `src/api/`                     | Framework-agnostic HTTP code — see [creating-api.md](./creating-api.md#structure) |
 | `src/theme.css`                | Design tokens                                                           |
 | `src/theme.ts`                 | React Navigation theme objects                                          |
@@ -37,10 +37,12 @@ Use the owning guide for folder-level detail; this table is the map only.
 
 ### `src/libs/`
 
-- Keep libs free of React, features, routes, and stores.
+- Treat each lib as an internal library: wrapped third-party APIs, adapters, or from-scratch utilities shared across the app.
+- Libs may depend on any npm package when the abstraction needs it.
+- Do not import from other app folders (`src/api/`, `src/features/`, `src/routes/`, `src/ui/`, etc.); depend only on npm packages and other files under `src/libs/`.
 - Prefer a single file when the module is small: `src/libs/ApiError.ts`.
 - Use a folder with `index.ts` when the module grows: `src/libs/date-utils/index.ts`.
-- Import via `@/libs/<name>` regardless of file or folder shape.
+- Import from app code via `@/libs/<name>` regardless of file or folder shape.
 
 ### Dependency flow
 
@@ -50,7 +52,7 @@ Use the owning guide for folder-level detail; this table is the map only.
 - Keep `src/routes/` focused on route config and navigation component wiring.
 - Keep `src/features/navigation/` focused on reusable navigation UI — not domain business logic.
 - Keep `src/api/` as plain TypeScript HTTP helpers; React components and Zustand stores call into them from feature code and hooks.
-- Keep `src/libs/` free of React, features, routes, and stores; put cross-cutting primitives here (for example `ApiError`) so `src/api/`, `src/features/`, and `src/ui/` can all import them.
+- Keep `src/libs/` isolated from other app folders; put shared library code here (for example `ApiError`) so `src/api/`, `src/features/`, and `src/ui/` can import it via `@/libs/...`.
 - Keep Zustand stores inside feature hooks (`src/features/<feature-name>/hooks/use<Feature>Store.ts`), even when other features consume them.
 
 ### Imports
