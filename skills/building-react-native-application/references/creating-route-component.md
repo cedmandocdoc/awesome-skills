@@ -23,20 +23,36 @@ Keep navigator files focused on the tree, types, and options. Domain UI stays in
 
 ## Guidelines
 
+### Naming
+
+Name navigator modules **`[Name][NavigatorType]`** — prefix with a module or feature name, then the navigator kind:
+
+| File | Navigator type |
+| --- | --- |
+| `MainBottomNavigator.tsx` | Bottom tabs |
+| `ProfileStackNavigator.tsx` | Stack |
+| `MainDrawerNavigator.tsx` | Drawer |
+
+- Use **PascalCase** for file and export names.
+- Match navigation component names to the navigator — see [creating-navigation-component.md](./creating-navigation-component.md#naming).
+- Split navigators into more files when the tree grows; keep one navigator per file when possible.
+
 ### Structure
 
 ```text
 src/routes/
-├── MainStack.tsx           # stack / tabs / drawer config
-├── index.tsx               # exports Navigation for App.tsx
-└── RootStack.tsx           # optional root navigator split
+├── MainBottomNavigator.tsx   # bottom tabs
+├── ProfileStackNavigator.tsx # stack
+├── MainDrawerNavigator.tsx   # drawer
+├── index.tsx                 # exports Navigation for App.tsx
+└── RootStackNavigator.tsx    # optional root navigator split
 ```
 
 - Prefer **static navigation config** for route registration:
   - Static config defines routes in a config object passed to `createNativeStackNavigator` / `createBottomTabNavigator` / etc., then wraps the root with `createStaticNavigation(...)`.
   - Dynamic config defines routes with `<Stack.Navigator>` and `<Stack.Screen>`.
 - Register routes and route options in `src/routes/`. Import **feature screen exports** as each route's `component`.
-- Import navigation components from `@/features/navigation` and wire through navigator `screenOptions`, `tabBarIcon`, or `drawerContent`.
+- Import navigation components from `@/features/navigation` and wire through whole navigator slots — `header`, `tabBar`, or `drawerContent`.
 - Split navigators into more files when the tree grows.
 
 ### Route responsibilities
@@ -48,31 +64,21 @@ src/routes/
 
 ### Wiring navigation components
 
-- **Default:** wire navigation components from `@/features/navigation` through navigator options (`screenOptions.header`, `tabBarIcon`, `drawerContent`).
+**Default:** plug whole navigation components from `@/features/navigation` into navigator options — see [creating-navigation-component.md](./creating-navigation-component.md#prefer-whole-navigation-components).
+
+| Navigator | Option | Component |
+| --- | --- | --- |
+| Stack | `screenOptions.header` | `[Module]StackHeader` |
+| Bottom tabs | `tabBar` | `[Module]BottomTabBar` |
+| Drawer | `drawerContent` | `[Module]DrawerContent` |
+
 - **Exception:** when route-level wiring is too complex (per-screen dynamic navigation components tied to screen state), compose navigation components directly in the feature screen — see [creating-navigation-component.md](./creating-navigation-component.md).
 
 ### Prefer navigator-owned navigation UI
 
-- Configure header, tab bar, and drawer content at the navigator level.
+- Configure header, tab bar, and drawer content at the navigator level with whole custom components.
 - Keep screen components focused on feature UI and behavior.
 - Use shared navigator options to keep navigation components consistent.
-- Do not copy the same custom header into every screen.
-
-### Header
-
-- Use `screenOptions` or per-screen `options` on stack navigators.
-- Reuse `header` renderers from `@/features/navigation` across all screens in a stack.
-
-### Drawer
-
-- Use drawer navigator options for drawer labels, icons, and behavior.
-- Pass custom drawer layout via `drawerContent` pointing to `@/features/navigation`.
-
-### Bottom tabs
-
-- Configure `tabBarIcon`, `tabBarLabel`, and style through tab navigator options.
-- Use shared tab options for consistent spacing, colors, and behavior.
-- Avoid manual tab bars in screen trees unless building a non-navigation surface.
 
 ### Choosing navigators
 
@@ -124,19 +130,19 @@ export default function App() {
 
 ### Register screens and wire navigation components
 
-`src/routes/MainStack.tsx`:
+`src/routes/ProfileStackNavigator.tsx`:
 
 ```tsx
 import type { StaticScreenProps } from "@react-navigation/native";
 import { createStaticNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { AppHeader } from "@/features/navigation";
+import { ProfileStackHeader } from "@/features/navigation";
 import { WorkshopListScreen } from "@/features/workshop-list";
 import { WorkshopDetailScreen } from "@/features/workshop-detail";
 
-const MainStack = createNativeStackNavigator({
+const ProfileStackNavigator = createNativeStackNavigator({
   screenOptions: {
-    header: (props) => <AppHeader {...props} />,
+    header: (props) => <ProfileStackHeader {...props} />,
   },
   screens: {
     Workshops: {
@@ -150,13 +156,30 @@ const MainStack = createNativeStackNavigator({
   },
 });
 
-type RootStackType = typeof MainStack;
+type RootStackType = typeof ProfileStackNavigator;
 
 declare module "@react-navigation/core" {
   interface RootNavigator extends RootStackType {}
 }
 
-export const Navigation = createStaticNavigation(MainStack);
+export const Navigation = createStaticNavigation(ProfileStackNavigator);
+```
+
+`src/routes/MainBottomNavigator.tsx`:
+
+```tsx
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { MainBottomTabBar } from "@/features/navigation";
+import { HomeScreen } from "@/features/home";
+import { SettingsScreen } from "@/features/settings";
+
+export const MainBottomNavigator = createBottomTabNavigator({
+  tabBar: (props) => <MainBottomTabBar {...props} />,
+  screens: {
+    Home: { screen: HomeScreen, options: { title: "Home" } },
+    Settings: { screen: SettingsScreen, options: { title: "Settings" } },
+  },
+});
 ```
 
 Use static config to keep route definitions declarative. Avoid dynamic `<Stack.Navigator>` / `<Stack.Screen>` registration unless runtime composition requires it.
@@ -164,7 +187,7 @@ Use static config to keep route definitions declarative. Avoid dynamic `<Stack.N
 For static TypeScript setup:
 
 - Type each screen's `route.params` with `StaticScreenProps<...>` when params are needed.
-- Export the root navigator type with `type RootStackType = typeof MainStack`.
+- Export the root navigator type with `type RootStackType = typeof ProfileStackNavigator`.
 - Extend `@react-navigation/core` `RootNavigator` so `useNavigation`, links, and refs infer from the app's root navigator.
 
 Prefer exporting a **route-ready screen component** from the feature (it can call `useRoute` / `useNavigation` when it needs params). When you need a thin adapter for props or params, place it **beside the navigator** in `src/routes/` so bridging stays next to the static `screens` config entry.
@@ -188,5 +211,5 @@ export function HomeScreen() {
 ## Related
 
 - [creating-screen-component.md](./creating-screen-component.md) — feature screen components
-- [creating-navigation-component.md](./creating-navigation-component.md) — shared header, tab, and drawer components
+- [creating-navigation-component.md](./creating-navigation-component.md) — shared header, tab bar, and drawer components
 - [setting-up-navigation-theme.md](./setting-up-navigation-theme.md) — theme colors for navigation components

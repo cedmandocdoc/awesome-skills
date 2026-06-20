@@ -2,7 +2,7 @@
 
 ## Overview
 
-Create **reusable navigation components** in `src/features/navigation/` — shared headers, tab icons, drawer content, app shells, sidebars, and related hooks. These components are consumed from `src/routes/` by default; other features may import them when route-level wiring is impractical.
+Create **reusable navigation components** in `src/features/navigation/` — stack headers, bottom tab bars, drawer content, app shells, sidebars, and related hooks. These components are consumed from `src/routes/` by default; other features may import them when route-level wiring is impractical.
 
 This module is **navigation infrastructure**, not a user-facing product feature. Import via `@/features/navigation`.
 
@@ -16,12 +16,35 @@ Start from [creating-component.md](./creating-component.md). For wiring navigati
 
 ## Naming
 
-- Prefix shared navigation components with **`App`** or the navigator scope: `AppHeader`, `AppShell`, `AppSidebar`, `AppDrawerContent`.
-- Tab icon renderers: `HomeTabIcon`, `SettingsTabIcon` — or a single `TabBarIcon` with a `route` prop.
-- Hooks: `useNavigationHeader`, `useTabBarOptions` — live in `src/features/navigation/hooks/`.
-- Do not duplicate screen-local headers when one shared component suffices.
+Derive the component name from the **route navigator module name** in `src/routes/` (see [creating-route-component.md](./creating-route-component.md#naming)). Drop the `Navigator` suffix and append the navigation slot type:
+
+| Route navigator | Navigation component |
+| --- | --- |
+| `MainBottomNavigator` | `MainBottomTabBar` |
+| `ProfileStackNavigator` | `ProfileStackHeader` |
+| `MainDrawerNavigator` | `MainDrawerContent` |
+
+- **Stack-style layout:** `[Module]StackHeader` — e.g. `ProfileStackNavigator` → `ProfileStackHeader`.
+- **Bottom-tab-style layout:** `[Module]BottomTabBar` — e.g. `MainBottomNavigator` → `MainBottomTabBar`.
+- **Drawer-style layout:** `[Module]DrawerContent` — e.g. `MainDrawerNavigator` → `MainDrawerContent`.
+- **App-wide shell:** `AppShell` when a single root wrapper wraps all authenticated routes.
+- Hooks: `useProfileStackHeader`, `useMainBottomTabBar` — live in `src/features/navigation/hooks/`.
+- Use one navigator-scoped component per layout slot instead of per-page duplicates.
 
 ## Guidelines
+
+### Prefer whole navigation components
+
+**Default:** replace the entire layout navigation surface with a custom component. Keep nav items, icons, labels, and spacing inside that component so navigation UI changes stay in one place.
+
+Whether to use a custom navigation component at all depends on the prompt; when unspecified, **use custom navigation components**.
+
+| Layout pattern | Component | Wire in |
+| --- | --- | --- |
+| Stack-style section header | `[Module]StackHeader` | Layout route that owns the section |
+| Bottom-tab-style sub-nav | `[Module]BottomTabBar` | Layout route around child `<Outlet />` |
+| Drawer-style sidebar | `[Module]DrawerContent` | Layout route around child `<Outlet />` |
+| App shell | `AppShell` or `[Module]Shell` | Root or authenticated layout route |
 
 ### Placement
 
@@ -29,10 +52,11 @@ Start from [creating-component.md](./creating-component.md). For wiring navigati
 src/features/navigation/
 ├── components/
 │   ├── AppShell.tsx
-│   ├── AppSidebar.tsx
-│   └── AppHeader.tsx
+│   ├── MainBottomTabBar.tsx
+│   ├── ProfileStackHeader.tsx
+│   └── MainDrawerContent.tsx
 ├── hooks/
-│   └── useNavigationHeader.ts
+│   └── useMainBottomTabBar.ts
 └── index.ts
 ```
 
@@ -48,7 +72,7 @@ Promote a component to `src/ui/` only when it is reused outside navigation and c
 ### Default path — wire from routes
 
 - Build navigation components once in `src/features/navigation/`.
-- Import and wire it from layout routes in `src/routes/` — see [creating-route-component.md](./creating-route-component.md).
+- Import and wire the whole component from layout routes in `src/routes/` — see [creating-route-component.md](./creating-route-component.md).
 - Keep screen/page components focused on feature UI.
 
 ### Exception — compose in a feature screen
@@ -57,29 +81,35 @@ When route-level wiring is too complex (dynamic navigation components driven by 
 
 ### Layout navigation components (web)
 
-- **App shell / sidebar:** structural wrappers rendered in layout routes around `<Outlet />`.
+- **App shell / drawer / tab bar:** structural wrappers rendered in layout routes around `<Outlet />`.
 - Accept children for the main content area; keep URL and outlet wiring in `src/routes/`.
-- Reuse across route sections via nested layout routes, not per-page duplication.
+- Put all nav items, icons, labels, and spacing inside the custom navigation component.
+- Reuse across route sections via nested layout routes.
 
 ### What to avoid
 
-- Copying the same header, sidebar, or shell JSX into every feature page.
+- Copying the same header, sidebar, tab bar, or shell JSX into every feature page.
 - Putting domain business logic in navigation components — navigation components are presentation and layout.
 
 ## Examples
 
-### App shell wired in a layout route
+### Drawer-style layout wired in a route navigator
 
-`src/features/navigation/components/AppShell.tsx`:
+`src/features/navigation/components/MainDrawerContent.tsx`:
 
 ```tsx
 import type { ReactNode } from "react";
-import { AppSidebar } from "./AppSidebar";
+import { Link } from "@tanstack/react-router";
 
-export function AppShell({ children }: { children: ReactNode }) {
+export function MainDrawerContent({ children }: { children: ReactNode }) {
   return (
     <div className="flex min-h-screen">
-      <AppSidebar />
+      <aside className="w-64 border-r border-border bg-background p-4">
+        <nav className="flex flex-col gap-2">
+          <Link to="/workshops">Workshops</Link>
+          <Link to="/settings">Settings</Link>
+        </nav>
+      </aside>
       <main className="flex-1">{children}</main>
     </div>
   );
@@ -89,11 +119,37 @@ export function AppShell({ children }: { children: ReactNode }) {
 `src/features/navigation/index.ts`:
 
 ```ts
-export { AppShell } from "./components/AppShell";
-export { AppSidebar } from "./components/AppSidebar";
+export { MainDrawerContent } from "./components/MainDrawerContent";
 ```
 
-Wire in `src/routes/_authenticated/route.tsx` — see [creating-route-component.md](./creating-route-component.md).
+Wire in `src/routes/MainDrawerNavigator.tsx` — see [creating-route-component.md](./creating-route-component.md).
+
+### Stack-style header in a section layout
+
+`src/features/navigation/components/ProfileStackHeader.tsx`:
+
+```tsx
+import type { ReactNode } from "react";
+
+export function ProfileStackHeader({
+  title,
+  children,
+}: {
+  title: string;
+  children: ReactNode;
+}) {
+  return (
+    <div>
+      <header className="border-b border-border px-4 py-3">
+        <h1 className="text-lg font-semibold">{title}</h1>
+      </header>
+      {children}
+    </div>
+  );
+}
+```
+
+Wire in `src/routes/ProfileStackNavigator.tsx` around `<Outlet />`.
 
 ### Feature page imports navigation components directly (exception)
 

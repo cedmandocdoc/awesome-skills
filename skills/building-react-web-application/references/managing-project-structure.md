@@ -22,7 +22,7 @@ Use this guide to organize the Vite + React SPA by responsibility. Keep routing,
 | `src/features/navigation/`     | Reusable navigation components (headers, shells, sidebars) and navigation hooks     |
 | `src/features/<feature-name>/` | Domain modules — see [creating-feature.md](./creating-feature.md#feature-folder-layout) |
 | `src/libs/`                    | Global reusable code (any folder may import via `@/libs/...`)                   |
-| `src/api/`                     | Framework-agnostic HTTP code — see [creating-api.md](./creating-api.md)         |
+| `src/api/`                     | Framework-agnostic HTTP code — see [creating-api.md](./creating-api.md#structure)         |
 | `tests/`                       | Playwright E2E tests (see [creating-e2e-testing.md](./creating-e2e-testing.md)) |
 
 ### Module internals
@@ -33,7 +33,7 @@ Use the owning guide for folder-level detail; this table is the map only.
 | --- | --- |
 | `src/features/<feature-name>/` | [creating-feature.md](./creating-feature.md#feature-folder-layout) |
 | `src/ui/` | [creating-ui-component.md](./creating-ui-component.md#folder-layout) |
-| `src/api/<backend-name>/` | [creating-api.md](./creating-api.md) |
+| `src/api/<backend-name>/` | [creating-api.md](./creating-api.md#structure) |
 | Feature `env.ts` | [managing-environment.md](./managing-environment.md) |
 | Feature hooks and stores | [managing-state.md](./managing-state.md) |
 

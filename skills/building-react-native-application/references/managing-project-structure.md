@@ -19,7 +19,7 @@ Use this guide to organize the React Native app by responsibility. Keep routing,
 | `src/features/navigation/`     | Reusable navigation components (headers, tab icons, drawer) and navigation hooks |
 | `src/features/<feature-name>/` | Domain modules — see [creating-feature.md](./creating-feature.md#feature-folder-layout) |
 | `src/libs/`                    | Global reusable code (any folder may import via `@/libs/...`)           |
-| `src/api/`                     | Framework-agnostic HTTP code — see [creating-api.md](./creating-api.md) |
+| `src/api/`                     | Framework-agnostic HTTP code — see [creating-api.md](./creating-api.md#structure) |
 | `src/theme.css`                | Design tokens                                                           |
 | `src/theme.ts`                 | React Navigation theme objects                                          |
 
@@ -31,7 +31,7 @@ Use the owning guide for folder-level detail; this table is the map only.
 | --- | --- |
 | `src/features/<feature-name>/` | [creating-feature.md](./creating-feature.md#feature-folder-layout) |
 | `src/ui/` | [creating-ui-component.md](./creating-ui-component.md#folder-layout) |
-| `src/api/<backend-name>/` | [creating-api.md](./creating-api.md) |
+| `src/api/<backend-name>/` | [creating-api.md](./creating-api.md#structure) |
 | Feature `env.ts` | [managing-environment.md](./managing-environment.md) |
 | Feature hooks and stores | [managing-state.md](./managing-state.md) |
 

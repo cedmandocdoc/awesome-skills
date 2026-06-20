@@ -2,7 +2,7 @@
 
 ## Overview
 
-Create **reusable navigation components** in `src/features/navigation/` — shared headers, tab icons, drawer content, and related hooks. These components are wired from `src/routes/` by default; feature screens and other features may import them when route-level wiring is impractical.
+Create **reusable navigation components** in `src/features/navigation/` — stack headers, bottom tab bars, drawer content, and related hooks. These components are wired from `src/routes/` by default; feature screens and other features may import them when route-level wiring is impractical.
 
 This module is **navigation infrastructure**, not a user-facing product feature. Import via `@/features/navigation`.
 
@@ -16,29 +16,50 @@ Start from [creating-component.md](./creating-component.md). For wiring navigati
 
 ## Naming
 
-- Prefix shared navigation components with **`App`** or the navigator scope: `AppHeader`, `AppTabBarIcon`, `AppDrawerContent`.
-- Tab icon renderers: `HomeTabIcon`, `SettingsTabIcon` — or a single `TabBarIcon` with a `route` prop.
-- Hooks: `useNavigationHeader`, `useTabBarOptions` — live in `src/features/navigation/hooks/`.
-- Do not name screen-local duplicates (`WorkshopHeader` in every screen) when one shared `AppHeader` suffices.
+Derive the component name from the **navigator module name** in `src/routes/` (see [creating-route-component.md](./creating-route-component.md#naming)). Drop the `Navigator` suffix and append the navigation slot type:
+
+| Navigator | Navigation component |
+| --- | --- |
+| `MainBottomNavigator` | `MainBottomTabBar` |
+| `ProfileStackNavigator` | `ProfileStackHeader` |
+| `MainDrawerNavigator` | `MainDrawerContent` |
+
+- **Stack:** `[Module]StackHeader` — e.g. `ProfileStackNavigator` → `ProfileStackHeader`.
+- **Bottom tabs:** `[Module]BottomTabBar` — e.g. `MainBottomNavigator` → `MainBottomTabBar`.
+- **Drawer:** `[Module]DrawerContent` — e.g. `MainDrawerNavigator` → `MainDrawerContent`.
+- Hooks: `useProfileStackHeader`, `useMainBottomTabBar` — live in `src/features/navigation/hooks/`.
+- Use one navigator-scoped component per slot instead of screen-local duplicates.
 
 ## Guidelines
+
+### Prefer whole navigation components
+
+**Default:** replace the entire navigator navigation slot with a custom component. Keep icons, labels, and layout inside that component so navigation UI changes stay in one place.
+
+Whether to use a custom navigation component at all depends on the prompt; when unspecified, **use custom navigation components**.
+
+| Navigator | Slot | Wire via |
+| --- | --- | --- |
+| Stack | `[Module]StackHeader` | `screenOptions.header` |
+| Bottom tabs | `[Module]BottomTabBar` | `tabBar` |
+| Drawer | `[Module]DrawerContent` | `drawerContent` |
 
 ### Placement
 
 ```text
 src/features/navigation/
 ├── components/
-│   ├── AppHeader.tsx
-│   ├── AppTabBarIcon.tsx
-│   └── AppDrawerContent.tsx
+│   ├── MainBottomTabBar.tsx
+│   ├── ProfileStackHeader.tsx
+│   └── MainDrawerContent.tsx
 ├── hooks/
-│   └── useNavigationHeader.ts
+│   └── useMainBottomTabBar.ts
 └── index.ts
 ```
 
 | Piece | Location |
 | --- | --- |
-| Shared header / tab / drawer UI | `src/features/navigation/components/` |
+| Shared header / tab bar / drawer UI | `src/features/navigation/components/` |
 | Navigation-related hooks | `src/features/navigation/hooks/` |
 | Generic presentation-only primitives | `src/ui/` when not navigation-specific |
 | Screen body | `src/features/<feature-name>/*Screen.tsx` |
@@ -48,37 +69,48 @@ Promote a component to `src/ui/` only when it is reused outside navigation and c
 ### Default path — wire from routes
 
 - Build navigation components once in `src/features/navigation/`.
-- Reference it from navigator `screenOptions`, `tabBarIcon`, or `drawerContent` in `src/routes/` — see [creating-route-component.md](./creating-route-component.md).
+- Plug them into navigator options in `src/routes/` — see [creating-route-component.md](./creating-route-component.md).
 - Keep screen components focused on feature UI.
 
 ### Exception — compose in a feature screen
 
-When route-level wiring is too complex (dynamic header per screen state, navigation components tightly coupled to screen data), import navigation components directly in the feature screen. Prefer this only when `src/routes/` wiring would be harder to follow than localized composition.
+When route-level wiring is too complex (dynamic navigation UI driven by screen-local state, navigation components tightly coupled to screen data), import navigation components directly in the feature screen. Prefer this only when `src/routes/` wiring would be harder to follow than localized composition.
 
-### Header component
+### Stack header
 
 - Accept stack header props (`options`, `navigation`, `route`) when wrapping the native header slot.
-- Reuse across all screens in a stack via `screenOptions.header` in `src/routes/`.
-- Do not copy the same header JSX into each screen file.
+- Register `[Module]StackHeader` via `screenOptions.header` on the stack navigator.
 
-### Tab and drawer pieces
+### Bottom tab bar
 
-- Tab icons and labels: small components registered in tab navigator options.
-- Custom drawer content: one `AppDrawerContent` component passed to `drawerContent`.
+- Accept bottom-tab bar props from React Navigation when implementing `[Module]BottomTabBar`.
+- Register `[Module]BottomTabBar` via the navigator `tabBar` option.
+- Keep tab items, icons, labels, and spacing inside the custom tab bar component.
 
-Navigation components are usually **presentation-only**; navigation actions come from React Navigation props (`navigation`, `route`).
+### Drawer content
+
+- Accept drawer content props when implementing `[Module]DrawerContent`.
+- Register `[Module]DrawerContent` via `drawerContent` on the drawer navigator.
+- Keep drawer labels, icons, and layout inside the custom drawer component.
+
+Navigation components are usually **presentation-only**; navigation actions come from React Navigation props (`navigation`, `route`, `state`, `descriptors`).
+
+### What to avoid
+
+- Copying the same header, tab bar, or drawer JSX into every screen file.
+- Putting domain business logic in navigation components — navigation components are presentation and layout.
 
 ## Examples
 
 ### Shared stack header
 
-`src/features/navigation/components/AppHeader.tsx`:
+`src/features/navigation/components/ProfileStackHeader.tsx`:
 
 ```tsx
 import type { NativeStackHeaderProps } from "@react-navigation/native-stack";
 import { Text, View } from "react-native";
 
-export function AppHeader({ options }: NativeStackHeaderProps) {
+export function ProfileStackHeader({ options }: NativeStackHeaderProps) {
   return (
     <View className="border-b border-border bg-background px-4 py-3">
       <Text className="text-lg font-semibold text-foreground">
@@ -92,17 +124,58 @@ export function AppHeader({ options }: NativeStackHeaderProps) {
 `src/features/navigation/index.ts`:
 
 ```ts
-export { AppHeader } from "./components/AppHeader";
+export { ProfileStackHeader } from "./components/ProfileStackHeader";
 ```
 
-Wire in `src/routes/MainStack.tsx`:
+Wire in `src/routes/ProfileStackNavigator.tsx`:
 
 ```tsx
-import { AppHeader } from "@/features/navigation";
+import { ProfileStackHeader } from "@/features/navigation";
 
 screenOptions: {
-  header: (props) => <AppHeader {...props} />,
+  header: (props) => <ProfileStackHeader {...props} />,
 },
+```
+
+### Shared bottom tab bar
+
+`src/features/navigation/components/MainBottomTabBar.tsx`:
+
+```tsx
+import type { BottomTabBarProps } from "@react-navigation/bottom-tabs";
+import { Pressable, Text, View } from "react-native";
+
+export function MainBottomTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
+  return (
+    <View className="flex-row border-t border-border bg-background">
+      {state.routes.map((route, index) => {
+        const { options } = descriptors[route.key];
+        const label = options.title ?? route.name;
+        const isFocused = state.index === index;
+
+        return (
+          <Pressable
+            key={route.key}
+            className="flex-1 items-center py-3"
+            onPress={() => navigation.navigate(route.name)}
+          >
+            <Text className={isFocused ? "text-primary" : "text-muted-foreground"}>
+              {label}
+            </Text>
+          </Pressable>
+        );
+      })}
+    </View>
+  );
+}
+```
+
+Wire in `src/routes/MainBottomNavigator.tsx`:
+
+```tsx
+import { MainBottomTabBar } from "@/features/navigation";
+
+tabBar: (props) => <MainBottomTabBar {...props} />,
 ```
 
 ### Feature screen imports navigation components directly (exception)
