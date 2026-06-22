@@ -16,7 +16,7 @@ Use this guide to organize the Vite + React SPA by responsibility. Keep routing,
 | ------------------------------ | ------------------------------------------------------------------------------- |
 | `global.css`                   | Project root: Tailwind + shadcn Tailwind imports; `@import` of `theme.css`      |
 | `src/theme.css`                | Design tokens and `@theme` / `:root` / `.dark` (see setting-up-theming.md)      |
-| `src/routes/`                  | Route layer: register feature pages and wire navigation components (see creating-route-component.md) |
+| `src/routes/`                  | TanStack Router file-based routes — flat filenames map to URLs (see creating-route-component.md) |
 | `src/routeTree.gen.ts`         | Generated route tree (from `src/routes/`; edit route modules)                   |
 | `src/ui/`                      | Presentation-only primitives — see [creating-ui-component.md](./creating-ui-component.md#folder-layout) |
 | `src/features/navigation/`     | Reusable navigation components (headers, shells, sidebars) and navigation hooks     |

@@ -81,16 +81,18 @@ export { WorkshopListPage } from "./components/WorkshopListPage";
 export { useWorkshops } from "./hooks/useWorkshops";
 ```
 
-`src/routes/workshops/index.tsx`:
+`src/routes/_app.workshops.tsx`:
 
 ```tsx
 import { createFileRoute } from "@tanstack/react-router";
 import { WorkshopListPage } from "@/features/workshop-list";
 
-export const Route = createFileRoute("/workshops/")({
+export const Route = createFileRoute("/_app/workshops")({
   component: WorkshopListPage,
 });
 ```
+
+URL: `/workshops` under the `_app` pathless shell. For a public list at `/workshops` without the app shell, use `workshops.tsx` instead — see [creating-route-component.md](./creating-route-component.md).
 
 ## Related
 

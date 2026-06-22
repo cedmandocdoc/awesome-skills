@@ -12,6 +12,10 @@ Opinionated ecosystem for building Vite-based React SPAs with a consistent archi
 
 Route-facing pages live in `src/features/<feature>/components/<Feature>Page.tsx`. All feature UI — pages and supporting blocks — shares the same `components/` folder. See [creating-screen-component](./references/creating-screen-component.md).
 
+## Route layout
+
+Routes live in `src/routes/` as **flat files** whose names map to URLs (`dashboard.tsx` → `/dashboard`, `main.dashboard.tsx` → `/main/dashboard`, `_app.dashboard.tsx` → `/dashboard` under a pathless `_app` shell). See [creating-route-component](./references/creating-route-component.md).
+
 ## Tech stack
 
 | Layer               | Choice                                                                         |
