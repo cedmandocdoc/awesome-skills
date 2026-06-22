@@ -65,7 +65,7 @@ src/features/navigation/
 | Shared layout / navigation components | `src/features/navigation/components/` |
 | Navigation-related hooks | `src/features/navigation/hooks/` |
 | Generic presentation-only primitives | `src/ui/` when not navigation-specific |
-| Screen / page body | `src/features/<feature-name>/*Page.tsx` (feature root) |
+| Screen / page body | `src/features/<feature-name>/components/*Page.tsx` |
 
 Promote a component to `src/ui/` only when it is reused outside navigation and carries no route-specific wiring.
 

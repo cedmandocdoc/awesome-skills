@@ -14,15 +14,15 @@ Start from [creating-component.md](./creating-component.md). For feature module 
 
 ## Placement
 
-Route-facing screen files **always** live at the feature root — never under `components/`:
+Route-facing screen files **always** live under the feature's `components/` folder:
 
 ```text
-src/features/<feature-name>/<Feature>Screen.tsx
+src/features/<feature-name>/components/<Feature>Screen.tsx
 ```
 
-Examples: `src/features/workshop-list/WorkshopListScreen.tsx`, `src/features/settings/SettingsScreen.tsx`.
+Examples: `src/features/workshop-list/components/WorkshopListScreen.tsx`, `src/features/settings/components/SettingsScreen.tsx`.
 
-Shared layout wrappers exported from a feature (`AuthLayout`, `MainLayout`) also live at the feature root: `src/features/<feature-name>/<Feature>Layout.tsx`.
+Shared layout wrappers exported from a feature (`AuthLayout`, `MainLayout`) also live in `components/`: `src/features/<feature-name>/components/<Feature>Layout.tsx`.
 
 ## Naming
 
@@ -33,7 +33,7 @@ Shared layout wrappers exported from a feature (`AuthLayout`, `MainLayout`) also
 
 ### Screen responsibilities
 
-- Compose feature components from `components/` and `@/ui/*` primitives for the route's UI.
+- Compose sibling feature components and `@/ui/*` primitives for the route's UI.
 - Read route params with React Navigation hooks when needed (`useRoute`, typed params).
 - Wire TanStack Query hooks, mutations, and feature stores for this flow.
 - Keep route registration in `src/routes/` — one-line import of the exported screen.
@@ -45,20 +45,19 @@ Shared layout wrappers exported from a feature (`AuthLayout`, `MainLayout`) also
 
 ### Size and structure
 
-- Keep screens focused; extract sub-trees to [creating-feature-component.md](./creating-feature-component.md) when the file grows.
-- Supporting UI blocks belong in `src/features/<feature-name>/components/`, not beside the screen file.
+- Keep screens focused; extract sub-trees to sibling feature components in the same `components/` folder when the file grows.
 - Async list/content wrappers: [creating-async-component.md](./creating-async-component.md).
 
 ## Examples
 
 ### Screen exported from feature barrel
 
-`src/features/workshop-list/WorkshopListScreen.tsx`:
+`src/features/workshop-list/components/WorkshopListScreen.tsx`:
 
 ```tsx
 import { AsyncFlatList } from "@/ui/Async";
-import { useWorkshops } from "./hooks/useWorkshops";
-import { WorkshopListItem } from "./components/WorkshopListItem";
+import { useWorkshops } from "../hooks/useWorkshops";
+import { WorkshopListItem } from "./WorkshopListItem";
 
 export function WorkshopListScreen() {
   const workshops = useWorkshops();
@@ -82,7 +81,7 @@ export function WorkshopListScreen() {
 `src/features/workshop-list/index.ts`:
 
 ```ts
-export { WorkshopListScreen } from "./WorkshopListScreen";
+export { WorkshopListScreen } from "./components/WorkshopListScreen";
 export { useWorkshops } from "./hooks/useWorkshops";
 ```
 

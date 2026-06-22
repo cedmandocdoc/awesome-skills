@@ -17,7 +17,7 @@ Use this guide to organize the React Native app by responsibility. Keep routing,
 | `src/routes/`                  | Route layer: navigator setup, route types, registration, and navigation component wiring |
 | `src/ui/`                      | Presentation-only primitives — see [creating-ui-component.md](./creating-ui-component.md#folder-layout) |
 | `src/features/navigation/`     | Reusable navigation components (headers, tab icons, drawer) and navigation hooks |
-| `src/features/<feature-name>/` | Domain modules — route-facing screens at feature root (`*Screen.tsx`); supporting UI in `components/` — see [creating-feature.md](./creating-feature.md#feature-folder-layout) |
+| `src/features/<feature-name>/` | Domain modules — screens and supporting UI in `components/` — see [creating-feature.md](./creating-feature.md#feature-folder-layout) |
 | `src/libs/`                    | Internal library modules — wrapped third-party logic or from-scratch utilities (imported elsewhere via `@/libs/...`) |
 | `src/api/`                     | Framework-agnostic HTTP code — see [creating-api.md](./creating-api.md#structure) |
 | `src/theme.css`                | Design tokens                                                           |
@@ -89,7 +89,7 @@ Add `@/*` to `tsconfig.json` and keep the bundler config aligned.
 ### Export a feature barrel
 
 ```ts
-export { WorkshopListScreen } from "./WorkshopListScreen";
+export { WorkshopListScreen } from "./components/WorkshopListScreen";
 export { useWorkshops } from "./hooks/useWorkshops";
 export type { Workshop } from "./types";
 ```

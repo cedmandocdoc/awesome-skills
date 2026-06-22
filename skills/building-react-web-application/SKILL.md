@@ -10,7 +10,7 @@ Opinionated ecosystem for building Vite-based React SPAs with a consistent archi
 
 ## Feature layout
 
-Route-facing pages live at the **feature root** (`src/features/<feature>/<Feature>Page.tsx`), not in `components/`. Supporting domain UI goes in `src/features/<feature>/components/`. See [creating-screen-component](./references/creating-screen-component.md).
+Route-facing pages live in `src/features/<feature>/components/<Feature>Page.tsx`. All feature UI — pages and supporting blocks — shares the same `components/` folder. See [creating-screen-component](./references/creating-screen-component.md).
 
 ## Tech stack
 

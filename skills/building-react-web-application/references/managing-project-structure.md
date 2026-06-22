@@ -20,7 +20,7 @@ Use this guide to organize the Vite + React SPA by responsibility. Keep routing,
 | `src/routeTree.gen.ts`         | Generated route tree (from `src/routes/`; edit route modules)                   |
 | `src/ui/`                      | Presentation-only primitives — see [creating-ui-component.md](./creating-ui-component.md#folder-layout) |
 | `src/features/navigation/`     | Reusable navigation components (headers, shells, sidebars) and navigation hooks     |
-| `src/features/<feature-name>/` | Domain modules — route-facing pages at feature root (`*Page.tsx`); supporting UI in `components/` — see [creating-feature.md](./creating-feature.md#feature-folder-layout) |
+| `src/features/<feature-name>/` | Domain modules — pages, screens, and supporting UI in `components/` — see [creating-feature.md](./creating-feature.md#feature-folder-layout) |
 | `src/libs/`                    | Internal library modules — wrapped third-party logic or from-scratch utilities (imported elsewhere via `@/libs/...`) |
 | `src/api/`                     | Framework-agnostic HTTP code — see [creating-api.md](./creating-api.md#structure)         |
 | `tests/`                       | Playwright E2E tests (see [creating-e2e-testing.md](./creating-e2e-testing.md)) |
@@ -114,7 +114,7 @@ Ensure `index.html` references the JS entry; Vite injects CSS from that import.
 ### Export a feature barrel
 
 ```ts
-export { WorkshopListPage } from "./WorkshopListPage";
+export { WorkshopListPage } from "./components/WorkshopListPage";
 export { useWorkshops } from "./hooks/useWorkshops";
 export type { Workshop } from "./types";
 ```

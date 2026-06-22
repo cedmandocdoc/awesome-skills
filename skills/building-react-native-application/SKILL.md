@@ -10,7 +10,7 @@ Opinionated ecosystem for building React Native apps with a consistent architect
 
 ## Feature layout
 
-Route-facing screens live at the **feature root** (`src/features/<feature>/<Feature>Screen.tsx`), not in `components/`. Supporting domain UI goes in `src/features/<feature>/components/`. See [creating-screen-component](./references/creating-screen-component.md).
+Route-facing screens live in `src/features/<feature>/components/<Feature>Screen.tsx`. All feature UI — screens and supporting blocks — shares the same `components/` folder. See [creating-screen-component](./references/creating-screen-component.md).
 
 ## Tech stack
 

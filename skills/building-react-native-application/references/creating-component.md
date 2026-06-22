@@ -23,7 +23,7 @@ Start here for **any** component work. This guide routes you to the right deep-d
 
 | Kind | Location |
 | --- | --- |
-| Screen component | `src/features/<feature-name>/*Screen.tsx` (feature root — not `components/`) |
+| Screen component | `src/features/<feature-name>/components/*Screen.tsx` |
 | Feature components | `src/features/<feature-name>/components/` |
 | Navigation components | `src/features/navigation/components/` |
 | Navigation hooks | `src/features/navigation/hooks/` |
@@ -54,7 +54,7 @@ Start here for **any** component work. This guide routes you to the right deep-d
 - Match file name to export name.
 - **`src/ui/`** — generic names: `Button`, `TextInput`, `Modal`.
 - **`src/features/*/components/`** — feature-prefixed when domain-specific: `CheckoutButton`, `CartItemRow`.
-- **`src/features/<feature>/*Screen.tsx`** — route-facing screens: `WorkshopListScreen`, `SettingsScreen`.
+- **`src/features/*/components/*Screen.tsx`** — route-facing screens: `WorkshopListScreen`, `SettingsScreen`.
 - Use `<Feature><Entity><Type>` for feature components (`AuthLoginForm`, `OrderSummaryCard`).
 - Use props or CVA variants for state — not `PrimaryButton` or `DisabledInput`.
 - Related parts share a prefix: `CartItem`, `CartItemImage`, `CartItemPrice`.
@@ -70,7 +70,7 @@ When reuse grows, re-run the decision tree:
 - **Navigation components reused across screens** → move to `src/features/navigation/` per [creating-navigation-component.md](./creating-navigation-component.md).
 - **Domain behavior used across screens** → extract to a new feature module per [creating-feature.md](./creating-feature.md).
 - **Still tied to one screen flow** → keep in the current feature.
-- **Screen in `components/`** → move to feature root (`src/features/<feature>/*Screen.tsx`) per [creating-screen-component.md](./creating-screen-component.md).
+- **Screen at feature root** → move to `src/features/<feature>/components/*Screen.tsx` per [creating-screen-component.md](./creating-screen-component.md).
 
 Update folder placement **and** the feature barrel export contract when moving code.
 

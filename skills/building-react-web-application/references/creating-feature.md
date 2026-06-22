@@ -14,9 +14,9 @@ The layout below is the **default starting point**, not a closed set. Add folder
 
 ```text
 src/features/<feature-name>/
-├── <Feature>Page.tsx         # route-facing page (see creating-screen-component.md)
 ├── index.ts                  # public barrel
 ├── components/               # domain UI blocks
+│   └── <Feature>Page.tsx     # route-facing page (see creating-screen-component.md)
 ├── hooks/                    # query hooks, stores, feature hooks (see managing-state.md)
 ├── types.ts                  # shared types; split to types/ when large
 ├── utils.ts                  # shared pure helpers when small (< ~200 lines total)
@@ -28,8 +28,8 @@ src/features/<feature-name>/
 
 ### Layout rules
 
-- Place the route-facing page at the feature root: `src/features/<feature-name>/<Feature>Page.tsx` — never in `components/`.
-- Place supporting UI in `components/` — not route-facing pages.
+- Place the route-facing page in `components/`: `src/features/<feature-name>/components/<Feature>Page.tsx`.
+- Place other supporting UI in the same `components/` folder.
 - Place hooks in `hooks/` — including Zustand stores (`use<Feature>Store.ts`).
 - Start shared types in `types.ts`; move to `types/<domain>.ts` or a `types/` folder when the file grows.
 - Start shared pure helpers in `utils.ts` (formatters, getters, mappers). Split into `utils/<actionName>.ts` when the file exceeds **~200 lines** or helpers are easier to find by name.
@@ -97,7 +97,7 @@ Some teams categorize features based on product language (e.g. "billing", "onboa
 ### Isolated feature barrel
 
 ```ts
-export { WorkshopListPage } from "./WorkshopListPage";
+export { WorkshopListPage } from "./components/WorkshopListPage";
 export { useWorkshops } from "./hooks/useWorkshops";
 export type { Workshop } from "./types";
 ```
@@ -107,7 +107,7 @@ export type { Workshop } from "./types";
 Exports a page plus related components and helpers — not every feature needs a primary page:
 
 ```ts
-export { WorkshopListPage } from "./WorkshopListPage";
+export { WorkshopListPage } from "./components/WorkshopListPage";
 export { WorkshopToolbar } from "./components/WorkshopToolbar";
 export { buildWorkshopSearch } from "./search/buildWorkshopSearch";
 export type { WorkshopSearchParams } from "./search/types";

@@ -22,6 +22,7 @@ Start from [creating-component.md](./creating-component.md). For module barrels 
 
 ### What belongs here
 
+- Route-facing pages (`*Page.tsx`) — see [creating-screen-component.md](./creating-screen-component.md).
 - UI blocks tied to product rules or feature state.
 - Event handlers and side effects specific to the feature.
 - Composition of `@/ui/*` primitives and other feature components.
@@ -29,7 +30,6 @@ Start from [creating-component.md](./creating-component.md). For module barrels 
 
 ### What does not belong here
 
-- Route-facing pages (`*Page.tsx`) → feature root per [creating-screen-component.md](./creating-screen-component.md), not `components/`.
 - Reusable presentation-only primitives → [creating-ui-component.md](./creating-ui-component.md).
 - Route layer files → `src/routes/` per [creating-route-component.md](./creating-route-component.md).
 - HTTP clients and request functions → `src/api/` per [creating-api.md](./creating-api.md).

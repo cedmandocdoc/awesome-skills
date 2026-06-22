@@ -14,15 +14,15 @@ Start from [creating-component.md](./creating-component.md). For feature module 
 
 ## Placement
 
-Route-facing page files **always** live at the feature root — never under `components/`:
+Route-facing page files **always** live under the feature's `components/` folder:
 
 ```text
-src/features/<feature-name>/<Feature>Page.tsx
+src/features/<feature-name>/components/<Feature>Page.tsx
 ```
 
-Examples: `src/features/workshop-list/WorkshopListPage.tsx`, `src/features/settings/SettingsPage.tsx`.
+Examples: `src/features/workshop-list/components/WorkshopListPage.tsx`, `src/features/settings/components/SettingsPage.tsx`.
 
-Shared layout wrappers exported from a feature (`AuthLayout`, `AppLayout`) also live at the feature root: `src/features/<feature-name>/<Feature>Layout.tsx`.
+Shared layout wrappers exported from a feature (`AuthLayout`, `AppLayout`) also live in `components/`: `src/features/<feature-name>/components/<Feature>Layout.tsx`.
 
 ## Naming
 
@@ -33,7 +33,7 @@ Shared layout wrappers exported from a feature (`AuthLayout`, `AppLayout`) also 
 
 ### Page responsibilities
 
-- Compose feature components from `components/` and `@/ui/*` primitives for the route's UI.
+- Compose sibling feature components and `@/ui/*` primitives for the route's UI.
 - Read path or search params via TanStack Router hooks when needed.
 - Wire TanStack Query hooks, mutations, and feature stores for this flow.
 - Keep `src/routes/` files thin — import and render the feature export.
@@ -46,18 +46,17 @@ Shared layout wrappers exported from a feature (`AuthLayout`, `AppLayout`) also 
 
 ### Size and structure
 
-- Keep pages focused; extract sub-trees to [creating-feature-component.md](./creating-feature-component.md) when the file grows.
-- Supporting UI blocks belong in `src/features/<feature-name>/components/`, not beside the page file.
+- Keep pages focused; extract sub-trees to sibling feature components in the same `components/` folder when the file grows.
 
 ## Examples
 
 ### Feature page composed by a route
 
-`src/features/workshop-list/WorkshopListPage.tsx`:
+`src/features/workshop-list/components/WorkshopListPage.tsx`:
 
 ```tsx
-import { useWorkshops } from "./hooks/useWorkshops";
-import { WorkshopListItem } from "./components/WorkshopListItem";
+import { useWorkshops } from "../hooks/useWorkshops";
+import { WorkshopListItem } from "./WorkshopListItem";
 
 export function WorkshopListPage() {
   const workshops = useWorkshops();
@@ -78,7 +77,7 @@ export function WorkshopListPage() {
 `src/features/workshop-list/index.ts`:
 
 ```ts
-export { WorkshopListPage } from "./WorkshopListPage";
+export { WorkshopListPage } from "./components/WorkshopListPage";
 export { useWorkshops } from "./hooks/useWorkshops";
 ```
 
