@@ -12,11 +12,22 @@ Start from [creating-component.md](./creating-component.md). For feature module 
 - [creating-feature-component.md](./creating-feature-component.md) — smaller blocks inside the page
 - [creating-route-component.md](./creating-route-component.md) — register pages and wire navigation components in `src/routes/`
 
+## Placement
+
+Route-facing page files **always** live at the feature root — never under `components/`:
+
+```text
+src/features/<feature-name>/<Feature>Page.tsx
+```
+
+Examples: `src/features/workshop-list/WorkshopListPage.tsx`, `src/features/settings/SettingsPage.tsx`.
+
+Shared layout wrappers exported from a feature (`AuthLayout`, `AppLayout`) also live at the feature root: `src/features/<feature-name>/<Feature>Layout.tsx`.
+
 ## Naming
 
 - Use the **`Page`** suffix for components rendered as a route destination: `WorkshopListPage`, `SettingsPage`.
 - Use **`Layout`** for structural wrappers shared across routes when exported from a feature: `AuthLayout`, `AppLayout`.
-- Page files live at the **feature root**: `src/features/<feature-name>/<Feature>Page.tsx`.
 
 ## Guidelines
 

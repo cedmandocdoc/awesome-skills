@@ -21,7 +21,7 @@ Start here for **any** component work. This guide routes you to the right deep-d
 
 | Kind | Location |
 | --- | --- |
-| Screen / page component | `src/features/<feature-name>/*Page.tsx` |
+| Screen / page component | `src/features/<feature-name>/*Page.tsx` (feature root — not `components/`) |
 | Feature components | `src/features/<feature-name>/components/` |
 | Navigation components | `src/features/navigation/components/` |
 | Navigation hooks | `src/features/navigation/hooks/` |
@@ -68,6 +68,7 @@ When reuse grows, re-run the decision tree:
 - **Navigation components reused across routes** → move to `src/features/navigation/` per [creating-navigation-component.md](./creating-navigation-component.md).
 - **Domain behavior used across routes** → extract to a new feature module per [creating-feature.md](./creating-feature.md).
 - **Still tied to one route flow** → keep in the current feature.
+- **Page in `components/`** → move to feature root (`src/features/<feature>/*Page.tsx`) per [creating-screen-component.md](./creating-screen-component.md).
 
 Update folder placement **and** the feature barrel export contract when moving code.
 

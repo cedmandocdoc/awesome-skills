@@ -8,6 +8,10 @@ version: 1.0.0
 
 Opinionated ecosystem for building React Native apps with a consistent architecture, library stack, and UI system.
 
+## Feature layout
+
+Route-facing screens live at the **feature root** (`src/features/<feature>/<Feature>Screen.tsx`), not in `components/`. Supporting domain UI goes in `src/features/<feature>/components/`. See [creating-screen-component](./references/creating-screen-component.md).
+
 ## Tech stack
 
 | Layer               | Choice                                               |

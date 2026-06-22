@@ -29,6 +29,7 @@ Start from [creating-component.md](./creating-component.md). For module barrels 
 
 ### What does not belong here
 
+- Route-facing screens (`*Screen.tsx`) → feature root per [creating-screen-component.md](./creating-screen-component.md), not `components/`.
 - Reusable presentation-only primitives → [creating-ui-component.md](./creating-ui-component.md).
 - Route registration → `src/routes/` per [creating-route-component.md](./creating-route-component.md).
 - HTTP clients and request functions → `src/api/` per [creating-api.md](./creating-api.md).

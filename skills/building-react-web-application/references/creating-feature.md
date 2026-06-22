@@ -28,8 +28,8 @@ src/features/<feature-name>/
 
 ### Layout rules
 
-- Place the route-facing page at the feature root (`<Feature>Page.tsx`).
-- Place supporting UI in `components/`.
+- Place the route-facing page at the feature root: `src/features/<feature-name>/<Feature>Page.tsx` — never in `components/`.
+- Place supporting UI in `components/` — not route-facing pages.
 - Place hooks in `hooks/` — including Zustand stores (`use<Feature>Store.ts`).
 - Start shared types in `types.ts`; move to `types/<domain>.ts` or a `types/` folder when the file grows.
 - Start shared pure helpers in `utils.ts` (formatters, getters, mappers). Split into `utils/<actionName>.ts` when the file exceeds **~200 lines** or helpers are easier to find by name.

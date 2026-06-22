@@ -8,6 +8,10 @@ version: 1.0.0
 
 Opinionated ecosystem for building Vite-based React SPAs with a consistent architecture, library stack, and UI system (`src/ui`).
 
+## Feature layout
+
+Route-facing pages live at the **feature root** (`src/features/<feature>/<Feature>Page.tsx`), not in `components/`. Supporting domain UI goes in `src/features/<feature>/components/`. See [creating-screen-component](./references/creating-screen-component.md).
+
 ## Tech stack
 
 | Layer               | Choice                                                                         |

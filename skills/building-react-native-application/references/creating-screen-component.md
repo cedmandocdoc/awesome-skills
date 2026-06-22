@@ -12,11 +12,22 @@ Start from [creating-component.md](./creating-component.md). For feature module 
 - [creating-feature-component.md](./creating-feature-component.md) — smaller blocks inside the screen
 - [creating-route-component.md](./creating-route-component.md) — static `screens` registration and navigation component wiring
 
+## Placement
+
+Route-facing screen files **always** live at the feature root — never under `components/`:
+
+```text
+src/features/<feature-name>/<Feature>Screen.tsx
+```
+
+Examples: `src/features/workshop-list/WorkshopListScreen.tsx`, `src/features/settings/SettingsScreen.tsx`.
+
+Shared layout wrappers exported from a feature (`AuthLayout`, `MainLayout`) also live at the feature root: `src/features/<feature-name>/<Feature>Layout.tsx`.
+
 ## Naming
 
 - Use the **`Screen`** suffix for components rendered as a route destination: `WorkshopListScreen`, `SettingsScreen`.
 - Use **`Layout`** for structural wrappers shared across route entries when exported from a feature: `AuthLayout`, `MainLayout`.
-- Screen files live at the **feature root**: `src/features/<feature-name>/<Feature>Screen.tsx`.
 
 ## Guidelines
 

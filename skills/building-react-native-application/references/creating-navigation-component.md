@@ -62,7 +62,7 @@ src/features/navigation/
 | Shared header / tab bar / drawer UI | `src/features/navigation/components/` |
 | Navigation-related hooks | `src/features/navigation/hooks/` |
 | Generic presentation-only primitives | `src/ui/` when not navigation-specific |
-| Screen body | `src/features/<feature-name>/*Screen.tsx` |
+| Screen body | `src/features/<feature-name>/*Screen.tsx` (feature root) |
 
 Promote a component to `src/ui/` only when it is reused outside navigation and carries no route-specific wiring.
 

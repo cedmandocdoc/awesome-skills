@@ -8,7 +8,7 @@ Each route entry configures a **screen and/or navigation**:
 
 | Configures | Source | Guide |
 | --- | --- | --- |
-| Screen / page UI | `src/features/<feature-name>/*Page.tsx` | [creating-screen-component.md](./creating-screen-component.md) |
+| Screen / page UI | `src/features/<feature-name>/*Page.tsx` (feature root) | [creating-screen-component.md](./creating-screen-component.md) |
 | Layout navigation components (header, tab bar, drawer, shell) | `src/features/navigation/` | [creating-navigation-component.md](./creating-navigation-component.md) |
 
 Keep route files thin — URL structure, layouts, loaders, and wiring only. Domain UI stays in features.
