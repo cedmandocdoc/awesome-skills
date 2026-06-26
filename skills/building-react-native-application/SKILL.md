@@ -1,35 +1,34 @@
 ---
 name: building-react-native-application
-description: Guides building Expo/React Native apps with TypeScript using a consistent architecture and library stack (NativeWind, React Navigation, TanStack Query, Zustand, Axios). Use for all React Native application work.
+description: Guides building Expo/React Native apps with TypeScript using a consistent architecture and library stack (NativeWind, React Navigation static config, TanStack Query, Zustand, Axios, React Native Reusables-style primitives in src/ui). Use when creating a new React Native app or updating architecture, UI, state, API, navigation, or styling to follow these conventions.
 version: 1.0.0
 ---
 
-# React Native
+# React Native application
 
-Opinionated ecosystem for building React Native apps with a consistent architecture, library stack, and UI system.
+Opinionated ecosystem for building Expo/React Native apps with a consistent architecture, library stack, and UI system (`src/ui`).
 
-## Feature layout
+## Agent workflow
 
-Route-facing screens live in `src/features/<feature>/components/<Feature>Screen.tsx`. All feature UI — screens and supporting blocks — shares the same `components/` folder. See [creating-screen-component](./references/creating-screen-component.md).
+1. **Pick an entry** — use [Entry points](#entry-points) below.
+2. **Classify the task** — match every applicable row in **Task types** (many tasks span multiple rows).
+3. **Component work** — when the task involves any component, open [creating-component](./references/creating-component.md) and follow its decision tree.
+4. **Read before coding** — open every linked doc from matched task rows and from the decision tree.
 
-## Tech stack
+## Entry points
 
-| Layer               | Choice                                               |
-| ------------------- | ---------------------------------------------------- |
-| Runtime             | Expo                                                 |
-| Language            | TypeScript                                           |
-| Styling             | NativeWind, Tailwind CSS, class-variance-authority   |
-| Routing             | React Navigation                                     |
-| Server state        | TanStack Query                                       |
-| Client global state | Zustand                                              |
-| HTTP                | Axios                                                |
-| Presentational UI   | React Native Reusables-style primitives in `src/ui/` |
+Four ways into this skill. Use the first row that matches; combine rows when the task spans types (e.g. new screen + form).
 
-## When to use
+| Entry | When | Go to |
+| --- | --- | --- |
+| Component | Building, moving, or recategorizing any component | [creating-component](./references/creating-component.md) |
+| Structure | Folder roles, dependency flow, or where a module belongs | [managing-project-structure](./references/managing-project-structure.md) |
+| Task bundle | API, forms, styling, bootstrap, navigation hooks, keyboard, fonts, splash | **Task types** table |
+| Lookup | You know the doc name or need a single reference | **Reference index** |
 
-Follow this skill for every task that touches this project's React Native (Expo) app: features, screens, navigation, APIs, state, styling, forms, async and list UI, bottom sheets, config, theming, layout, and tooling choices for the app.
+## Task types
 
-Match the work to every **Task type** that applies — many tasks span multiple rows (e.g. new screen + form). Open every link in the **Docs** column from each matching row before coding.
+Match every row that applies. Open every link in the **Docs** column from each matching row before coding.
 
 | Task type                           | Docs                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -44,8 +43,59 @@ Match the work to every **Task type** that applies — many tasks span multiple 
 | Refactor / move component           | [creating-component](./references/creating-component.md)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | Styling / theme                     | [styling](./references/styling.md), [styling-preference](./references/styling-preference.md), [setting-up-theming](./references/setting-up-theming.md), [setting-up-tailwind-theme](./references/setting-up-tailwind-theme.md), [setting-up-navigation-theme](./references/setting-up-navigation-theme.md), [overriding-classname](./references/overriding-classname.md), [NativeWind — Installation](https://www.nativewind.dev/docs/getting-started/installation)                                                                                                                                                                                             |
 | Navigation components & backgrounds | [creating-navigation-component](./references/creating-navigation-component.md), [setting-up-navigation-theme](./references/setting-up-navigation-theme.md), [reusing-navigation-background](./references/reusing-navigation-background.md), [managing-screen-background](./references/managing-screen-background.md), [React Navigation — Hello (static)](https://reactnavigation.org/docs/hello-react-navigation.md?config=static), [Native stack](https://reactnavigation.org/docs/native-stack-navigator.md), [Bottom tabs](https://reactnavigation.org/docs/native-bottom-tab-navigator.md), [Drawer](https://reactnavigation.org/docs/drawer-navigator.md) |
+| Navigation hooks                    | [creating-route-component](./references/creating-route-component.md), [creating-navigation-component](./references/creating-navigation-component.md), [React Navigation — TypeScript](https://reactnavigation.org/docs/typescript.md)                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | Keyboard                            | [Keyboard controller — Components](https://kirillzyusko.github.io/react-native-keyboard-controller/docs/guides/components-overview.md)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 | Fonts                               | [Expo — Fonts](https://docs.expo.dev/develop/user-interface/fonts/index.md), [setting-up-theming](./references/setting-up-theming.md), [setting-up-tailwind-theme](./references/setting-up-tailwind-theme.md)                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | Splash screen                       | [Expo — SplashScreen](https://docs.expo.dev/versions/latest/sdk/splash-screen.md)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 | Project bootstrap                   | [managing-project-structure](./references/managing-project-structure.md), [managing-environment](./references/managing-environment.md), [linting](./references/linting.md), [setting-up-registry-components](./references/setting-up-registry-components.md), [NativeWind — Installation](https://www.nativewind.dev/docs/getting-started/installation)                                                                                                                                                                                                                                                                                                         |
 | Routing only                        | [creating-route-component](./references/creating-route-component.md), [creating-navigation-component](./references/creating-navigation-component.md), [React Navigation — Hello (static)](https://reactnavigation.org/docs/hello-react-navigation.md?config=static), [Native stack](https://reactnavigation.org/docs/native-stack-navigator.md), [Bottom tabs](https://reactnavigation.org/docs/native-bottom-tab-navigator.md), [Drawer](https://reactnavigation.org/docs/drawer-navigator.md)                                                                                                                                                                 |
+
+## Reference index
+
+Catalog of every local reference. **Entry** marks hub docs. **Layer** groups docs by concern. Use **Task types** for curated bundles.
+
+| Reference | Entry | Layer | Purpose |
+| --- | --- | --- | --- |
+| [creating-api](./references/creating-api.md) | | API | HTTP modules under `src/api/` |
+| [creating-async-component](./references/creating-async-component.md) | | Component | Loading, error, and list UI wrappers |
+| [creating-bottom-sheet-component](./references/creating-bottom-sheet-component.md) | | Component | Bottom sheet UI in `src/ui/BottomSheet/` |
+| [creating-component](./references/creating-component.md) | Component | Component | Decision tree for any component work |
+| [creating-feature](./references/creating-feature.md) | | Feature | Feature module folders and barrels |
+| [creating-feature-component](./references/creating-feature-component.md) | | Component | Domain UI blocks in features |
+| [creating-form-component](./references/creating-form-component.md) | | Form | Form fields and form shells |
+| [creating-navigation-component](./references/creating-navigation-component.md) | | Route | Reusable headers, tab bars, drawer content |
+| [creating-route-component](./references/creating-route-component.md) | | Route | `[Name][NavigatorType]` modules in `src/routes/` — typed `useNavigation` |
+| [creating-screen-component](./references/creating-screen-component.md) | | Feature | Route-facing `*Screen` in `src/features/<feature>/components/` |
+| [creating-ui-component](./references/creating-ui-component.md) | | Component | Shared primitives in `src/ui/` |
+| [linting](./references/linting.md) | | Setup | ESLint and Prettier setup |
+| [managing-api-error](./references/managing-api-error.md) | | API | API error handling patterns |
+| [managing-environment](./references/managing-environment.md) | | Setup | Feature `env.ts` and env vars |
+| [managing-form-error](./references/managing-form-error.md) | | Form | Form validation and error display |
+| [managing-project-structure](./references/managing-project-structure.md) | Structure | Architecture | Folder layout and dependency flow |
+| [managing-screen-background](./references/managing-screen-background.md) | | Route | Screen background handling |
+| [managing-state](./references/managing-state.md) | | State | TanStack Query hooks and Zustand stores |
+| [managing-stepper-form](./references/managing-stepper-form.md) | | Form | Multi-step form UI |
+| [managing-stepper-hook](./references/managing-stepper-hook.md) | | Form | Multi-step form state hook |
+| [managing-wrapper-components](./references/managing-wrapper-components.md) | | Component | Wrapper and composition patterns |
+| [overriding-classname](./references/overriding-classname.md) | | Styling | `className` override rules |
+| [reusing-navigation-background](./references/reusing-navigation-background.md) | | Route | Shared navigation backgrounds |
+| [setting-up-axios](./references/setting-up-axios.md) | | API | Axios client setup |
+| [setting-up-navigation-theme](./references/setting-up-navigation-theme.md) | | Styling | React Navigation theme objects |
+| [setting-up-registry-components](./references/setting-up-registry-components.md) | | Setup | Registry / `src/ui/` bootstrap |
+| [setting-up-theming](./references/setting-up-theming.md) | | Styling | Design tokens and theme CSS |
+| [setting-up-tailwind-theme](./references/setting-up-tailwind-theme.md) | | Styling | Tailwind / NativeWind theme config |
+| [styling](./references/styling.md) | | Styling | Styling conventions |
+| [styling-preference](./references/styling-preference.md) | | Styling | Styling preferences and defaults |
+
+## Tech stack
+
+| Layer               | Choice                                               |
+| ------------------- | ---------------------------------------------------- |
+| Runtime             | Expo                                                 |
+| Language            | TypeScript                                           |
+| Styling             | NativeWind, Tailwind CSS, class-variance-authority   |
+| Routing             | React Navigation (static config, `src/routes`)       |
+| Server state        | TanStack Query                                       |
+| Client global state | Zustand                                              |
+| HTTP                | Axios                                                |
+| Presentational UI   | React Native Reusables-style primitives in `src/ui/` |
