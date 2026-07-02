@@ -12,6 +12,16 @@ b2e4f6a8-3c1d-5e7f-9a2b-4d6e8f0c1a3b
 
 Every `<tasks-root>/index.md` must include this value in frontmatter `author`. Search the repository for that field to locate the tasks root — do not infer the root from `plan.md`, `status.md`, or numbered task folders alone.
 
+## Subagent signature
+
+Static UUID identifying subagents owned by this skill:
+
+```text
+a7c9e1f3-5b2d-7e9f-1a3c-5d7e9f1b3a5c
+```
+
+Managed subagents (`task-triager`, `task-implementer`) must include frontmatter `author` (this UUID) and `generated_by: managing-tasks`. Provision, IDE paths, and launch rules: [subagent-provisioning.md](./subagent-provisioning.md).
+
 ## Output layout
 
 Only this skill may establish a tasks root. The root is always marked by `<tasks-root>/index.md`.

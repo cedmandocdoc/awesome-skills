@@ -1,6 +1,6 @@
 ---
 name: managing-tasks
-description: Manages structured task folders (plan.md, status.md) for cross-session agent handoff. Creates, executes, checks, triages, updates, blocks, verifies, archives, reopens, skips, or cancels tasks. Use when the user works with tasks/NNN-slug folders or asks about task status, blockers, readiness, or lifecycle.
+description: Manages structured task folders (plan.md, status.md) for cross-session agent handoff. Creates, executes, executes multiple (plan then implement backlog), checks, triages, updates, blocks, verifies, archives, reopens, skips, or cancels tasks. Use when the user works with tasks/NNN-slug folders or asks about task status, blockers, readiness, or lifecycle.
 ---
 
 # Managing Tasks
@@ -23,8 +23,9 @@ Follow this skill for every task-lifecycle action under `<tasks-root>/NNN-slug/`
 | --- | --- | --- |
 | Create | "Create a task: …", "Plan … as a task", "new task" | [creating-task.md](references/creating-task.md) |
 | Execute | "Continue `tasks/001-…`", "Resume the dark mode task", "implement next step" | [executing-task.md](references/executing-task.md) |
-| Check | "Status of `tasks/003-…`", "list all tasks", "what's next?" | [checking-task.md](references/checking-task.md) |
-| Triage | "What can I start?", "Which tasks are ready?", "What's unblocked?" | [triaging-tasks.md](references/triaging-tasks.md) |
+| Execute multiple | "Finish all tasks", "run the backlog", "implement until no task available", @-mention tasks root with no folder | [executing-multiple-tasks.md](references/executing-multiple-tasks.md) |
+| Check | "Status of `tasks/003-…`", "list all tasks", "what's next on this task?" | [checking-task.md](references/checking-task.md) |
+| Triage | "What can I start?", "Which tasks are ready?", "What's unblocked?", "roadmap for tasks" | [triaging-tasks.md](references/triaging-tasks.md) |
 | Update | "Update task scope", "add a phase to `tasks/003-…`", "replan" | [updating-task.md](references/updating-task.md) |
 | Block | "Block this task", "waiting on design review" | [blocking-task.md](references/blocking-task.md) |
 | Unblock | "Unblock `tasks/002-…`", "dependency resolved" | [unblocking-task.md](references/unblocking-task.md) |
@@ -42,9 +43,11 @@ Load this skill when intent matches any row, whether the user @-mentions the ski
 | --- | --- |
 | [task-contract.md](references/task-contract.md) | Tasks root `index.md` marker, author UUID, layout, frontmatter, finding tasks, resolving domain references |
 | [creating-task.md](references/creating-task.md) | New task folder, plan + initial status; **no application code** |
-| [executing-task.md](references/executing-task.md) | Run `next_step_id`, implement, update status before stopping |
+| [executing-task.md](references/executing-task.md) | Run `next_step_id` for one task folder, implement, update status before stopping |
+| [executing-multiple-tasks.md](references/executing-multiple-tasks.md) | Backlog loop — plan execution series once → implement in order (subagents or inline) |
 | [checking-task.md](references/checking-task.md) | Read-only status report for one task or all tasks |
-| [triaging-tasks.md](references/triaging-tasks.md) | Read-only triage — which tasks can start now vs need deps, assets, design, or plan input |
+| [triaging-tasks.md](references/triaging-tasks.md) | Read-only triage — readiness report or ordered execution roadmap |
+| [subagent-provisioning.md](references/subagent-provisioning.md) | Find, validate, or create `task-triager` and `task-implementer` per IDE |
 | [updating-task.md](references/updating-task.md) | Amend `plan.md` and sync `status.md` when scope changes |
 | [blocking-task.md](references/blocking-task.md) | Mark task blocked with reason; freeze execution pointer |
 | [unblocking-task.md](references/unblocking-task.md) | Clear blocker; restore `In Progress` |
@@ -59,6 +62,8 @@ Load this skill when intent matches any row, whether the user @-mentions the ski
 - [`assets/index.md`](assets/index.md)
 - [`assets/plan.md`](assets/plan.md)
 - [`assets/status.md`](assets/status.md)
+- [`assets/agents/task-triager.md`](assets/agents/task-triager.md)
+- [`assets/agents/task-implementer.md`](assets/agents/task-implementer.md)
 
 ## Examples
 
@@ -71,3 +76,5 @@ Load this skill when intent matches any row, whether the user @-mentions the ski
 **Check:** User asks "what's the status of the dark mode task?". Follow [checking-task.md](references/checking-task.md) → read `status.md` → report without mutating files.
 
 **Triage:** User asks "what can I work on?". Follow [triaging-tasks.md](references/triaging-tasks.md) → scan all tasks → split into startable now vs not ready with blocker type and unblock action.
+
+**Execute multiple:** User says "finish all tasks". Follow [executing-multiple-tasks.md](references/executing-multiple-tasks.md) → provision subagents per [subagent-provisioning.md](references/subagent-provisioning.md) → delegate to `task-triager` for the plan, then `task-implementer` for each planned task until cap or exit.
