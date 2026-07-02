@@ -1,0 +1,4 @@
+interface:
+  display_name: "Cloudflare Web Deployment"
+  short_description: "Deploy static web apps to Cloudflare via Workers Builds and GitHub integration"
+  default_prompt: "Use $deploying-cloudflare-web-application when deploying a web app to Cloudflare, configuring wrangler.toml for static assets, connecting a GitHub repo to Workers Builds, or discovering build command and output path for Cloudflare deployment."

@@ -1,0 +1,70 @@
+# Supabase dashboard — GitHub integration
+
+Connect the repository in **Project Settings → Integrations → GitHub**.
+
+On each push or merge to the production branch (with **Deploy to production** enabled), Supabase:
+
+1. Applies pending migrations from `migrations/`
+2. Deploys Edge Functions declared in `config.toml`
+3. Deploys storage buckets declared in `config.toml`
+
+No local `supabase link` is required. The first merge to the production branch syncs a new remote project.
+
+## Setup steps
+
+1. Open the **remote** Supabase project in the dashboard.
+2. Go to **Project Settings → Integrations → GitHub**.
+3. Click **Authorize GitHub** and approve the Supabase GitHub app.
+4. Select the **Git repository**.
+5. Set **Working directory** to the discovered Supabase root path (see [application-readiness.md](application-readiness.md)).
+6. Set **Production branch** (e.g. `main`).
+7. Enable **Deploy to production**.
+8. Click **Enable integration** (or save).
+
+## Settings reference
+
+| Setting | Required | Notes |
+| --- | --- | --- |
+| Git repository | Yes | User selects repo |
+| Working directory | Yes | Repo-relative path to Supabase root |
+| Production branch | Yes | Branch that triggers production deploy |
+| Deploy to production | Yes | Must be enabled for auto-deploy on merge |
+| Automatic branching | No | Pro plan — preview DB per Git branch |
+| Supabase changes only | No | Only create branches when Supabase files change |
+
+## Recommended follow-ups
+
+| Action | Why |
+| --- | --- |
+| Required check on production branch | Block merges when migration checks fail (GitHub repo settings) |
+| Deploy failure notifications | Supabase branch email notifications in integration settings |
+
+## Working directory examples
+
+| Repository layout | Working directory |
+| --- | --- |
+| `supabase/config.toml` at root | `.` |
+| `apps/api/config.toml` | `apps/api` |
+| `packages/backend/supabase/config.toml` | `packages/backend` |
+
+## Ongoing releases
+
+1. Merge backend changes to the production branch.
+2. Confirm deploy succeeded in the Supabase dashboard or GitHub checks.
+3. Run smoke tests if schema or function behavior changed.
+
+Day-to-day releases do **not** require `supabase db push` or `supabase functions deploy` from a developer machine.
+
+## Troubleshooting
+
+| Symptom | Likely cause | Action |
+| --- | --- | --- |
+| Deploy fails on merge | Invalid migration or function config | Check integration logs; fix migration; re-merge |
+| Functions not updated | Function not declared in `config.toml` | Add `[functions.<name>]` and merge again |
+| Wrong project updated | Wrong repo or working directory | Verify integration settings |
+| Migrations not picked up | Incorrect working directory | Confirm path points at folder with `migrations/` |
+
+## Official docs
+
+- [GitHub integration](https://supabase.com/docs/guides/deployment/branching/github-integration)
+- [Deployment overview](https://supabase.com/docs/guides/deployment)
