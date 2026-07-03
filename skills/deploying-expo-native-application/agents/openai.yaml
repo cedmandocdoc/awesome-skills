@@ -1,0 +1,4 @@
+interface:
+  display_name: "Expo Native Deployment Setup"
+  short_description: "Prepare Expo iOS/Android apps for EAS Build — eas.json, environments, and release readiness"
+  default_prompt: "Use $deploying-expo-native-application when preparing an Expo native app for EAS Build, configuring eas.json profiles and EAS secrets, linking an Expo project, or validating release readiness before the first preview or production build. Use expo-deployment for build, submit, and store operations."
