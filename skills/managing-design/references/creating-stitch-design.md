@@ -1,14 +1,28 @@
-# Creating Stitch design.md
+# Creating Stitch Design
+
+## Overview
 
 **Authoring mode.** Apply when generating or updating `design.md` for Google Stitch from a style guide.
-
 Produces a [DESIGN.md](https://stitch.withgoogle.com/docs/design-md/specification.md) file: YAML front matter (normative tokens) plus markdown body (rationale and usage). Structure from [`../assets/design.md`](../assets/design.md).
-
 **Input:** A complete style guide — either produced by [creating-style-guide.md](creating-style-guide.md) or read from an existing file that follows [`../assets/style-guide.md`](../assets/style-guide.md).
-
 **Delivery:** Write `design.md` to disk (default for Stitch handoff). Do not paste the full body in chat unless the user asks.
 
-## When to use
+**Input:** A complete style guide — either produced by [creating-style-guide.md](./creating-style-guide.md) or read from an existing file that follows [`../assets/style-guide.md`](../assets/style-guide.md).
+
+**Delivery:** Write `design.md` to disk (default for Stitch handoff). Paste the full body in chat only when the user asks.
+
+## Prerequisites
+
+1. **Complete style guide** — all nine sections filled with concrete values (from [creating-style-guide.md](creating-style-guide.md) or an existing file).
+2. **Product name** — for YAML `name` and document title.
+3. **Component inventory** (optional) — from UI specs; enriches `## Components` and YAML `components:`.
+
+If the style guide is missing or thin, run [creating-style-guide.md](creating-style-guide.md) first (or its gap-filling flow via [creating-stitch-prompts.md](creating-stitch-prompts.md)).
+
+
+## Guidelines
+
+### When to use
 
 - User asks for `design.md` for Google Stitch
 - [creating-stitch-prompts.md](creating-stitch-prompts.md) needs visual tokens for a handoff
@@ -16,7 +30,7 @@ Produces a [DESIGN.md](https://stitch.withgoogle.com/docs/design-md/specificatio
 
 Do **not** use this recipe for standalone style guides in chat — use [creating-style-guide.md](creating-style-guide.md) instead.
 
-## Relationship to style guide
+### Relationship to style guide
 
 The style guide is the **authoring format** (internal, shadcn-oriented tokens, nine fixed sections). `design.md` is the **Stitch handoff format** (official spec, YAML + eight canonical sections).
 
@@ -34,15 +48,7 @@ The style guide is the **authoring format** (internal, shadcn-oriented tokens, n
 
 [creating-style-guide.md](creating-style-guide.md) is unchanged — it still owns token conventions, parsing foreign guides, and the nine-section output contract.
 
-## Prerequisites
-
-1. **Complete style guide** — all nine sections filled with concrete values (from [creating-style-guide.md](creating-style-guide.md) or an existing file).
-2. **Product name** — for YAML `name` and document title.
-3. **Component inventory** (optional) — from UI specs; enriches `## Components` and YAML `components:`.
-
-If the style guide is missing or thin, run [creating-style-guide.md](creating-style-guide.md) first (or its gap-filling flow via [creating-stitch-prompts.md](creating-stitch-prompts.md)).
-
-## Official spec compliance
+### Official spec compliance
 
 Follow the [DESIGN.md format specification](https://stitch.withgoogle.com/docs/design-md/specification.md):
 
@@ -59,7 +65,7 @@ Optional validation after write:
 npx @google/design.md lint design.md
 ```
 
-## Workflow
+### Workflow
 
 1. **Obtain style guide** — generate via [creating-style-guide.md](creating-style-guide.md) or read existing file at agreed path.
 2. **Parse sections** — extract tables and prose from all nine style guide sections.
@@ -69,7 +75,7 @@ npx @google/design.md lint design.md
 6. **Write file** — save as `design.md` at agreed path.
 7. **Summarize in chat** — path, one-line summary, unmapped tokens, lint result if run.
 
-## Token mapping
+### Token mapping
 
 ### YAML metadata
 
@@ -165,7 +171,7 @@ The official YAML schema has no `elevation` group. Put shadow values from §7 in
 
 No YAML group required. Summarize §9 breakpoint table and adaptation rules under `## Layout`.
 
-## Prose sections
+### Prose sections
 
 Write human-readable rationale in each `##` section. Follow spec examples:
 
@@ -178,7 +184,7 @@ Write human-readable rationale in each `##` section. Follow spec examples:
 - **Components** — atom guidance; reference YAML component keys.
 - **Do's and Don'ts** — guardrails from §1 Do/Don't plus token discipline rules.
 
-## Output contract
+### Output contract
 
 The file must include:
 
@@ -187,7 +193,7 @@ The file must include:
 3. No duplicate `##` headings.
 4. Concrete values — no `[...]` placeholders in final output.
 
-## Filling rules
+### Filling rules
 
 1. **Style guide is source** — do not invent tokens absent from the style guide unless filling a required YAML key with a documented default.
 2. **Preserve values** — hex/oklch from §2 pass through unchanged.
@@ -195,14 +201,14 @@ The file must include:
 4. **Light-first YAML** — dark mode documented in prose when both modes exist.
 5. **Components before handoff** — ensure `button-primary`, `input-default`, and `card-default` at minimum.
 
-## Output format
+### Output format
 
 1. **Path** — repo-relative path to `design.md`.
 2. **Summary** — product name, token counts, any normalized mappings.
 3. **Gaps** — unmapped style guide tokens, missing component variants, lint warnings.
 4. **Lint** — note if `@google/design.md lint` was run and result.
 
-## Follow-up updates
+### Follow-up updates
 
 When the user revises visual tokens:
 

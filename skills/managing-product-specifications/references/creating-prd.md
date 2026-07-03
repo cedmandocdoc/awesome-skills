@@ -1,14 +1,22 @@
-# Creating a PRD
+# Creating PRD
 
-**Docs only.** Writes `<docs-root>/prd.md`. Do not create companion specs unless the user explicitly asks.
+## Overview
 
-## 1. Resolve docs root
+**Docs only.** Writes `<docs-root>/prd.md`. Stop without creating companion specs unless the user explicitly asks.
+
+## Prerequisites
+
+Per [spec-contract.md](./spec-contract.md) → **Resolve docs root**, **Finding docs root**, and **Initialize docs root** when no `index.md` marker exists.
+
+## Guidelines
+
+### 1. Resolve docs root
 
 Per [spec-contract.md](./spec-contract.md) → **Resolve docs root**, **Finding docs root**, and **Initialize docs root** when no `index.md` marker exists.
 
 If `prd.md` already exists → stop; direct the user to [updating-prd.md](./updating-prd.md) unless they confirm overwrite.
 
-## 2. Gather context
+### 2. Gather context
 
 | Source | What to extract |
 | --- | --- |
@@ -18,11 +26,11 @@ If `prd.md` already exists → stop; direct the user to [updating-prd.md](./upda
 
 Ask **at most one** clarifying question if product scope or audience is ambiguous.
 
-## 3. Choose tier
+### 3. Choose tier
 
 Per [spec-contract.md](./spec-contract.md) → **Tier**. Default: **standard**.
 
-## 4. Write `prd.md`
+### 4. Write `prd.md`
 
 Use [`../assets/prd.md`](../assets/prd.md). Required:
 
@@ -33,7 +41,7 @@ Use [`../assets/prd.md`](../assets/prd.md). Required:
 
 Do not invent metrics, personas, or features unsupported by user input.
 
-## 5. Confirm to the user
+### 5. Confirm to the user
 
 Reply with:
 
@@ -43,3 +51,7 @@ Reply with:
 - Suggested next docs (e.g. `ui-specs.md` for visual language, `trd-web.md` for web baseline, first FRD) — **do not create them**
 
 **Stop without implementing** application code.
+
+## Examples
+
+**Create PRD (new repo):** No `index.md` found → ask user for an empty folder (e.g. `docs/`) → write `docs/index.md` then `docs/prd.md` → suggest `ui-specs.md` or first FRD; stop without auto-creating them.

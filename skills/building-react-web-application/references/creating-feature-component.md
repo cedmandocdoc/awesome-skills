@@ -11,13 +11,6 @@ Start from [creating-component.md](./creating-component.md). For module barrels 
 - [creating-component.md](./creating-component.md) — placement and shared rules
 - [creating-ui-component.md](./creating-ui-component.md) — when you need a missing shared primitive first
 
-## Naming
-
-- Use **`<Feature><Entity><Type>`** when the component carries domain meaning: `AuthLoginForm`, `CartItemRow`, `OrderSummaryCard`.
-- Prefix with the feature when the name only makes sense in that product area: `CheckoutButton`, `SearchInput`.
-- Group related parts with a shared prefix: `CartItem`, `CartItemImage`, `CartItemPrice`, `CartItemQuantity`.
-- Suffixes: `Card`, `Item` / `Row`, `Form`, `Modal` / `Dialog` — pick one list pattern and stay consistent.
-
 ## Guidelines
 
 ### What belongs here
@@ -43,6 +36,13 @@ Start from [creating-component.md](./creating-component.md). For module barrels 
 ### Extraction heuristic
 
 When building a route view, split recurring rendering blocks into named feature components if they clarify the tree and stay under **200 lines**. If a block is presentation-only and reused across features, promote it to `src/ui/` instead.
+
+### Naming
+
+- Use **`<Feature><Entity><Type>`** when the component carries domain meaning: `AuthLoginForm`, `CartItemRow`, `OrderSummaryCard`.
+- Prefix with the feature when the name only makes sense in that product area: `CheckoutButton`, `SearchInput`.
+- Group related parts with a shared prefix: `CartItem`, `CartItemImage`, `CartItemPrice`, `CartItemQuantity`.
+- Suffixes: `Card`, `Item` / `Row`, `Form`, `Modal` / `Dialog` — pick one list pattern and stay consistent.
 
 ## Examples
 

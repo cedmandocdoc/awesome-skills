@@ -1,0 +1,4 @@
+interface:
+  display_name: "Managing Tasks"
+  short_description: "Create, execute, triage, and manage task folders with plan.md and status.md"
+  default_prompt: "Use $managing-tasks when the user works with tasks/NNN-slug folders or asks about task status, blockers, readiness, or lifecycle."

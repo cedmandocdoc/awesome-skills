@@ -8,7 +8,7 @@ Shell setup for `src/ui/` registry primitives: Lucide, NativeWind `inlineRem`, r
 
 - [setting-up-theming.md](./setting-up-theming.md)
 
-## Steps
+## Guidelines
 
 ### Install Lucide Icons
 

@@ -1,8 +1,16 @@
-# Checking a task
+# Checking Task
 
-**Read-only.** Report status without changing artifacts or implementing work.
+## Overview
 
-## 1. Resolve scope
+**Read-only.** Reports task status for one folder or all tasks without mutating files.
+
+## Prerequisites
+
+Per [task-contract.md](./task-contract.md) → **Resolve tasks root**.
+
+## Guidelines
+
+### 1. Resolve scope
 
 Determine what the user wants:
 
@@ -17,7 +25,7 @@ For a single task, resolve `<task-folder>` from the user's message under `<tasks
 
 For all tasks, discover every task folder under `<tasks-root>/` per **Finding existing tasks**.
 
-## 2. Read artifacts
+### 2. Read artifacts
 
 **Single task:**
 
@@ -30,7 +38,7 @@ For all tasks, discover every task folder under `<tasks-root>/` per **Finding ex
 
 Do **not** modify any files.
 
-## 3. Build the report
+### 3. Build the report
 
 **Single task — include:**
 
@@ -48,6 +56,10 @@ Do **not** modify any files.
 
 Sort by task id. Group or filter by status when the user asks (e.g. "blocked tasks only").
 
-## 4. Confirm to the user
+### 4. Confirm to the user
 
 Reply with the report. Do not advance the execution pointer, check off steps, or write application code unless the user switches intent (e.g. "continue this task" → [executing-task.md](./executing-task.md)).
+
+## Examples
+
+**Check:** User asks "what's the status of the dark mode task?". Read `status.md` → report without mutating files.

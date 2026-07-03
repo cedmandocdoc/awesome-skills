@@ -8,7 +8,7 @@ Maps [setting-up-theming.md](./setting-up-theming.md) tokens into React Navigati
 
 - [setting-up-theming.md](./setting-up-theming.md)
 
-## Steps
+## Guidelines
 
 ### Create `src/theme.ts`
 

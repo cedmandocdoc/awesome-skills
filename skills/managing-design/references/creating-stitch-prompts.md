@@ -1,23 +1,24 @@
-# Creating Google Stitch prompts
+# Creating Stitch Prompts
+
+## Overview
 
 **Authoring mode.** Apply when generating or updating `design.md` and `prompt.md` for Google Stitch.
-
 Produces two markdown files the user feeds into Google Stitch:
-
 | File | Recipe | Purpose |
 | --- | --- | --- |
 | `design.md` | [creating-stitch-design.md](creating-stitch-design.md) | Official [DESIGN.md spec](https://stitch.withgoogle.com/docs/design-md/specification.md) — YAML tokens + canonical sections from [`design.md`](../assets/design.md) |
 | `prompt.md` | This recipe | Screen plan, component library, and numbered Stitch build order |
-
 **Prerequisites (required before generating):**
-
 1. **PRD or FRD** — scope, requirements, acceptance criteria, feature boundaries
 2. **User story** — roles, goals, behaviors, permissions
 3. **UI specs** — flows, screens, states, validation, edge cases, content, layout
-
 If any input is missing or too thin, **stop and gather information** before generating. Mark `[TBD]` for gaps — never fabricate flows, roles, copy, or visual tokens.
 
-## Gap-filling (when inputs are insufficient)
+Produces `design.md` ([creating-stitch-design.md](./creating-stitch-design.md)) and `prompt.md` (this recipe) for Google Stitch.
+
+## Guidelines
+
+### Gap-filling (when inputs are insufficient)
 
 Ask in this order. Wait for answers before proceeding to the next tier unless the user provides everything at once.
 
@@ -52,7 +53,7 @@ Ask when UI specs or style guide is missing or vague:
 
 Capture answers in notes. Visual decisions become a style guide via [creating-style-guide.md](creating-style-guide.md), then `design.md` via [creating-stitch-design.md](creating-stitch-design.md). Behavioral decisions go into `prompt.md`. List any remaining gaps as `[TBD]` in the delivery summary.
 
-## Delivery preference
+### Delivery preference
 
 **Ask before generating** (unless the user already specified).
 
@@ -73,7 +74,7 @@ On follow-up requests ("add checkout screen", "update color tokens"), **edit the
 - Do not wrap file bodies in chat code fences — nested markdown breaks inside fences.
 - In chat, return paths, summary, and gaps only — not the full file bodies. If the user insists on in-chat delivery, write the files anyway and say copying from the files is the reliable method.
 
-## Workflow
+### Workflow
 
 1. **Assess inputs** — prerequisites above; if insufficient, run gap-filling.
 2. **Confirm delivery** — agree on directory path and feature slug.
@@ -85,7 +86,7 @@ On follow-up requests ("add checkout screen", "update color tokens"), **edit the
 
 When `design.md` already exists and the user only asks for visual token updates, re-run [Generating visual tokens](#generating-visual-tokens) and [Generating `design.md`](#generating-designmd); sync `prompt.md` token references if needed.
 
-## Generating visual tokens
+### Generating visual tokens
 
 This step produces the **internal style guide** used as input to Stitch `design.md`. Invoke [creating-style-guide.md](creating-style-guide.md) — it does not know about Stitch.
 
@@ -94,7 +95,7 @@ This step produces the **internal style guide** used as input to Stitch `design.
 3. **Produce content** — follow that recipe's workflow; structure from [`style-guide.md`](../assets/style-guide.md).
 4. **Hold in memory or temp** — do not write `style-guide.md` to disk unless the user asks; this is intermediate content for the next step.
 
-## Generating `design.md`
+### Generating `design.md`
 
 Transform the style guide into official Stitch format via [creating-stitch-design.md](creating-stitch-design.md).
 
@@ -104,7 +105,7 @@ Transform the style guide into official Stitch format via [creating-stitch-desig
 4. **Write to disk** — save as `design.md` at the agreed path. Do **not** paste the full body in chat.
 5. **Summarize in chat** — paths, one-line summary, and gaps only.
 
-## File contracts
+### File contracts
 
 ### `design.md`
 
@@ -130,7 +131,7 @@ Generation prompt for Google Stitch. Fixed section order:
 
 Template: [`prompt.md`](../assets/prompt.md). Populate the header source hierarchy from the template — do not restate it elsewhere in the file.
 
-## Filling rules
+### Filling rules
 
 ### `design.md`
 
@@ -145,7 +146,7 @@ Follow all filling rules in [creating-stitch-design.md](creating-stitch-design.m
 5. **Stitch Generation Plan** — numbered steps covering every component category and every screen/state variant from inputs, in build order.
 6. **Be specific** — use hierarchical component names (`Input/Text/Error`, `Button/Primary/Hover`) derived from specs.
 
-## Extraction checklist
+### Extraction checklist
 
 Before filling templates, confirm you have:
 
@@ -183,12 +184,12 @@ Before filling templates, confirm you have:
 | Breakpoints | §9 Breakpoints & Responsive Behavior | `## Layout` (breakpoints subsection) |
 | Component atoms | UI specs component inventory | YAML `components:`, `## Components` |
 
-## Authoring rules
+### Authoring rules
 
 - **User story drives role coverage** — every role with distinct behavior gets explicit screen/view coverage.
 - **Production intent** — named components, full variant coverage, role-aware views.
 
-## Output format
+### Output format
 
 Return to the user in chat per **File and chat delivery** in Delivery preference:
 
@@ -197,7 +198,7 @@ Return to the user in chat per **File and chat delivery** in Delivery preference
 3. **Gaps** — any detail marked TBD or missing from inputs.
 4. **Copy instruction** — tell the user to open both files and use them with Google Stitch (`design.md` as visual reference; `prompt.md` as generation prompt).
 
-## Follow-up updates
+### Follow-up updates
 
 When the user revises either file:
 
@@ -207,3 +208,13 @@ When the user revises either file:
 4. Overwrite the same files unless the user asks for a new path or versioned copy.
 
 Do not write to Google Stitch directly; this recipe only produces the markdown files.
+
+## Examples
+
+**Style guide:** User asks for design tokens and visual direction. Follow [creating-style-guide.md](./creating-style-guide.md) → normalize any foreign guide to canonical tokens → output copiable markdown in chat (or write a file if asked).
+
+**design.md only:** User has a style guide and wants Stitch format. Follow [creating-stitch-design.md](./creating-stitch-design.md) → parse style guide → write `design.md` with YAML tokens and spec-compliant sections.
+
+**Create handoff:** User shares PRD, user story, and UI specs and asks for a Google Stitch handoff. Style guide → `design.md` → `prompt.md` → write both to `stitch/<feature-slug>/`.
+
+**Update:** User says "add mobile variant to the settings screen in prompt." Read existing files at agreed path → apply changes → overwrite same files.

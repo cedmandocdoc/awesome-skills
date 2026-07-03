@@ -37,15 +37,7 @@ Use this guide to build **multi-step forms** in React Native with **Stepperize +
 - Render step fields using `stepper.flow.switch(...)` and compose inputs via **`form.AppField`** + pre-bound **`field.*`** components.
 - Render completion state with `stepper.flow.is("done")` (or your final step id).
 
-## Setup
-
-Install dependencies in the app project:
-
-```bash
-npm install @stepperize/react @tanstack/react-form zod
-```
-
-## Example
+### Example
 
 ```tsx
 import { Pressable, Text, View } from "react-native";
@@ -142,6 +134,14 @@ export function CheckoutStepFormScreen() {
     </form.AppForm>
   );
 }
+```
+
+## Setup
+
+Install dependencies in the app project:
+
+```bash
+npm install @stepperize/react @tanstack/react-form zod
 ```
 
 ## Related

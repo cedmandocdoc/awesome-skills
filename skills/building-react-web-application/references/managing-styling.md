@@ -1,4 +1,4 @@
-# Styling
+# Managing Styling
 
 ## Overview
 

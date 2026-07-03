@@ -1,0 +1,4 @@
+interface:
+  display_name: "Managing Design"
+  short_description: "Create style guides and Google Stitch design.md and prompt.md handoffs"
+  default_prompt: "Use $managing-design when the user wants a style guide, design.md, prompt.md, design tokens, Stitch prompt, Google Stitch handoff, or UI-spec-to-Stitch workflow."

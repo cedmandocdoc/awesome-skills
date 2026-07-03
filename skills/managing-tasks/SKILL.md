@@ -1,23 +1,26 @@
 ---
 name: managing-tasks
 description: Manages structured task folders (plan.md, status.md) for cross-session agent handoff. Creates, executes, executes multiple (plan then implement backlog), checks, triages, updates, blocks, verifies, archives, reopens, skips, or cancels tasks. Use when the user works with tasks/NNN-slug folders or asks about task status, blockers, readiness, or lifecycle.
+version: 1.0.0
 ---
 
 # Managing Tasks
+
+## Overview
 
 Skill collection for durable, handoff-ready task work on disk. Works in any environment where the agent can read and write repository files.
 
 **Contract:** [`references/task-contract.md`](references/task-contract.md) — tasks root `index.md` marker, author UUID, layout, frontmatter, status fields, skill discovery.
 
-**Rule:** Read exactly **one** recipe below for the user's intent. Do not load other recipe files unless the user switches intent mid-session.
-
-## When to use
+## Agent workflow
 
 Follow this skill for every task-lifecycle action under `<tasks-root>/NNN-slug/`: planning, executing, checking status, amending scope, blocking, verifying, archiving, reopening, skipping, or cancelling.
 
 **Tasks root:** Located only via `<tasks-root>/index.md` with the static **Author signature** UUID in frontmatter. If none exists, **ask the user** for an empty folder path, then initialize with `index.md` before any task folder. See [task-contract.md](references/task-contract.md) → **Resolve tasks root**.
 
-## Task recipes
+Match one **Recipes** row; open exactly that reference.
+
+### Recipes
 
 | Intent | Example phrasing | Read |
 | --- | --- | --- |
@@ -35,14 +38,16 @@ Follow this skill for every task-lifecycle action under `<tasks-root>/NNN-slug/`
 | Skip | "Skip this step", "defer `step-2`", "skip and move on" | [skipping-step.md](references/skipping-step.md) |
 | Cancel | "Cancel task", "abandon `tasks/005-…`", "stop this task" | [cancelling-task.md](references/cancelling-task.md) |
 
-Load this skill when intent matches any row, whether the user @-mentions the skill or describes the work in natural language.
-
 ## Reference index
+
+### Contract
+
+[task-contract.md](references/task-contract.md) — layout, frontmatter, resolve rules.
 
 | Doc | When to use |
 | --- | --- |
 | [task-contract.md](references/task-contract.md) | Tasks root `index.md` marker, author UUID, layout, frontmatter, finding tasks, resolving domain references |
-| [creating-task.md](references/creating-task.md) | New task folder, plan + initial status; **no application code** |
+| [creating-task.md](references/creating-task.md) | New task folder, plan + initial status; planning only |
 | [executing-task.md](references/executing-task.md) | Run `next_step_id` for one task folder, implement, update status before stopping |
 | [executing-multiple-tasks.md](references/executing-multiple-tasks.md) | Backlog loop — plan execution series once → implement in order (subagents or inline) |
 | [checking-task.md](references/checking-task.md) | Read-only status report for one task or all tasks |
@@ -64,17 +69,3 @@ Load this skill when intent matches any row, whether the user @-mentions the ski
 - [`assets/status.md`](assets/status.md)
 - [`assets/agents/task-triager.md`](assets/agents/task-triager.md)
 - [`assets/agents/task-implementer.md`](assets/agents/task-implementer.md)
-
-## Examples
-
-**Create (new repo):** No `index.md` found → ask user for an empty folder (e.g. `tasks/`) → write `tasks/index.md` then `tasks/001-dark-mode-toggle/plan.md` + `status.md` → suggest _"Continue `tasks/001-dark-mode-toggle`"_.
-
-**Execute:** User says continue `tasks/001-dark-mode-toggle`. Follow [executing-task.md](references/executing-task.md) → read `status.md` first → run `next_step_id`.
-
-**Update:** User adds a phase to an in-progress task. Follow [updating-task.md](references/updating-task.md) → bump `plan_revision` → sync step queue.
-
-**Check:** User asks "what's the status of the dark mode task?". Follow [checking-task.md](references/checking-task.md) → read `status.md` → report without mutating files.
-
-**Triage:** User asks "what can I work on?". Follow [triaging-tasks.md](references/triaging-tasks.md) → scan all tasks → split into startable now vs not ready with blocker type and unblock action.
-
-**Execute multiple:** User says "finish all tasks". Follow [executing-multiple-tasks.md](references/executing-multiple-tasks.md) → provision subagents per [subagent-provisioning.md](references/subagent-provisioning.md) → delegate to `task-triager` for the plan, then `task-implementer` for each planned task until cap or exit.

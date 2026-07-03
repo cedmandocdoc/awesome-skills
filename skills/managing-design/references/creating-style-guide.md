@@ -1,27 +1,12 @@
-# Creating a style guide
+# Creating Style Guide
+
+## Overview
 
 **Authoring mode.** Apply when the user needs a complete visual styling guide — theme, color, typography, spacing, grid, alignment, depth, roundness, and breakpoints.
 
 Produces markdown per [output contract](#output-contract) using [`../assets/style-guide.md`](../assets/style-guide.md).
 
 **Delivery:** Copiable markdown in chat (default). Write a file only when the user asks for a path.
-
-## When to use
-
-- User asks for a style guide, design tokens, or visual language document
-- User wants to standardize naming before specs or implementation
-
-## Convention selection
-
-**Before generating**, determine inputs and normalize to the canonical token system below.
-
-| Situation | Action |
-| --- | --- |
-| User provides a custom or foreign style guide | **Parse and normalize** — map values onto canonical token names in [Color](#color-token-convention-shadcn), [Typography](#typography-token-convention), and [Layout](#layout-token-convention) conventions. Record original names in the delivery summary if useful. |
-| User names another framework (Material, Tailwind palette) as the **target** output | Map framework roles onto the same canonical structure; use framework names only when the user explicitly requires them as-is. |
-| No existing system | Use all defaults in the convention sections below. |
-
-Read the convention sections before filling the template.
 
 ## Prerequisites
 
@@ -34,7 +19,27 @@ Gather or confirm:
 
 If inputs are thin, ask briefly then proceed with convention defaults and note any `[TBD]` values in the delivery summary. Do not invent brand colors without user input unless they explicitly accept defaults.
 
-## Parsing custom style guides
+
+## Guidelines
+
+### When to use
+
+- User asks for a style guide, design tokens, or visual language document
+- User wants to standardize naming before specs or implementation
+
+### Convention selection
+
+**Before generating**, determine inputs and normalize to the canonical token system below.
+
+| Situation | Action |
+| --- | --- |
+| User provides a custom or foreign style guide | **Parse and normalize** — map values onto canonical token names in [Color](#color-token-convention-shadcn), [Typography](#typography-token-convention), and [Layout](#layout-token-convention) conventions. Record original names in the delivery summary if useful. |
+| User names another framework (Material, Tailwind palette) as the **target** output | Map framework roles onto the same canonical structure; use framework names only when the user explicitly requires them as-is. |
+| No existing system | Use all defaults in the convention sections below. |
+
+Read the convention sections before filling the template.
+
+### Parsing custom style guides
 
 When the user supplies an existing guide (markdown, Figma tokens, CSS variables, Tailwind config, etc.):
 
@@ -46,7 +51,7 @@ When the user supplies an existing guide (markdown, Figma tokens, CSS variables,
 6. **Fill template** — every section in [`style-guide.md`](../assets/style-guide.md); no skipped sections.
 7. **Flag unmapped values** — list in delivery summary as `[TBD]` or propose new tokens following the same naming patterns.
 
-## Workflow
+### Workflow
 
 1. **Detect existing system** — search user inputs, repo, and linked docs.
 2. **Parse and normalize** — if a foreign guide exists, run [Parsing custom style guides](#parsing-custom-style-guides).
@@ -55,7 +60,7 @@ When the user supplies an existing guide (markdown, Figma tokens, CSS variables,
 5. **Draft per output contract** — fill every row and bullet in [`style-guide.md`](../assets/style-guide.md) with concrete values.
 6. **Deliver** — see [Output format](#output-format).
 
-## Color token convention (shadcn)
+### Color token convention (shadcn)
 
 Default color naming. Based on [shadcn theming](https://ui.shadcn.com/docs/theming.md).
 
@@ -99,7 +104,7 @@ Use the full set unless the project explicitly omits tokens (e.g. no sidebar). S
 
 When the user supplies brand hex values, map them onto these semantic roles and record hex (or converted oklch) in the color table.
 
-## Typography token convention
+### Typography token convention
 
 ### Token categories
 
@@ -149,7 +154,7 @@ When the user supplies brand hex values, map them onto these semantic roles and 
 | Caption / metadata | `text-label-xs` | `font-body` | `font-body` |
 | Wordmark | `text-heading-lg` or custom | `font-body` | `font-brand` |
 
-## Layout token convention
+### Layout token convention
 
 ### Spacing (`space-*`)
 
@@ -204,7 +209,7 @@ Focus ring: 2px outline using `ring` color token, 2px offset (§7 other depth tr
 
 Adaptation rules and touch/pointer guidance go in §9 per template.
 
-## Output contract
+### Output contract
 
 The markdown must include **all nine sections** from [`style-guide.md`](../assets/style-guide.md) in fixed order:
 
@@ -228,7 +233,7 @@ The markdown must include **all nine sections** from [`style-guide.md`](../asset
 - Color values: hex or oklch (consistent within one document)
 - Typography sizes: px; line heights: % or unitless ratio
 
-## Filling rules
+### Filling rules
 
 1. **Normalize foreign names** — map custom guides onto canonical tokens unless the user explicitly requires foreign names preserved.
 2. **Light and dark pairs** — every surface token needs both mode values when dark mode applies.
@@ -236,7 +241,7 @@ The markdown must include **all nine sections** from [`style-guide.md`](../asset
 4. **Derive from inputs** — brand values from the user; structural token names from conventions.
 5. **No duplicate naming** — one canonical name per token.
 
-## Output format
+### Output format
 
 1. **Summary** — convention used and any normalized mappings from a foreign guide
 2. **Copiable markdown** — full document in a single markdown code fence
@@ -244,6 +249,6 @@ The markdown must include **all nine sections** from [`style-guide.md`](../asset
 
 Do **not** write a file unless the user explicitly asks for one.
 
-## Follow-up updates
+### Follow-up updates
 
 When the user revises tokens, output updated markdown using the same [output contract](#output-contract).

@@ -1,8 +1,12 @@
-# Discovering Supabase root
+# Discovering Supabase Root
 
-Verify the repository has a deployable Supabase app and locate the working directory before connecting GitHub integration.
+## Overview
 
-## Required layout
+Locate the Supabase project root, validate `config.toml` and migrations, and confirm the dashboard working directory before GitHub integration.
+
+## Guidelines
+
+### Required layout
 
 Minimum structure at the Supabase project root:
 
@@ -17,7 +21,7 @@ Minimum structure at the Supabase project root:
 
 Optional but common: `seed.sql`, `package.json` with Supabase CLI scripts, `functions/deno.json`.
 
-## Discover the Supabase root
+### Discover the Supabase root
 
 Search the repository for `config.toml` files that include Supabase sections (`[api]`, `[db]`, `[functions.*]`, etc.).
 
@@ -33,7 +37,7 @@ When the standard layout uses a nested `supabase/` subfolder (e.g. `apps/web/sup
 
 If multiple `config.toml` candidates exist, ask the user which app deploys to the target remote project.
 
-## config.toml checks
+### config.toml checks
 
 Before connect:
 
@@ -44,7 +48,7 @@ Before connect:
 
 Undeclared functions and buckets are **not** deployed by GitHub integration.
 
-## Local validation
+### Local validation
 
 From the Supabase root:
 
@@ -56,7 +60,7 @@ supabase db lint
 
 Prefer `db reset --local` when seeds must be exercised; use `supabase migration up --local` for faster incremental checks.
 
-### Edge Functions (if present)
+#### Edge Functions (if present)
 
 ```bash
 # Example — adapt to project scripts
@@ -66,7 +70,7 @@ deno test --config functions/deno.json functions/
 
 Many monorepos wrap these in `package.json` scripts (e.g. `functions:check`, `functions:test`).
 
-## Pre-merge checklist
+### Pre-merge checklist
 
 Copy when preparing a release:
 
@@ -79,7 +83,7 @@ Copy when preparing a release:
 - [ ] Secrets and auth config noted for manual dashboard setup (if needed)
 ```
 
-## What stays manual
+### What stays manual
 
 GitHub integration does not replace dashboard configuration for:
 

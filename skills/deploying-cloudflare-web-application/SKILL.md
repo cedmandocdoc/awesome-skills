@@ -6,71 +6,67 @@ version: 1.0.0
 
 # Deploying a web application to Cloudflare
 
+## Overview
+
 Deploy static web apps using **Cloudflare Workers Builds**: connect GitHub in the dashboard, run a build command on push, then `npx wrangler deploy`. No separate deploy pipeline in the repository is required.
 
 ## Agent workflow
 
-Run these steps **in order** before generating or editing deployment files.
+Run these steps **in order** before generating or editing deployment files. Works wherever the agent can read and write repository files.
 
-### 1. Discovery (required)
+### Steps
 
-Gather facts from the repository and user. **Do not guess** when multiple apps or ambiguous build setups exist — ask the user.
+1. **Discovery (required)** — Gather facts from the repository and user. Ask the user when multiple apps or ambiguous build setups exist.
 
-| Question | How to resolve | If unclear |
-| --- | --- | --- |
-| **Which app deploys?** | Scan `package.json` files, workspace config (`pnpm-workspace.yaml`, `turbo.json`, `nx.json`), and existing `wrangler.toml` | List candidates; ask user to pick one |
-| **Build command** | `package.json` `scripts.build` (or framework-specific: `export`, `generate`, etc.) | Ask user |
-| **Build output path** | Framework config (`vite.config` `outDir`, `next.config` `distDir`/`output`, `angular.json` `outputPath`), or run a local build once | Ask user |
-| **SPA with client-side routing?** | React Router, Vue Router, TanStack Router, Expo web, etc. | Default to SPA mode unless the app is fully static HTML |
-| **Build-time env vars** | `VITE_*`, `NEXT_PUBLIC_*`, `EXPO_PUBLIC_*`, `PUBLIC_*`, or docs in the app | List required vars; user sets them in Cloudflare dashboard |
-| **Monorepo root directory** | Path where `wrangler.toml` lives and where the build command should run | Repo root vs package subdirectory |
+   | Question | How to resolve | If unclear |
+   | --- | --- | --- |
+   | **Which app deploys?** | Scan `package.json` files, workspace config (`pnpm-workspace.yaml`, `turbo.json`, `nx.json`), and existing `wrangler.toml` | List candidates; ask user to pick one |
+   | **Build command** | `package.json` `scripts.build` (or framework-specific: `export`, `generate`, etc.) | Ask user |
+   | **Build output path** | Framework config (`vite.config` `outDir`, `next.config` `distDir`/`output`, `angular.json` `outputPath`), or run a local build once | Ask user |
+   | **SPA with client-side routing?** | React Router, Vue Router, TanStack Router, Expo web, etc. | Default to SPA mode unless the app is fully static HTML |
+   | **Build-time env vars** | `VITE_*`, `NEXT_PUBLIC_*`, `EXPO_PUBLIC_*`, `PUBLIC_*`, or docs in the app | List required vars; user sets them in Cloudflare dashboard |
+   | **Monorepo root directory** | Path where `wrangler.toml` lives and where the build command should run | Repo root vs package subdirectory |
 
-Full discovery heuristics: [discovering-application.md](references/discovering-application.md).
+   Full discovery heuristics: [discovering-application.md](references/discovering-application.md).
 
-### 2. Validate locally (recommended)
+2. **Validate locally (recommended)** — Before committing deployment config, confirm the build produces files in the expected output directory:
 
-Before committing deployment config, confirm the build produces files in the expected output directory:
+   ```bash
+   # From the chosen root directory (repo root or package path)
+   <build-command>
+   ls <output-directory>
+   ```
 
-```bash
-# From the chosen root directory (repo root or package path)
-<build-command>
-ls <output-directory>
-```
+3. **Generate or update repository files** — Minimum files to add or update:
 
-### 3. Generate or update repository files
+   1. **`wrangler.toml` or `wrangler.jsonc`** at the project root (see [configuring-wrangler.md](references/configuring-wrangler.md))
+   2. **`wrangler` in `package.json` devDependencies** (pin version for reproducible Workers Builds)
+   3. **Node version hint** (optional) — `engines` in `package.json` or `.nvmrc` if the build needs a specific Node version
 
-Minimum files to add or update:
+   Static-only SPA (no Worker script):
 
-1. **`wrangler.toml` or `wrangler.jsonc`** at the project root (see [configuring-wrangler.md](references/configuring-wrangler.md))
-2. **`wrangler` in `package.json` devDependencies** (pin version for reproducible Workers Builds)
-3. **Node version hint** (optional) — `engines` in `package.json` or `.nvmrc` if the build needs a specific Node version
+   ```toml
+   name = "<cloudflare-project-name>"
+   compatibility_date = "<YYYY-MM-DD>"
 
-Static-only SPA (no Worker script):
+   [assets]
+   directory = "./<output-directory>"
+   not_found_handling = "single-page-application"
+   ```
 
-```toml
-name = "<cloudflare-project-name>"
-compatibility_date = "<YYYY-MM-DD>"
+   `name` must match the Worker name in the Cloudflare dashboard.
 
-[assets]
-directory = "./<output-directory>"
-not_found_handling = "single-page-application"
-```
+4. **Document dashboard settings for the user** — The agent configures repo files; the user connects Git in **Workers & Pages → Worker → Settings → Builds**. Provide a filled-in table from [configuring-github-integration.md](references/configuring-github-integration.md).
 
-`name` must match the Worker name in the Cloudflare dashboard.
+5. **Post-deploy verification**
 
-### 4. Document dashboard settings for the user
+   - App loads on the assigned `*.workers.dev` URL or custom domain
+   - Deep links and browser refresh work on client-routed paths (if SPA)
+   - Build-time public env vars are present in the bundle (smoke one feature that depends on them)
 
-The agent configures repo files; the user connects Git in **Workers & Pages → Worker → Settings → Builds**. Provide a filled-in table from [configuring-github-integration.md](references/configuring-github-integration.md).
+   Troubleshooting: [troubleshooting-deployment.md](references/troubleshooting-deployment.md).
 
-### 5. Post-deploy verification
-
-- App loads on the assigned `*.workers.dev` URL or custom domain
-- Deep links and browser refresh work on client-routed paths (if SPA)
-- Build-time public env vars are present in the bundle (smoke one feature that depends on them)
-
-Troubleshooting: [troubleshooting-deployment.md](references/troubleshooting-deployment.md).
-
-## Decision tree
+### Decision tree
 
 ```
 Deploy web app to Cloudflare?
@@ -83,23 +79,11 @@ Deploy web app to Cloudflare?
    └─ Set dashboard root directory to package path; install deps from repo root if needed
 ```
 
-## What this skill covers
+## Reference index
 
-| Topic | Reference |
+| Doc | When to use |
 | --- | --- |
-| Discovering app, build command, output path | [discovering-application.md](references/discovering-application.md) |
-| `wrangler.toml` / SPA routing / hybrid apps | [configuring-wrangler.md](references/configuring-wrangler.md) |
-| Dashboard Git integration settings | [configuring-github-integration.md](references/configuring-github-integration.md) |
-| Common failures | [troubleshooting-deployment.md](references/troubleshooting-deployment.md) |
-
-## Common build output paths (hints only)
-
-Use discovery to confirm — do not assume.
-
-| Tooling | Typical output | Typical build command |
-| --- | --- | --- |
-| Vite | `dist/` | `npm run build` |
-| Create React App | `build/` | `npm run build` |
-| Next.js (static export) | `out/` | `npm run build` |
-| Astro (static) | `dist/` | `npm run build` |
-| Expo web | `dist/` | `npx expo export -p web` |
+| [discovering-application.md](references/discovering-application.md) | Find deploy target, build command, output path, SPA mode, build-time env vars |
+| [configuring-wrangler.md](references/configuring-wrangler.md) | `wrangler.toml` / SPA routing / hybrid static + Worker apps |
+| [configuring-github-integration.md](references/configuring-github-integration.md) | Dashboard Git integration settings |
+| [troubleshooting-deployment.md](references/troubleshooting-deployment.md) | Build, deploy, and runtime failures |

@@ -1,12 +1,20 @@
-# Creating UI specs
+# Creating UI Specs
 
-**Docs only.** Writes product or feature UI specs: `ui-specs.md` or `ui-specs-<app>.md`.
+## Overview
 
-## 1. Resolve docs root
+**Docs only.** Writes product or feature UI specs.
+
+## Prerequisites
+
+Per [spec-contract.md](./spec-contract.md) → **Resolve docs root**, **Finding docs root**, and **Initialize docs root** when no `index.md` marker exists.
+
+## Guidelines
+
+### 1. Resolve docs root
 
 Per [spec-contract.md](./spec-contract.md) → **Resolve docs root**, **Finding docs root**, and **Initialize docs root** (if needed).
 
-## 2. Resolve target path
+### 2. Resolve target path
 
 Per [spec-contract.md](./spec-contract.md) → **Path resolution**.
 
@@ -19,7 +27,7 @@ Per [spec-contract.md](./spec-contract.md) → **Path resolution**.
 
 If file exists → [updating-ui-specs.md](./updating-ui-specs.md) unless overwrite confirmed.
 
-## 3. Read prerequisites
+### 3. Read prerequisites
 
 | Target | Read first |
 | --- | --- |
@@ -28,11 +36,11 @@ If file exists → [updating-ui-specs.md](./updating-ui-specs.md) unless overwri
 
 Product `ui-specs.md` = brand, tokens, visual direction. Feature `ui-specs-<app>.md` = screens and interactions. Inherit tokens; do not redefine without reason.
 
-## 4. Choose tier
+### 4. Choose tier
 
 Default: **standard**. Feature per-app docs include screen inventory at standard tier.
 
-## 5. Write UI specs
+### 5. Write UI specs
 
 Use [`../assets/ui-specs.md`](../assets/ui-specs.md). Required:
 
@@ -44,11 +52,11 @@ Use [`../assets/ui-specs.md`](../assets/ui-specs.md). Required:
 
 Do not invent flows or visuals unsupported by user story / FRD.
 
-## 6. Sync FRD hub
+### 6. Sync FRD hub
 
 If feature-scoped → update `frd.md` `related.ui_specs` or `ui_specs_by_app`.
 
-## 7. Confirm to the user
+### 7. Confirm to the user
 
 Reply with docs root path, file path, upstream docs read, suggested next docs (typically `trd-<app>.md` or Figma handoff if applicable).
 

@@ -1,30 +1,36 @@
-# Reviewing an FRD
+# Reviewing FRD
+
+## Overview
 
 **Review mode.** Read-only unless the user asks to apply edits.
 
-## When to apply
+## Prerequisites
 
-- Reviewing `features/<slug>/frd.md` before user stories, UI specs, or TRD work
-- Checking feature scope against PRD
+Authoring standards: [creating-frd.md](./creating-frd.md) and [spec-contract.md](./spec-contract.md).
 
-**Standards:** [creating-frd.md](./creating-frd.md) and [spec-contract.md](./spec-contract.md).
+## Guidelines
 
-## Workflow
+### When to apply
+
+- Reviewing `features/<slug>/frd.md` before implementation
+- Checking feature scope and hub links
+
+### Workflow
 
 1. Resolve docs root per [spec-contract.md](./spec-contract.md) → **Finding docs root**; then resolve feature `frd.md` under `<docs-root>`
 2. Read `prd.md` when linked
 3. Read sibling specs if the user asked for package review
 4. Run checklist; deliver output format
 
-## Checklist
+### Checklist
 
-### Frontmatter and hub
+#### Frontmatter and hub
 
 - `doc_type: frd`, `scope: feature`, `feature`, `apps`, `depends_on`, `related` present
 - **Related documents** matches files on disk or TBD consistently
 - `apps` matches PRD feature description
 
-### Content quality
+#### Content quality
 
 - **Functional requirements** are testable and prioritized
 - **Business rules** and **edge cases** cover failure modes
@@ -32,21 +38,23 @@
 - **Out of scope** prevents creep
 - **Dependencies** on other features or systems are explicit
 
-### Upstream / downstream
+#### Upstream / downstream
 
 - Feature fits PRD in-scope items (or documents intentional PRD drift)
 - Missing user story / UI / TRD siblings flagged when build-ready review requested
 
-## Output format
+## Examples
+
+### Report template
 
 ```markdown
-## Summary
+
+### Severity guidance
+
 [Readiness for downstream specs and main recommendation]
 
-## Strengths
 - [...]
 
-## Issues
 ### Must fix
 - [...]
 
@@ -56,6 +64,9 @@
 ### Consider
 - [...]
 
-## Suggested next steps
 [e.g. create user-story.md, resolve open dependency]
 ```
+
+## Related
+
+- [creating-frd.md]

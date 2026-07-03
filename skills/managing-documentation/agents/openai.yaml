@@ -1,0 +1,4 @@
+interface:
+  display_name: "Managing Documentation"
+  short_description: "Create and review Markdown, skills, rules, and AGENTS.md for clarity and structure"
+  default_prompt: "Use $managing-documentation when writing or editing .md files, reviewing doc PRs, authoring SKILL.md or rules, or when the user asks whether documentation is well written or needs improvement."

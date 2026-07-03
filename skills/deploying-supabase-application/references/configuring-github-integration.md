@@ -1,16 +1,12 @@
-# Configuring GitHub integration — Supabase dashboard
+# Configuring GitHub Integration
 
-Connect the repository in **Project Settings → Integrations → GitHub**.
+## Overview
 
-On each push or merge to the production branch (with **Deploy to production** enabled), Supabase:
+Dashboard settings after local validation passes.
 
-1. Applies pending migrations from `migrations/`
-2. Deploys Edge Functions declared in `config.toml`
-3. Deploys storage buckets declared in `config.toml`
+## Guidelines
 
-No local `supabase link` is required. The first merge to the production branch syncs a new remote project.
-
-## Setup steps
+### Setup steps
 
 1. Open the **remote** Supabase project in the dashboard.
 2. Go to **Project Settings → Integrations → GitHub**.
@@ -21,7 +17,7 @@ No local `supabase link` is required. The first merge to the production branch s
 7. Enable **Deploy to production**.
 8. Click **Enable integration** (or save).
 
-## Settings reference
+### Settings reference
 
 | Setting | Required | Notes |
 | --- | --- | --- |
@@ -32,14 +28,14 @@ No local `supabase link` is required. The first merge to the production branch s
 | Automatic branching | No | Pro plan — preview DB per Git branch |
 | Supabase changes only | No | Only create branches when Supabase files change |
 
-## Recommended follow-ups
+### Recommended follow-ups
 
 | Action | Why |
 | --- | --- |
 | Required check on production branch | Block merges when migration checks fail (GitHub repo settings) |
 | Deploy failure notifications | Supabase branch email notifications in integration settings |
 
-## Working directory examples
+### Working directory examples
 
 | Repository layout | Working directory |
 | --- | --- |
@@ -47,7 +43,7 @@ No local `supabase link` is required. The first merge to the production branch s
 | `apps/api/config.toml` | `apps/api` |
 | `packages/backend/supabase/config.toml` | `packages/backend` |
 
-## Ongoing releases
+### Ongoing releases
 
 1. Merge backend changes to the production branch.
 2. Confirm deploy succeeded in the Supabase dashboard or GitHub checks.
@@ -57,7 +53,7 @@ Day-to-day releases do **not** require `supabase db push` or `supabase functions
 
 Troubleshooting: [troubleshooting-deployment.md](troubleshooting-deployment.md).
 
-## Official docs
+### Official docs
 
 - [GitHub integration](https://supabase.com/docs/guides/deployment/branching/github-integration)
 - [Deployment overview](https://supabase.com/docs/guides/deployment)

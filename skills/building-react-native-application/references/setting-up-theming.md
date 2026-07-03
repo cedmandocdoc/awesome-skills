@@ -8,7 +8,7 @@ Shared design tokens and light/dark variables as the single source for NativeWin
 
 - [NativeWind — Installation](https://www.nativewind.dev/docs/getting-started/installation)
 
-## Steps
+## Guidelines
 
 ### Install component helpers
 

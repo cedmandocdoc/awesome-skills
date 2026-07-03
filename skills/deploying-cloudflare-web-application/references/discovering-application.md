@@ -1,14 +1,18 @@
-# Discovering application — target app, build command, output path
+# Discovering Application
+
+## Overview
 
 Run this before writing `wrangler.toml` or recommending dashboard settings.
 
-## 1. Find deployable applications
+## Guidelines
 
-### Single-package repo
+### 1. Find deployable applications
+
+#### Single-package repo
 
 One `package.json` at the root with a `build` (or equivalent) script → that package is the deploy target.
 
-### Monorepo
+#### Monorepo
 
 Check workspace manifests:
 
@@ -25,19 +29,19 @@ For each candidate package, open its `package.json` and note:
 
 **If more than one package has a web build script**, list them and ask the user which app to deploy. Do not pick arbitrarily.
 
-### Existing Cloudflare config
+#### Existing Cloudflare config
 
 Search for `wrangler.toml`, `wrangler.jsonc`, or `[assets]` / `pages_build_output_dir`. An existing config may already name the target app and output directory — verify it still matches the chosen package.
 
-## 2. Determine build command
+### 2. Determine build command
 
-### Preferred order
+#### Preferred order
 
 1. **User-stated command** — use as-is
 2. **`package.json` scripts** — `build` is the default; also check `export`, `generate`, `build:web`
 3. **Framework docs** — only when scripts are missing or wrappers are required (e.g. monorepo: install at root, build in package)
 
-### Monorepo build patterns
+#### Monorepo build patterns
 
 Build command often needs dependency install at the repo root:
 
@@ -58,9 +62,9 @@ Set the dashboard **root directory** to where `wrangler.toml` lives:
 
 **If no build script exists**, ask the user for the command. Do not invent one.
 
-## 3. Determine build output path
+### 3. Determine build output path
 
-### Preferred order
+#### Preferred order
 
 1. **User-stated path**
 2. **Framework config**
@@ -76,7 +80,7 @@ Set the dashboard **root directory** to where `wrangler.toml` lives:
 
 3. **Run build locally** and list the directory that contains `index.html` (or the app entry asset)
 
-### Path in `wrangler.toml`
+#### Path in `wrangler.toml`
 
 `assets.directory` is relative to the **Wrangler project root** (the dashboard root directory), not necessarily the git repo root.
 
@@ -89,7 +93,7 @@ Examples:
 
 **If output path is unclear**, ask the user.
 
-## 4. SPA vs static multi-page
+### 4. SPA vs static multi-page
 
 | Signal | Likely SPA |
 | --- | --- |
@@ -100,7 +104,7 @@ Examples:
 
 When unsure for a client-rendered app, prefer SPA handling — missing it causes 404 on refresh.
 
-## 5. Build-time environment variables
+### 5. Build-time environment variables
 
 Scan the app for public env prefixes baked in at build time:
 
@@ -111,7 +115,7 @@ Scan the app for public env prefixes baked in at build time:
 
 List required variables for the user to add under **Workers & Pages → Settings → Builds → Build variables**. These are not runtime Worker secrets unless the app also has a Worker script that reads `env.*`.
 
-## 6. Discovery checklist
+### 6. Discovery checklist
 
 Copy and fill before generating files:
 
@@ -125,3 +129,15 @@ Copy and fill before generating files:
 - [ ] Build-time env vars: <list or none>
 - [ ] Monorepo install step required: yes / no
 ```
+
+#### Common build output paths (hints only)
+
+Use discovery to confirm — do not assume.
+
+| Tooling | Typical output | Typical build command |
+| --- | --- | --- |
+| Vite | `dist/` | `npm run build` |
+| Create React App | `build/` | `npm run build` |
+| Next.js (static export) | `out/` | `npm run build` |
+| Astro (static) | `dist/` | `npm run build` |
+| Expo web | `dist/` | `npx expo export -p web` |

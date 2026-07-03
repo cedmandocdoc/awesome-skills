@@ -1,8 +1,12 @@
-# Task contract
+# Task Contract
 
-On-disk layout and field meanings shared by all `managing-tasks` workflows.
+## Overview
 
-## Author signature
+Shared layout and field meanings for all `managing-tasks` workflows.
+
+## Guidelines
+
+### Author signature
 
 Static UUID identifying tasks roots created by this skill:
 
@@ -12,7 +16,7 @@ b2e4f6a8-3c1d-5e7f-9a2b-4d6e8f0c1a3b
 
 Every `<tasks-root>/index.md` must include this value in frontmatter `author`. Search the repository for that field to locate the tasks root — do not infer the root from `plan.md`, `status.md`, or numbered task folders alone.
 
-## Subagent signature
+### Subagent signature
 
 Static UUID identifying subagents owned by this skill:
 
@@ -22,7 +26,7 @@ a7c9e1f3-5b2d-7e9f-1a3c-5d7e9f1b3a5c
 
 Managed subagents (`task-triager`, `task-implementer`) must include frontmatter `author` (this UUID) and `generated_by: managing-tasks`. Provision, IDE paths, and launch rules: [subagent-provisioning.md](./subagent-provisioning.md).
 
-## Output layout
+### Output layout
 
 Only this skill may establish a tasks root. The root is always marked by `<tasks-root>/index.md`.
 
@@ -38,7 +42,7 @@ Only this skill may establish a tasks root. The root is always marked by `<tasks
 
 Templates: [`../assets/plan.md`](../assets/plan.md), [`../assets/status.md`](../assets/status.md), [`../assets/index.md`](../assets/index.md) for new tasks roots.
 
-## Plan frontmatter
+### Plan frontmatter
 
 Every `plan.md` includes YAML frontmatter:
 
@@ -50,7 +54,7 @@ Every `plan.md` includes YAML frontmatter:
 | `plan_revision` | Integer; start at `1`, bump on each plan amend |
 | `todos` | Step queue: `id`, `content`, `status` (`pending` \| `completed` \| `skipped` \| `cancelled`) |
 
-## Resolve tasks root
+### Resolve tasks root
 
 1. Search per **Finding tasks root** below.
 2. **Decide location:**
@@ -60,7 +64,7 @@ Every `plan.md` includes YAML frontmatter:
 
 Do not create task folders outside the resolved root. Do not treat a folder as the tasks root unless it contains a valid `index.md` per **Finding tasks root**.
 
-## Finding tasks root
+### Finding tasks root
 
 Search the repository for `index.md` files whose YAML frontmatter contains **all** of:
 
@@ -74,7 +78,7 @@ The tasks root is the parent directory of each matching `index.md` (e.g. `tasks/
 
 After resolving the root, list and read task folders only under that directory.
 
-## Initialize tasks root
+### Initialize tasks root
 
 When **no** valid `index.md` exists and the user is creating a task:
 
@@ -88,13 +92,13 @@ When **no** valid `index.md` exists and the user is creating a task:
 
 Only this skill may create or replace `index.md`. If the user points at a non-empty folder without a valid `index.md`, do not write tasks there.
 
-## Finding existing tasks
+### Finding existing tasks
 
 After resolving the tasks root per **Finding tasks root**, search under `<tasks-root>/` and `<tasks-root>/archive/` for directories matching `[0-9][0-9][0-9]-*/` that contain `plan.md`.
 
 Treat `plan.md` as a task when frontmatter contains `generated_by: managing-tasks` **or** `generated_by: creating-tasks` (legacy).
 
-## Status fields
+### Status fields
 
 | Field | Values | Meaning |
 | --- | --- | --- |
@@ -105,14 +109,14 @@ Treat `plan.md` as a task when frontmatter contains `generated_by: managing-task
 | `cancel_reason` | text or `None` | Why the task was cancelled |
 | `handoff_note` | one sentence | What the next session should do first |
 
-## Step queue rules
+### Step queue rules
 
 - Check off steps when completed.
 - Skipped steps stay in the queue with a skip reason in the session log; set todo `status: skipped` in plan frontmatter.
 - Never uncheck a completed step unless the user explicitly replans and confirms.
 - `verify` is always the last step before `Done`.
 
-## Resolving domain references (execute / plan)
+### Resolving domain references (execute / plan)
 
 For each entry in `plan.md` → Context → **References**:
 
@@ -123,7 +127,7 @@ For each entry in `plan.md` → Context → **References**:
 
 `<skill-dir>` is the folder containing that skill's `SKILL.md`. If missing under `references/`, use the link in that skill's `SKILL.md` index.
 
-## Discovering project skills
+### Discovering project skills
 
 Each skill is `<skill-name>/SKILL.md` with optional `references/`, `scripts/`, and `assets/` ([Agent Skills](https://agentskills.io)).
 

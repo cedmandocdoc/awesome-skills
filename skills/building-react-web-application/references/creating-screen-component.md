@@ -12,23 +12,6 @@ Start from [creating-component.md](./creating-component.md). For feature module 
 - [creating-feature-component.md](./creating-feature-component.md) — smaller blocks inside the page
 - [creating-route-component.md](./creating-route-component.md) — register pages and wire navigation components in `src/routes/`
 
-## Placement
-
-Route-facing page files **always** live under the feature's `components/` folder:
-
-```text
-src/features/<feature-name>/components/<Feature>Page.tsx
-```
-
-Examples: `src/features/workshop-list/components/WorkshopListPage.tsx`, `src/features/settings/components/SettingsPage.tsx`.
-
-Shared layout wrappers exported from a feature (`AuthLayout`, `AppLayout`) also live in `components/`: `src/features/<feature-name>/components/<Feature>Layout.tsx`.
-
-## Naming
-
-- Use the **`Page`** suffix for components rendered as a route destination: `WorkshopListPage`, `SettingsPage`.
-- Use **`Layout`** for structural wrappers shared across routes when exported from a feature: `AuthLayout`, `AppLayout`.
-
 ## Guidelines
 
 ### Page responsibilities
@@ -47,6 +30,23 @@ Shared layout wrappers exported from a feature (`AuthLayout`, `AppLayout`) also 
 ### Size and structure
 
 - Keep pages focused; extract sub-trees to sibling feature components in the same `components/` folder when the file grows.
+
+### Placement
+
+Route-facing page files **always** live under the feature's `components/` folder:
+
+```text
+src/features/<feature-name>/components/<Feature>Page.tsx
+```
+
+Examples: `src/features/workshop-list/components/WorkshopListPage.tsx`, `src/features/settings/components/SettingsPage.tsx`.
+
+Shared layout wrappers exported from a feature (`AuthLayout`, `AppLayout`) also live in `components/`: `src/features/<feature-name>/components/<Feature>Layout.tsx`.
+
+### Naming
+
+- Use the **`Page`** suffix for components rendered as a route destination: `WorkshopListPage`, `SettingsPage`.
+- Use **`Layout`** for structural wrappers shared across routes when exported from a feature: `AuthLayout`, `AppLayout`.
 
 ## Examples
 

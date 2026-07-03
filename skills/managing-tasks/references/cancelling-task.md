@@ -1,8 +1,16 @@
-# Cancelling a task
+# Cancelling Task
 
-Mark a task as abandoned. No further execution unless the user explicitly replans.
+## Overview
 
-## 1. Resolve task folder
+**Execution mode.** Marks task cancelled; optional archive.
+
+## Prerequisites
+
+Per [task-contract.md](./task-contract.md) → **Resolve tasks root**.
+
+## Guidelines
+
+### 1. Resolve task folder
 
 Per [task-contract.md](./task-contract.md) → **Resolve tasks root** and **Finding tasks root**.
 
@@ -10,15 +18,15 @@ Resolve `<task-folder>` from the user's message under `<tasks-root>/`. If unclea
 
 If already `Done` → confirm the user intends to cancel a completed task (unusual); otherwise stop.
 
-## 2. Confirm intent
+### 2. Confirm intent
 
 If the user's message is ambiguous (e.g. "stop working on this"), confirm cancellation vs pause. Cancellation is terminal for execution.
 
-## 3. Record cancel reason
+### 3. Record cancel reason
 
 Capture `cancel_reason` from the user or context (e.g. duplicate task, wrong approach, deprioritized).
 
-## 4. Update `status.md`
+### 4. Update `status.md`
 
 1. Set `overall_status`: `Cancelled`
 2. Set `next_step_id`: `none`
@@ -33,13 +41,13 @@ Capture `cancel_reason` from the user or context (e.g. duplicate task, wrong app
 - Set pending todos to `status: cancelled`
 - Leave completed and skipped todos unchanged
 
-## 5. Archive (optional)
+### 5. Archive (optional)
 
 If the user asks to archive or the tasks root uses `archive/`, follow [archiving-task.md](./archiving-task.md).
 
 Do not delete task folders unless the user explicitly requests deletion.
 
-## 6. Confirm to the user
+### 6. Confirm to the user
 
 Reply with:
 

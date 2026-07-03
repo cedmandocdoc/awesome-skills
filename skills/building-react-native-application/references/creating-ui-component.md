@@ -12,7 +12,13 @@ Create **shared presentational primitives** in `src/ui/`. Start from the [creati
 - [setting-up-registry-components.md](./setting-up-registry-components.md) — one-time shell (Lucide, `inlineRem`, `PortalHost`) when the app has not been set up yet
 - [managing-wrapper-components.md](./managing-wrapper-components.md) — `className` merging on shared components
 
-## Folder layout
+## Guidelines
+
+- Use React Native primitives or `@/ui/*` when composing.
+- Keep components presentation-only — props in, UI out.
+- Normalize **`cn` → `cx`**: import **`cx`** from **`class-variance-authority`** when editing registry output by hand.
+
+### Folder layout
 
 `src/ui/` stays **flat and presentation-only** — no business logic, features, API, or stores. The layout below is the default; group files when a subsystem owns multiple related pieces.
 
@@ -35,13 +41,13 @@ src/ui/
 - Put reusable UI-only hooks in `src/ui/hooks/` — not feature or data hooks.
 - Named composition roots (`Form/`, `Async/`, `BottomSheet/`) follow the same group + barrel pattern.
 
-## Naming
+### Naming
 
 - Generic, unprefixed names: `Button`, `TextInput`, `Modal`, `Card`.
 - Compound parts share the root prefix: `Button`, `ButtonText`, `ButtonIcon` — **one export per file**.
 - Do not encode variant state in the name (`PrimaryButton` → `Button` with `tone` prop).
 
-## Validate with `shadcn view`
+### Validate with `shadcn view`
 
 Before running the add script, confirm the registry entry resolves:
 
@@ -61,7 +67,7 @@ Before running the add script, confirm the registry entry resolves:
 
 If validation fails, **do not** run the add script. Build manually per [Manual primitive](#add-a-custom-srcui-primitive-no-registry-item) below.
 
-## Run the add script
+### Run the add script
 
 From the app **project root**:
 
@@ -75,12 +81,6 @@ Use `--root <project-dir>` when the cwd is not the app root.
 The script vendors files into `src/ui/` (for example `Button.tsx`), rewrites `cn` → `cx`, and fixes import paths. Import with `@/ui/Button`.
 
 When the script cannot resolve a dependency, add the component by hand and keep it presentation-only.
-
-## Guidelines
-
-- Use React Native primitives or `@/ui/*` when composing.
-- Keep components presentation-only — props in, UI out.
-- Normalize **`cn` → `cx`**: import **`cx`** from **`class-variance-authority`** when editing registry output by hand.
 
 ## Examples
 
@@ -145,5 +145,5 @@ export function Button({ children, className }: { children: ReactNode; className
 ## Related
 
 - [add-registry-component.cjs](../scripts/add-registry-component.cjs) — vendoring script
-- [styling.md](./styling.md) — NativeWind utilities and CVA patterns
+- [managing-styling.md](./managing-styling.md) — NativeWind utilities and CVA patterns
 - [overriding-classname.md](./overriding-classname.md) — targeted `!` overrides on shared components

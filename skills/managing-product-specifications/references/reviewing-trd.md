@@ -1,28 +1,34 @@
-# Reviewing a TRD
+# Reviewing TRD
+
+## Overview
 
 **Review mode.** Read-only unless the user asks to apply edits.
 
-## When to apply
+## Prerequisites
 
-- Reviewing product or feature TRD before implementation
-- Validating architecture against FRD / PRD
+Authoring standards: [creating-trd.md](./creating-trd.md) and [spec-contract.md](./spec-contract.md).
 
-**Standards:** [creating-trd.md](./creating-trd.md) and [spec-contract.md](./spec-contract.md).
+## Guidelines
 
-## Workflow
+### When to apply
+
+- Reviewing TRD before implementation
+- Checking technical completeness against FRD and product TRD
+
+### Workflow
 
 1. Resolve docs root per [spec-contract.md](./spec-contract.md) → **Finding docs root**; resolve TRD path under `<docs-root>`; read `inherits_from` chain fully
 2. Read scope doc (`prd.md` or `frd.md`)
 3. Run checklist; deliver output format
 
-## Checklist
+### Checklist
 
-### Structure and frontmatter
+#### Structure and frontmatter
 
 - `doc_type: trd`, `scope`, `depends_on`, `inherits_from` correct
 - App baseline vs feature TRD scope is clear (no duplicated baseline prose)
 
-### Technical content
+#### Technical content
 
 - **Stack** choices justified
 - **Architecture** diagrams match described components
@@ -31,21 +37,23 @@
 - **Security** and **environments** addressed when relevant
 - **Tradeoffs** document meaningful decisions
 
-### Consistency
+#### Consistency
 
 - Feature TRD does not contradict product `trd-<app>.md` baseline
 - Cross-app feature TRDs agree on shared contracts (`trd.md` at feature level)
 
-## Output format
+## Examples
+
+### Report template
 
 ```markdown
-## Summary
+
+### Severity guidance
+
 [Implementation readiness and main recommendation]
 
-## Strengths
 - [...]
 
-## Issues
 ### Must fix
 - [Architecture gaps, contract mismatches, missing security]
 
@@ -55,6 +63,9 @@
 ### Consider
 - [...]
 
-## Suggested next steps
 [...]
 ```
+
+## Related
+
+- [creating-trd.md]

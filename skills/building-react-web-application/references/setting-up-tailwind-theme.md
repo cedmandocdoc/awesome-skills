@@ -1,4 +1,4 @@
-# Setting Up Tailwind Theme (semantic tokens)
+# Setting Up Tailwind Theme
 
 ## Overview
 

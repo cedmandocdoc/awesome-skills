@@ -13,12 +13,6 @@ Start from [creating-component.md](./creating-component.md).
 - `@gorhom/bottom-sheet` installed in the app
 - App root wrapped once with **`GestureHandlerRootView`** and **`BottomSheetModalProvider`**
 
-## Naming
-
-- Wrapper exports: **`BottomSheetView`**, **`BottomSheetFlatList`** from `@/ui/BottomSheet`.
-- Internal shell: **`BottomSheetModal`** — not exported from the public barrel.
-- Feature sheet components: `<Feature><Purpose>Sheet` (for example `JobFiltersSheet`, `OptionPickerSheet`).
-
 ## Guidelines
 
 ### Default path
@@ -134,6 +128,12 @@ Use when the shared wrapper is insufficient.
 | Modal        | [Usage](https://gorhom.dev/react-native-bottom-sheet/modal/usage), [Props](https://gorhom.dev/react-native-bottom-sheet/modal/props), [Methods](https://gorhom.dev/react-native-bottom-sheet/modal/methods), [Hooks](https://gorhom.dev/react-native-bottom-sheet/modal/hooks)                                                                                                                                                                                                                             |
 | Bottom sheet | [Usage](https://gorhom.dev/react-native-bottom-sheet/usage), [Props](https://gorhom.dev/react-native-bottom-sheet/props), [Methods](https://gorhom.dev/react-native-bottom-sheet/methods), [Hooks](https://gorhom.dev/react-native-bottom-sheet/hooks)                                                                                                                                                                                                                                                     |
 | Components   | [BottomSheetView](https://gorhom.dev/react-native-bottom-sheet/components/bottomsheetview), [BottomSheetScrollView](https://gorhom.dev/react-native-bottom-sheet/components/bottomsheetscrollview), [BottomSheetFlatList](https://gorhom.dev/react-native-bottom-sheet/components/bottomsheetflatlist), [BottomSheetBackdrop](https://gorhom.dev/react-native-bottom-sheet/components/bottomsheetbackdrop), [BottomSheetFooter](https://gorhom.dev/react-native-bottom-sheet/components/bottomsheetfooter) |
+
+### Naming
+
+- Wrapper exports: **`BottomSheetView`**, **`BottomSheetFlatList`** from `@/ui/BottomSheet`.
+- Internal shell: **`BottomSheetModal`** — not exported from the public barrel.
+- Feature sheet components: `<Feature><Purpose>Sheet` (for example `JobFiltersSheet`, `OptionPickerSheet`).
 
 ## Examples
 

@@ -36,15 +36,7 @@ Use this guide to build **multi-step forms** with **Stepperize + `useAppForm` + 
 - Render per-step fields with `stepper.flow.switch(...)` and compose inputs via **`form.AppField`** + pre-bound **`field.*`** components.
 - Use `stepper.flow.is("done")` (or final step ID) for completion state.
 
-## Setup
-
-Install dependencies in the app project:
-
-```bash
-npm install @stepperize/react @tanstack/react-form zod
-```
-
-## Example
+### Example
 
 ```tsx
 import { useAppForm } from "@/ui/Form";
@@ -141,6 +133,14 @@ export function CheckoutStepForm() {
     </form.AppForm>
   );
 }
+```
+
+## Setup
+
+Install dependencies in the app project:
+
+```bash
+npm install @stepperize/react @tanstack/react-form zod
 ```
 
 ## Related

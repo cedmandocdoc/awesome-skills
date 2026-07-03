@@ -1,19 +1,27 @@
-# Updating a PRD
+# Updating PRD
 
-**Docs only.** Amends existing `<docs-root>/prd.md`.
+## Overview
 
-## 1. Resolve path
+**Docs only.** Amends `prd.md`; syncs feature index.
+
+## Prerequisites
+
+Per [spec-contract.md](./spec-contract.md) → **Resolve docs root**, **Finding docs root**, and **Initialize docs root** when no `index.md` marker exists.
+
+## Guidelines
+
+### 1. Resolve path
 
 Per [spec-contract.md](./spec-contract.md) → **Resolve docs root** and **Finding docs root**. Target: `<docs-root>/prd.md`.
 
 If missing → direct the user to [creating-prd.md](./creating-prd.md).
 
-## 2. Read current state
+### 2. Read current state
 
 1. Read full `prd.md` (frontmatter + body)
 2. Note `spec_revision`, Features table, Related documents, open questions
 
-## 3. Gather changes
+### 3. Gather changes
 
 From the user message, determine:
 
@@ -22,7 +30,7 @@ From the user message, determine:
 
 Ask **at most one** clarifying question if the amend scope is ambiguous.
 
-## 4. Update `prd.md`
+### 4. Update `prd.md`
 
 1. Bump `spec_revision` in frontmatter
 2. Append **Spec changelog** per [spec-contract.md](./spec-contract.md)
@@ -32,11 +40,11 @@ Ask **at most one** clarifying question if the amend scope is ambiguous.
    - Renamed feature → update slug and links; flag orphaned `features/` folders
 5. Sync **Related documents** if product companions were created elsewhere
 
-## 5. Flag downstream drift
+### 5. Flag downstream drift
 
 List specs that may need review after this PRD change (FRDs, product `user-story.md`, `ui-specs.md`, `trd*.md`).
 
-## 6. Confirm to the user
+### 6. Confirm to the user
 
 Reply with:
 

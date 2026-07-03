@@ -1,8 +1,12 @@
-# Configuring Wrangler for static web apps
+# Configuring Wrangler
+
+## Overview
 
 Workers Builds runs `npx wrangler deploy`, which reads `wrangler.toml` or `wrangler.jsonc` from the dashboard **root directory**.
 
-## Minimum — static site
+## Guidelines
+
+### Minimum — static site
 
 ```toml
 name = "my-app"
@@ -21,7 +25,7 @@ directory = "./dist"
 
 `main` is **not** required for static-only hosting.
 
-## SPA client-side routing
+### SPA client-side routing
 
 ```toml
 [assets]
@@ -38,7 +42,7 @@ Alternatives:
 | `"404-page"` | Static site with custom `404.html` |
 | `"none"` | Every URL must map to a real file |
 
-## Optional assets settings
+### Optional assets settings
 
 ```toml
 [assets]
@@ -53,7 +57,7 @@ html_handling = "auto-trailing-slash"
 | `binding` | Name for `env.ASSETS` in Worker code (default `ASSETS`) — only if `main` is set |
 | `run_worker_first` | Route patterns that invoke Worker before static assets (hybrid apps) |
 
-## Static + Worker API (hybrid)
+### Static + Worker API (hybrid)
 
 When the app needs server logic at the edge:
 
@@ -71,7 +75,7 @@ run_worker_first = ["/api/*"]
 
 Worker fetches static assets via `env.ASSETS.fetch(request)` for non-API routes.
 
-## JSONC variant
+### JSONC variant
 
 ```jsonc
 {
@@ -85,7 +89,7 @@ Worker fetches static assets via `env.ASSETS.fetch(request)` for non-API routes.
 }
 ```
 
-## Pin Wrangler version
+### Pin Wrangler version
 
 Add to the `package.json` at the Wrangler project root:
 
@@ -99,7 +103,7 @@ Add to the `package.json` at the Wrangler project root:
 
 Workers Builds uses the version from `package.json` when present.
 
-## `.assetsignore`
+### `.assetsignore`
 
 Optional file beside `wrangler.toml` (same syntax as `.gitignore`) to exclude files from upload:
 
@@ -108,6 +112,6 @@ Optional file beside `wrangler.toml` (same syntax as `.gitignore`) to exclude fi
 *.md
 ```
 
-## Environments (staging / production)
+### Environments (staging / production)
 
 For multiple Workers environments, use `wrangler deploy --env <name>` in the dashboard deploy command and define `[env.staging]` blocks. See [Cloudflare advanced setups](https://developers.cloudflare.com/workers/ci-cd/builds/advanced-setups/).

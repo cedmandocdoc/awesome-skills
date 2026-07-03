@@ -8,35 +8,6 @@ A feature module packages domain logic with the feature UI, and exposes a small 
 
 For components inside a feature folder, see [creating-feature-component.md](./creating-feature-component.md). For route-facing pages, see [creating-screen-component.md](./creating-screen-component.md). For navigation components, see [creating-navigation-component.md](./creating-navigation-component.md).
 
-## Feature folder layout
-
-The layout below is the **default starting point**, not a closed set. Add folders when multiple files share the same role (for example `schemas/` for Zod form schemas).
-
-```text
-src/features/<feature-name>/
-├── index.ts                  # public barrel
-├── components/               # domain UI blocks
-│   └── <Feature>Page.tsx     # route-facing page (see creating-screen-component.md)
-├── hooks/                    # query hooks, stores, feature hooks (see managing-state.md)
-├── types.ts                  # shared types; split to types/ when large
-├── utils.ts                  # shared pure helpers when small (< ~200 lines total)
-├── utils/                    # one file per helper when utils grow (e.g. getUser.ts, formatDate.ts)
-├── constants.ts              # shared constants
-├── env.ts                    # when this feature reads env (see managing-environment.md)
-└── schemas/                  # example extension — form-driven features
-```
-
-### Layout rules
-
-- Place the route-facing page in `components/`: `src/features/<feature-name>/components/<Feature>Page.tsx`.
-- Place other supporting UI in the same `components/` folder.
-- Place hooks in `hooks/` — including Zustand stores (`use<Feature>Store.ts`).
-- Start shared types in `types.ts`; move to `types/<domain>.ts` or a `types/` folder when the file grows.
-- Start shared pure helpers in `utils.ts` (formatters, getters, mappers). Split into `utils/<actionName>.ts` when the file exceeds **~200 lines** or helpers are easier to find by name.
-- Keep shared constants in `constants.ts`.
-- Add `env.ts` when only this feature reads those variables — see [managing-environment.md](./managing-environment.md).
-- Add role-based folders (`schemas/`, `mappers/`, etc.) when grouping improves clarity; keep internal files off the barrel unless they are part of the public API.
-
 ## Guidelines
 
 ### Mental model
@@ -91,6 +62,35 @@ Some teams categorize features based on product language (e.g. "billing", "onboa
 - An isolated feature typically exports one primary page plus supporting hooks and types.
 - A grouped feature exports multiple named parts (for example a page, a component, and a helper function).
 - Keep internal implementation files off the barrel.
+
+### Feature folder layout
+
+The layout below is the **default starting point**, not a closed set. Add folders when multiple files share the same role (for example `schemas/` for Zod form schemas).
+
+```text
+src/features/<feature-name>/
+├── index.ts                  # public barrel
+├── components/               # domain UI blocks
+│   └── <Feature>Page.tsx     # route-facing page (see creating-screen-component.md)
+├── hooks/                    # query hooks, stores, feature hooks (see managing-state.md)
+├── types.ts                  # shared types; split to types/ when large
+├── utils.ts                  # shared pure helpers when small (< ~200 lines total)
+├── utils/                    # one file per helper when utils grow (e.g. getUser.ts, formatDate.ts)
+├── constants.ts              # shared constants
+├── env.ts                    # when this feature reads env (see managing-environment.md)
+└── schemas/                  # example extension — form-driven features
+```
+
+### Layout rules
+
+- Place the route-facing page in `components/`: `src/features/<feature-name>/components/<Feature>Page.tsx`.
+- Place other supporting UI in the same `components/` folder.
+- Place hooks in `hooks/` — including Zustand stores (`use<Feature>Store.ts`).
+- Start shared types in `types.ts`; move to `types/<domain>.ts` or a `types/` folder when the file grows.
+- Start shared pure helpers in `utils.ts` (formatters, getters, mappers). Split into `utils/<actionName>.ts` when the file exceeds **~200 lines** or helpers are easier to find by name.
+- Keep shared constants in `constants.ts`.
+- Add `env.ts` when only this feature reads those variables — see [managing-environment.md](./managing-environment.md).
+- Add role-based folders (`schemas/`, `mappers/`, etc.) when grouping improves clarity; keep internal files off the barrel unless they are part of the public API.
 
 ## Examples
 

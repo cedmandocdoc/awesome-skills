@@ -14,24 +14,6 @@ Start from [creating-component.md](./creating-component.md). For wiring in route
 - [creating-route-component.md](./creating-route-component.md) — default wiring in `src/routes/`
 - [creating-screen-component.md](./creating-screen-component.md) — route-facing pages (navigation components stay out of page trees by default)
 
-## Naming
-
-Derive the component name from the **layout route segment** in `src/routes/` (see [creating-route-component.md](./creating-route-component.md#file-naming--url-structure)). Use the segment label (drop leading `_`) plus the layout role:
-
-| Layout route file | Navigation component |
-| --- | --- |
-| `_app.tsx` | `AppShell`, `AppSidebar` |
-| `main.tsx` | `MainShell`, `MainSidebar` |
-| `settings.tsx` | `SettingsHeader` |
-| `profile.tsx` | `ProfileHeader` |
-
-- **App-wide pathless shell:** `AppShell` or `AppSidebar` for `_app.tsx`.
-- **Pathful section shell:** `[Section]Shell` or `[Section]Sidebar` — e.g. `main.tsx` → `MainShell`.
-- **Section header:** `[Section]Header` — e.g. `settings.tsx` → `SettingsHeader`.
-- **Tab-style sub-nav:** `[Section]TabBar` when a layout owns peer tabs at the same depth.
-- Hooks: `useAppShell`, `useMainSidebar` — live in `src/features/navigation/hooks/`.
-- Use one layout-scoped component per slot instead of per-page duplicates.
-
 ## Guidelines
 
 ### Prefer whole navigation components
@@ -92,6 +74,24 @@ When layout wiring is too complex (dynamic chrome driven by page-local state, ti
 - Copying the same header, sidebar, tab bar, or shell JSX into every feature page.
 - Putting domain business logic in navigation components — navigation components are presentation and layout.
 - Naming components after React Navigation navigator types (`MainDrawerNavigator`, `ProfileStackNavigator`).
+
+### Naming
+
+Derive the component name from the **layout route segment** in `src/routes/` (see [creating-route-component.md](./creating-route-component.md#file-naming--url-structure)). Use the segment label (drop leading `_`) plus the layout role:
+
+| Layout route file | Navigation component |
+| --- | --- |
+| `_app.tsx` | `AppShell`, `AppSidebar` |
+| `main.tsx` | `MainShell`, `MainSidebar` |
+| `settings.tsx` | `SettingsHeader` |
+| `profile.tsx` | `ProfileHeader` |
+
+- **App-wide pathless shell:** `AppShell` or `AppSidebar` for `_app.tsx`.
+- **Pathful section shell:** `[Section]Shell` or `[Section]Sidebar` — e.g. `main.tsx` → `MainShell`.
+- **Section header:** `[Section]Header` — e.g. `settings.tsx` → `SettingsHeader`.
+- **Tab-style sub-nav:** `[Section]TabBar` when a layout owns peer tabs at the same depth.
+- Hooks: `useAppShell`, `useMainSidebar` — live in `src/features/navigation/hooks/`.
+- Use one layout-scoped component per slot instead of per-page duplicates.
 
 ## Examples
 

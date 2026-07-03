@@ -8,7 +8,7 @@ Wires Tailwind theme keys to the CSS variables in [setting-up-theming.md](./sett
 
 - [setting-up-theming.md](./setting-up-theming.md)
 
-## Steps
+## Guidelines
 
 ### Extend `tailwind.config.js`
 

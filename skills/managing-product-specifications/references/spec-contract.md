@@ -1,10 +1,12 @@
-# Spec contract
+# Spec Contract
 
-On-disk layout, naming, frontmatter, and inheritance shared by all `managing-product-specifications` workflows.
+## Overview
 
-**Docs only.** Do not write application code unless the user explicitly asks in the same message.
+Shared layout, naming, frontmatter, inheritance, and tiers for all `managing-product-specifications` workflows.
 
-## Model
+## Guidelines
+
+### Model
 
 | Level | Scope document | Companion documents (same types at that scope) |
 | --- | --- | --- |
@@ -20,7 +22,7 @@ On-disk layout, naming, frontmatter, and inheritance shared by all `managing-pro
 
 `<type>` is one of: `trd`, `user-story`, `ui-specs`.
 
-## Author signature
+### Author signature
 
 Static UUID identifying docs roots created by this skill:
 
@@ -30,7 +32,7 @@ Static UUID identifying docs roots created by this skill:
 
 Every `<docs-root>/index.md` must include this value in frontmatter `author`. Search the repository for that field to locate the docs root — do not infer the root from `prd.md`, `frd.md`, or other spec paths alone.
 
-## Output layout
+### Output layout
 
 Only this skill may establish a docs root. The root is always marked by `<docs-root>/index.md`.
 
@@ -57,7 +59,7 @@ Only this skill may establish a docs root. The root is always marked by `<docs-r
 
 Templates: [`../assets/`](../assets/), including [`../assets/index.md`](../assets/index.md) for new docs roots.
 
-## Resolve docs root
+### Resolve docs root
 
 1. Search per **Finding docs root** below.
 2. **Decide location:**
@@ -67,7 +69,7 @@ Templates: [`../assets/`](../assets/), including [`../assets/index.md`](../asset
 
 Do not write spec files outside the resolved root. Do not treat a folder as the docs root unless it contains a valid `index.md` per **Finding docs root**.
 
-## Finding docs root
+### Finding docs root
 
 Search the repository for `index.md` files whose YAML frontmatter contains **all** of:
 
@@ -81,7 +83,7 @@ The docs root is the parent directory of each matching `index.md` (e.g. `docs/in
 
 After resolving the root, list and read spec files only under that directory.
 
-## Initialize docs root
+### Initialize docs root
 
 When **no** valid `index.md` exists and the user is creating specs:
 
@@ -95,7 +97,7 @@ When **no** valid `index.md` exists and the user is creating specs:
 
 Only this skill may create or replace `index.md`. If the user points at a non-empty folder without a valid `index.md`, do not write specs there.
 
-## Feature slug
+### Feature slug
 
 Build from the feature title:
 
@@ -107,7 +109,7 @@ Folder: `<docs-root>/features/<feature-slug>/`.
 
 If the folder already exists and the user asked to **create** (not update), stop and ask whether to overwrite or pick a new slug.
 
-## Path resolution
+### Path resolution
 
 | Target | Path |
 | --- | --- |
@@ -121,7 +123,7 @@ If the folder already exists and the user asked to **create** (not update), stop
 
 When the user names an app (e.g. "checkout TRD for web"), resolve to the `-<app>` suffix. When they name only the type at feature level, resolve to the shared file (`trd.md`, `user-story.md`, `ui-specs.md`).
 
-## Inheritance (read upstream; do not duplicate)
+### Inheritance (read upstream; do not duplicate)
 
 ```text
 features/<slug>/ui-specs-<app>.md
@@ -142,7 +144,7 @@ features/<slug>/user-story-<app>.md
 
 App baseline `trd-<app>.md` at product level describes the **whole app** (stack, repo layout, deploy). Feature `trd-<app>.md` describes **that feature in that app** and inherits the baseline.
 
-## Frontmatter (all generated specs)
+### Frontmatter (all generated specs)
 
 Every file this skill writes includes YAML frontmatter:
 
@@ -161,7 +163,7 @@ Every file this skill writes includes YAML frontmatter:
 | `inherits_from` | companions | Relative paths to parent-tier docs at same or product scope |
 | `related` | FRD hub | Map of sibling doc paths (see creating-frd.md) |
 
-## Prerequisites by doc type
+### Prerequisites by doc type
 
 | Doc | Must read before drafting |
 | --- | --- |
@@ -176,7 +178,7 @@ Every file this skill writes includes YAML frontmatter:
 
 Missing upstream: ask once whether to proceed with TBD sections or create upstream first. Do not invent product facts unsupported by inputs.
 
-## Tier (depth)
+### Tier (depth)
 
 | Tier | When | Behavior |
 | --- | --- | --- |
@@ -186,7 +188,7 @@ Missing upstream: ask once whether to proceed with TBD sections or create upstre
 
 Infer tier from user phrasing; if unclear, default to **standard**.
 
-## FRD hub (`related` block)
+### FRD hub (`related` block)
 
 `frd.md` is the feature index. When any sibling spec is created or updated, sync `related` in frontmatter and the **Related documents** body section.
 
@@ -209,30 +211,30 @@ related:
 
 Omit keys for files that do not exist yet; add them when those files are created.
 
-## PRD feature index
+### PRD feature index
 
 `prd.md` lists features with links to each `features/<slug>/frd.md`. When creating or updating an FRD, sync the PRD feature index section.
 
-## Changelog on update
+### Changelog on update
 
 Every update bumps `spec_revision` and appends a row to **Spec changelog** (add section if missing):
 
 ```markdown
-## Spec changelog
+### Spec changelog
 
 | Rev | Date | Summary |
 | --- | --- | --- |
 | 2 | YYYY-MM-DD | Added API error handling to acceptance criteria |
 ```
 
-## No auto-spawn
+### No auto-spawn
 
 Creating PRD or FRD writes **only** that file. Suggest next docs in the confirmation message; do not create sibling specs unless the user explicitly requests them in the same or a follow-up message.
 
-## Separate repositories
+### Separate repositories
 
 Same layout per repo. Cross-repo links use full URLs or paths the user provides in `depends_on` / `related`. Product PRD in a platform repo links outward to app-repo feature paths.
 
-## Diagrams
+### Diagrams
 
 Use **Mermaid** in TRD files for architecture, sequence, and data-flow diagrams. Prefer `flowchart`, `sequenceDiagram`, and `C4Context` where appropriate.

@@ -1,18 +1,26 @@
-# Updating a task
+# Updating Task
 
-**Replanning only.** Amend the spec when scope changes. Do not implement new work unless the user explicitly asks in the same message.
+## Overview
 
-## 1. Resolve task folder
+**Planning only.** Amends `plan.md` and syncs `status.md` when scope changes.
+
+## Prerequisites
+
+Per [task-contract.md](./task-contract.md) → **Resolve tasks root**.
+
+## Guidelines
+
+### 1. Resolve task folder
 
 Same as [executing-task.md](./executing-task.md) → step 1.
 
-## 2. Read current state
+### 2. Read current state
 
 1. Read `status.md`, then `plan.md`
 2. Note `overall_status`, completed steps, and `next_step_id`
 3. If `overall_status` is `Cancelled` → confirm with the user before replanning; to restore execution state, prefer [reopening-task.md](./reopening-task.md)
 
-## 3. Gather changes
+### 3. Gather changes
 
 From the user message, determine:
 
@@ -22,7 +30,7 @@ From the user message, determine:
 
 Ask **at most one** clarifying question if the amend scope is ambiguous.
 
-## 4. Update `plan.md`
+### 4. Update `plan.md`
 
 1. Bump `plan_revision` in frontmatter (e.g. `1` → `2`)
 2. Append a **Plan changelog** section entry (if missing, add the section before Phases):
@@ -43,7 +51,7 @@ Ask **at most one** clarifying question if the amend scope is ambiguous.
 
 Re-run skill discovery from [task-contract.md](./task-contract.md) when the amended work touches new areas.
 
-## 5. Sync `status.md`
+### 5. Sync `status.md`
 
 1. Update the **Step queue** to match plan todos (keep checkmarks for completed steps)
 2. Set `next_step_id`:
@@ -53,7 +61,7 @@ Re-run skill discovery from [task-contract.md](./task-contract.md) when the amen
 3. Clear `blocking_reason` if the amend resolves the blocker; set `overall_status` to `In Progress` if was `Blocked`
 4. Update `handoff_note` for the executor
 
-## 6. Confirm to the user
+### 6. Confirm to the user
 
 Reply with:
 
@@ -62,3 +70,7 @@ Reply with:
 - What changed vs what was preserved
 
 **Stop without implementing** new phases unless the user also asked to continue in the same message.
+
+## Examples
+
+**Update:** User adds a phase to an in-progress task. Bump `plan_revision` → sync step queue.

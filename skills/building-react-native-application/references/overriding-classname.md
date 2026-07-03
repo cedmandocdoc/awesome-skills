@@ -1,14 +1,10 @@
-# Overriding `className` on shared components (Native)
+# Overriding className
 
 ## Overview
 
 Use this guide when a consumer passes NativeWind utilities through a component `className` prop and those utilities overlap with classes already applied by the base component.
 
 Prefix every conflicting consumer utility with Tailwind's important modifier (`!`) so the override applies reliably.
-
-## Why `!` is needed
-
-This stack merges classes with **`cx`** from `class-variance-authority`, which concatenates class strings but does **not** deduplicate Tailwind utilities (there is no `tailwind-merge`). When base and consumer classes target the same utility category, both remain applied and source order decides the winner—not the consumer's intent. The `!` modifier forces the consumer utility to win.
 
 ## Guidelines
 
@@ -40,6 +36,10 @@ Classes like `sm:p-0` and `hover:bg-primary` stack one or more **variants** (res
 
 - Read the base component's default `className` and variant output before overriding.
 - Apply `!` to each conflicting token (for example `!text-lg`, `!p-2`, `!text-primary`).
+
+### Why `!` is needed
+
+This stack merges classes with **`cx`** from `class-variance-authority`, which concatenates class strings but does **not** deduplicate Tailwind utilities (there is no `tailwind-merge`). When base and consumer classes target the same utility category, both remain applied and source order decides the winner—not the consumer's intent. The `!` modifier forces the consumer utility to win.
 
 ## Examples
 

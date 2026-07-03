@@ -202,7 +202,7 @@ Follow this skill for … Works wherever the agent can read and write repository
 References are **recipes or deep dives** the agent reads after `SKILL.md` routes to them. Every reference uses the **same major sections in the same order**. Skill-specific content goes in **`###` subsections** under the major section it belongs to — especially under **Guidelines**.
 
 ```markdown
-# <Action> — <topic>
+# <Action>
 
 ## Overview
 ## Prerequisites
@@ -269,7 +269,7 @@ Use only what the reference needs:
 ### Title and filename
 
 - **Filename:** kebab-case with verb prefix (`creating-task.md`, `discovering-application.md`).
-- **Title:** `# <Action> — <topic>` — sentence case after the em dash.
+- **Title:** `# <Action>` — title case with spaces. Derive from the filename: drop `.md`, replace hyphens with spaces, capitalize each word. Preserve acronyms and code terms (`API`, `UI`, `E2E`, `PRD`, `GitHub`, `className`). Example: `managing-project-structure.md` → `# Managing Project Structure`.
 
 ### Cross-links
 
@@ -284,7 +284,7 @@ Use only what the reference needs:
 **Framework guide** (matches building-react references):
 
 ```markdown
-# Creating component — routing and shared rules
+# Creating Component
 
 ## Overview
 
@@ -314,7 +314,7 @@ Start here for any component work. Read the decision tree, then open only the li
 **Lifecycle recipe:**
 
 ```markdown
-# Creating a task — plan and status files
+# Creating Task
 
 ## Overview
 
@@ -336,7 +336,7 @@ Per [task-contract.md](./task-contract.md) → **Resolve tasks root**.
 **Contract:**
 
 ```markdown
-# Task contract — on-disk layout and fields
+# Task Contract
 
 ## Overview
 
@@ -357,7 +357,7 @@ Shared layout and field meanings for all managing-tasks workflows.
 **Review:**
 
 ```markdown
-# Reviewing a PRD — product requirements
+# Reviewing PRD
 
 ## Overview
 
@@ -390,7 +390,7 @@ Authoring standards: [creating-prd.md](./creating-prd.md).
 **Configuring:**
 
 ```markdown
-# Configuring GitHub integration — Supabase dashboard
+# Configuring GitHub Integration
 
 ## Overview
 

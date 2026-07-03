@@ -12,12 +12,6 @@ Start from [creating-component.md](./creating-component.md). For fetching and ho
 - [managing-state.md](./managing-state.md)
 - [managing-api-error.md](./managing-api-error.md)
 
-## Naming
-
-- Wrapper exports: `AsyncView`, `AsyncScrollView`, `AsyncFlatList`.
-- Internal helpers alongside wrappers: `ErrorMessage` (not exported from the public barrel unless needed).
-- Feature screens compose wrappers — do not fork the state machine per screen.
-
 ## Guidelines
 
 ### Folder placement
@@ -95,6 +89,12 @@ Read user-facing copy from `error.message`. See [managing-api-error.md](./managi
 | **AsyncView** | Non-scroll content (forms, dashboards). No pull-to-refresh; recovery via **Try again** only. |
 | **AsyncScrollView** | Scrollable content with pull-to-refresh (`RefreshControl` + `isReloading` / `reload`). |
 | **AsyncFlatList** | Long lists with virtualization; optional infinite scroll via `loadMore` + `isLoadingMore` footer. |
+
+### Naming
+
+- Wrapper exports: `AsyncView`, `AsyncScrollView`, `AsyncFlatList`.
+- Internal helpers alongside wrappers: `ErrorMessage` (not exported from the public barrel unless needed).
+- Feature screens compose wrappers — do not fork the state machine per screen.
 
 ## Examples
 

@@ -4,7 +4,9 @@
 
 Start here for **any** component work. This guide routes you to the right deep-dive doc. Read the decision tree first, then open **only** the linked creation guide for your case.
 
-## Decision tree
+## Guidelines
+
+### Decision tree
 
 | You are building… | Go to |
 | --- | --- |
@@ -17,7 +19,7 @@ Start here for **any** component work. This guide routes you to the right deep-d
 
 **Already built but wrong layer?** Re-run the tree in [Recategorizing](#recategorizing-an-existing-component).
 
-## Placement
+### Placement
 
 | Kind | Location |
 | --- | --- |
@@ -37,7 +39,7 @@ Start here for **any** component work. This guide routes you to the right deep-d
 - Put route registration and wiring in `src/routes/`.
 - Import primitives with `@/ui/<file>`; use relative imports inside `src/ui/`.
 
-## Shared rules
+### Shared rules
 
 - Use functional components and named exports.
 - Prefer `interface` for props.
@@ -46,7 +48,7 @@ Start here for **any** component work. This guide routes you to the right deep-d
 - Prefer compound parts (`Button`, `ButtonText`, `ButtonIcon`) over `typeof children` switches.
 - UI primitives (`src/ui/`) are **presentation-only** — no business logic, data fetching, mutations, or routing decisions.
 
-## Naming (baseline)
+### Naming (baseline)
 
 - PascalCase exports; singular nouns (`UserCard`, not `UsersCard`).
 - Match file name to export name.
@@ -59,7 +61,7 @@ Start here for **any** component work. This guide routes you to the right deep-d
 
 Each creation guide adds type-specific naming rules.
 
-## Recategorizing an existing component
+### Recategorizing an existing component
 
 When reuse grows, re-run the decision tree:
 

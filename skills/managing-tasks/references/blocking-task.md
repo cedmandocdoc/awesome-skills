@@ -1,8 +1,16 @@
-# Blocking a task
+# Blocking Task
 
-Mark a task as blocked when work cannot proceed. No implementation in this workflow.
+## Overview
 
-## 1. Resolve task folder
+**Execution mode.** Marks a task blocked with reason and freezes the execution pointer.
+
+## Prerequisites
+
+Per [task-contract.md](./task-contract.md) → **Resolve tasks root**.
+
+## Guidelines
+
+### 1. Resolve task folder
 
 Per [task-contract.md](./task-contract.md) → **Resolve tasks root** and **Finding tasks root**.
 
@@ -10,7 +18,7 @@ Resolve `<task-folder>` from the user's message under `<tasks-root>/`. If unclea
 
 If `overall_status` is `Cancelled` or `Done` → stop and tell the user.
 
-## 2. Record blocking reason
+### 2. Record blocking reason
 
 Require a concrete `blocking_reason` from the user or context, e.g.:
 
@@ -18,7 +26,7 @@ Require a concrete `blocking_reason` from the user or context, e.g.:
 - Design review pending
 - Upstream dependency not merged
 
-## 3. Update `status.md`
+### 3. Update `status.md`
 
 1. Set `overall_status`: `Blocked`
 2. Set `blocking_reason`: `<reason>`
@@ -28,7 +36,7 @@ Require a concrete `blocking_reason` from the user or context, e.g.:
 
 Do **not** change `plan.md` frontmatter todo statuses.
 
-## 4. Confirm to the user
+### 4. Confirm to the user
 
 Reply with:
 

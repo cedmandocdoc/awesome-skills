@@ -123,7 +123,7 @@ See [Installation with Vite](https://tanstack.com/router/latest/docs/framework/r
 ### Generated route tree
 
 - `routeTree.gen.ts` is **generated** from `src/routes/`; edit route modules, not this file.
-- **Lint / format ignore:** exclude it from ESLint and Prettier (or Biome). See [linting.md](./linting.md).
+- **Lint / format ignore:** exclude it from ESLint and Prettier (or Biome). See [linting.md](./managing-linting.md).
 - **VS Code:** optionally mark the file readonly and exclude from search/watch for quieter diffs after renames.
 
 ### Choosing layout patterns

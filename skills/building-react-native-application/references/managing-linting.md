@@ -1,4 +1,4 @@
-# Linting
+# Managing Linting
 
 ## Overview
 
@@ -16,6 +16,22 @@ Use this guide to set up ESLint and Prettier for Expo + React Native TypeScript 
 - Use one config block for TypeScript source files (`**/*.{ts,tsx}`) with `@typescript-eslint/parser`.
 - Use a separate block for JavaScript and config files (`**/*.{js,cjs,mjs,jsx}`) with lighter rules.
 - Keep React Native UI rules primarily in TypeScript app code.
+
+### Usage
+
+### Run checks locally
+
+```bash
+npm run lint
+npm run lint -- --fix
+npm run format
+```
+
+### Keep CI and editor behavior aligned
+
+- Run `npm run lint` in CI without `--fix`.
+- Optionally run `prettier --check src/` in CI.
+- Enable ESLint and Prettier in the editor so local feedback matches CI.
 
 ## Setup
 
@@ -110,19 +126,3 @@ module.exports = defineConfig([
   }
 }
 ```
-
-## Usage
-
-### Run checks locally
-
-```bash
-npm run lint
-npm run lint -- --fix
-npm run format
-```
-
-### Keep CI and editor behavior aligned
-
-- Run `npm run lint` in CI without `--fix`.
-- Optionally run `prettier --check src/` in CI.
-- Enable ESLint and Prettier in the editor so local feedback matches CI.

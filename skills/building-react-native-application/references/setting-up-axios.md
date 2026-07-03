@@ -4,7 +4,7 @@
 
 Axios for Expo via a small client factory and env-based base URL and options—one place to grow auth, timeouts, and interceptors.
 
-## Steps
+## Guidelines
 
 ### Install Axios
 

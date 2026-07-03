@@ -1,8 +1,12 @@
-# Subagent provisioning
+# Subagent Provisioning
 
-How `managing-tasks` finds, validates, and creates subagents across AI-assisted IDEs. Recipes that delegate work ([executing-multiple-tasks.md](./executing-multiple-tasks.md)) call this reference **before** launching a subagent.
+## Overview
 
-## Agent signature
+Finds, validates, and creates `task-triager` and `task-implementer` subagents across AI-assisted IDEs. Recipes that delegate work call this reference **before** launching a subagent.
+
+## Guidelines
+
+### Agent signature
 
 Static UUID identifying subagents owned by this skill:
 
@@ -21,14 +25,14 @@ Every managed-tasks subagent file must include **all** of these frontmatter fiel
 
 **Canonical bodies:** [`../assets/agents/task-implementer.md`](../assets/agents/task-implementer.md), [`../assets/agents/task-triager.md`](../assets/agents/task-triager.md). When creating or refreshing an agent, copy the matching template and write only IDE-specific frontmatter fields (see **IDE agent roots**).
 
-## Managed subagents
+### Managed subagents
 
 | Agent id | Recipe | `readonly` | Template |
 | --- | --- | --- | --- |
 | `task-triager` | [triaging-tasks.md](./triaging-tasks.md) — execution-roadmap mode | `true` | [`../assets/agents/task-triager.md`](../assets/agents/task-triager.md) |
 | `task-implementer` | [executing-task.md](./executing-task.md), [verifying-task.md](./verifying-task.md) | `false` | [`../assets/agents/task-implementer.md`](../assets/agents/task-implementer.md) |
 
-## Provision workflow
+### Provision workflow
 
 Run once per required agent id before the first delegation in a session:
 
@@ -45,7 +49,7 @@ Run once per required agent id before the first delegation in a session:
 
 Do not hand-edit managed subagent bodies outside the skill templates unless the user explicitly asks — refresh from the template on the next provision.
 
-## IDE agent roots
+### IDE agent roots
 
 Prefer the first existing root in this table for the detected IDE. Project-level paths win over user-level paths when both exist.
 
@@ -67,7 +71,7 @@ Prefer the first existing root in this table for the detected IDE. Project-level
 
 **User-level fallbacks** (reuse only when project root has no valid managed agent): `~/.cursor/agents/`, `~/.claude/agents/`, `~/.codex/agents/`, `~/.copilot/agents/`.
 
-## Launch by IDE
+### Launch by IDE
 
 | IDE | Delegate `task-triager` | Delegate `task-implementer` |
 | --- | --- | --- |
@@ -77,6 +81,6 @@ Prefer the first existing root in this table for the detected IDE. Project-level
 | GitHub Copilot | Agent `task-triager` | Agent `task-implementer` |
 | Unsupported | Parent runs [triaging-tasks.md](./triaging-tasks.md) execution-roadmap inline | Parent runs [executing-task.md](./executing-task.md) inline per task |
 
-## Refresh on skill update
+### Refresh on skill update
 
 When `generated_by: managing-tasks` matches but the body diverges from the template (e.g. after a skill upgrade), overwrite the body from the template and preserve IDE frontmatter plus `author` / `generated_by`. Only do this during provision when the user has not customized the agent.

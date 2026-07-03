@@ -1,12 +1,20 @@
-# Creating a task
+# Creating Task
 
-**Planning only.** Do not write application code unless the user explicitly asks to implement in the same message.
+## Overview
 
-## 1. Resolve tasks root
+**Planning only.** Writes `plan.md` and `status.md` for a new task folder. Stop without implementing unless the user also asks to implement in the same message.
+
+## Prerequisites
+
+Per [task-contract.md](./task-contract.md) → **Resolve tasks root**.
+
+## Guidelines
+
+### 1. Resolve tasks root
 
 Per [task-contract.md](./task-contract.md) → **Resolve tasks root**, **Finding tasks root**, and **Initialize tasks root** when no `index.md` marker exists.
 
-## 2. Assign task id and slug
+### 2. Assign task id and slug
 
 Within the resolved tasks root:
 
@@ -20,7 +28,7 @@ Within the resolved tasks root:
 
 If the folder already exists, stop and ask whether to overwrite or pick a new slug.
 
-## 3. Gather project context
+### 3. Gather project context
 
 | Source | What to extract |
 | --- | --- |
@@ -33,7 +41,7 @@ If the folder already exists, stop and ask whether to overwrite or pick a new sl
 
 Ask **at most one** clarifying question if scope or target area is ambiguous.
 
-## 4. Write `plan.md`
+### 4. Write `plan.md`
 
 Use [`../assets/plan.md`](../assets/plan.md). Required sections:
 
@@ -51,7 +59,7 @@ Keep phases implementation-ready: file paths, patterns to follow, acceptance cri
 
 **Skills and references** — when conventions apply, fill Context using skill discovery in [task-contract.md](./task-contract.md). Include reference basenames, not skill names alone (~6 references max unless scope requires more).
 
-## 5. Write `status.md`
+### 5. Write `status.md`
 
 Use [`../assets/status.md`](../assets/status.md). Initialize:
 
@@ -61,7 +69,7 @@ Use [`../assets/status.md`](../assets/status.md). Initialize:
 - `handoff_note`: one sentence describing what the executor should do first
 - Include full `task_folder` path in the execution pointer
 
-## 6. Confirm to the user
+### 6. Confirm to the user
 
 Reply with:
 
@@ -71,3 +79,7 @@ Reply with:
 - Suggested follow-up: _"Continue `tasks/001-dark-mode-toggle`"_ or _"Read `tasks/001-dark-mode-toggle/status.md` and run the next step"_
 
 **Stop without implementing** unless the user also asked to implement in the same message.
+
+## Examples
+
+**Create (new repo):** No `index.md` found → ask user for an empty folder (e.g. `tasks/`) → write `tasks/index.md` then `tasks/001-dark-mode-toggle/plan.md` + `status.md` → suggest _"Continue `tasks/001-dark-mode-toggle`"_.

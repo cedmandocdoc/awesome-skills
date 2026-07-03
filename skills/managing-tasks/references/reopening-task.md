@@ -1,8 +1,16 @@
-# Reopening a task
+# Reopening Task
 
-Restore a cancelled task for continued work. Replanning optional; this workflow only restores execution state.
+## Overview
 
-## 1. Resolve task folder
+**Execution mode.** Restores a cancelled task for continued work.
+
+## Prerequisites
+
+Per [task-contract.md](./task-contract.md) → **Resolve tasks root**.
+
+## Guidelines
+
+### 1. Resolve task folder
 
 Per [task-contract.md](./task-contract.md) → **Resolve tasks root** and **Finding tasks root**.
 
@@ -10,13 +18,13 @@ Resolve `<task-folder>` from the user's message under `<tasks-root>/`. If unclea
 
 If `overall_status` is not `Cancelled` → stop; tell the user (offer [checking-task.md](./checking-task.md) or [executing-task.md](./executing-task.md) as appropriate).
 
-## 2. Confirm intent
+### 2. Confirm intent
 
 Confirm the user intends to reopen, not start a separate copy. Reopening continues the same folder; for a new task with similar scope, use [creating-task.md](./creating-task.md).
 
 If scope also changed, follow [updating-task.md](./updating-task.md) after reopening or in the same session if the user asks.
 
-## 3. Restore execution state
+### 3. Restore execution state
 
 1. Set `overall_status`: `In Progress` (or `Not Started` if no steps were ever completed)
 2. Set `cancel_reason`: `None`
@@ -29,7 +37,7 @@ If scope also changed, follow [updating-task.md](./updating-task.md) after reope
 
 **Optional plan changelog** — if the user describes scope changes while reopening, bump `plan_revision` and add a row per [updating-task.md](./updating-task.md).
 
-## 4. Confirm to the user
+### 4. Confirm to the user
 
 Reply with:
 

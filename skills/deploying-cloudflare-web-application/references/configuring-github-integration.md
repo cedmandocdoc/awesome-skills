@@ -1,4 +1,6 @@
-# Configuring GitHub integration — Cloudflare dashboard (Workers Builds)
+# Configuring GitHub Integration
+
+## Overview
 
 Connect the repository in **Workers & Pages → Create or select Worker → Settings → Builds → Connect**.
 
@@ -9,7 +11,9 @@ Cloudflare runs on each push to the configured branch:
 
 Preview branches use `npx wrangler versions upload` by default (preview URL, not promoted to production).
 
-## Settings reference
+## Guidelines
+
+### Settings reference
 
 | Setting | Required | Typical value |
 | --- | --- | --- |
@@ -24,7 +28,7 @@ Preview branches use `npx wrangler versions upload` by default (preview URL, not
 
 `name` in `wrangler.toml` **must match** the Worker name in the dashboard or the build fails.
 
-## Build command examples
+### Build command examples
 
 Single package at repo root:
 
@@ -42,7 +46,7 @@ pnpm install --frozen-lockfile && cd apps/web && pnpm run build
 pnpm install --frozen-lockfile && pnpm --filter web build
 ```
 
-## Build watch paths (optional)
+### Build watch paths (optional)
 
 Limit deploys to relevant file changes in monorepos, for example:
 
@@ -52,7 +56,7 @@ Limit deploys to relevant file changes in monorepos, for example:
 - `package.json`
 - `wrangler.toml`
 
-## Environment variables — two buckets
+### Environment variables — two buckets
 
 | Type | Where | When |
 | --- | --- | --- |
@@ -61,19 +65,23 @@ Limit deploys to relevant file changes in monorepos, for example:
 
 Static SPAs with build-time public env only need **build variables**.
 
-## Custom domain (post-deploy)
+### Custom domain (post-deploy)
 
 1. Workers & Pages → Worker → Settings → Domains & Routes
 2. Add custom domain; create DNS record in Cloudflare (or CNAME at DNS provider)
 
 Not required for first deploy — `*.workers.dev` works for smoke testing.
 
-## Ongoing releases
+### Ongoing releases
 
 Merge to the production branch → Cloudflare builds and deploys automatically. Check deploy status in the Cloudflare dashboard or GitHub deployment checks.
 
-## Official docs
+### Official docs
 
 - [Workers Builds configuration](https://developers.cloudflare.com/workers/ci-cd/builds/configuration/)
 - [Git integration](https://developers.cloudflare.com/workers/ci-cd/builds/git-integration/)
 - [Static assets](https://developers.cloudflare.com/workers/static-assets/)
+
+## References
+
+- [Workers Builds](https://developers.cloudflare.com/workers/ci-cd/builds/)

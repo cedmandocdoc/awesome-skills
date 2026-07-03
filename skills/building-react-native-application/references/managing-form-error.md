@@ -12,7 +12,9 @@ Use this guide to handle form failures in TanStack Form with a clear split:
 - [managing-api-error.md](./managing-api-error.md)
 - [creating-form-component.md](./creating-form-component.md) — `src/ui/Form/` layout, `FieldShell`, and pre-bound `*Field` components
 
-## Workflow
+## Guidelines
+
+### Workflow
 
 ### 1) Define error UI first (expects `ApiError`)
 
@@ -95,7 +97,7 @@ formApi.setErrorMap({
 
 Map the corresponding error into each pre-bound field’s **`FieldShell`** `error` prop (same slot as Zod validation). This keeps API-backed field errors inline with local validation.
 
-## Conventions
+### Conventions
 
 - Keep server-level failures in `onServer`.
 - Keep per-field submit failures in `onSubmit.fields`.

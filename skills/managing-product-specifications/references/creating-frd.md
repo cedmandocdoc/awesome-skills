@@ -1,14 +1,22 @@
-# Creating an FRD
+# Creating FRD
 
-**Docs only.** Writes `<docs-root>/features/<slug>/frd.md`. Do not auto-create sibling specs.
+## Overview
 
-## 1. Resolve docs root and slug
+**Docs only.** Writes `<docs-root>/features/<slug>/frd.md`.
+
+## Prerequisites
+
+Per [spec-contract.md](./spec-contract.md) → **Resolve docs root**, **Finding docs root**, and **Initialize docs root** when no `index.md` marker exists.
+
+## Guidelines
+
+### 1. Resolve docs root and slug
 
 Per [spec-contract.md](./spec-contract.md) → **Resolve docs root**, **Finding docs root**, **Initialize docs root** (if needed), and **Feature slug**.
 
 If `frd.md` already exists → stop; direct to [updating-frd.md](./updating-frd.md) unless the user confirms overwrite.
 
-## 2. Gather context
+### 2. Gather context
 
 | Source | What to extract |
 | --- | --- |
@@ -20,11 +28,11 @@ If `prd.md` is missing → ask once: create PRD first, or proceed with TBD upstr
 
 Determine `apps` list (e.g. `[web]`, `[web, api]`). Ask **at most one** question if apps are ambiguous in a monorepo.
 
-## 3. Choose tier
+### 3. Choose tier
 
 Per [spec-contract.md](./spec-contract.md) → **Tier**. Default: **standard**.
 
-## 4. Write `frd.md`
+### 4. Write `frd.md`
 
 Use [`../assets/frd.md`](../assets/frd.md). Required:
 
@@ -34,11 +42,11 @@ Use [`../assets/frd.md`](../assets/frd.md). Required:
 
 Do not invent behavior unsupported by user input or PRD.
 
-## 5. Sync PRD feature index
+### 5. Sync PRD feature index
 
 If `prd.md` exists → add or update the Features table row linking to this FRD. If the user did not ask to update PRD, note the suggested PRD edit in the confirmation message.
 
-## 6. Confirm to the user
+### 6. Confirm to the user
 
 Reply with:
 
@@ -48,3 +56,7 @@ Reply with:
 - Suggested next docs in dependency order: `user-story.md` → `ui-specs.md` / `ui-specs-<app>.md` → `trd.md` / `trd-<app>.md`
 
 **Stop without implementing** application code.
+
+## Examples
+
+**Create FRD:** User asks for checkout FRD (web + api). Resolve docs root via `index.md` → write `<docs-root>/features/checkout/frd.md` with `apps: [web, api]` → link from PRD feature index.

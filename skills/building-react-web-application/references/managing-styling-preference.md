@@ -1,10 +1,10 @@
-# Styling preference
+# Managing Styling Preference
 
 ## Overview
 
 Prefer the project’s current style guide and *design tokens* over ad hoc colors, spacing, and typography. Tokens keep routes, features, and components consistent and easier to change.
 
-For utilities and `cx` / CVA, see [styling.md](./styling.md). For wiring tokens in CSS, see [setting-up-theming.md](./setting-up-theming.md) and [setting-up-tailwind-theme.md](./setting-up-tailwind-theme.md).
+For utilities and `cx` / CVA, see [styling.md](./managing-styling.md). For wiring tokens in CSS, see [setting-up-theming.md](./setting-up-theming.md) and [setting-up-tailwind-theme.md](./setting-up-tailwind-theme.md).
 
 ## Guidelines
 

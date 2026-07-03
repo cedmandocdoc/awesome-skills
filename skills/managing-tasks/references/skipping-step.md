@@ -1,8 +1,16 @@
-# Skipping a step
+# Skipping Step
 
-Skip the current or named step and advance the execution pointer. Use when the user explicitly defers work or accepts missing acceptance criteria for that step.
+## Overview
 
-## 1. Resolve task folder and step
+**Execution mode.** Skips a step with reason and advances the execution pointer.
+
+## Prerequisites
+
+Per [task-contract.md](./task-contract.md) → **Resolve tasks root**.
+
+## Guidelines
+
+### 1. Resolve task folder and step
 
 Per [task-contract.md](./task-contract.md) → **Resolve tasks root** and **Finding tasks root**.
 
@@ -14,7 +22,7 @@ Per [task-contract.md](./task-contract.md) → **Resolve tasks root** and **Find
 
 If `overall_status` is `Cancelled` or `Done` → stop and tell the user.
 
-## 2. Record skip reason
+### 2. Record skip reason
 
 Require a brief reason (from the user or inferred from context), e.g.:
 
@@ -22,7 +30,7 @@ Require a brief reason (from the user or inferred from context), e.g.:
 - Blocked on external dependency
 - No longer needed after scope change
 
-## 3. Update artifacts
+### 3. Update artifacts
 
 **`plan.md` frontmatter:**
 
@@ -39,14 +47,14 @@ Require a brief reason (from the user or inferred from context), e.g.:
 
 Do **not** check off skipped steps as completed.
 
-## 4. Follow-up obligations
+### 4. Follow-up obligations
 
 If skipping leaves a gap in the verification checklist:
 
 - Add a note to `handoff_note` or a new todo in `plan.md` (prefer [updating-task.md](./updating-task.md) if the user wants a formal amend)
 - Or link a related task under Context → **Related tasks**
 
-## 5. Confirm to the user
+### 5. Confirm to the user
 
 Reply with:
 

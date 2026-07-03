@@ -1,25 +1,20 @@
-# Executing multiple tasks
+# Executing Multiple Tasks
 
-**Backlog execution mode.** Plan the execution series once, then implement tasks in that order — no per-task re-triage between implementations.
+## Overview
 
-Use when the user wants to work through the backlog without naming a specific task folder — e.g. "finish all tasks", "run the backlog", "implement until nothing is startable".
+**Backlog execution mode.** Plans then implements tasks in order until cap or exit.
 
-**Not this recipe:**
+## Prerequisites
 
-| User intent | Recipe |
-| --- | --- |
-| One known task folder, step by step | [executing-task.md](./executing-task.md) |
-| Read-only — which tasks can start? | [triaging-tasks.md](./triaging-tasks.md) — readiness report mode |
-| Read-only — execution roadmap only | [triaging-tasks.md](./triaging-tasks.md) — execution-roadmap mode |
-| Status report only | [checking-task.md](./checking-task.md) |
+Per [subagent-provisioning.md](./subagent-provisioning.md) when delegating to subagents.
 
-**Disambiguation:** A message that names `tasks/<NNN-slug>/` or "continue this task" → [executing-task.md](./executing-task.md). A message that @-mentions the tasks root or says "finish all" with no folder → this recipe.
+## Guidelines
 
-## 1. Resolve tasks root
+### 1. Resolve tasks root
 
 Per [task-contract.md](./task-contract.md) → **Resolve tasks root**.
 
-## 2. Parameters
+### 2. Parameters
 
 Parse from the user's message. Use defaults when omitted.
 
@@ -29,13 +24,13 @@ Parse from the user's message. Use defaults when omitted.
 | `stop_on_blocked` | `true` | Stop when implementer returns `Blocked task-...` |
 | `push_on_done` | `false` | Tell implementer to push only when the user explicitly requests push |
 
-## 3. Provision subagents
+### 3. Provision subagents
 
 Before delegating, follow [subagent-provisioning.md](./subagent-provisioning.md) for **`task-triager`** and **`task-implementer`**.
 
 If the IDE has no subagent support (Windsurf, Continue, or unknown), run the orchestration loop **inline** — you orchestrate but follow triaging-tasks execution-roadmap and executing-task per task yourself; skip §4–§5 delegation and use the same exit conditions in §6.
 
-## 4. Subagent contracts
+### 4. Subagent contracts
 
 Parse subagent replies exactly — one line each.
 
@@ -56,7 +51,7 @@ Parse subagent replies exactly — one line each.
 
 Map `task-<NNN-slug>` to `<tasks-root>/<NNN-slug>/`.
 
-## 5. Orchestration loop
+### 5. Orchestration loop
 
 Run in two phases. Track:
 
@@ -66,7 +61,7 @@ Run in two phases. Track:
 - `completed_tasks` — list of `task-<NNN-slug>` ids
 - `last_outcome` — last implementer reply line
 
-### Phase A — Plan once
+#### Phase A — Plan once
 
 1. **Plan** — Launch `task-triager` with `readonly: true` (or run [triaging-tasks.md](./triaging-tasks.md) execution-roadmap inline when subagents are unavailable).
    - Prompt: `Build an execution plan for the task backlog. max_completed: <N>.`
@@ -75,7 +70,7 @@ Run in two phases. Track:
 
 Do not launch the implementer until phase A returns a plan.
 
-### Phase B — Execute the plan
+#### Phase B — Execute the plan
 
 For each entry in `execution_plan` starting at `plan_index`:
 
@@ -94,7 +89,7 @@ When `plan_index` reaches the end of `execution_plan` → exit loop (reason: `pl
 
 Do not launch triager and implementer in parallel. Order is always plan once → implement → implement → …
 
-## 6. Report results
+### 6. Report results
 
 Reply with a short summary. Optional one-line progress per completed task is allowed; do not paste subagent logs, diffs, or step-by-step narration.
 
@@ -108,7 +103,7 @@ Last outcome: <last implementer one-liner, or "none">
 
 If stop reason is `blocked`, you may add one sentence on what the user can do to unblock.
 
-## 7. Constraints
+### 7. Constraints
 
 - **Delegate only** (when subagents are available) — never substitute your own triage or implementation for subagent work.
 - **Plan once per run** — do not call `task-triager` again mid-loop; follow `execution_plan` until an exit condition.
@@ -118,3 +113,7 @@ If stop reason is `blocked`, you may add one sentence on what the user can do to
 - **No replanning** — do not update task plans, unblock tasks, or archive unless the user explicitly asks outside this run.
 
 Each fully implemented task follows [executing-task.md](./executing-task.md) and [verifying-task.md](./verifying-task.md) inside the implementer subagent (or inline) — not in the orchestrating session.
+
+## Examples
+
+**Execute multiple:** User says "finish all tasks". Provision subagents per [subagent-provisioning.md](./subagent-provisioning.md) → delegate to `task-triager` for the plan, then `task-implementer` for each planned task until cap or exit.

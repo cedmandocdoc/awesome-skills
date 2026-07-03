@@ -40,15 +40,7 @@ This keeps step definitions centralized, makes step IDs type-safe across the fea
 - Use `stepper.flow.is(id)` for simple conditionals.
 - Use `stepper.navigation.next()`, `prev()`, `goTo(id)`, and `reset()` for transitions.
 
-## Setup
-
-Install Stepperize in the app project:
-
-```bash
-npm install @stepperize/react
-```
-
-## Example
+### Example
 
 ### Feature hook: `useBookingStepper`
 
@@ -128,6 +120,14 @@ export function BookingMiniStepper() {
     </section>
   );
 }
+```
+
+## Setup
+
+Install Stepperize in the app project:
+
+```bash
+npm install @stepperize/react
 ```
 
 ## Related

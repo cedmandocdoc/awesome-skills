@@ -10,7 +10,7 @@ Shared design tokens and light/dark variables as the single source for Tailwind,
 
 - [Tailwind CSS — Using Vite](https://tailwindcss.com/docs/installation/using-vite)
 
-## Steps
+## Guidelines
 
 ### 1. Install Tailwind with Vite
 
@@ -66,8 +66,8 @@ Keep everything else from that section in order—for example:
 
 Use the **class-based** pattern from the manual (e.g. `.dark` on `<html>`). Toggle it from the root layout or a small provider when you add a theme switcher.
 
-## Next
+### Next
 
 - For how semantic token names map to usage in components, see [setting-up-tailwind-theme.md](./setting-up-tailwind-theme.md).
-- For day-to-day utility rules, see [styling.md](./styling.md).
+- For day-to-day utility rules, see [styling.md](./managing-styling.md).
 - For vendoring registry files into `src/ui/` with `cx` and path fixes, see [creating-ui-component.md](./creating-ui-component.md).

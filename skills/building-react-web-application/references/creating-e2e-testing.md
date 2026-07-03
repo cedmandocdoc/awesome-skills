@@ -78,6 +78,18 @@ data-testid="nav:header:logo"
 
 Add `data-testid` in feature or route components when building UI that E2E tests must target. Prefer test IDs over CSS selectors or brittle text matches.
 
+### Review checklist
+
+- Focus on pages and user journeys only
+- Choose single page vs flow test type deliberately
+- Use Page Object Model for all page interactions
+- Organize tests in the proper directory structure
+- Follow file naming conventions
+- Use fixtures for test data management
+- Implement proper wait strategies
+- Use `data-testid` locators with namespace conventions
+- Test complete user workflows for flow tests
+
 ## Examples
 
 ### Page object
@@ -193,15 +205,3 @@ export class TestHelpers {
   }
 }
 ```
-
-## Review checklist
-
-- Focus on pages and user journeys only
-- Choose single page vs flow test type deliberately
-- Use Page Object Model for all page interactions
-- Organize tests in the proper directory structure
-- Follow file naming conventions
-- Use fixtures for test data management
-- Implement proper wait strategies
-- Use `data-testid` locators with namespace conventions
-- Test complete user workflows for flow tests

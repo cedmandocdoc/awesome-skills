@@ -1,8 +1,16 @@
-# Archiving a task
+# Archiving Task
 
-Move completed or cancelled tasks to `archive/`. No implementation in this workflow.
+## Overview
 
-## 1. Resolve scope
+**Execution mode.** Moves `Done` or `Cancelled` tasks to `archive/`.
+
+## Prerequisites
+
+Per [task-contract.md](./task-contract.md) → **Resolve tasks root**.
+
+## Guidelines
+
+### 1. Resolve scope
 
 | Scope | Trigger phrasing |
 | --- | --- |
@@ -13,13 +21,13 @@ Per [task-contract.md](./task-contract.md) → **Resolve tasks root** and **Find
 
 Resolve `<task-folder>` for a single task under `<tasks-root>/`. For batch, discover tasks per **Finding existing tasks**, then filter by `overall_status` (`Done` and/or `Cancelled` as the user specifies).
 
-## 2. Eligibility
+### 2. Eligibility
 
 Archive only when `overall_status` is `Done` or `Cancelled`.
 
 If the task is `In Progress`, `Blocked`, or `Review` → confirm with the user before archiving (unusual).
 
-## 3. Move folder
+### 3. Move folder
 
 For each task to archive:
 
@@ -30,7 +38,7 @@ For each task to archive:
 
 Do not delete task folders unless the user explicitly requests deletion.
 
-## 4. Confirm to the user
+### 4. Confirm to the user
 
 Reply with:
 

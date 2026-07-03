@@ -1,6 +1,12 @@
-# Troubleshooting deployment — Cloudflare web
+# Troubleshooting Deployment
 
-## Build fails
+## Overview
+
+Diagnose build, deploy, and runtime failures for Cloudflare Workers Builds static hosting.
+
+## Guidelines
+
+### Build fails
 
 | Symptom | Likely cause | Action |
 | --- | --- | --- |
@@ -10,7 +16,7 @@
 | Build timeout (20 min) | Heavy build or OOM | Optimize build; split steps |
 | Missing env at build | Build variables not set in dashboard | Add `VITE_*` / `NEXT_PUBLIC_*` under Build variables |
 
-## Deploy fails
+### Deploy fails
 
 | Symptom | Likely cause | Action |
 | --- | --- | --- |
@@ -19,7 +25,7 @@
 | Wrangler not found | No wrangler in project | Add `wrangler` to `devDependencies` |
 | `wrangler.toml` not found | Wrong root directory | Point root directory to folder containing config |
 
-## Runtime issues
+### Runtime issues
 
 | Symptom | Likely cause | Action |
 | --- | --- | --- |
@@ -28,14 +34,14 @@
 | Old content after deploy | Browser or CDN cache | Hard refresh; check deployment is active |
 | Assets 404 | Output path or base URL mismatch | Check framework `base` / `assetPrefix` config |
 
-## Monorepo-specific
+### Monorepo-specific
 
 | Symptom | Likely cause | Action |
 | --- | --- | --- |
 | Deploy on unrelated commits | No watch paths | Configure build watch paths |
 | Lockfile changes break build | Install not using frozen lockfile | Use `pnpm install --frozen-lockfile` or `npm ci` |
 
-## Debugging deploys
+### Debugging deploys
 
 - Cloudflare dashboard → Worker → Deployments → view build log
 - Retry build after fixing config (retry uses settings at retry time)

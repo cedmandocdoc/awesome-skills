@@ -51,7 +51,7 @@ src/ui/Form/
 - UI in `src/features/<feature>/` or route modules **compose** fields and the form hook; they **do not** redefine `createFormHook` or field contexts.
 - Keep API submission beside other server logic (TanStack Query mutations, Axios clients) per [creating-api.md](./creating-api.md); use the form’s submit handler to call validated values into those layers.
 
-## Official guides (behavior and APIs)
+### Official guides (behavior and APIs)
 
 Use these for validation timing, submit lifecycle, and fine-grained reactivity. This skill does not duplicate those pages.
 
@@ -61,15 +61,7 @@ Use these for validation timing, submit lifecycle, and fine-grained reactivity. 
 | **Submission** | [Submission handling](https://tanstack.com/form/latest/docs/framework/react/guides/submission-handling.md) |
 | **Reactivity** | [Reactivity](https://tanstack.com/form/latest/docs/framework/react/guides/reactivity.md)                   |
 
-## Setup
-
-Install the package in the app project:
-
-```bash
-npm install @tanstack/react-form
-```
-
-## Composition shape
+### Composition shape
 
 Build contexts in **`contexts.ts`**, define field and form components in sibling files, then pass them into **`createFormHook`** from **`index.tsx`**.
 
@@ -106,7 +98,7 @@ export { useAppForm, withForm };
 
 Registered field components appear on the **`field`** object inside **`form.AppField`** (for example `<field.InputField label="…" />`). Registered form components appear on **`form`** (for example `<form.SubscribeButton label="…" />` inside **`form.AppForm`**). See [Form composition](https://tanstack.com/form/latest/docs/framework/react/guides/form-composition.md) for `withForm`, lazy loading, and tree-shaking.
 
-## Creating field components
+### Creating field components
 
 ### 1) Shared field shell
 
@@ -175,6 +167,14 @@ export function InputField({ label }: { label: string }) {
 Register **`InputField`** in `fieldComponents` inside **`index.tsx`**. Add Zod validators on the form so front-end validation runs automatically; error display in the shell is covered in [managing-form-error.md](./managing-form-error.md).
 
 Repeat for other controls (`TextareaField`, `CheckboxField`, etc.) using the same **`NameOfControl + Field`** naming.
+
+## Setup
+
+Install the package in the app project:
+
+```bash
+npm install @tanstack/react-form
+```
 
 ## Examples
 

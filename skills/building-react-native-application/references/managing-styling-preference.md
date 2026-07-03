@@ -1,10 +1,10 @@
-# Styling preference
+# Managing Styling Preference
 
 ## Overview
 
 Prefer the project’s current style guide and *design tokens* over ad hoc colors, spacing, and typography. Tokens keep screens and components consistent and easier to change.
 
-For how to wire tokens and utilities with NativeWind, see [styling.md](./styling.md). For theme extension and navigation theming, see the **Theming** row in the skill’s references table.
+For how to wire tokens and utilities with NativeWind, see [managing-styling.md](./managing-styling.md). For theme extension and navigation theming, see the **Theming** row in the skill’s references table.
 
 ## Guidelines
 

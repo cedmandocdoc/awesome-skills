@@ -14,22 +14,6 @@ Start from [creating-component.md](./creating-component.md). For wiring navigati
 - [creating-route-component.md](./creating-route-component.md) — default wiring in `src/routes/`
 - [creating-screen-component.md](./creating-screen-component.md) — route-facing screens (navigation components stay out of screen trees by default)
 
-## Naming
-
-Derive the component name from the **navigator module name** in `src/routes/` (see [creating-route-component.md](./creating-route-component.md#naming)). Drop the `Navigator` suffix and append the navigation slot type:
-
-| Navigator | Navigation component |
-| --- | --- |
-| `MainBottomNavigator` | `MainBottomTabBar` |
-| `ProfileStackNavigator` | `ProfileStackHeader` |
-| `MainDrawerNavigator` | `MainDrawerContent` |
-
-- **Stack:** `[Module]StackHeader` — e.g. `ProfileStackNavigator` → `ProfileStackHeader`.
-- **Bottom tabs:** `[Module]BottomTabBar` — e.g. `MainBottomNavigator` → `MainBottomTabBar`.
-- **Drawer:** `[Module]DrawerContent` — e.g. `MainDrawerNavigator` → `MainDrawerContent`.
-- Hooks: `useProfileStackHeader`, `useMainBottomTabBar` — live in `src/features/navigation/hooks/`.
-- Use one navigator-scoped component per slot instead of screen-local duplicates.
-
 ## Guidelines
 
 ### Prefer whole navigation components
@@ -99,6 +83,22 @@ Navigation components are usually **presentation-only**; navigation actions come
 
 - Copying the same header, tab bar, or drawer JSX into every screen file.
 - Putting domain business logic in navigation components — navigation components are presentation and layout.
+
+### Naming
+
+Derive the component name from the **navigator module name** in `src/routes/` (see [creating-route-component.md](./creating-route-component.md#naming)). Drop the `Navigator` suffix and append the navigation slot type:
+
+| Navigator | Navigation component |
+| --- | --- |
+| `MainBottomNavigator` | `MainBottomTabBar` |
+| `ProfileStackNavigator` | `ProfileStackHeader` |
+| `MainDrawerNavigator` | `MainDrawerContent` |
+
+- **Stack:** `[Module]StackHeader` — e.g. `ProfileStackNavigator` → `ProfileStackHeader`.
+- **Bottom tabs:** `[Module]BottomTabBar` — e.g. `MainBottomNavigator` → `MainBottomTabBar`.
+- **Drawer:** `[Module]DrawerContent` — e.g. `MainDrawerNavigator` → `MainDrawerContent`.
+- Hooks: `useProfileStackHeader`, `useMainBottomTabBar` — live in `src/features/navigation/hooks/`.
+- Use one navigator-scoped component per slot instead of screen-local duplicates.
 
 ## Examples
 

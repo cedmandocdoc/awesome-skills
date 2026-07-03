@@ -1,23 +1,26 @@
 ---
 name: managing-product-specifications
 description: Creates, updates, and reviews product specification markdown (PRD, FRD, TRD, user story, UI specs) with consistent structure, frontmatter, and monorepo app suffixes. Use when the user asks to draft, amend, or review prd.md, frd.md, trd, user-story, or ui-specs at product or feature level — no code implementation.
+version: 1.0.0
 ---
 
 # Managing Product Specifications
+
+## Overview
 
 Skill collection for pre-implementation product specs on disk. Works in any environment where the agent can read and write repository files.
 
 **Contract:** [`references/spec-contract.md`](references/spec-contract.md) — layout, naming, frontmatter, inheritance, tiers.
 
-**Rule:** Read exactly **one** recipe below for the user's intent. Do not load other recipe files unless the user switches intent mid-session.
+## Agent workflow
 
-## When to use
-
-Follow this skill when creating, updating, or reviewing product specification markdown: PRD, FRD, TRD, user story, or UI specs — at product level (`<docs-root>/`) or feature level (`<docs-root>/features/<slug>/`). No application code unless the user explicitly asks in the same message.
+Follow this skill when creating, updating, or reviewing product specification markdown: PRD, FRD, TRD, user story, or UI specs — at product level (`<docs-root>/`) or feature level (`<docs-root>/features/<slug>/`). Stop without application code unless the user explicitly asks in the same message.
 
 **Docs root:** Located only via `<docs-root>/index.md` with the static **Author signature** UUID in frontmatter. If none exists, **ask the user** for an empty folder path, then initialize with `index.md` before any spec. See [spec-contract.md](references/spec-contract.md) → **Resolve docs root**.
 
-## Spec recipes
+Match one **Recipes** cell; open exactly that reference.
+
+### Recipes
 
 | Doc | Create | Update | Review |
 | --- | --- | --- | --- |
@@ -27,11 +30,13 @@ Follow this skill when creating, updating, or reviewing product specification ma
 | **User story** | [creating-user-story.md](references/creating-user-story.md) | [updating-user-story.md](references/updating-user-story.md) | [reviewing-user-story.md](references/reviewing-user-story.md) |
 | **UI specs** | [creating-ui-specs.md](references/creating-ui-specs.md) | [updating-ui-specs.md](references/updating-ui-specs.md) | [reviewing-ui-specs.md](references/reviewing-ui-specs.md) |
 
-Load this skill when intent matches any cell, whether the user @-mentions the skill or describes the work in natural language.
-
 **Path resolution:** Product companions (`<docs-root>/trd-web.md`, …) and feature companions (`<docs-root>/features/<slug>/trd-api.md`, …) use the same recipe; `<docs-root>` comes from [spec-contract.md](references/spec-contract.md) → **Finding docs root**.
 
 ## Reference index
+
+### Contract
+
+[spec-contract.md](references/spec-contract.md) — layout, frontmatter, resolve rules.
 
 | Doc | When to use |
 | --- | --- |
@@ -60,15 +65,3 @@ Load this skill when intent matches any cell, whether the user @-mentions the sk
 - [`assets/trd.md`](assets/trd.md)
 - [`assets/user-story.md`](assets/user-story.md)
 - [`assets/ui-specs.md`](assets/ui-specs.md)
-
-## Examples
-
-**Create PRD (new repo):** No `index.md` found → ask user for an empty folder (e.g. `docs/`) → write `docs/index.md` then `docs/prd.md` → suggest `ui-specs.md` or first FRD; do not auto-create them.
-
-**Create FRD:** User asks for checkout FRD (web + api). Resolve docs root via `index.md` → write `<docs-root>/features/checkout/frd.md` with `apps: [web, api]` → link from PRD feature index.
-
-**Create feature TRD:** User asks for checkout web TRD. Follow [creating-trd.md](references/creating-trd.md) → read `frd.md` and `<docs-root>/trd-web.md` → write `<docs-root>/features/checkout/trd-web.md`.
-
-**Update FRD:** User adds acceptance criteria. Follow [updating-frd.md](references/updating-frd.md) → bump `spec_revision` → note downstream user-story / TRD docs that may need review.
-
-**Review UI specs:** User asks to review `ui-specs-mobile.md`. Follow [reviewing-ui-specs.md](references/reviewing-ui-specs.md) → checklist → structured feedback; no file mutations.

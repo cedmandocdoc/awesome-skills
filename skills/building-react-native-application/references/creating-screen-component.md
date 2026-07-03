@@ -12,23 +12,6 @@ Start from [creating-component.md](./creating-component.md). For feature module 
 - [creating-feature-component.md](./creating-feature-component.md) — smaller blocks inside the screen
 - [creating-route-component.md](./creating-route-component.md) — static `screens` registration and navigation component wiring
 
-## Placement
-
-Route-facing screen files **always** live under the feature's `components/` folder:
-
-```text
-src/features/<feature-name>/components/<Feature>Screen.tsx
-```
-
-Examples: `src/features/workshop-list/components/WorkshopListScreen.tsx`, `src/features/settings/components/SettingsScreen.tsx`.
-
-Shared layout wrappers exported from a feature (`AuthLayout`, `MainLayout`) also live in `components/`: `src/features/<feature-name>/components/<Feature>Layout.tsx`.
-
-## Naming
-
-- Use the **`Screen`** suffix for components rendered as a route destination: `WorkshopListScreen`, `SettingsScreen`.
-- Use **`Layout`** for structural wrappers shared across route entries when exported from a feature: `AuthLayout`, `MainLayout`.
-
 ## Guidelines
 
 ### Screen responsibilities
@@ -47,6 +30,23 @@ Shared layout wrappers exported from a feature (`AuthLayout`, `MainLayout`) also
 
 - Keep screens focused; extract sub-trees to sibling feature components in the same `components/` folder when the file grows.
 - Async list/content wrappers: [creating-async-component.md](./creating-async-component.md).
+
+### Placement
+
+Route-facing screen files **always** live under the feature's `components/` folder:
+
+```text
+src/features/<feature-name>/components/<Feature>Screen.tsx
+```
+
+Examples: `src/features/workshop-list/components/WorkshopListScreen.tsx`, `src/features/settings/components/SettingsScreen.tsx`.
+
+Shared layout wrappers exported from a feature (`AuthLayout`, `MainLayout`) also live in `components/`: `src/features/<feature-name>/components/<Feature>Layout.tsx`.
+
+### Naming
+
+- Use the **`Screen`** suffix for components rendered as a route destination: `WorkshopListScreen`, `SettingsScreen`.
+- Use **`Layout`** for structural wrappers shared across route entries when exported from a feature: `AuthLayout`, `MainLayout`.
 
 ## Examples
 
