@@ -122,7 +122,7 @@ Every `SKILL.md` uses the **same major sections in the same order**. Skill-speci
 | **Reference index** | Yes | Full catalog of `references/` files. Single table: Doc \| When to use (add Purpose or Layer columns when helpful). |
 | **Templates** | If `assets/` exists | Links to copyable templates under `assets/`. |
 
-Omit **Templates** when the skill has no `assets/`. Do not add **Examples** or **Official docs** sections to `SKILL.md` — put scenarios in reference docs; put platform URLs in references (e.g. troubleshooting or configuring docs) or inline where a step needs them.
+Omit **Templates** when the skill has no `assets/`. Do not add **Examples** sections to `SKILL.md` — put scenarios in reference docs; put platform URLs in the reference doc **References** section or inline where a step needs them.
 
 #### Subsections under **Agent workflow**
 
@@ -199,67 +199,228 @@ Follow this skill for … Works wherever the agent can read and write repository
 
 ## Reference document structure
 
-References are **recipes or deep dives** the agent reads after `SKILL.md` routes to them.
-
-### Title line
+References are **recipes or deep dives** the agent reads after `SKILL.md` routes to them. Every reference uses the **same major sections in the same order**. Skill-specific content goes in **`###` subsections** under the major section it belongs to — especially under **Guidelines**.
 
 ```markdown
 # <Action> — <topic>
+
+## Overview
+## Prerequisites
+## Guidelines
+## Setup
+## Examples
+## Related
+## References
 ```
 
-Subtitle after an em dash: `# Discovering application — target app, build command, output path`.
+Omit optional sections when they do not apply. Do not add other top-level sections.
 
-### Opening block
+### Major sections
 
-1. **Mode line** (when applicable): `**Planning only.**`, `**Docs only.**`, `**Review mode.**`
-2. **One sentence** — when to run this reference
+| Section | Required | Purpose |
+| --- | --- | --- |
+| **Overview** | Yes | What this reference does, when to run it, and the mode boundary. Start with a **mode line** when the doc mutates files or is read-only (see below). One short paragraph; bullets for triggers if needed. |
+| **Prerequisites** | Optional | What must be resolved or read first — contract links, upstream docs, repo paths, dashboard access, prerequisite files. |
+| **Guidelines** | Yes | **Main content.** Procedures, rules, tables, decision trees, checklists, troubleshooting phases, and contract definitions. Use `###` subsections; numbered steps (`### 1.` … `### N.`) for lifecycle recipes. |
+| **Setup** | Optional | One-time bootstrap separate from the main procedure — install packages, minimum config, env vars, initialize a root folder. |
+| **Examples** | Optional | Copy-paste samples: code, config snippets, filled templates, report formats. |
+| **Related** | Optional | Links to other references or `assets/` in the **same skill** only. |
+| **References** | Optional | External platform or spec URLs (official docs, API docs, third-party specifications). |
 
-### Common section patterns
+**Why this scales:** recipe docs put numbered steps in **Guidelines**; contract docs put every field and layout rule in **Guidelines**; framework docs put decision trees and placement rules in **Guidelines**; troubleshooting puts phase groups and symptom tables in **Guidelines**. **Related** and **References** stay separate so in-skill navigation and external URLs do not mix with procedural content.
 
-Use only the sections the doc needs:
+### Mode line (in Overview)
 
-| Section | Typical use |
+Place the mode line as the **first line** of **Overview**:
+
+| Mode | Use for |
 | --- | --- |
-| Numbered steps (`## 1. …`) | Sequential workflows |
-| Resolution / discovery | How to find paths, roots, or candidates in the repo |
-| Tables | Options, fields, symptom → cause → action |
-| Checklists | Copy-paste verification before proceeding |
-| Code blocks | Commands, config snippets, templates |
-| Confirm to the user | What to report before stopping |
+| `**Planning only.**` | Task/spec planning; no implementation |
+| `**Docs only.**` | Writes or amends markdown specs only |
+| `**Authoring mode.**` | Creates docs, style guides, or design handoff files |
+| `**Review mode.**` | Read-only review unless the user asks to apply edits |
+| `**Execution mode.**` | Implements the current task step |
+| `**Read-only.**` | Status, triage, or check — no file mutations |
+| `**Backlog execution mode.**` | Multi-task orchestration loop |
 
-### Contract references (`*-contract.md`)
+### Common `###` subsections under Guidelines
 
-Shared by all recipes in a skill:
+Use only what the reference needs:
 
-- Author or domain signatures (UUIDs) when the skill owns on-disk markers
-- Output layout and file tree
-- Frontmatter field tables
-- Resolve / find / initialize procedures
+| Subsection | Use for |
+| --- | --- |
+| `### 1.` … `### N.` | Lifecycle recipes — resolve → gather → act → sync → confirm |
+| `### Decision tree` | Routing table before a deep dive |
+| `### Confirm to the user` | Final recipe step — paths, summary, follow-up (or use `### N.` for this) |
+| Topic headings | Contract fields, troubleshooting phases (`### Build fails`), review checklist groups |
 
-### Troubleshooting references
+### Mapping reference kinds → sections
 
-- Group by phase (build, deploy, runtime)
-- **Symptom | Likely cause | Action** tables
-- Short debugging steps; link to official logs when relevant
+| Kind | Filename prefix | Overview | Prerequisites | Guidelines | Setup | Examples | Related | References |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Lifecycle recipe | `creating-`, `updating-`, `executing-`, … | Mode + purpose | Contract / path resolve | Numbered steps | — | — | — | — |
+| Contract | `*-contract.md` | What the contract governs | — | Signatures, layout, fields, resolve rules | Init procedures (if any) | — | — | — |
+| Review | `reviewing-` | Mode + scope | Link to creating doc | Steps + checklist `###` groups | — | Report template | Creating doc | — |
+| Discovery | `discovering-` | When to run | — | Numbered discovery phases + checklist | — | Path/command samples | — | — |
+| Configuring | `configuring-` | Platform + goal | Dashboard/repo state | Settings tables, field reference | Install, minimum config | Filled settings examples | — | Platform docs |
+| Troubleshooting | `troubleshooting-` | When to use | — | Phase groups + symptom tables | — | Debug commands (optional) | — | Platform docs |
+| Convention / guide | `managing-`, `creating-*` (framework) | What this guide covers | Required reading | Rules, placement, naming, trees | Install / bootstrap | Code samples | Linked refs | External docs (optional) |
 
-### Configuring / discovering references
+### Title and filename
 
-- Prerequisites stated up front
-- Minimum viable example first, then variants
-- Field tables for config keys
-- “Preferred order” for resolution (user input → repo files → ask)
+- **Filename:** kebab-case with verb prefix (`creating-task.md`, `discovering-application.md`).
+- **Title:** `# <Action> — <topic>` — sentence case after the em dash.
 
-### Review references
+### Cross-links
 
-- Point to the creating doc for standards
-- Checklist aligned with those standards
-- Fixed output format (Summary, Strengths, Issues, Next steps)
+- Recipe → contract: link from **Prerequisites** or step 1 in **Guidelines**
+- Recipe → asset: `[../assets/plan.md](../assets/plan.md)` from a Guidelines step
+- In-skill navigation: **Related** section — not mixed into **Guidelines**
+- External URLs: **References** section — not mixed into **Guidelines**
+- Keep links **flat** — same skill only; no reference → reference → reference chains
 
-### Cross-links inside a skill
+### Minimal skeletons
 
-- Recipe → contract: `[task-contract.md](./task-contract.md)`
-- Recipe → asset: `[../assets/plan.md](../assets/plan.md)`
-- Keep references **flat** — avoid chains of reference-only links
+**Framework guide** (matches building-react references):
+
+```markdown
+# Creating component — routing and shared rules
+
+## Overview
+
+Start here for any component work. Read the decision tree, then open only the linked guide for your case.
+
+## Prerequisites
+
+- [managing-project-structure.md](./managing-project-structure.md) when folder placement is unclear
+
+## Guidelines
+
+### Decision tree
+…
+
+### Placement
+…
+
+### Shared rules
+…
+
+## Related
+
+- [creating-ui-component.md](./creating-ui-component.md)
+- [managing-state.md](./managing-state.md)
+```
+
+**Lifecycle recipe:**
+
+```markdown
+# Creating a task — plan and status files
+
+## Overview
+
+**Planning only.** Writes `plan.md` and `status.md` for a new task folder.
+
+## Prerequisites
+
+Per [task-contract.md](./task-contract.md) → **Resolve tasks root**.
+
+## Guidelines
+
+### 1. Resolve tasks root
+…
+
+### 6. Confirm to the user
+…
+```
+
+**Contract:**
+
+```markdown
+# Task contract — on-disk layout and fields
+
+## Overview
+
+Shared layout and field meanings for all managing-tasks workflows.
+
+## Guidelines
+
+### Author signature
+…
+
+### Output layout
+…
+
+### Resolve tasks root
+…
+```
+
+**Review:**
+
+```markdown
+# Reviewing a PRD — product requirements
+
+## Overview
+
+**Review mode.** Read-only unless the user asks to apply edits.
+
+## Prerequisites
+
+Authoring standards: [creating-prd.md](./creating-prd.md).
+
+## Guidelines
+
+### Workflow
+1. Read the full `prd.md`.
+2. Run the checklist below.
+3. Deliver feedback using the examples template.
+
+### Checklist — structure
+…
+
+## Examples
+
+### Report template
+…
+
+## Related
+
+- [creating-prd.md](./creating-prd.md)
+```
+
+**Configuring:**
+
+```markdown
+# Configuring GitHub integration — Supabase dashboard
+
+## Overview
+
+Dashboard settings after local validation passes.
+
+## Guidelines
+
+### Settings reference
+…
+
+## Setup
+
+### Connect repository
+…
+
+## Examples
+
+### Working directory examples
+…
+
+## References
+
+- [GitHub integration](https://supabase.com/docs/guides/deployment/branching/github-integration)
+```
+
+### Reference constraints
+
+- Prefer tables and bullets over long prose
+- Put **Confirm to the user** as the last `###` under **Guidelines** for mutating recipes
+- Mode line in **Overview** carries the boundary; avoid repeating it in every step
 
 ---
 
@@ -289,7 +450,7 @@ Use `.yaml` extension (existing convention in this repo). Content is the same if
 | Rule | Detail |
 | --- | --- |
 | No cross-skill links | Do not link to `skills/other-skill/...` or tell the agent to load another catalog skill |
-| Repeat minimal context | If two skills need the same fact, state it briefly in each skill or link to **official external docs** |
+| Repeat minimal context | If two skills need the same fact, state it briefly in each skill or link from **References** to external docs |
 | External skills | May mention third-party or user-installed skills only as optional context, not as dependencies |
 
 A user may install one skill without the rest of the catalog. Each skill must stand alone.
@@ -300,7 +461,7 @@ A user may install one skill without the rest of the catalog. Each skill must st
 
 - [ ] `skills/<name>/SKILL.md` has valid frontmatter (`name`, `description`)
 - [ ] `skills/<name>/agents/openai.yaml` present and aligned with `name` / `description`
-- [ ] Reference files use kebab-case and consistent verb prefixes
+- [ ] Reference files use kebab-case filenames and verb prefixes; body uses Overview → Prerequisites → Guidelines → Setup → Examples → Related → References (omit empty sections)
 - [ ] `SKILL.md` uses Overview → Agent workflow → Reference index (→ Templates if `assets/`); skill-specific blocks are subsections only
 - [ ] No links to other skills under `skills/`
 - [ ] Active voice, concise tables, mode lines instead of repeated negatives
