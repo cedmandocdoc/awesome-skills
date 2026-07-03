@@ -93,16 +93,3 @@ Deploy Supabase backend?
 | Supabase root, working directory, local validation | [discovering-supabase-root.md](references/discovering-supabase-root.md) |
 | Dashboard GitHub integration settings | [configuring-github-integration.md](references/configuring-github-integration.md) |
 | Common failures | [troubleshooting-deployment.md](references/troubleshooting-deployment.md) |
-
-## Out of scope
-
-- Custom GitHub Actions or CI deploy pipelines (integration replaces them for the default path)
-- `supabase link` / manual `db push` / `functions deploy` as the standard release workflow
-- Supabase branching / preview environments (Pro plan) unless the user asks
-- Auth provider setup, SMTP, content seeding, or app-specific release gates
-- Postgres schema design (use `supabase-postgres-best-practices`)
-
-## Official docs
-
-- [GitHub integration](https://supabase.com/docs/guides/deployment/branching/github-integration)
-- [Deployment overview](https://supabase.com/docs/guides/deployment)

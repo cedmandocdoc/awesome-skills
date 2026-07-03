@@ -103,16 +103,3 @@ Use discovery to confirm — do not assume.
 | Next.js (static export) | `out/` | `npm run build` |
 | Astro (static) | `dist/` | `npm run build` |
 | Expo web | `dist/` | `npx expo export -p web` |
-
-## Out of scope
-
-- Cloudflare Pages-only Git integration (legacy path without `wrangler deploy`)
-- Custom Git provider CI deploy pipelines
-- Runtime Worker bindings (KV, D1, R2) unless the app already uses them
-- DNS and custom domain setup beyond noting it as a post-deploy step
-
-## Official docs
-
-- [Workers Builds configuration](https://developers.cloudflare.com/workers/ci-cd/builds/configuration/)
-- [Git integration](https://developers.cloudflare.com/workers/ci-cd/builds/git-integration/)
-- [Static assets](https://developers.cloudflare.com/workers/static-assets/)
