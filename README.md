@@ -47,7 +47,6 @@ Source formats also work: full GitHub URL, a path to a single skill, or a local 
 | --- | --- |
 | [`managing-tasks`](skills/managing-tasks/) | Structured task folders (`plan.md`, `status.md`) for cross-session agent handoff — create, execute, triage, block, verify, and archive work on disk. |
 | [`managing-product-specifications`](skills/managing-product-specifications/) | Draft and review product specs (PRD, FRD, TRD, user stories, UI specs) with consistent layout and frontmatter — planning only, no implementation. |
-| [`managing-documentation`](skills/managing-documentation/) | Write and review Markdown, `SKILL.md`, rules, and `AGENTS.md` for clarity, structure, and style. |
 | [`managing-design`](skills/managing-design/) | Produce visual style guides and Google Stitch handoff files from PRDs, user stories, and UI specs. |
 | [`building-react-web-application`](skills/building-react-web-application/) | Build Vite + React SPAs with a fixed stack: Tailwind v4, TanStack Router/Query, Zustand, Axios, and shadcn-style UI in `src/ui`. |
 | [`building-react-native-application`](skills/building-react-native-application/) | Build Expo/React Native apps with NativeWind, React Navigation, TanStack Query, Zustand, Axios, and reusable primitives in `src/ui`. |

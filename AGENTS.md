@@ -8,7 +8,7 @@ Each skill is **self-contained**. A skill may link only to files inside its own 
 
 ## Documentation strategy
 
-Follow the same standards as the **writing-documentation** skill:
+Apply these standards when writing skills and reference docs:
 
 | Principle | Practice |
 | --- | --- |
