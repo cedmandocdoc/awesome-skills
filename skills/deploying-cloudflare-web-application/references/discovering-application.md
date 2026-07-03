@@ -1,4 +1,4 @@
-# Discovery — target app, build command, output path
+# Discovering application — target app, build command, output path
 
 Run this before writing `wrangler.toml` or recommending dashboard settings.
 

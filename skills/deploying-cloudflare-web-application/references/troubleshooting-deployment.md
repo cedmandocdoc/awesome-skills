@@ -1,4 +1,4 @@
-# Troubleshooting — Cloudflare web deploy
+# Troubleshooting deployment — Cloudflare web
 
 ## Build fails
 

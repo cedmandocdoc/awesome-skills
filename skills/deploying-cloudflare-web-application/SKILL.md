@@ -25,7 +25,7 @@ Gather facts from the repository and user. **Do not guess** when multiple apps o
 | **Build-time env vars** | `VITE_*`, `NEXT_PUBLIC_*`, `EXPO_PUBLIC_*`, `PUBLIC_*`, or docs in the app | List required vars; user sets them in Cloudflare dashboard |
 | **Monorepo root directory** | Path where `wrangler.toml` lives and where the build command should run | Repo root vs package subdirectory |
 
-Full discovery heuristics: [references/discovery.md](references/discovery.md).
+Full discovery heuristics: [discovering-application.md](references/discovering-application.md).
 
 ### 2. Validate locally (recommended)
 
@@ -41,7 +41,7 @@ ls <output-directory>
 
 Minimum files to add or update:
 
-1. **`wrangler.toml` or `wrangler.jsonc`** at the project root (see [references/wrangler-configuration.md](references/wrangler-configuration.md))
+1. **`wrangler.toml` or `wrangler.jsonc`** at the project root (see [configuring-wrangler.md](references/configuring-wrangler.md))
 2. **`wrangler` in `package.json` devDependencies** (pin version for reproducible Workers Builds)
 3. **Node version hint** (optional) — `engines` in `package.json` or `.nvmrc` if the build needs a specific Node version
 
@@ -60,7 +60,7 @@ not_found_handling = "single-page-application"
 
 ### 4. Document dashboard settings for the user
 
-The agent configures repo files; the user connects Git in **Workers & Pages → Worker → Settings → Builds**. Provide a filled-in table from [references/github-integration.md](references/github-integration.md).
+The agent configures repo files; the user connects Git in **Workers & Pages → Worker → Settings → Builds**. Provide a filled-in table from [configuring-github-integration.md](references/configuring-github-integration.md).
 
 ### 5. Post-deploy verification
 
@@ -68,7 +68,7 @@ The agent configures repo files; the user connects Git in **Workers & Pages → 
 - Deep links and browser refresh work on client-routed paths (if SPA)
 - Build-time public env vars are present in the bundle (smoke one feature that depends on them)
 
-Troubleshooting: [references/troubleshooting.md](references/troubleshooting.md).
+Troubleshooting: [troubleshooting-deployment.md](references/troubleshooting-deployment.md).
 
 ## Decision tree
 
@@ -78,7 +78,7 @@ Deploy web app to Cloudflare?
 │  ├─ Client-side routing (SPA)? → not_found_handling = "single-page-application"
 │  └─ Static multi-page / file-per-route? → omit not_found_handling or use "404-page"
 ├─ Static + API in same Worker?
-│  └─ Add main Worker script + assets; see wrangler-configuration reference
+│  └─ Add main Worker script + assets; see configuring-wrangler reference
 └─ Monorepo?
    └─ Set dashboard root directory to package path; install deps from repo root if needed
 ```
@@ -87,10 +87,10 @@ Deploy web app to Cloudflare?
 
 | Topic | Reference |
 | --- | --- |
-| Discovering app, build command, output path | [discovery.md](references/discovery.md) |
-| `wrangler.toml` / SPA routing / hybrid apps | [wrangler-configuration.md](references/wrangler-configuration.md) |
-| Dashboard Git integration settings | [github-integration.md](references/github-integration.md) |
-| Common failures | [troubleshooting.md](references/troubleshooting.md) |
+| Discovering app, build command, output path | [discovering-application.md](references/discovering-application.md) |
+| `wrangler.toml` / SPA routing / hybrid apps | [configuring-wrangler.md](references/configuring-wrangler.md) |
+| Dashboard Git integration settings | [configuring-github-integration.md](references/configuring-github-integration.md) |
+| Common failures | [troubleshooting-deployment.md](references/troubleshooting-deployment.md) |
 
 ## Common build output paths (hints only)
 
@@ -110,3 +110,9 @@ Use discovery to confirm — do not assume.
 - Custom Git provider CI deploy pipelines
 - Runtime Worker bindings (KV, D1, R2) unless the app already uses them
 - DNS and custom domain setup beyond noting it as a post-deploy step
+
+## Official docs
+
+- [Workers Builds configuration](https://developers.cloudflare.com/workers/ci-cd/builds/configuration/)
+- [Git integration](https://developers.cloudflare.com/workers/ci-cd/builds/git-integration/)
+- [Static assets](https://developers.cloudflare.com/workers/static-assets/)

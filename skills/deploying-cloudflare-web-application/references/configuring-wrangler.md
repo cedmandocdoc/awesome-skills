@@ -1,4 +1,4 @@
-# Wrangler configuration for static web apps
+# Configuring Wrangler for static web apps
 
 Workers Builds runs `npx wrangler deploy`, which reads `wrangler.toml` or `wrangler.jsonc` from the dashboard **root directory**.
 

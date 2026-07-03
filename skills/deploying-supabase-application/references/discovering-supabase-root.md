@@ -1,6 +1,6 @@
-# Supabase application readiness
+# Discovering Supabase root
 
-Verify the repository has a deployable Supabase app before connecting GitHub integration.
+Verify the repository has a deployable Supabase app and locate the working directory before connecting GitHub integration.
 
 ## Required layout
 

@@ -1,4 +1,4 @@
-# Cloudflare dashboard — GitHub integration (Workers Builds)
+# Configuring GitHub integration — Cloudflare dashboard (Workers Builds)
 
 Connect the repository in **Workers & Pages → Create or select Worker → Settings → Builds → Connect**.
 
@@ -16,7 +16,7 @@ Preview branches use `npx wrangler versions upload` by default (preview URL, not
 | Git repository | Yes | User selects repo |
 | Production branch | Yes | `main` |
 | Root directory | Monorepos | Repo root or package path where `wrangler.toml` lives |
-| Build command | Usually | Framework build (see discovery) |
+| Build command | Usually | Framework build (see [discovering-application.md](discovering-application.md)) |
 | Deploy command | Yes | `npx wrangler deploy` |
 | Non-production deploy command | Optional | `npx wrangler versions upload` |
 | Build variables | If app needs them | `VITE_*`, `NEXT_PUBLIC_*`, etc. |

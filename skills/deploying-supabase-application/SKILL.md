@@ -19,12 +19,12 @@ Locate the Supabase project root in the repository. **Do not guess** when multip
 | Question | How to resolve | If unclear |
 | --- | --- | --- |
 | **Supabase root** | Directory containing `config.toml` and `migrations/` | List candidates; ask user to pick one |
-| **Working directory** | Repo-relative path to the Supabase root (used in dashboard) | See [application-readiness.md](references/application-readiness.md) |
+| **Working directory** | Repo-relative path to the Supabase root (used in dashboard) | See [discovering-supabase-root.md](references/discovering-supabase-root.md) |
 | **Production branch** | User's deploy branch (`main`, `master`, `production`, etc.) | Ask user; default `main` only when repo convention is obvious |
 | **Edge Functions** | `[functions.*]` entries in `config.toml` | List declared functions |
 | **Storage buckets** | `[storage.buckets.*]` entries in `config.toml` | List declared buckets |
 
-Full discovery heuristics: [references/application-readiness.md](references/application-readiness.md).
+Full discovery heuristics: [discovering-supabase-root.md](references/discovering-supabase-root.md).
 
 ### 2. Validate locally (required before first connect)
 
@@ -42,7 +42,7 @@ Fix migration or function errors **before** connecting GitHub or merging to the 
 
 ### 3. Document dashboard settings for the user
 
-The agent validates repo readiness; the user connects Git in **Project Settings → Integrations → GitHub**. Provide a filled-in table from [references/github-integration-checklist.md](references/github-integration-checklist.md).
+The agent validates repo readiness; the user connects Git in **Project Settings → Integrations → GitHub**. Provide a filled-in table from [configuring-github-integration.md](references/configuring-github-integration.md).
 
 Minimum settings:
 
@@ -61,6 +61,8 @@ After the user enables integration and merges (or pushes) to the production bran
 - For schema or function behavior changes, run project-specific smoke checks
 
 First merge to the production branch populates a new remote project — no separate bootstrap deploy is needed.
+
+Troubleshooting: [troubleshooting-deployment.md](references/troubleshooting-deployment.md).
 
 ## What GitHub integration deploys
 
@@ -88,8 +90,9 @@ Deploy Supabase backend?
 
 | Topic | Reference |
 | --- | --- |
-| App structure, working directory, local validation | [application-readiness.md](references/application-readiness.md) |
-| Dashboard GitHub integration settings | [github-integration-checklist.md](references/github-integration-checklist.md) |
+| Supabase root, working directory, local validation | [discovering-supabase-root.md](references/discovering-supabase-root.md) |
+| Dashboard GitHub integration settings | [configuring-github-integration.md](references/configuring-github-integration.md) |
+| Common failures | [troubleshooting-deployment.md](references/troubleshooting-deployment.md) |
 
 ## Out of scope
 

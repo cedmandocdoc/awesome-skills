@@ -1,4 +1,4 @@
-# Supabase dashboard — GitHub integration
+# Configuring GitHub integration — Supabase dashboard
 
 Connect the repository in **Project Settings → Integrations → GitHub**.
 
@@ -16,7 +16,7 @@ No local `supabase link` is required. The first merge to the production branch s
 2. Go to **Project Settings → Integrations → GitHub**.
 3. Click **Authorize GitHub** and approve the Supabase GitHub app.
 4. Select the **Git repository**.
-5. Set **Working directory** to the discovered Supabase root path (see [application-readiness.md](application-readiness.md)).
+5. Set **Working directory** to the discovered Supabase root path (see [discovering-supabase-root.md](discovering-supabase-root.md)).
 6. Set **Production branch** (e.g. `main`).
 7. Enable **Deploy to production**.
 8. Click **Enable integration** (or save).
@@ -55,14 +55,7 @@ No local `supabase link` is required. The first merge to the production branch s
 
 Day-to-day releases do **not** require `supabase db push` or `supabase functions deploy` from a developer machine.
 
-## Troubleshooting
-
-| Symptom | Likely cause | Action |
-| --- | --- | --- |
-| Deploy fails on merge | Invalid migration or function config | Check integration logs; fix migration; re-merge |
-| Functions not updated | Function not declared in `config.toml` | Add `[functions.<name>]` and merge again |
-| Wrong project updated | Wrong repo or working directory | Verify integration settings |
-| Migrations not picked up | Incorrect working directory | Confirm path points at folder with `migrations/` |
+Troubleshooting: [troubleshooting-deployment.md](troubleshooting-deployment.md).
 
 ## Official docs
 
