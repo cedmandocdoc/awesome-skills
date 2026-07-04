@@ -80,6 +80,10 @@ Reply with:
 
 **Stop without implementing** unless the user also asked to implement in the same message.
 
+## Related
+
+- [creating-multiple-tasks.md](./creating-multiple-tasks.md) — orchestrate several new tasks via `task-planner` subagents
+
 ## Examples
 
 **Create (new repo):** No `index.md` found → ask user for an empty folder (e.g. `tasks/`) → write `tasks/index.md` then `tasks/001-dark-mode-toggle/plan.md` + `status.md` → suggest _"Continue `tasks/001-dark-mode-toggle`"_.

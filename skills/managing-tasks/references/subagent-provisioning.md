@@ -2,7 +2,7 @@
 
 ## Overview
 
-Finds, validates, and creates `task-triager` and `task-implementer` subagents across AI-assisted IDEs. Recipes that delegate work call this reference **before** launching a subagent.
+Finds, validates, and creates `task-planner`, `task-triager`, and `task-implementer` subagents across AI-assisted IDEs. Recipes that delegate work call this reference **before** launching a subagent.
 
 ## Guidelines
 
@@ -23,12 +23,13 @@ Every managed-tasks subagent file must include **all** of these frontmatter fiel
 
 **Match rule:** A file is a valid managed-tasks subagent when frontmatter `name` matches the required agent id **and** `author` + `generated_by` match the table above. Reuse that file. Do not create a duplicate.
 
-**Canonical bodies:** [`../assets/agents/task-implementer.md`](../assets/agents/task-implementer.md), [`../assets/agents/task-triager.md`](../assets/agents/task-triager.md). When creating or refreshing an agent, copy the matching template and write only IDE-specific frontmatter fields (see **IDE agent roots**).
+**Canonical bodies:** [`../assets/agents/task-planner.md`](../assets/agents/task-planner.md), [`../assets/agents/task-implementer.md`](../assets/agents/task-implementer.md), [`../assets/agents/task-triager.md`](../assets/agents/task-triager.md). When creating or refreshing an agent, copy the matching template and write only IDE-specific frontmatter fields (see **IDE agent roots**).
 
 ### Managed subagents
 
 | Agent id | Recipe | `readonly` | Template |
 | --- | --- | --- | --- |
+| `task-planner` | [creating-task.md](./creating-task.md) | `false` | [`../assets/agents/task-planner.md`](../assets/agents/task-planner.md) |
 | `task-triager` | [triaging-tasks.md](./triaging-tasks.md) — execution-roadmap mode | `true` | [`../assets/agents/task-triager.md`](../assets/agents/task-triager.md) |
 | `task-implementer` | [executing-task.md](./executing-task.md), [verifying-task.md](./verifying-task.md) | `false` | [`../assets/agents/task-implementer.md`](../assets/agents/task-implementer.md) |
 
@@ -73,13 +74,13 @@ Prefer the first existing root in this table for the detected IDE. Project-level
 
 ### Launch by IDE
 
-| IDE | Delegate `task-triager` | Delegate `task-implementer` |
-| --- | --- | --- |
-| Cursor / Codex | Task tool, `readonly: true`, prompt per [executing-multiple-tasks.md](./executing-multiple-tasks.md) §4 | Task tool, prompt per executing-multiple-tasks §5 |
-| Claude Code | Subagent `task-triager`, read-only | Subagent `task-implementer` |
-| Cline | Subagent preset `task-triager` | Subagent preset `task-implementer` |
-| GitHub Copilot | Agent `task-triager` | Agent `task-implementer` |
-| Unsupported | Parent runs [triaging-tasks.md](./triaging-tasks.md) execution-roadmap inline | Parent runs [executing-task.md](./executing-task.md) inline per task |
+| IDE | Delegate `task-planner` | Delegate `task-triager` | Delegate `task-implementer` |
+| --- | --- | --- | --- |
+| Cursor / Codex | Task tool, prompt per [creating-multiple-tasks.md](./creating-multiple-tasks.md) §6 | Task tool, `readonly: true`, prompt per [executing-multiple-tasks.md](./executing-multiple-tasks.md) §5 | Task tool, prompt per executing-multiple-tasks §5 |
+| Claude Code | Subagent `task-planner` | Subagent `task-triager`, read-only | Subagent `task-implementer` |
+| Cline | Subagent preset `task-planner` | Subagent preset `task-triager` | Subagent preset `task-implementer` |
+| GitHub Copilot | Agent `task-planner` | Agent `task-triager` | Agent `task-implementer` |
+| Unsupported | Parent runs [creating-task.md](./creating-task.md) inline per spec | Parent runs [triaging-tasks.md](./triaging-tasks.md) execution-roadmap inline | Parent runs [executing-task.md](./executing-task.md) inline per task |
 
 ### Refresh on skill update
 

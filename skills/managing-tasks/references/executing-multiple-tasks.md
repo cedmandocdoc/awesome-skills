@@ -114,6 +114,10 @@ If stop reason is `blocked`, you may add one sentence on what the user can do to
 
 Each fully implemented task follows [executing-task.md](./executing-task.md) and [verifying-task.md](./verifying-task.md) inside the implementer subagent (or inline) — not in the orchestrating session.
 
+## Related
+
+- [creating-multiple-tasks.md](./creating-multiple-tasks.md) — plan multiple new tasks before execution
+
 ## Examples
 
 **Execute multiple:** User says "finish all tasks". Provision subagents per [subagent-provisioning.md](./subagent-provisioning.md) → delegate to `task-triager` for the plan, then `task-implementer` for each planned task until cap or exit.

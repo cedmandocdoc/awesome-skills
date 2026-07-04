@@ -1,6 +1,6 @@
 ---
 name: managing-tasks
-description: Manages structured task folders (plan.md, status.md) for cross-session agent handoff. Creates, executes, executes multiple (plan then implement backlog), checks, triages, updates, blocks, verifies, archives, reopens, skips, or cancels tasks. Use when the user works with tasks/NNN-slug folders or asks about task status, blockers, readiness, or lifecycle.
+description: Manages structured task folders (plan.md, status.md) for cross-session agent handoff. Creates, creates multiple (plan a backlog of new tasks), executes, executes multiple (plan then implement backlog), checks, triages, updates, blocks, verifies, archives, reopens, skips, or cancels tasks. Use when the user works with tasks/NNN-slug folders or asks about task status, blockers, readiness, or lifecycle.
 version: 1.0.0
 ---
 
@@ -25,6 +25,7 @@ Match one **Recipes** row; open exactly that reference.
 | Intent | Example phrasing | Read |
 | --- | --- | --- |
 | Create | "Create a task: …", "Plan … as a task", "new task" | [creating-task.md](references/creating-task.md) |
+| Create multiple | "Create tasks for …", "Plan tasks: …", "break this into tasks" | [creating-multiple-tasks.md](references/creating-multiple-tasks.md) |
 | Execute | "Continue `tasks/001-…`", "Resume the dark mode task", "implement next step" | [executing-task.md](references/executing-task.md) |
 | Execute multiple | "Finish all tasks", "run the backlog", "implement until no task available", @-mention tasks root with no folder | [executing-multiple-tasks.md](references/executing-multiple-tasks.md) |
 | Check | "Status of `tasks/003-…`", "list all tasks", "what's next on this task?" | [checking-task.md](references/checking-task.md) |
@@ -48,11 +49,12 @@ Match one **Recipes** row; open exactly that reference.
 | --- | --- |
 | [task-contract.md](references/task-contract.md) | Tasks root `index.md` marker, author UUID, layout, frontmatter, finding tasks, resolving domain references |
 | [creating-task.md](references/creating-task.md) | New task folder, plan + initial status; planning only |
+| [creating-multiple-tasks.md](references/creating-multiple-tasks.md) | Multiple new task folders — parse spec list → plan each via `task-planner` (subagent or inline) |
 | [executing-task.md](references/executing-task.md) | Run `next_step_id` for one task folder, implement, update status before stopping |
 | [executing-multiple-tasks.md](references/executing-multiple-tasks.md) | Backlog loop — plan execution series once → implement in order (subagents or inline) |
 | [checking-task.md](references/checking-task.md) | Read-only status report for one task or all tasks |
 | [triaging-tasks.md](references/triaging-tasks.md) | Read-only triage — readiness report or ordered execution roadmap |
-| [subagent-provisioning.md](references/subagent-provisioning.md) | Find, validate, or create `task-triager` and `task-implementer` per IDE |
+| [subagent-provisioning.md](references/subagent-provisioning.md) | Find, validate, or create `task-planner`, `task-triager`, and `task-implementer` per IDE |
 | [updating-task.md](references/updating-task.md) | Amend `plan.md` and sync `status.md` when scope changes |
 | [blocking-task.md](references/blocking-task.md) | Mark task blocked with reason; freeze execution pointer |
 | [unblocking-task.md](references/unblocking-task.md) | Clear blocker; restore `In Progress` |
@@ -67,5 +69,6 @@ Match one **Recipes** row; open exactly that reference.
 - [`assets/index.md`](assets/index.md)
 - [`assets/plan.md`](assets/plan.md)
 - [`assets/status.md`](assets/status.md)
+- [`assets/agents/task-planner.md`](assets/agents/task-planner.md)
 - [`assets/agents/task-triager.md`](assets/agents/task-triager.md)
 - [`assets/agents/task-implementer.md`](assets/agents/task-implementer.md)
