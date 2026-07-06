@@ -64,34 +64,54 @@ Some teams categorize features based on product language (e.g. "billing", "onboa
 - A grouped feature exports multiple named parts (for example a screen, a component, and a helper function).
 - Keep internal implementation files off the barrel.
 
+### Type-based organization
+
+**First-class strategy.** Organize feature internals by **file type** — not by a fixed folder checklist. Only a few types are common enough to list in examples (`components`, `hooks`, `types`, `utils`, `schemas`, `constants`); add any other type the feature needs using the same file-or-folder pattern.
+
+| Phase | Rule |
+| --- | --- |
+| Start | One **file** at the feature root, named after the type: `types.ts`, `utils.ts`, `schemas.ts`, `constants.ts`. |
+| Multi-file from day one | Use a **folder** immediately when the type naturally has several exports — `components/` and `hooks/` (one export per file). |
+| Scale | When a single type file exceeds **~200 lines**, replace it with a **folder** of the same name. Inside the folder, one file per export; each file exports exactly one thing. |
+
+Apply the same scaling rule to every type — `utils`, `types`, `schemas`, `mappers`, `validators`, and any new type you introduce.
+
 ### Feature folder layout
 
-The layout below is the **default starting point**, not a closed set. Add folders when multiple files share the same role (for example `schemas/` for Zod form schemas).
+The tree below shows **common** types, not an exhaustive list. Add type-named files or folders as the feature grows.
 
 ```text
 src/features/<feature-name>/
 ├── index.ts                  # public barrel
-├── components/               # domain UI blocks
+├── components/               # domain UI — folder from the start (one component per file)
 │   └── <Feature>Screen.tsx  # route-facing screen (see creating-screen-component.md)
-├── hooks/                    # query hooks, stores, feature hooks (see managing-state.md)
-├── types.ts                  # shared types; split to types/ when large
-├── utils.ts                  # shared pure helpers when small (< ~200 lines total)
-├── utils/                    # one file per helper when utils grow (e.g. getUser.ts, formatDate.ts)
-├── constants.ts              # shared constants
-├── env.ts                    # when this feature reads env (see managing-environment.md)
-└── schemas/                  # example extension — form-driven features
+├── hooks/                    # query hooks, stores — folder from the start (one hook per file)
+├── types.ts                  # shared types → types/ when > ~200 lines
+├── utils.ts                  # shared pure helpers → utils/ when > ~200 lines
+├── schemas.ts                # Zod/form schemas → schemas/ when > ~200 lines
+├── constants.ts              # shared constants → constants/ when > ~200 lines
+└── env.ts                    # when this feature reads env (see managing-environment.md)
+
+# scaled examples (same type name, folder form):
+├── types/
+│   └── Workshop.ts           # one type per file
+├── utils/
+│   ├── formatDate.ts         # one helper per file
+│   └── mapWorkshop.ts
+└── schemas/
+    └── workshopFormSchema.ts # one schema per file
 ```
 
 ### Layout rules
 
+- Follow [Type-based organization](#type-based-organization) for every file type — including types not shown in the tree.
 - Place the route-facing screen in `components/`: `src/features/<feature-name>/components/<Feature>Screen.tsx`.
-- Place other supporting UI in the same `components/` folder.
-- Place hooks in `hooks/` — including Zustand stores (`use<Feature>Store.ts`).
-- Start shared types in `types.ts`; move to `types/<domain>.ts` or a `types/` folder when the file grows.
-- Start shared pure helpers in `utils.ts` (formatters, getters, mappers). Split into `utils/<actionName>.ts` when the file exceeds **~200 lines** or helpers are easier to find by name.
-- Keep shared constants in `constants.ts`.
+- Place other supporting UI in the same `components/` folder — one component per file.
+- Place hooks in `hooks/` — including Zustand stores (`use<Feature>Store.ts`); one hook per file.
+- Start `types`, `utils`, `schemas`, `constants`, and other shared types as a single `<type>.ts` file; promote to `<type>/` when the file exceeds **~200 lines**.
+- Inside a type folder, name files after what they export; each file exports exactly one thing.
 - Add `env.ts` when only this feature reads those variables — see [managing-environment.md](./managing-environment.md).
-- Add role-based folders (`schemas/`, `mappers/`, etc.) when grouping improves clarity; keep internal files off the barrel unless they are part of the public API.
+- Keep internal implementation files off the barrel unless they are part of the public API.
 
 ## Examples
 
@@ -110,6 +130,6 @@ Exports a screen plus related components and helpers — not every feature needs
 ```ts
 export { WorkshopListScreen } from "./components/WorkshopListScreen";
 export { WorkshopToolbar } from "./components/WorkshopToolbar";
-export { buildWorkshopSearch } from "./search/buildWorkshopSearch";
-export type { WorkshopSearchParams } from "./search/types";
+export { buildWorkshopSearch } from "./utils/buildWorkshopSearch";
+export type { WorkshopSearchParams } from "./types";
 ```
