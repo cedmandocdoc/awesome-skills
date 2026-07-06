@@ -113,7 +113,7 @@ function BookingStepActions() {
 Install Stepperize in the app project:
 
 ```bash
-npm install @stepperize/react
+node ../scripts/install-packages.cjs @stepperize/react
 ```
 
 ## Related

@@ -42,7 +42,7 @@ Use this guide to set up ESLint and Prettier for this Vite + React TypeScript st
 ### Install dependencies
 
 ```bash
-npm install --save-dev eslint prettier eslint-plugin-prettier eslint-config-prettier @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint-plugin-react eslint-plugin-react-hooks
+node ../scripts/install-packages.cjs --dev eslint prettier eslint-plugin-prettier eslint-config-prettier @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint-plugin-react eslint-plugin-react-hooks
 ```
 
 ### Add a Prettier config

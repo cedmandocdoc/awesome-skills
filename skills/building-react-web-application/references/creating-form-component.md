@@ -173,7 +173,7 @@ Repeat for other controls (`TextareaField`, `CheckboxField`, etc.) using the sam
 Install the package in the app project:
 
 ```bash
-npm install @tanstack/react-form
+node ../scripts/install-packages.cjs @tanstack/react-form
 ```
 
 ## Examples

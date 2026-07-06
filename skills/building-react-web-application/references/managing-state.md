@@ -32,7 +32,7 @@ Use this guide to decide where state belongs. Use TanStack Query for server data
 ### Install dependencies
 
 ```bash
-npm install @tanstack/react-query zustand
+node ../scripts/install-packages.cjs @tanstack/react-query zustand
 ```
 
 ### Add `QueryClientProvider` at the root

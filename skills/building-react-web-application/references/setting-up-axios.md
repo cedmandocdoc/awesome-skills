@@ -9,7 +9,7 @@ Axios for the browser via a small client factory and env-based base URL and opti
 ### Install Axios
 
 ```bash
-npm install axios
+node ../scripts/install-packages.cjs axios
 ```
 
 ### Create a client

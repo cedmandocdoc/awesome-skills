@@ -13,7 +13,7 @@ Shared design tokens and light/dark variables as the single source for NativeWin
 ### Install component helpers
 
 ```bash
-npx expo install tailwindcss-animate
+node ../scripts/run-package.cjs -- expo install tailwindcss-animate
 ```
 
 ### Create `src/theme.css`

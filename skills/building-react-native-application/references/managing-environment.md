@@ -35,7 +35,7 @@ Use this guide when a *feature*, *API backend folder*, or other module reads con
 ### Install Zod
 
 ```bash
-npm install zod
+node ../scripts/install-packages.cjs zod
 ```
 
 ## Examples

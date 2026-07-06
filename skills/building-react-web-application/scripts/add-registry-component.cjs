@@ -23,7 +23,9 @@ const { execFileSync } = require("child_process");
 const fs = require("fs");
 const path = require("path");
 
-const VALID_PM = new Set(["npm", "pnpm", "yarn", "bun"]);
+const { detectPackageManager, VALID_PM } = require("./detect-pm.cjs");
+const { resolveInstallCommand } = require("./install-packages.cjs");
+const { resolveDlxCommand } = require("./run-package.cjs");
 
 function parseArgs(argv) {
   const args = { root: process.cwd(), urls: [], pm: null };
@@ -49,75 +51,9 @@ function parseArgs(argv) {
   return args;
 }
 
-function readPackageManagerField(projectRoot) {
-  try {
-    const pkgPath = path.join(projectRoot, "package.json");
-    const raw = fs.readFileSync(pkgPath, "utf8");
-    const pkg = JSON.parse(raw);
-    const spec = pkg.packageManager;
-    if (typeof spec !== "string") return null;
-    const name = spec.split("@")[0];
-    return VALID_PM.has(name) ? name : null;
-  } catch {
-    return null;
-  }
-}
-
-/** Prefer explicit --pm, then package.json#packageManager, then lockfiles. */
-function detectPackageManager(projectRoot) {
-  const fromPkg = readPackageManagerField(projectRoot);
-  if (fromPkg) return fromPkg;
-  if (fs.existsSync(path.join(projectRoot, "pnpm-lock.yaml"))) return "pnpm";
-  if (fs.existsSync(path.join(projectRoot, "yarn.lock"))) return "yarn";
-  if (
-    fs.existsSync(path.join(projectRoot, "bun.lockb")) ||
-    fs.existsSync(path.join(projectRoot, "bun.lock"))
-  ) {
-    return "bun";
-  }
-  return "npm";
-}
-
-function isYarnBerry(projectRoot) {
-  return fs.existsSync(path.join(projectRoot, ".yarnrc.yml"));
-}
-
-function shadcnViewArgs(pm, projectRoot, nameOrUrl) {
-  if (pm === "pnpm") {
-    return { file: "pnpm", args: ["dlx", "shadcn@latest", "view", nameOrUrl] };
-  }
-  if (pm === "bun") {
-    return { file: "bunx", args: ["shadcn@latest", "view", nameOrUrl] };
-  }
-  if (pm === "yarn") {
-    if (isYarnBerry(projectRoot)) {
-      return {
-        file: "yarn",
-        args: ["dlx", "shadcn@latest", "view", nameOrUrl],
-      };
-    }
-    return { file: "npx", args: ["shadcn@latest", "view", nameOrUrl] };
-  }
-  return { file: "npx", args: ["shadcn@latest", "view", nameOrUrl] };
-}
-
 function packageInstall(projectRoot, deps, dev, pm) {
   if (!deps || deps.length === 0) return;
-  let file;
-  let args;
-  if (pm === "pnpm") {
-    file = "pnpm";
-    args = dev ? ["add", "-D", ...deps] : ["add", ...deps];
-  } else if (pm === "yarn") {
-    file = "yarn";
-    args = dev ? ["add", "-D", ...deps] : ["add", ...deps];
-  } else if (pm === "bun") {
-    file = "bun";
-    args = dev ? ["add", "-d", ...deps] : ["add", ...deps];
-  } else {
-    file = "npm";
-    args = dev ? ["install", "--save-dev", ...deps] : ["install", ...deps];
-  }
+  const { file, args } = resolveInstallCommand(pm, { dev, packages: deps });
   execFileSync(file, args, {
     cwd: projectRoot,
     stdio: "inherit",
@@ -132,7 +68,10 @@ function parseRegistryJson(raw) {
 }
 
 function runView(nameOrUrl, cwd, pm) {
-  const { file, args } = shadcnViewArgs(pm, cwd, nameOrUrl);
+  const { file, args } = resolveDlxCommand(pm, cwd, "shadcn@latest", [
+    "view",
+    nameOrUrl,
+  ]);
   return execFileSync(file, args, {
     cwd,
     encoding: "utf8",
@@ -372,7 +311,7 @@ function main() {
   const visited = new Set();
   const summary = { items: [], filesWritten: [], skippedDeps: [] };
   const projectRoot = path.resolve(root);
-  const pm = pmFlag || detectPackageManager(projectRoot);
+  const pm = detectPackageManager(projectRoot, { pmOverride: pmFlag });
   console.error(`[add-registry-component] package manager: ${pm}`);
 
   for (const u of urls) {

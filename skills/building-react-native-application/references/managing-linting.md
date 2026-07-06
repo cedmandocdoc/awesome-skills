@@ -38,7 +38,7 @@ npm run format
 ### Install dependencies
 
 ```bash
-npm install --save-dev eslint prettier eslint-plugin-prettier eslint-config-prettier eslint-config-expo @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint-plugin-react eslint-plugin-react-native
+node ../scripts/install-packages.cjs --dev eslint prettier eslint-plugin-prettier eslint-config-prettier eslint-config-expo @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint-plugin-react eslint-plugin-react-native
 ```
 
 ### Add a Prettier config

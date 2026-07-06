@@ -70,13 +70,13 @@ format(date, "PPP", { locale: enUS });
 ### Install date-fns
 
 ```bash
-npm install date-fns
+node ../scripts/install-packages.cjs date-fns
 ```
 
 ### Install time zone support (when needed)
 
 ```bash
-npm install @date-fns/tz
+node ../scripts/install-packages.cjs @date-fns/tz
 ```
 
 ## Examples

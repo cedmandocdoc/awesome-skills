@@ -140,7 +140,7 @@ export function CheckoutStepForm() {
 Install dependencies in the app project:
 
 ```bash
-npm install @stepperize/react @tanstack/react-form zod
+node ../scripts/install-packages.cjs @stepperize/react @tanstack/react-form zod
 ```
 
 ## Related

@@ -52,7 +52,7 @@ Before running the add script, confirm the registry entry resolves:
 1. Run (registry slug or full URL):
 
    ```bash
-   npx shadcn@latest view "${url}"
+   node ../scripts/run-package.cjs -- shadcn@latest view "${url}"
    ```
 
 2. Confirm exit code **0**.
@@ -70,8 +70,8 @@ If validation fails, **do not** run the add script. Build manually per [Manual p
 From the app **project root**:
 
 ```bash
-npx shadcn@latest view button
-node path/to/building-react-web-application/scripts/add-registry-component.cjs button
+node ../scripts/run-package.cjs -- shadcn@latest view button
+node ../scripts/add-registry-component.cjs button
 ```
 
 Pass a full registry item URL when the slug is not enough. Use `--root <project-dir>` when the cwd is not the app root.

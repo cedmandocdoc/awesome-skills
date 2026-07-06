@@ -13,7 +13,7 @@ Shell setup for `src/ui/` registry primitives: Lucide, NativeWind `inlineRem`, r
 ### Install Lucide Icons
 
 ```bash
-npx expo install lucide-react-native
+node ../scripts/run-package.cjs -- expo install lucide-react-native
 ```
 
 ### Update the default inlined `rem` value

@@ -10,7 +10,12 @@ Start from [creating-component.md](./creating-component.md).
 
 - [creating-component.md](./creating-component.md) — placement and shared rules
 - [creating-ui-component.md](./creating-ui-component.md) — composition root under `src/ui/BottomSheet/`
-- `@gorhom/bottom-sheet` installed in the app
+- `@gorhom/bottom-sheet` installed in the app:
+
+```bash
+node ../scripts/run-package.cjs -- expo install @gorhom/bottom-sheet
+```
+
 - App root wrapped once with **`GestureHandlerRootView`** and **`BottomSheetModalProvider`**
 
 ## Guidelines

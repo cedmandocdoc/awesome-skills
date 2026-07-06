@@ -9,7 +9,7 @@ Axios for Expo via a small client factory and env-based base URL and options—o
 ### Install Axios
 
 ```bash
-npm install axios
+node ../scripts/install-packages.cjs axios
 ```
 
 ### Create a client

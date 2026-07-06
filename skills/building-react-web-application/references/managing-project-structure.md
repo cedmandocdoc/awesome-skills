@@ -48,7 +48,7 @@ Use the owning guide for folder-level detail; this table is the map only.
 
 ### Registry and `src/ui`
 
-Primitives are added with **[`add-registry-component.cjs`](../scripts/add-registry-component.cjs)** (or `npx shadcn@latest view` for inspection). The script writes under **`src/ui/`**, rewrites imports for that layout, and normalizes **`cn` → `cx`** from **`class-variance-authority`**. Stock shadcn docs assume **`@/components/ui`** and a **`cn`** utility; this stack standardizes on **`src/ui/`** and **`cx`**.
+Primitives are added with **[`add-registry-component.cjs`](../scripts/add-registry-component.cjs)** (or [`run-package.cjs`](../scripts/run-package.cjs) for `shadcn view` inspection). The script writes under **`src/ui/`**, rewrites imports for that layout, and normalizes **`cn` → `cx`** from **`class-variance-authority`**. Stock shadcn docs assume **`@/components/ui`** and a **`cn`** utility; this stack standardizes on **`src/ui/`** and **`cx`**.
 
 ### Root providers
 

@@ -4,7 +4,7 @@
 
 Shared design tokens and light/dark variables as the single source for Tailwind, registry UI, and the rest of the app. Use the **same two-file pattern as the React Native skill**: project-root **`global.css`** (Tailwind entry + upstream imports) and **`src/theme.css`** (token wiring). Pull **only** the [shadcn manual **Configure styles**](https://ui.shadcn.com/docs/installation/manual.md) *content* into `theme.css`—split so Tailwind’s `@import "tailwindcss"` lives in `global.css` only.
 
-**Class merging and primitives:** use **`cva`** and **`cx`** from **`class-variance-authority`**, with shared components under **`src/ui/`** (see [managing-project-structure.md](./managing-project-structure.md)). **Add registry output** with [`add-registry-component.cjs`](../scripts/add-registry-component.cjs); it wraps `npx shadcn@latest view` and aligns paths and **`cn` → `cx`** for this layout.
+**Class merging and primitives:** use **`cva`** and **`cx`** from **`class-variance-authority`**, with shared components under **`src/ui/`** (see [managing-project-structure.md](./managing-project-structure.md)). **Add registry output** with [`add-registry-component.cjs`](../scripts/add-registry-component.cjs); it uses [`run-package.cjs`](../scripts/run-package.cjs) for `shadcn view` and aligns paths and **`cn` → `cx`** for this layout.
 
 ## Prerequisites
 
@@ -16,9 +16,19 @@ Shared design tokens and light/dark variables as the single source for Tailwind,
 
 Follow [Installing Tailwind CSS as a Vite plugin](https://tailwindcss.com/docs/installation/using-vite): install `tailwindcss` and `@tailwindcss/vite`, register the plugin in `vite.config.ts`.
 
+```bash
+node ../scripts/install-packages.cjs tailwindcss @tailwindcss/vite
+```
+
 ### 2. Install registry-related dependencies
 
-From [Manual installation — Add dependencies](https://ui.shadcn.com/docs/installation/manual.md), install the packages the doc lists for styling and components (for example `class-variance-authority`, `lucide-react`, `tw-animate-css`, and any `shadcn` package your tooling expects). Merge `className` strings with **`import { cx } from "class-variance-authority"`** (CVA re-exports `clsx` as **`cx`**); omit **`tailwind-merge`** and the manual’s standalone **`cn`** utility file for this stack.
+From [Manual installation — Add dependencies](https://ui.shadcn.com/docs/installation/manual.md), install the packages the doc lists for styling and components (for example `class-variance-authority`, `lucide-react`, `tw-animate-css`, and any `shadcn` package your tooling expects).
+
+```bash
+node ../scripts/install-packages.cjs class-variance-authority lucide-react tw-animate-css
+```
+
+Merge `className` strings with **`import { cx } from "class-variance-authority"`** (CVA re-exports `clsx` as **`cx`**); omit **`tailwind-merge`** and the manual’s standalone **`cn`** utility file for this stack.
 
 ### 3. Create `global.css` (project root)
 

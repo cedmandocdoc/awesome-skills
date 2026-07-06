@@ -54,7 +54,7 @@ Before running the add script, confirm the registry entry resolves:
 1. Run (replace `url` with the React Native Reusables registry URL):
 
    ```bash
-   npx shadcn@latest view "${url}"
+   node ../scripts/run-package.cjs -- shadcn@latest view "${url}"
    ```
 
 2. Confirm exit code **0**.
@@ -72,8 +72,8 @@ If validation fails, **do not** run the add script. Build manually per [Manual p
 From the app **project root**:
 
 ```bash
-npx shadcn@latest view "https://reactnativereusables.com/r/nativewind/button.json"
-node path/to/building-react-native-application/scripts/add-registry-component.cjs "https://reactnativereusables.com/r/nativewind/button.json"
+node ../scripts/run-package.cjs -- shadcn@latest view "https://reactnativereusables.com/r/nativewind/button.json"
+node ../scripts/add-registry-component.cjs "https://reactnativereusables.com/r/nativewind/button.json"
 ```
 
 Use `--root <project-dir>` when the cwd is not the app root.

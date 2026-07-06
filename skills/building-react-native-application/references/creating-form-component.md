@@ -174,7 +174,7 @@ Repeat for other controls using the same **`NameOfControl + Field`** naming.
 Install the package in the app project:
 
 ```bash
-npm install @tanstack/react-form
+node ../scripts/install-packages.cjs @tanstack/react-form
 ```
 
 ## Examples
