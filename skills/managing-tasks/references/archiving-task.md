@@ -35,6 +35,7 @@ For each task to archive:
 2. Move `<tasks-root>/<NNN>-<slug>/` → `<tasks-root>/archive/<NNN>-<slug>/`
 3. Update `task_folder` in `status.md` to the new path
 4. Append session log: date, `—`, `Archived`, optional note
+5. Remove the matching task row from `<tasks-root>/index.md` (per [task-contract.md](./task-contract.md) → **`index.md` status mirror**)
 
 Do not delete task folders unless the user explicitly requests deletion.
 

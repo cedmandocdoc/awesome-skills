@@ -35,6 +35,7 @@ Capture `cancel_reason` from the user or context (e.g. duplicate task, wrong app
 5. Add to execution pointer: `cancel_reason`: `<reason>`
 6. Update `handoff_note`: task cancelled; replan only if user revives
 7. Append session log: date, `—`, `Cancelled`, reason
+8. Sync `<tasks-root>/index.md` `Status` for this task to `Cancelled` (per [task-contract.md](./task-contract.md) → **`index.md` status mirror**)
 
 **`plan.md` frontmatter (optional):**
 

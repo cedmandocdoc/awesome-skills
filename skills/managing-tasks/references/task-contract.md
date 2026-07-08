@@ -125,6 +125,18 @@ Treat `plan.md` as a task when frontmatter contains `generated_by: managing-task
 | `cancel_reason` | text or `None` | Why the task was cancelled |
 | `handoff_note` | one sentence | What the next session should do first |
 
+### `index.md` status mirror
+
+`<tasks-root>/index.md` is the root-level summary for active tasks. Keep it synchronized with per-task files:
+
+- Maintain one row per non-archived task folder under `<tasks-root>/`.
+- `ID` is `task-<NNN-slug>`.
+- `Task` is the task title from `plan.md` frontmatter `name`.
+- `Status` mirrors `status.md` `overall_status` exactly.
+- On create: append a row with `Status` = `Not Started`.
+- On any lifecycle update that changes `overall_status`: update the matching row in `index.md` in the same run.
+- On archive: remove the row after moving the folder to `archive/`.
+
 ### Step queue rules
 
 - Check off steps when completed.

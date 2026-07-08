@@ -31,6 +31,7 @@ Capture how the blocker was resolved (from the user or context). Optional one-li
 3. Confirm `next_step_id` still exists in the step queue and is pending; if not, set to the first unchecked pending step
 4. Update `handoff_note` for the executor
 5. Append session log: date, `next_step_id`, `Unblocked`, resolution note
+6. Sync `<tasks-root>/index.md` `Status` for this task to the new `overall_status` (per [task-contract.md](./task-contract.md) → **`index.md` status mirror**)
 
 ### 4. Confirm to the user
 

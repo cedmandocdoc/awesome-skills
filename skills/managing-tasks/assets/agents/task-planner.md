@@ -39,7 +39,8 @@ Run creating-task.md §1–§6 for the single spec:
 3. Gather project context — read mentioned files, README, AGENTS.md, existing related tasks
 4. Write `plan.md` from [`../plan.md`](../plan.md)
 5. Write `status.md` from [`../status.md`](../status.md)
-6. Do **not** implement — planning only
+6. Sync `<tasks-root>/index.md`: append `task-<NNN-slug>` with title and `Status` = `Not Started` per `task-contract.md` → **`index.md` status mirror**
+7. Do **not** implement — planning only
 
 When scope is ambiguous:
 

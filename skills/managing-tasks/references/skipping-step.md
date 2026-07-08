@@ -44,6 +44,7 @@ Require a brief reason (from the user or inferred from context), e.g.:
 4. Set `overall_status` to `In Progress` (or keep `Review` if skipping non-verify work while in review)
 5. Append session log: date, step id, `Skipped`, reason
 6. Update `handoff_note`
+7. Sync `<tasks-root>/index.md` `Status` for this task when `overall_status` changed (per [task-contract.md](./task-contract.md) → **`index.md` status mirror**)
 
 Do **not** check off skipped steps as completed.
 

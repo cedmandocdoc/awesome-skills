@@ -60,6 +60,7 @@ Re-run skill discovery from [task-contract.md](./task-contract.md) when the amen
    - If user asked to redo a step → uncheck only that step with explicit confirmation
 3. Clear `blocking_reason` if the amend resolves the blocker; set `overall_status` to `In Progress` if was `Blocked`
 4. Update `handoff_note` for the executor
+5. Sync `<tasks-root>/index.md` `Status` for this task when `overall_status` changed (per [task-contract.md](./task-contract.md) → **`index.md` status mirror**)
 
 ### 6. Confirm to the user
 

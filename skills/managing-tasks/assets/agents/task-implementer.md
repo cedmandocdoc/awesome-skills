@@ -43,7 +43,8 @@ Run until `overall_status` is `Done`, `Blocked`, or `Cancelled`:
 5. If `Not Started` or `Review` (with pending work) → set `In Progress` per executing-task protocol
 6. Execute `next_step_id` per executing-task.md (or verify per verifying-task.md when appropriate)
 7. Update `status.md` and `plan.md` before continuing
-8. Return to step 1
+8. Sync `<tasks-root>/index.md` `Status` when `overall_status` changed (per task-contract.md → **`index.md` status mirror**)
+9. Return to step 1
 
 Do not stop after a single step if more steps remain and you are not Blocked.
 

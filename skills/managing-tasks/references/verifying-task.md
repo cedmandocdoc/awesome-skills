@@ -48,6 +48,7 @@ Record pass/fail per item.
 5. Set `next_step_id`: `none`
 6. Update `handoff_note`: task complete
 7. Append session log: date, `verify`, `Completed`, brief results
+8. Sync `<tasks-root>/index.md` `Status` for this task to `Done` (per [task-contract.md](./task-contract.md) → **`index.md` status mirror**)
 
 **If checks fail:**
 
@@ -56,6 +57,7 @@ Record pass/fail per item.
 3. Set `handoff_note` with failing items and suggested fix step
 4. Append session log: date, `verify`, `Failed`, failing items
 5. Optionally add a fix todo via [updating-task.md](./updating-task.md) if the user wants a formal replan
+6. Sync `<tasks-root>/index.md` `Status` for this task when `overall_status` changed during failed verification handling (per [task-contract.md](./task-contract.md) → **`index.md` status mirror**)
 
 ### 5. Confirm to the user
 

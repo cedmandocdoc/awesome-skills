@@ -34,6 +34,7 @@ If scope also changed, follow [updating-task.md](./updating-task.md) after reope
 6. In `plan.md` frontmatter, set todos with `status: cancelled` back to `status: pending` (leave `completed` and `skipped` unchanged)
 7. Update `handoff_note` for the executor
 8. Append session log: date, `—`, `Reopened`, reason
+9. Sync `<tasks-root>/index.md` `Status` for this task to the restored `overall_status` (per [task-contract.md](./task-contract.md) → **`index.md` status mirror**)
 
 **Optional plan changelog** — if the user describes scope changes while reopening, bump `plan_revision` and add a row per [updating-task.md](./updating-task.md).
 

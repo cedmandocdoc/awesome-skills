@@ -33,6 +33,7 @@ Require a concrete `blocking_reason` from the user or context, e.g.:
 3. Keep `current_step_id` and `next_step_id` unchanged — do **not** advance or check off steps
 4. Update `handoff_note`: blocked; what must resolve before continuing
 5. Append session log: date, current or `next_step_id`, `Blocked`, reason
+6. Sync `<tasks-root>/index.md` `Status` for this task to `Blocked` (per [task-contract.md](./task-contract.md) → **`index.md` status mirror**)
 
 Do **not** change `plan.md` frontmatter todo statuses.
 

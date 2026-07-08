@@ -46,6 +46,7 @@ Always update:
 
 - `handoff_note` — one sentence for the next session
 - **Session log** — date, step id, result, brief notes
+- `<tasks-root>/index.md` `Status` for this task when `overall_status` changed (per [task-contract.md](./task-contract.md) → **`index.md` status mirror**)
 
 ### 5. Blocked workflow
 

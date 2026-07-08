@@ -71,6 +71,10 @@ Use [`../assets/status.md`](../assets/status.md). Initialize:
 
 ### 6. Confirm to the user
 
+Before replying, sync `<tasks-root>/index.md` per [task-contract.md](./task-contract.md) → **`index.md` status mirror**:
+
+- Append `task-<NNN-slug>` with task title and `Status` = `Not Started`.
+
 Reply with:
 
 - Tasks root path (via `index.md`), task folder path, and whether `index.md` was newly created
