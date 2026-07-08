@@ -25,6 +25,7 @@ Match one **Recipes** row; open exactly that reference.
 | Intent | Example phrasing | Read |
 | --- | --- | --- |
 | Create | "Create a task: …", "Plan … as a task", "new task" | [creating-task.md](references/creating-task.md) |
+| Create spike | "Create a spike task for …", "Research feasibility of …", "Investigate whether … is achievable" | [creating-spike-task.md](references/creating-spike-task.md) |
 | Create multiple | "Create tasks for …", "Plan tasks: …", "break this into tasks" | [creating-multiple-tasks.md](references/creating-multiple-tasks.md) |
 | Execute | "Continue `tasks/001-…`", "Resume the dark mode task", "implement next step" | [executing-task.md](references/executing-task.md) |
 | Execute multiple | "Finish all tasks", "run the backlog", "implement until no task available", @-mention tasks root with no folder | [executing-multiple-tasks.md](references/executing-multiple-tasks.md) |
@@ -49,12 +50,14 @@ Match one **Recipes** row; open exactly that reference.
 | --- | --- |
 | [task-contract.md](references/task-contract.md) | Tasks root `index.md` marker, author UUID, layout, frontmatter, finding tasks, resolving domain references |
 | [creating-task.md](references/creating-task.md) | New task folder, plan + initial status; planning only |
-| [creating-multiple-tasks.md](references/creating-multiple-tasks.md) | Multiple new task folders — parse spec list → plan each via `task-planner` (subagent or inline) |
+| [creating-spike-task.md](references/creating-spike-task.md) | New spike/research/investigation task folder with `plan.md`, `status.md`, and `findings.md` handoff |
+| [creating-multiple-tasks.md](references/creating-multiple-tasks.md) | Multiple new task folders — parse spec list, require expected task agents, then delegate planning |
 | [executing-task.md](references/executing-task.md) | Run `next_step_id` for one task folder, implement, update status before stopping |
-| [executing-multiple-tasks.md](references/executing-multiple-tasks.md) | Backlog loop — plan execution series once → implement in order (subagents or inline) |
+| [executing-multiple-tasks.md](references/executing-multiple-tasks.md) | Backlog loop — require expected task agents, plan execution series once, then implement in order |
 | [checking-task.md](references/checking-task.md) | Read-only status report for one task or all tasks |
 | [triaging-tasks.md](references/triaging-tasks.md) | Read-only triage — readiness report or ordered execution roadmap |
-| [subagent-provisioning.md](references/subagent-provisioning.md) | Find, validate, or create `task-planner`, `task-triager`, and `task-implementer` per IDE |
+| [finding-task-agents.md](references/finding-task-agents.md) | Check whether required task agents already exist and decide whether to continue or stop early |
+| [creating-task-agents.md](references/creating-task-agents.md) | User-invoked creation and refresh flow for `task-planner`, `task-triager`, and `task-implementer` |
 | [updating-task.md](references/updating-task.md) | Amend `plan.md` and sync `status.md` when scope changes |
 | [blocking-task.md](references/blocking-task.md) | Mark task blocked with reason; freeze execution pointer |
 | [unblocking-task.md](references/unblocking-task.md) | Clear blocker; restore `In Progress` |
@@ -63,12 +66,14 @@ Match one **Recipes** row; open exactly that reference.
 | [reopening-task.md](references/reopening-task.md) | Restore a cancelled task for continued work |
 | [skipping-step.md](references/skipping-step.md) | Skip a step with reason; advance execution pointer |
 | [cancelling-task.md](references/cancelling-task.md) | Mark task cancelled; optional archive |
+| [findings-contract.md](references/findings-contract.md) | Contract for `findings.md` in spike tasks: sections, frontmatter, and recommendation labels |
 
 ## Templates
 
 - [`assets/index.md`](assets/index.md)
 - [`assets/plan.md`](assets/plan.md)
 - [`assets/status.md`](assets/status.md)
+- [`assets/findings.md`](assets/findings.md)
 - [`assets/agents/task-planner.md`](assets/agents/task-planner.md)
 - [`assets/agents/task-triager.md`](assets/agents/task-triager.md)
 - [`assets/agents/task-implementer.md`](assets/agents/task-implementer.md)

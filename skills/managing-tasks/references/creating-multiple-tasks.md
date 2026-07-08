@@ -2,13 +2,13 @@
 
 ## Overview
 
-**Planning mode.** Creates multiple task folders from a user-provided list of goals. Orchestrates subagent delegation or inline creation per spec; stops without implementing unless the user also asks to implement in the same message.
+**Planning only.** Creates multiple task folders from a user-provided list of goals. Requires `task-planner` to exist, then orchestrates delegation per spec; stops without implementing unless the user also asks to implement in the same message.
 
 ## Prerequisites
 
 Per [task-contract.md](./task-contract.md) → **Resolve tasks root** when the user names a tasks root or one already exists.
 
-Per [subagent-provisioning.md](./subagent-provisioning.md) when delegating to subagents.
+Per [finding-task-agents.md](./finding-task-agents.md) when this workflow requires task-agent delegation.
 
 ## Guidelines
 
@@ -47,13 +47,17 @@ Store as `creation_plan` — ordered list of spec strings. Set `plan_index` to `
 
 Do not delegate this decomposition to a subagent.
 
-### 4. Provision subagents
+### 4. Require expected task agents
 
-Before delegating, follow [subagent-provisioning.md](./subagent-provisioning.md) for **`task-planner`**.
+Before delegating, follow [finding-task-agents.md](./finding-task-agents.md) for required agents: **`task-planner`**.
 
-If the IDE has no subagent support (Windsurf, Continue, or unknown), run the orchestration loop **inline** — follow [creating-task.md](./creating-task.md) per spec yourself; skip §5 delegation and use the same exit conditions in §6.
+If the finder reports missing expected agents, stop immediately and reply:
 
-### 5. Subagent contract
+`Create the subagent first by running managing-tasks creating-task-agents.`
+
+Do not continue into orchestration until required agents exist.
+
+### 5. Task-agent contract
 
 Parse subagent replies exactly — one line each.
 
@@ -79,7 +83,7 @@ Track:
 
 For each entry in `creation_plan` starting at `plan_index`:
 
-1. **Plan** — Launch `task-planner` for the current spec (or follow [creating-task.md](./creating-task.md) inline).
+1. **Plan** — Launch `task-planner` for the current spec.
    - Prompt: `Create a task: <spec>. Tasks root: <tasks-root>/. Follow creating-task.md per managing-tasks. Planning only — do not implement.`
    - Parse the one-line reply:
      - `Created task-<NNN-slug>` → append to `created_tasks`, increment `created_count`, set `last_outcome`.
@@ -92,7 +96,7 @@ For each entry in `creation_plan` starting at `plan_index`:
 
 When `plan_index` reaches the end of `creation_plan` → exit loop (reason: `plan_exhausted`).
 
-Do not launch multiple planners in parallel. Order is always plan spec → plan spec → …
+Do not launch multiple planners in parallel. Order is always plan spec -> plan spec -> ...
 
 ### 7. Report results
 
@@ -112,17 +116,18 @@ When `created_count > 0`, suggest follow-up: _"Execute the backlog with executin
 
 ### 8. Constraints
 
-- **Delegate only** (when subagents are available) — never substitute your own task creation for subagent work.
+- **Require expected agents first** — run [finding-task-agents.md](./finding-task-agents.md) and return early when required agents are missing.
+- **Delegate only** — never substitute your own task creation for task-agent work.
 - **One spec per planner launch** — do not batch multiple specs in one planner call.
 - **Trust subagent one-liners** — do not re-read disk to second-guess planner outcomes unless a reply does not match the contract patterns.
 - **No git operations** — creating tasks does not commit unless the user explicitly asks outside this run.
 - **No execution** — do not advance `next_step_id`, run implementation steps, or call `task-implementer` unless the user explicitly asked to implement in the same message.
 
-Each created task follows [creating-task.md](./creating-task.md) inside the planner subagent (or inline) — not in the orchestrating session.
+Each created task follows [creating-task.md](./creating-task.md) inside the planner subagent, not in the orchestrating session.
 
 ## Examples
 
-**Create multiple:** User says "Create tasks for dark mode toggle, user profile settings, and push notifications". Resolve tasks root → build three-spec `creation_plan` → provision `task-planner` per [subagent-provisioning.md](./subagent-provisioning.md) → delegate once per spec until cap or exit → report created ids.
+**Create multiple:** User says "Create tasks for dark mode toggle, user profile settings, and push notifications". Resolve tasks root -> build three-spec `creation_plan` -> verify `task-planner` exists via [finding-task-agents.md](./finding-task-agents.md) -> delegate once per spec until cap or exit -> report created ids.
 
 **Create then execute:** User says "Plan tasks for A and B, then implement them". Run this reference through §7, then [executing-multiple-tasks.md](./executing-multiple-tasks.md) in the same session.
 
@@ -130,4 +135,5 @@ Each created task follows [creating-task.md](./creating-task.md) inside the plan
 
 - [creating-task.md](./creating-task.md) — single-task planning recipe used inside each planner run
 - [executing-multiple-tasks.md](./executing-multiple-tasks.md) — backlog execution after tasks exist
-- [subagent-provisioning.md](./subagent-provisioning.md) — `task-planner` agent file
+- [finding-task-agents.md](./finding-task-agents.md) — checks whether `task-planner` exists
+- [creating-task-agents.md](./creating-task-agents.md) — user-invoked agent creation workflow

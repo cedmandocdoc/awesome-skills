@@ -6,7 +6,7 @@
 
 ## Prerequisites
 
-Per [subagent-provisioning.md](./subagent-provisioning.md) when delegating to subagents.
+Per [finding-task-agents.md](./finding-task-agents.md) when this workflow requires task-agent delegation.
 
 ## Guidelines
 
@@ -24,13 +24,17 @@ Parse from the user's message. Use defaults when omitted.
 | `stop_on_blocked` | `true` | Stop when implementer returns `Blocked task-...` |
 | `push_on_done` | `false` | Tell implementer to push only when the user explicitly requests push |
 
-### 3. Provision subagents
+### 3. Require expected task agents
 
-Before delegating, follow [subagent-provisioning.md](./subagent-provisioning.md) for **`task-triager`** and **`task-implementer`**.
+Before delegating, follow [finding-task-agents.md](./finding-task-agents.md) for required agents: **`task-triager`** and **`task-implementer`**.
 
-If the IDE has no subagent support (Windsurf, Continue, or unknown), run the orchestration loop **inline** — you orchestrate but follow triaging-tasks execution-roadmap and executing-task per task yourself; skip §4–§5 delegation and use the same exit conditions in §6.
+If the finder reports missing expected agents, stop immediately and reply:
 
-### 4. Subagent contracts
+`Create the subagent first by running managing-tasks creating-task-agents.`
+
+Do not continue into orchestration until required agents exist.
+
+### 4. Task-agent contracts
 
 Parse subagent replies exactly — one line each.
 
@@ -63,7 +67,7 @@ Run in two phases. Track:
 
 #### Phase A — Plan once
 
-1. **Plan** — Launch `task-triager` with `readonly: true` (or run [triaging-tasks.md](./triaging-tasks.md) execution-roadmap inline when subagents are unavailable).
+1. **Plan** — Launch `task-triager` with `readonly: true`.
    - Prompt: `Build an execution plan for the task backlog. max_completed: <N>.`
    - If reply is `No Task Available` → exit (reason: `no_task`).
    - If reply matches `Execution Plan: ...` → split on commas, trim whitespace, store as `execution_plan`. Set `plan_index` to `0`.
@@ -74,7 +78,7 @@ Do not launch the implementer until phase A returns a plan.
 
 For each entry in `execution_plan` starting at `plan_index`:
 
-1. **Implement** — Launch `task-implementer` for the current `task-<NNN-slug>` (or follow [executing-task.md](./executing-task.md) inline).
+1. **Implement** — Launch `task-implementer` for the current `task-<NNN-slug>`.
    - Prompt: `Implement <tasks-root>/<NNN-slug> end-to-end per managing-tasks. Commit when Done.` Append `Push to remote when Done.` only when `push_on_done` is true.
    - Parse the one-line reply:
      - `Finished implementing task-<NNN-slug>` → append to `completed_tasks`, increment `completed_count`, set `last_outcome`.
@@ -87,7 +91,7 @@ For each entry in `execution_plan` starting at `plan_index`:
 
 When `plan_index` reaches the end of `execution_plan` → exit loop (reason: `plan_exhausted`).
 
-Do not launch triager and implementer in parallel. Order is always plan once → implement → implement → …
+Do not launch triager and implementer in parallel. Order is always plan once -> implement -> implement -> ...
 
 ### 6. Report results
 
@@ -105,14 +109,15 @@ If stop reason is `blocked`, you may add one sentence on what the user can do to
 
 ### 7. Constraints
 
-- **Delegate only** (when subagents are available) — never substitute your own triage or implementation for subagent work.
+- **Require expected agents first** — run [finding-task-agents.md](./finding-task-agents.md) and return early when required agents are missing.
+- **Delegate only** — never substitute your own triage or implementation for task-agent work.
 - **Plan once per run** — do not call `task-triager` again mid-loop; follow `execution_plan` until an exit condition.
 - **One task per implementer launch** — do not batch multiple folders in one implementer call.
 - **Trust subagent one-liners** — do not re-read `status.md` to second-guess implementer outcomes unless a reply does not match the contract patterns.
 - **No extra git operations** — do not commit, push, or amend unless the user explicitly asked and implementer handles commits on Done.
 - **No replanning** — do not update task plans, unblock tasks, or archive unless the user explicitly asks outside this run.
 
-Each fully implemented task follows [executing-task.md](./executing-task.md) and [verifying-task.md](./verifying-task.md) inside the implementer subagent (or inline) — not in the orchestrating session.
+Each fully implemented task follows [executing-task.md](./executing-task.md) and [verifying-task.md](./verifying-task.md) inside the implementer subagent, not in the orchestrating session.
 
 ## Related
 
@@ -120,4 +125,4 @@ Each fully implemented task follows [executing-task.md](./executing-task.md) and
 
 ## Examples
 
-**Execute multiple:** User says "finish all tasks". Provision subagents per [subagent-provisioning.md](./subagent-provisioning.md) → delegate to `task-triager` for the plan, then `task-implementer` for each planned task until cap or exit.
+**Execute multiple:** User says "finish all tasks". Verify expected agents per [finding-task-agents.md](./finding-task-agents.md) -> delegate to `task-triager` for the plan, then `task-implementer` for each planned task until cap or exit.

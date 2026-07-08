@@ -19,7 +19,7 @@ Per [task-contract.md](./task-contract.md) → **Resolve tasks root**.
 | Mode | Trigger phrasing | Output |
 | --- | --- | --- |
 | **readiness-report** (default) | "What can I start?", "Which tasks are ready?", "What's unblocked?" | Startable / not-ready tables (§5) |
-| **execution-roadmap** | "Roadmap for tasks", "execution plan", "what order should I implement?", parent prompt with `max_completed`, subagent `task-triager` | Ordered roadmap (§6–§7) |
+| **execution-roadmap** | "Roadmap for tasks", "execution plan", "what order should I implement?", parent prompt with `max_completed` | Ordered roadmap (§6–§7) |
 
 When mode is unclear, default to **readiness-report**.
 
@@ -183,23 +183,6 @@ Repeat until `len(plan) >= max_completed` or no progress in an iteration:
 This captures tasks that are not startable on disk yet but **will become** startable once earlier roadmap entries complete.
 
 ### 7. Roadmap output (execution-roadmap mode)
-
-#### Subagent / parent handoff
-
-When the caller is `task-triager` or [executing-multiple-tasks.md](./executing-multiple-tasks.md), reply with **exactly one line** — nothing else.
-
-| Outcome | Reply (exact pattern) |
-| --- | --- |
-| One or more tasks in the plan | `Execution Plan: task-<NNN-slug>, task-<NNN-slug>, ...` |
-| No tasks to run | `No Task Available` |
-
-Rules:
-
-- Comma-separated `task-<NNN-slug>` ids in execution order
-- At most `max_completed` entries
-- Use the same id format as readiness report (`tasks/005-db-lesson-progress-schema` → `task-005-db-lesson-progress-schema`)
-
-#### User-facing roadmap
 
 When the user asked for a roadmap directly, reply with a short summary plus an ordered list:
 

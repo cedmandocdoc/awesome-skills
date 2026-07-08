@@ -24,7 +24,7 @@ Static UUID identifying subagents owned by this skill:
 a7c9e1f3-5b2d-7e9f-1a3c-5d7e9f1b3a5c
 ```
 
-Managed subagents (`task-triager`, `task-implementer`) must include frontmatter `author` (this UUID) and `generated_by: managing-tasks`. Provision, IDE paths, and launch rules: [subagent-provisioning.md](./subagent-provisioning.md).
+Managed task agents (`task-planner`, `task-triager`, `task-implementer`) must include frontmatter `author` (this UUID) and `generated_by: managing-tasks`. Discovery and explicit creation flows: [finding-task-agents.md](./finding-task-agents.md), [creating-task-agents.md](./creating-task-agents.md).
 
 ### Output layout
 
@@ -36,11 +36,12 @@ Only this skill may establish a tasks root. The root is always marked by `<tasks
   <NNN>-<slug>/
     plan.md      # Stable spec: goal, phases, files, acceptance criteria
     status.md    # Mutable state: execution pointer, step queue, handoff note
+    findings.md  # Optional for spike tasks: feasibility decision and handoff deliverables
   archive/       # Optional: cancelled or completed tasks moved here
     <NNN>-<slug>/
 ```
 
-Templates: [`../assets/plan.md`](../assets/plan.md), [`../assets/status.md`](../assets/status.md), [`../assets/index.md`](../assets/index.md) for new tasks roots.
+Templates: [`../assets/plan.md`](../assets/plan.md), [`../assets/status.md`](../assets/status.md), [`../assets/findings.md`](../assets/findings.md), [`../assets/index.md`](../assets/index.md) for new tasks roots.
 
 ### Plan frontmatter
 
@@ -53,6 +54,21 @@ Every `plan.md` includes YAML frontmatter:
 | `generated_by` | `managing-tasks` (legacy tasks may say `creating-tasks`) |
 | `plan_revision` | Integer; start at `1`, bump on each plan amend |
 | `todos` | Step queue: `id`, `content`, `status` (`pending` \| `completed` \| `skipped` \| `cancelled`) |
+
+### Findings frontmatter (spike tasks)
+
+When a task is a spike/research/investigation effort, `findings.md` should include:
+
+| Field | Purpose |
+| --- | --- |
+| `doc_type` | Must be `task-findings` |
+| `generated_by` | Must be `managing-tasks` |
+| `task_type` | Must be `spike` |
+| `recommendation` | `feasible` \| `not feasible` \| `conditional` |
+| `confidence` | `low` \| `medium` \| `high` |
+| `last_updated` | Date in `YYYY-MM-DD` |
+
+Contract details: [findings-contract.md](./findings-contract.md).
 
 ### Resolve tasks root
 
