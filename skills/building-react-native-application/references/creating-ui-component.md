@@ -11,6 +11,7 @@ Create **shared presentational primitives** in `src/ui/`. Start from the [creati
 - [creating-component.md](./creating-component.md) — placement and shared rules
 - [setting-up-registry-components.md](./setting-up-registry-components.md) — one-time shell (Lucide, `inlineRem`, `PortalHost`) when the app has not been set up yet
 - [managing-wrapper-components.md](./managing-wrapper-components.md) — `className` merging on shared components
+- [discovering-registry-components.md](./discovering-registry-components.md) — intent-to-component lookup and labels
 
 ## Guidelines
 
@@ -46,6 +47,15 @@ src/ui/
 - Generic, unprefixed names: `Button`, `TextInput`, `Modal`, `Card`.
 - Compound parts share the root prefix: `Button`, `ButtonText`, `ButtonIcon` — **one export per file**.
 - Do not encode variant state in the name (`PrimaryButton` → `Button` with `tone` prop).
+
+### Lookup registry candidates
+
+Before `shadcn view`, map the request to candidates with [discovering-registry-components.md](./discovering-registry-components.md):
+
+1. Normalize the request intent (`picker`, `confirm delete`, `settings toggle`, `menu`).
+2. Match by `labels`, then by exact `slug`.
+3. Prefer exact semantic match before composition.
+4. For composite requests, choose a primary primitive and supporting primitives (for example `alert-dialog` + `button`).
 
 ### Validate with `shadcn view`
 
