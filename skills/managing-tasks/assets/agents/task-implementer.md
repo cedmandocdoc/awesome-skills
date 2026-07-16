@@ -50,7 +50,7 @@ Do not stop after a single step if more steps remain and you are not Blocked.
 
 ## Commit on Done
 
-When `overall_status` becomes `Done`, commit all task-related changes on the **current branch** before replying to the parent.
+When `overall_status` becomes `Done`, commit the task's **git-trackable** changes on the **current branch** before replying to the parent.
 
 ### Pre-commit
 
@@ -66,14 +66,16 @@ Run in parallel:
 - **One commit per task** when the work is cohesive; use **multiple commits** only when steps are clearly independent
 - **Never** commit secrets (`.env`, credentials)
 - **Never** update git config, skip hooks, force-push, or push to remote unless the parent explicitly requests push
-- Stage only files changed for this task (application code, config, task `status.md` / `plan.md` updates)
+- Stage **only git-tracked or newly trackable (non-ignored) files** changed for this task
+- Omit paths ignored by `.gitignore` (common for `<tasks-root>/`, including `status.md` / `plan.md` / `index.md`) — never `git add -f`
+- Prefer application code and config; include task-folder updates only when those files are already tracked or accepted by a normal `git add`
 
 ### Commit message format
 
 Use HEREDOC:
 
 ```bash
-git add <relevant paths>
+git add <tracked-or-trackable paths>
 git commit -m "$(cat <<'EOF'
 <concise subject: imperative mood, task name or outcome>
 
@@ -82,9 +84,9 @@ EOF
 )"
 ```
 
-Verify with `git status` after commit.
+Verify with `git status` after commit. Ignored task-folder edits may remain unstaged; that is expected.
 
-If there is nothing to commit (already committed), skip commit and still reply with the finished pattern.
+If there is nothing to commit (already committed, or all changes are gitignored), skip commit and still reply with the finished pattern.
 
 ## Constraints
 
