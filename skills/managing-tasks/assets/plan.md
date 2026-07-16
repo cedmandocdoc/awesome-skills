@@ -2,6 +2,7 @@
 name: {{TASK_TITLE}}
 overview: {{ONE_LINE_OVERVIEW}}
 generated_by: managing-tasks
+task_type: {{implementation|spike}}
 plan_revision: 1
 todos:
   - id: {{STEP_ID_1}}
@@ -21,6 +22,13 @@ todos:
 
 {{WHAT_DONE_LOOKS_LIKE}}
 
+## Requirements
+
+- **Sources:** {{URLs, ticket/PRD paths, Figma/design links, screenshots, @-mentioned docs — or "none"}}
+- **Scope:** {{components, screens, packages, platforms named by the user}}
+- **Constraints:** {{style guide, reuse rules, stack limits, "ask before…" — or "none"}}
+- **Acceptance:** {{done criteria from the user}}
+
 ## Non-goals
 
 - {{OUT_OF_SCOPE_1}}
@@ -31,27 +39,31 @@ todos:
 - **Area:** {{package, app, or subsystem}}
 - **Primary files:** {{paths}}
 - **Skills to load:** {{skill names, or "none"}}
-- **References:** {{basenames from chosen skill(s) — recipes, index, or references/ — e.g. creating-feature or skill-name/creating-feature — or "none"}}
-- **Related tasks:** {{links to sibling task folders, or "none"}}
+- **References:** {{skill reference basenames, e.g. creating-feature or skill-name/creating-feature — or "none"}}
+- **Related tasks:** {{sibling task folder links, or "none"}}
+
+## Approach
+
+{{STRATEGY_OR_RESEARCH_QUESTIONS_OR_OMIT}}
 
 ## Current vs target
 
-{{Brief bullet diff or mermaid diagram if helpful}}
+{{BRIEF_DIFF_OR_OMIT}}
 
 ## Phases
 
 ### Phase 1 — {{TITLE}}
 
-{{Concrete steps with file paths and patterns to follow.}}
+{{STEPS_WITH_FILE_PATHS}}
 
 ### Phase 2 — {{TITLE}}
 
-{{...}}
+{{STEPS_WITH_FILE_PATHS}}
 
 ## Verification checklist
 
-- [ ] {{acceptance criterion 1}}
-- [ ] {{acceptance criterion 2}}
+- [ ] {{ACCEPTANCE_1}}
+- [ ] {{ACCEPTANCE_2}}
 - [ ] Typecheck / lint passes for affected packages
 - [ ] Manual smoke: {{flow}}
 

@@ -5,8 +5,8 @@ Execution source of truth for [`plan.md`](./plan.md). **Read this file first** i
 ## Agent startup protocol
 
 1. Open this file and read the **Execution pointer**
-2. Open `plan.md` for step details and acceptance criteria
-3. Pick the workflow from `managing-tasks` → **Task recipes** (usually `executing-task.md`)
+2. Open `plan.md` — read **Requirements** (Sources, Constraints, Acceptance), then step details
+3. Pick the workflow from `managing-tasks` → **Recipes** (usually `executing-task.md`)
 4. Execute `next_step_id` unless status is `Blocked` or `Cancelled`
 5. Update this file before ending the session (pointer, queue, handoff note)
 

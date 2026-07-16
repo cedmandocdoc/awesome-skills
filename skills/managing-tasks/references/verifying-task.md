@@ -4,6 +4,8 @@
 
 **Execution mode.** Runs verification checklist; marks `Done` or reports failures.
 
+**Runtime truth:** task `status.md` + `plan.md` verification checklist. For `task_type: spike`, also satisfy [findings-contract.md](./findings-contract.md) before Done. **Infra:** [task-contract.md](./task-contract.md) → **Resolve tasks root**, **Step queue rules**, **`index.md` status mirror**.
+
 ## Prerequisites
 
 Per [task-contract.md](./task-contract.md) → **Resolve tasks root**.

@@ -2,8 +2,8 @@
 doc_type: task-findings
 generated_by: managing-tasks
 task_type: spike
-recommendation: conditional
-confidence: medium
+recommendation: {{feasible|not feasible|conditional}}
+confidence: {{low|medium|high}}
 last_updated: {{YYYY-MM-DD}}
 ---
 
@@ -11,17 +11,16 @@ last_updated: {{YYYY-MM-DD}}
 
 ## Overview
 
-{{Summarize what was investigated, scope boundaries, and why this investigation was requested.}}
+{{WHAT_WAS_INVESTIGATED_AND_BOUNDARIES}}
 
 ## Feasibility
 
 - **Recommendation:** `{{feasible|not feasible|conditional}}`
-- **Rationale:** {{Explain the key technical, product, timeline, and dependency factors behind the recommendation.}}
-- **Key assumptions:** {{List assumptions that materially affect the recommendation.}}
+- **Rationale:** {{KEY_FACTORS}}
+- **Key assumptions:** {{ASSUMPTIONS}}
 
 ## Deliverables
 
-- [ ] {{Deliverable 1: concrete output or decision needed next}}
-- [ ] {{Deliverable 2: prerequisite, dependency, or approval}}
-- [ ] {{Deliverable 3: follow-up task candidate with clear scope}}
-- [ ] {{Deliverable 4: risk mitigation or validation item}}
+- [ ] {{DELIVERABLE_1}}
+- [ ] {{DELIVERABLE_2}}
+- [ ] {{DELIVERABLE_3}}

@@ -25,12 +25,12 @@ Extract `<NNN-slug>` from the task folder name (e.g. `tasks/070-ai-mentor-conver
 Resolve `<skill-dir>` as the directory containing `managing-tasks/SKILL.md` per `<skill-dir>/references/task-contract.md` → **Discovering project skills**.
 
 1. Read `<skill-dir>/SKILL.md`
-2. Follow `<skill-dir>/references/executing-task.md` for every implementation step
+2. Follow `<skill-dir>/references/executing-task.md` for every implementation step (**Runtime truth:** task `status.md` + `plan.md`; do not re-read create templates)
 3. When only `verify` remains or `overall_status` is `Review`, follow `<skill-dir>/references/verifying-task.md`
 4. If blocked, follow `<skill-dir>/references/blocking-task.md`
-5. Resolve tasks root per `<skill-dir>/references/task-contract.md`
+5. Resolve tasks root per `<skill-dir>/references/task-contract.md` (plumbing slices only)
 
-Load any **Skills to load** and **References** listed in the task's `plan.md` before implementing each step.
+Read **Requirements** (Sources, Constraints, Acceptance) in the task's `plan.md` before implementing each step. Open Sources URLs/paths the step depends on. Then load Context **Skills to load** and **References**.
 
 ## Execution loop
 

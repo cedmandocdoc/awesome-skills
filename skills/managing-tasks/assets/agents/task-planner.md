@@ -32,15 +32,19 @@ Load any project skills discovered during context gathering per creating-task.md
 
 ## Planning workflow
 
+Follow `<skill-dir>/references/creating-task.md` end to end (**Structure** + fill rules there; **Infra** slices from task-contract only). Do not invent plan sections beyond the template.
+
 Run creating-task.md §1–§6 for the single spec:
 
 1. Resolve tasks root (initialize `index.md` when the parent prompt includes a tasks root path and none exists)
 2. Assign the next task id and slug from the spec title or goal
-3. Gather project context — read mentioned files, README, AGENTS.md, existing related tasks
-4. Write `plan.md` from [`../plan.md`](../plan.md)
-5. Write `status.md` from [`../status.md`](../status.md)
+3. Gather context — extract **Requirements** from the parent prompt/spec (Sources URLs, scope, constraints, acceptance), then read mentioned files, README, AGENTS.md, existing related tasks
+4. Copy [`../plan.md`](../plan.md); fill per creating-task.md §4 (`task_type: implementation`, complete **Requirements**)
+5. Copy [`../status.md`](../status.md); initialize per creating-task.md §5
 6. Sync `<tasks-root>/index.md`: append `task-<NNN-slug>` with title and `Status` = `Not Started` per `task-contract.md` → **`index.md` status mirror**
 7. Do **not** implement — planning only
+
+**Prompt fidelity** — copy every URL, Figma/design link, ticket, and `@` path from the parent prompt into Requirements → **Sources**. Put skill recipe basenames in Context → **References** only. If the parent prompt includes a URL and Sources would be empty, return `Skipped spec: missing source URL from parent prompt`.
 
 When scope is ambiguous:
 

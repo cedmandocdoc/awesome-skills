@@ -2,7 +2,9 @@
 
 ## Overview
 
-**Planning only.** Writes `plan.md` and `status.md` for a new task folder. Stop without implementing unless the user also asks to implement in the same message.
+**Planning only.** Writes `plan.md` and `status.md` for a new implementation task folder. Stop without implementing unless the user also asks to implement in the same message.
+
+**Structure:** copy [`../assets/plan.md`](../assets/plan.md) and [`../assets/status.md`](../assets/status.md). **Infra:** [task-contract.md](./task-contract.md) → **Resolve tasks root**, **Initialize tasks root**, **`index.md` status mirror**, **Discovering project skills** only.
 
 ## Prerequisites
 
@@ -30,38 +32,46 @@ If the folder already exists, stop and ask whether to overwrite or pick a new sl
 
 ### 3. Gather project context
 
+Extract from the user prompt first, then enrich from the repo.
+
 | Source | What to extract |
 | --- | --- |
-| User input | Goal, constraints, files/features mentioned |
+| User input | Goal, **Sources** (URLs, Figma/design links, tickets, PRD paths, screenshots), scope names, constraints, acceptance language, `@`-mentioned paths |
 | `README.md`, `AGENTS.md` | Conventions, skill references, architecture notes |
 | Project structure | Monorepo layout, app/package boundaries, key directories |
 | Mentioned files | **Read them** — patterns, dependencies, related code |
-| Project skills | Discover applicable skills per [task-contract.md](./task-contract.md) |
+| Project skills | Discover applicable skills per [task-contract.md](./task-contract.md) → **Discovering project skills** |
 | Existing tasks | Related plans under the tasks root (reference, do not duplicate) |
 
-Ask **at most one** clarifying question if scope or target area is ambiguous.
+**Prompt fidelity** — every URL, file path, and acceptance phrase from the user message must land in `plan.md` → **Requirements**. Prefer verbatim Sources over paraphrase.
+
+If the prompt includes a URL (or `@` path to a design/spec) and Sources would otherwise be empty, stop and ask once for the missing link or path before writing the plan.
+
+Ask **at most one** clarifying question if scope or target area is ambiguous (in addition to the Sources check above).
 
 ### 4. Write `plan.md`
 
-Use [`../assets/plan.md`](../assets/plan.md). Required sections:
+Copy [`../assets/plan.md`](../assets/plan.md). Set `task_type: implementation`. Fill sections per this table (template is skeleton only):
 
 | Section | Content |
 | --- | --- |
-| YAML frontmatter | `name`, `overview`, `generated_by: managing-tasks`, `plan_revision: 1`, `todos` (id + content + status: pending) |
+| YAML frontmatter | `name`, `overview`, `generated_by: managing-tasks`, `task_type: implementation`, `plan_revision: 1`, `todos` (id + content + status: pending) |
 | Goal | One paragraph outcome |
+| Requirements | **Sources**, **Scope**, **Constraints**, **Acceptance** from the user prompt |
 | Non-goals | Explicit out-of-scope items |
-| Context | Files, related tasks, **Skills to load**, **References** |
-| Phases | Ordered steps with concrete file paths; optional per-phase `References:` |
-| Verification checklist | How to confirm done |
+| Context | Area, files, related tasks, **Skills to load**, **References** (skill basenames only) |
+| Approach | Omit when the path is obvious; otherwise state the chosen strategy |
+| Phases | Ordered implementation steps with concrete file paths; cite Requirements Sources when a step depends on them |
+| Verification checklist | How to confirm done — mirror Requirements Acceptance |
 | Risks | Non-obvious decisions or blockers |
 
 Keep phases implementation-ready: file paths, patterns to follow, acceptance criteria per phase.
 
-**Skills and references** — when conventions apply, fill Context using skill discovery in [task-contract.md](./task-contract.md). Include reference basenames, not skill names alone (~6 references max unless scope requires more).
+**Requirements vs Context** — external URLs and design/spec paths go in Requirements → **Sources**. Skill recipe basenames go in Context → **References** (resolve later via [task-contract.md](./task-contract.md) → **Resolving domain references**). ~6 skill references max unless scope requires more.
 
 ### 5. Write `status.md`
 
-Use [`../assets/status.md`](../assets/status.md). Initialize:
+Copy [`../assets/status.md`](../assets/status.md). Initialize:
 
 - `overall_status`: `Not Started`
 - `next_step_id`: first step id from the plan's todo/step queue
@@ -79,6 +89,7 @@ Reply with:
 
 - Tasks root path (via `index.md`), task folder path, and whether `index.md` was newly created
 - One-line summary
+- Whether Requirements Sources captured any URLs or design links
 - `next_step_id` for the executor
 - Suggested follow-up: _"Continue `tasks/001-dark-mode-toggle`"_ or _"Read `tasks/001-dark-mode-toggle/status.md` and run the next step"_
 
@@ -87,7 +98,10 @@ Reply with:
 ## Related
 
 - [creating-multiple-tasks.md](./creating-multiple-tasks.md) — orchestrate several new tasks via `task-planner` subagents
+- [creating-spike-task.md](./creating-spike-task.md) — research/investigation task with `findings.md`
 
 ## Examples
 
 **Create (new repo):** No `index.md` found → ask user for an empty folder (e.g. `tasks/`) → write `tasks/index.md` then `tasks/001-dark-mode-toggle/plan.md` + `status.md` → suggest _"Continue `tasks/001-dark-mode-toggle`"_.
+
+**Create (Figma parity):** User names a component and Figma URL → Requirements Sources includes the full URL; phases cite that URL; Context References lists skill recipe basenames separately.

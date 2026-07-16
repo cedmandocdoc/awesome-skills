@@ -2,7 +2,9 @@
 
 ## Overview
 
-Shared layout and field meanings for all `managing-tasks` workflows.
+Shared **system plumbing** for all `managing-tasks` workflows: tasks root discovery, folder layout, status fields, step queue, index mirror, and skill/reference resolution.
+
+Plan and findings **body structure** live in templates and create recipes — not here. Spike validation: [findings-contract.md](./findings-contract.md).
 
 ## Guidelines
 
@@ -34,41 +36,27 @@ Only this skill may establish a tasks root. The root is always marked by `<tasks
 <tasks-root>/
   index.md                          # tasks root marker — required; created first
   <NNN>-<slug>/
-    plan.md      # Stable spec: goal, phases, files, acceptance criteria
+    plan.md      # Stable spec (structure: assets/plan.md; rules: create/update recipes)
     status.md    # Mutable state: execution pointer, step queue, handoff note
-    findings.md  # Optional for spike tasks: feasibility decision and handoff deliverables
+    findings.md  # Spike only (structure: assets/findings.md; rules: findings-contract.md)
   archive/       # Optional: cancelled or completed tasks moved here
     <NNN>-<slug>/
 ```
 
-Templates: [`../assets/plan.md`](../assets/plan.md), [`../assets/status.md`](../assets/status.md), [`../assets/findings.md`](../assets/findings.md), [`../assets/index.md`](../assets/index.md) for new tasks roots.
+Templates: [`../assets/plan.md`](../assets/plan.md), [`../assets/status.md`](../assets/status.md), [`../assets/findings.md`](../assets/findings.md), [`../assets/index.md`](../assets/index.md).
 
 ### Plan frontmatter
 
-Every `plan.md` includes YAML frontmatter:
+Machine fields every `plan.md` includes (body sections come from the template + create recipe):
 
 | Field | Purpose |
 | --- | --- |
 | `name` | Task title |
 | `overview` | One-line summary |
 | `generated_by` | `managing-tasks` (legacy tasks may say `creating-tasks`) |
+| `task_type` | `implementation` (default) or `spike`; omit only on legacy plans |
 | `plan_revision` | Integer; start at `1`, bump on each plan amend |
 | `todos` | Step queue: `id`, `content`, `status` (`pending` \| `completed` \| `skipped` \| `cancelled`) |
-
-### Findings frontmatter (spike tasks)
-
-When a task is a spike/research/investigation effort, `findings.md` should include:
-
-| Field | Purpose |
-| --- | --- |
-| `doc_type` | Must be `task-findings` |
-| `generated_by` | Must be `managing-tasks` |
-| `task_type` | Must be `spike` |
-| `recommendation` | `feasible` \| `not feasible` \| `conditional` |
-| `confidence` | `low` \| `medium` \| `high` |
-| `last_updated` | Date in `YYYY-MM-DD` |
-
-Contract details: [findings-contract.md](./findings-contract.md).
 
 ### Resolve tasks root
 

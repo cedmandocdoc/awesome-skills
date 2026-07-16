@@ -41,6 +41,8 @@ Derive an ordered list of task specs from the user message. Each spec is a short
 
 Trim whitespace; drop empty entries. Preserve user order.
 
+**Carry Sources into every spec** — when the user message includes shared URLs, Figma/design links, tickets, or `@` paths that apply to the backlog, append them to each delegated planner prompt (not only the first). Spec strings alone may drop links; the parent prompt to `task-planner` must still include them.
+
 If the list is empty after parsing → exit (reason: `no_specs`).
 
 Store as `creation_plan` — ordered list of spec strings. Set `plan_index` to `0`.
@@ -84,7 +86,7 @@ Track:
 For each entry in `creation_plan` starting at `plan_index`:
 
 1. **Plan** — Launch `task-planner` for the current spec.
-   - Prompt: `Create a task: <spec>. Tasks root: <tasks-root>/. Follow creating-task.md per managing-tasks. Planning only — do not implement.`
+   - Prompt: `Create a task: <spec>. Sources (copy into plan Requirements): <shared URLs/paths or "none">. Tasks root: <tasks-root>/. Follow creating-task.md per managing-tasks. Planning only — do not implement.`
    - Parse the one-line reply:
      - `Created task-<NNN-slug>` → append to `created_tasks`, increment `created_count`, set `last_outcome`.
      - `Skipped spec: ...` → set `last_outcome`. If `stop_on_skip`, exit loop (reason: `skipped`). Otherwise advance `plan_index` and continue.

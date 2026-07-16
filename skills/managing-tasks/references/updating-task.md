@@ -4,6 +4,8 @@
 
 **Planning only.** Amends `plan.md` and syncs `status.md` when scope changes.
 
+**Structure:** keep section order from [`../assets/plan.md`](../assets/plan.md); fill rules match [creating-task.md](./creating-task.md) §4. **Infra:** [task-contract.md](./task-contract.md) → **Resolve tasks root**, **Step queue rules**, **`index.md` status mirror**, **Discovering project skills**.
+
 ## Prerequisites
 
 Per [task-contract.md](./task-contract.md) → **Resolve tasks root**.
@@ -25,8 +27,9 @@ Same as [executing-task.md](./executing-task.md) → step 1.
 From the user message, determine:
 
 - New goals, phases, or acceptance criteria
+- New or corrected **Requirements** (Sources URLs, scope, constraints, acceptance)
 - Removed or deferred scope (move to Non-goals)
-- New files, skills, or references to add to Context
+- New files, skills, or skill reference basenames to add to Context
 
 Ask **at most one** clarifying question if the amend scope is ambiguous.
 
@@ -43,8 +46,9 @@ Ask **at most one** clarifying question if the amend scope is ambiguous.
    | 2 | YYYY-MM-DD | Added phase 3 for API error handling |
    ```
 
-3. Edit Goal, Non-goals, Context, Phases, Verification checklist, and Risks as needed
-4. Sync frontmatter `todos`:
+3. Edit Goal, Requirements, Non-goals, Context, Approach, Phases, Verification checklist, and Risks as needed
+4. When the user adds a URL or design link, append it to Requirements → **Sources** (verbatim); do not leave it only in chat or phase prose
+5. Sync frontmatter `todos`:
    - **Preserve** todos with `status: completed` or `skipped` — do not reset them
    - Add new todos for new steps; mark removed steps `status: cancelled` (do not delete rows)
    - Renumber or rename step ids only when necessary; if ids change, update `status.md` queue to match

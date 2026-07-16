@@ -1,7 +1,7 @@
 ---
 name: managing-tasks
 description: Manages structured task folders (plan.md, status.md) for cross-session agent handoff. Creates, creates multiple (plan a backlog of new tasks), executes, executes multiple (plan then implement backlog), checks, triages, updates, blocks, verifies, archives, reopens, skips, or cancels tasks. Use when the user works with tasks/NNN-slug folders or asks about task status, blockers, readiness, or lifecycle.
-version: 1.0.0
+version: 1.2.0
 ---
 
 # Managing Tasks
@@ -10,7 +10,7 @@ version: 1.0.0
 
 Skill collection for durable, handoff-ready task work on disk. Works in any environment where the agent can read and write repository files.
 
-**Contract:** [`references/task-contract.md`](references/task-contract.md) — tasks root `index.md` marker, author UUID, layout, frontmatter, status fields, skill discovery.
+**Layering:** recipes own action rules; [`assets/`](assets/) are copy skeletons; [`references/task-contract.md`](references/task-contract.md) is system plumbing (resolve root, status, discovery); on-disk `plan.md` / `status.md` are runtime truth after create.
 
 ## Agent workflow
 
@@ -44,12 +44,12 @@ Match one **Recipes** row; open exactly that reference.
 
 ### Contract
 
-[task-contract.md](references/task-contract.md) — layout, frontmatter, resolve rules.
+[task-contract.md](references/task-contract.md) — system plumbing only (resolve root, layout, status, discovery).
 
 | Doc | When to use |
 | --- | --- |
-| [task-contract.md](references/task-contract.md) | Tasks root `index.md` marker, author UUID, layout, frontmatter, finding tasks, resolving domain references |
-| [creating-task.md](references/creating-task.md) | New task folder, plan + initial status; planning only |
+| [task-contract.md](references/task-contract.md) | Tasks root `index.md` marker, author UUID, layout, plan frontmatter fields, status fields, finding tasks, resolving domain references |
+| [creating-task.md](references/creating-task.md) | New task folder, plan + initial status; planning only — owns Requirements fill rules |
 | [creating-spike-task.md](references/creating-spike-task.md) | New spike/research/investigation task folder with `plan.md`, `status.md`, and `findings.md` handoff |
 | [creating-multiple-tasks.md](references/creating-multiple-tasks.md) | Multiple new task folders — parse spec list, require expected task agents, then delegate planning |
 | [executing-task.md](references/executing-task.md) | Run `next_step_id` for one task folder, implement, update status before stopping |
@@ -66,7 +66,7 @@ Match one **Recipes** row; open exactly that reference.
 | [reopening-task.md](references/reopening-task.md) | Restore a cancelled task for continued work |
 | [skipping-step.md](references/skipping-step.md) | Skip a step with reason; advance execution pointer |
 | [cancelling-task.md](references/cancelling-task.md) | Mark task cancelled; optional archive |
-| [findings-contract.md](references/findings-contract.md) | Contract for `findings.md` in spike tasks: sections, frontmatter, and recommendation labels |
+| [findings-contract.md](references/findings-contract.md) | Spike `findings.md` validation — frontmatter enums, deliverables quality, handoff checklist |
 
 ## Templates
 

@@ -45,7 +45,7 @@ Parse from the user or parent prompt when in execution-roadmap mode:
 For each task folder:
 
 1. Read `status.md` — **first**
-2. Read `plan.md` — goal, Context, phases, frontmatter `todos`, verification checklist
+2. Read `plan.md` — goal, Requirements, Context, phases, frontmatter `todos`, verification checklist
 
 Build a working map of task id → `overall_status`, `next_step_id`, `blocking_reason`, and Context → **Related tasks**.
 
@@ -92,6 +92,7 @@ Check inputs the **next step** (and steps it explicitly builds on in the same ph
 | Context → **Primary files** | Path exists, or the plan says the next step creates it |
 | Phase steps for `next_step_id` | Named paths, configs, fixtures, and assets exist or are created in an earlier **completed** step in this task |
 | Context → **References** | Each basename resolves per [task-contract.md](./task-contract.md) → **Resolving domain references** |
+| Requirements → **Sources** | External URLs and design/spec paths the task depends on |
 | Design / spec pointers | Files or URLs named in the plan (mockup, stitch prompt, style guide, Figma link with accessible file, wireframe, API spec) exist and are usable |
 
 | Condition | Verdict |

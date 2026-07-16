@@ -2,15 +2,13 @@
 
 ## Overview
 
-Shared contract for spike task handoff document `findings.md`.
-
-`findings.md` captures the investigation result, recommendation, and actionable deliverables for the next task or decision maker.
+**Validation rules** for spike handoff document `findings.md`. Structure comes from [`../assets/findings.md`](../assets/findings.md) (skeleton only). Use this contract when writing or completing a spike — not when executing ordinary implementation tasks.
 
 ## Guidelines
 
 ### Purpose
 
-Use this contract for tasks whose primary output is feasibility discovery, requirement clarification, or investigation synthesis.
+Use for tasks whose primary output is feasibility discovery, requirement clarification, or investigation synthesis.
 
 ### Location and naming
 

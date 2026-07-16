@@ -4,6 +4,8 @@
 
 **Execution mode.** Implements the current step unless it is documentation-only.
 
+**Runtime truth:** `<task-folder>/status.md` then `plan.md` (do not re-read create templates). **Infra:** [task-contract.md](./task-contract.md) → **Resolve tasks root**, **Finding existing tasks**, **Resolving domain references**, **Step queue rules**, **`index.md` status mirror**.
+
 ## Prerequisites
 
 Per [task-contract.md](./task-contract.md) → **Resolve tasks root** and **Finding tasks root**.
@@ -19,7 +21,7 @@ Resolve `<task-folder>` from the user's message under `<tasks-root>/`. If unclea
 ### 2. Startup protocol
 
 1. Read `<task-folder>/status.md` — **first**
-2. Read `<task-folder>/plan.md` for step details and acceptance criteria
+2. Read `<task-folder>/plan.md` — Goal, **Requirements** (Sources, Scope, Constraints, Acceptance), Context, and the current step
 3. If `overall_status` is `Cancelled` → stop; tell the user the task was cancelled
 4. If `overall_status` is `Blocked` → stop unless the user says to unblock; address `blocking_reason` first
 5. If `overall_status` is `Done` → stop; confirm completion or offer [archiving-task.md](./archiving-task.md)
@@ -28,10 +30,11 @@ Resolve `<task-folder>` from the user's message under `<tasks-root>/`. If unclea
 ### 3. Execute `next_step_id`
 
 1. Find the step in `plan.md` (phases and/or frontmatter `todos`)
-2. Load Context **Skills to load** from `plan.md`; read each skill's `SKILL.md`
-3. Read Context **References** per [task-contract.md](./task-contract.md) → **Resolving domain references**
-4. Implement the step: code, config, or docs as the plan specifies
-5. Run quick checks mentioned in the plan (lint, typecheck) when practical
+2. Apply **Requirements** — open Sources URLs/paths the step depends on (Figma, tickets, specs); honor Constraints and Acceptance
+3. Load Context **Skills to load** from `plan.md`; read each skill's `SKILL.md`
+4. Read Context **References** per [task-contract.md](./task-contract.md) → **Resolving domain references**
+5. Implement the step: code, config, or docs as the plan specifies
+6. Run quick checks mentioned in the plan (lint, typecheck) when practical
 
 ### 4. Update `status.md` before stopping
 
