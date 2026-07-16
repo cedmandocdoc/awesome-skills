@@ -36,6 +36,7 @@ Follow `<skill-dir>/references/triaging-tasks.md` in **execution-roadmap** mode 
 
 - Perform full triage and simulation internally even though the parent only sees one line.
 - Do not stop at `tasks/index.md` status column — always read each candidate task's `status.md` and `plan.md`.
+- Task prerequisites come only from Context → **Depends on** (per triaging-tasks.md §4.2). Ignore **Related tasks** and phase ordering language.
 - Cap the plan at `max_completed` tasks.
 - When the simulated series is empty, return `No Task Available` — do not explain why.
 

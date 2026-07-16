@@ -47,7 +47,7 @@ For each task folder:
 1. Read `status.md` — **first**
 2. Read `plan.md` — goal, Requirements, Context, phases, frontmatter `todos`, verification checklist
 
-Build a working map of task id → `overall_status`, `next_step_id`, `blocking_reason`, and Context → **Related tasks**.
+Build a working map of task id → `overall_status`, `next_step_id`, `blocking_reason`, and Context → **Depends on**.
 
 Do **not** modify any files.
 
@@ -68,20 +68,25 @@ Evaluate **every** task. A task may appear in only one group.
 
 #### 4.2 Task dependencies
 
-Inspect `plan.md` → Context → **Related tasks** and phase text for ordering language (`depends on`, `after`, `requires`, `blocked by`, `once … is done`).
+Read `plan.md` → Context → **Depends on** only. Ignore **Related tasks**, phase prose, and freeform ordering language for readiness.
 
-For each referenced sibling task folder:
+| **Depends on** value | Action |
+| --- | --- |
+| `none`, empty, or field missing | Pass — no task prerequisites |
+| One or more folder names | Gate on each entry below |
 
-1. Resolve the path under `<tasks-root>/`
+For each listed prerequisite folder:
+
+1. Resolve `<tasks-root>/<NNN-slug>/` (accept bare folder name or `task-<NNN-slug>` → strip `task-` prefix)
 2. Read its `status.md` → `overall_status`
 
 | Condition | Verdict |
 | --- | --- |
-| Prerequisite task is `Done` or explicitly listed as non-blocking in the plan | Pass |
-| Prerequisite task is `Not Started`, `In Progress`, `Blocked`, `Review`, or `Cancelled` | **Not ready** — task dependency |
-| Related task path missing or not a valid task folder | **Not ready** — broken dependency link |
+| Prerequisite `overall_status` is `Done` | Pass for that entry |
+| Prerequisite is `Not Started`, `In Progress`, `Blocked`, `Review`, or `Cancelled` | **Not ready** — task dependency |
+| Path missing or not a valid task folder | **Not ready** — broken dependency link |
 
-When the plan does not state whether a related task is a prerequisite, treat it as **informational only** unless phase text implies ordering.
+All listed entries must Pass. **Related tasks** never blocks.
 
 #### 4.3 Artifacts and references on disk
 
@@ -111,7 +116,7 @@ Inspect the phase and todo matching `next_step_id`.
 | --- | --- |
 | Vague step with no file paths, patterns, or acceptance criteria (`implement feature`, `add UI`, `wire up backend`) | **Not ready** — missing input |
 | Placeholders: `TBD`, `TODO`, `pending design`, `awaiting spec`, `???`, `fill in later` | **Not ready** — missing input |
-| Next step assumes work that is not in the plan and not in a completed related task | **Not ready** — would invent steps |
+| Next step assumes work that is not in the plan and not delivered by a completed **Depends on** task | **Not ready** — would invent steps |
 | Concrete paths, patterns, skills, references, and acceptance criteria for the next step | Pass |
 
 If the plan is incomplete but the gap is small and the user only asked for a readiness report, note the specific question to resolve in **Unblock action** — do not replan unless the user switches intent ([updating-task.md](./updating-task.md) or [creating-task.md](./creating-task.md)).

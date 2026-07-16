@@ -41,7 +41,7 @@ Extract from the user prompt first, then enrich from the repo.
 | Project structure | Monorepo layout, app/package boundaries, key directories |
 | Mentioned files | **Read them** — patterns, dependencies, related code |
 | Project skills | Discover applicable skills per [task-contract.md](./task-contract.md) → **Discovering project skills** |
-| Existing tasks | Related plans under the tasks root (reference, do not duplicate) |
+| Existing tasks | Sibling folders to set as **Depends on** (hard prereqs) or **Related tasks** (informational only) |
 
 **Prompt fidelity** — every URL, file path, and acceptance phrase from the user message must land in `plan.md` → **Requirements**. Prefer verbatim Sources over paraphrase.
 
@@ -59,7 +59,7 @@ Copy [`../assets/plan.md`](../assets/plan.md). Set `task_type: implementation`. 
 | Goal | One paragraph outcome |
 | Requirements | **Sources**, **Scope**, **Constraints**, **Acceptance** from the user prompt |
 | Non-goals | Explicit out-of-scope items |
-| Context | Area, files, related tasks, **Skills to load**, **References** (skill basenames only) |
+| Context | Area, files, **Depends on**, **Related tasks**, **Skills to load**, **References** (skill basenames only) |
 | Approach | Omit when the path is obvious; otherwise state the chosen strategy |
 | Phases | Ordered implementation steps with concrete file paths; cite Requirements Sources when a step depends on them |
 | Verification checklist | How to confirm done — mirror Requirements Acceptance |
@@ -68,6 +68,15 @@ Copy [`../assets/plan.md`](../assets/plan.md). Set `task_type: implementation`. 
 Keep phases implementation-ready: file paths, patterns to follow, acceptance criteria per phase.
 
 **Requirements vs Context** — external URLs and design/spec paths go in Requirements → **Sources**. Skill recipe basenames go in Context → **References** (resolve later via [task-contract.md](./task-contract.md) → **Resolving domain references**). ~6 skill references max unless scope requires more.
+
+**Depends on vs Related tasks** — both default to `none`.
+
+| Field | Use when | Value format |
+| --- | --- | --- |
+| **Depends on** | This task must wait until those tasks are `Done` | Folder names under the tasks root (e.g. `001-auth-schema`); comma-separate multiple |
+| **Related tasks** | Informational sibling links only — never blocks readiness | Same folder-name format, or `none` |
+
+Put a sibling in **Depends on** only when the user or plan order requires it finished first. Do not encode ordering in phase prose — triage reads **Depends on** only.
 
 ### 5. Write `status.md`
 

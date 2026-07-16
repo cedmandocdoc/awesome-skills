@@ -42,7 +42,7 @@ Capture the decision question and every source the investigation must consult:
 | User input | Question to answer, **Sources** (URLs, Figma/design links, tickets, docs), boundaries, deadline, decision owner, acceptance for "enough research" |
 | `README.md`, `AGENTS.md` | Constraints, architecture, conventions, required approvals |
 | Mentioned files or systems | Known dependencies, complexity hotspots, unknowns |
-| Existing tasks | Related implementations to avoid duplicate investigation |
+| Existing tasks | Sibling folders to set as **Depends on** (hard prereqs) or **Related tasks** (informational only) |
 | Project skills | Discovery and docs skills relevant to this domain |
 
 **Prompt fidelity** — every URL, file path, and constraint from the user message must land in `plan.md` → **Requirements**. Prefer verbatim Sources over paraphrase.
@@ -60,6 +60,7 @@ Copy [`../assets/plan.md`](../assets/plan.md). Set `task_type: spike`. Keep this
 | Goal | Investigation question and target decision |
 | Requirements | Same fidelity rules as [creating-task.md](./creating-task.md) — Sources, Scope, Constraints, Acceptance |
 | Non-goals | Exclude implementation and production rollout |
+| Context | Same **Depends on** / **Related tasks** rules as [creating-task.md](./creating-task.md); default both to `none` |
 | Approach | Research questions, unknowns, and evidence to gather |
 | Phases | Evidence gathering → option evaluation → recommendation drafting into `findings.md` |
 | Verification checklist | Findings quality (label, rationale, actionable deliverables) — not feature behavior |

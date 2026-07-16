@@ -40,7 +40,8 @@ todos:
 - **Primary files:** {{paths}}
 - **Skills to load:** {{skill names, or "none"}}
 - **References:** {{skill reference basenames, e.g. creating-feature or skill-name/creating-feature — or "none"}}
-- **Related tasks:** {{sibling task folder links, or "none"}}
+- **Depends on:** {{prerequisite task folder names under the tasks root, e.g. `001-auth-schema` — or "none"}}
+- **Related tasks:** {{informational sibling task folder links — or "none"}}
 
 ## Approach
 
