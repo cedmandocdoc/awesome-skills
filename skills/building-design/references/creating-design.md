@@ -27,7 +27,7 @@ If inputs are thin, ask briefly then proceed with convention defaults and note a
 ### When to use
 
 - User asks for a style guide, design tokens, visual language, or `design.md`
-- Stitch, Figma Make, or Claude Design handoffs need a visual system file
+- Design prompts (Claude Design, Stitch, Figma Make) need a visual system file
 - User supplies a foreign guide to normalize into DESIGN.md format
 
 ### Official spec compliance
@@ -79,7 +79,7 @@ When the user supplies an existing guide (markdown, Figma tokens, CSS variables,
 4. **Map brand inputs** — assign colors to semantic roles; fonts to families; density to spacing scale.
 5. **Build YAML front matter** — concrete values under `colors`, `typography`, `rounded`, `spacing`, `components` using canonical keys.
 6. **Draft markdown body** — fill canonical sections; include dark mode, breakpoints, elevation, motion, and a11y where inputs support them.
-7. **Write file** — save as `design.md` at the agreed path (default: ask user, or project-agreed design path).
+7. **Write file** — save as `design.md` at the agreed path. **Always ask** before writing unless the user already gave a path. Default: `design/design.md`.
 8. **Summarize in chat** — path, one-line summary, unmapped tokens, lint result if run.
 
 ### Color token convention (shadcn)
@@ -268,7 +268,7 @@ The file must include:
 2. **Light-first YAML** — dark mode documented in Colors prose when both modes exist.
 3. **Separate concerns** — size in `text-*`; weight/family documented in Overview and resolved into YAML fields; spacing in `space-*`; corners in `radius-*`.
 4. **Reference syntax** — component YAML uses `{colors.*}`, `{typography.*}`, `{rounded.*}`; not raw hex in component tokens when a color token exists.
-5. **Components before handoff** — ensure `button-primary`, `input-default`, and `card-default` at minimum when building for Stitch / design tools.
+5. **Components before handoff** — ensure `button-primary`, `input-default`, and `card-default` at minimum when building for design-tool prompts.
 6. **No duplicate naming** — one canonical name per token.
 
 ### Output format
@@ -280,17 +280,15 @@ The file must include:
 
 ### Confirm to the user
 
-Reply with file path, convention used, upstream inputs read, and suggested next step (Stitch / Figma / Claude Design handoff, or feature `ui-specs.md` for view states when product specs are in progress).
+Reply with file path, convention used, upstream inputs read, and suggested next step ([creating-design-prompts.md](./creating-design-prompts.md), or feature `ui-specs.md` for view states when product specs are in progress).
 
 ### Follow-up updates
 
-When the user revises visual tokens, update `design.md` in place using the same output contract. Keep downstream `prompt.md` and tool handoffs consistent with YAML keys.
+When the user revises visual tokens, update `design.md` in place using the same output contract. Keep downstream design prompt folders consistent with YAML keys.
 
 ## Related
 
-- [creating-stitch-prompts.md](./creating-stitch-prompts.md) — Stitch handoff using this `design.md`
-- [creating-figma-showcase-prompt.md](./creating-figma-showcase-prompt.md) — embeds tokens from `design.md`
-- [creating-claude-design-prompts.md](./creating-claude-design-prompts.md) — Claude Design passes gated on `design.md`
+- [creating-design-prompts.md](./creating-design-prompts.md) — shared application-design prompts gated on this `design.md`
 
 ## References
 

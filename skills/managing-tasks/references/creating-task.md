@@ -73,7 +73,7 @@ Keep phases implementation-ready: file paths, patterns to follow, acceptance cri
 
 | Field | Use when | Value format |
 | --- | --- | --- |
-| **Depends on** | This task must wait until those tasks are `Done` | Folder names under the tasks root (e.g. `001-auth-schema`); comma-separate multiple |
+| **Depends on** | This task must wait until those tasks are `Done` (active or under `archives/`) | Folder names (e.g. `001-auth-schema`); comma-separate multiple |
 | **Related tasks** | Informational sibling links only — never blocks readiness | Same folder-name format, or `none` |
 
 Put a sibling in **Depends on** only when the user or plan order requires it finished first. Do not encode ordering in phase prose — triage reads **Depends on** only.

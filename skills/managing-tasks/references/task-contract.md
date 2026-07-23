@@ -39,7 +39,7 @@ Only this skill may establish a tasks root. The root is always marked by `<tasks
     plan.md      # Stable spec (structure: assets/plan.md; rules: create/update recipes)
     status.md    # Mutable state: execution pointer, step queue, handoff note
     findings.md  # Spike only (structure: assets/findings.md; rules: findings-contract.md)
-  archive/       # Optional: cancelled or completed tasks moved here
+  archives/       # Done and Cancelled tasks moved here automatically
     <NNN>-<slug>/
 ```
 
@@ -56,7 +56,7 @@ Machine fields every `plan.md` includes (body sections come from the template + 
 | `generated_by` | `managing-tasks` (legacy tasks may say `creating-tasks`) |
 | `task_type` | `implementation` (default) or `spike`; omit only on legacy plans |
 | `plan_revision` | Integer; start at `1`, bump on each plan amend |
-| `todos` | Step queue: `id`, `content`, `status` (`pending` \| `completed` \| `skipped` \| `cancelled`) |
+| `todos` | Step queue: `id`, `content`, `status` (`pending` \| `completed` \| `cancelled`) |
 
 ### Resolve tasks root
 
@@ -98,7 +98,7 @@ Only this skill may create or replace `index.md`. If the user points at a non-em
 
 ### Finding existing tasks
 
-After resolving the tasks root per **Finding tasks root**, search under `<tasks-root>/` and `<tasks-root>/archive/` for directories matching `[0-9][0-9][0-9]-*/` that contain `plan.md`.
+After resolving the tasks root per **Finding tasks root**, search under `<tasks-root>/` and `<tasks-root>/archives/` for directories matching `[0-9][0-9][0-9]-*/` that contain `plan.md`.
 
 Treat `plan.md` as a task when frontmatter contains `generated_by: managing-tasks` **or** `generated_by: creating-tasks` (legacy).
 
@@ -106,30 +106,59 @@ Treat `plan.md` as a task when frontmatter contains `generated_by: managing-task
 
 | Field | Values | Meaning |
 | --- | --- | --- |
-| `overall_status` | `Not Started`, `In Progress`, `Blocked`, `Review`, `Done`, `Cancelled` | Task lifecycle |
+| `overall_status` | `Not Started`, `In Progress`, `Blocked`, `Done`, `Cancelled` | Task lifecycle |
 | `current_step_id` | step id or `none` | Step in progress this session |
 | `next_step_id` | step id or `none` | Next step for the executor |
 | `blocking_reason` | text or `None` | Why work is blocked |
 | `cancel_reason` | text or `None` | Why the task was cancelled |
 | `handoff_note` | one sentence | What the next session should do first |
 
+When only `verify` remains, keep `overall_status`: `In Progress` and `next_step_id`: `verify`.
+
+### Auto-archive
+
+When `overall_status` becomes `Done` or `Cancelled`:
+
+1. Ensure `<tasks-root>/archives/` exists.
+2. Move `<tasks-root>/<NNN>-<slug>/` → `<tasks-root>/archives/<NNN>-<slug>/`.
+3. Update `task_folder` in `status.md` to the new path.
+4. Remove the matching row from `<tasks-root>/index.md`.
+
+Do not leave `Done` or `Cancelled` folders under the active root. Archive is the terminal step of execute (on Done) and cancel — not a separate user intent.
+
+### Resolve task dependency
+
+For each folder name in `plan.md` → Context → **Depends on** (accept bare `NNN-slug` or `task-<NNN-slug>` → strip `task-` prefix):
+
+1. Resolve active path: `<tasks-root>/<NNN-slug>/`.
+2. If missing, resolve archives path: `<tasks-root>/archives/<NNN-slug>/`.
+3. Read that folder's `status.md` → `overall_status`.
+
+| Condition | Verdict |
+| --- | --- |
+| Found; `overall_status` is `Done` | Satisfied |
+| Found active; `Not Started`, `In Progress`, or `Blocked` | Not ready — wait on prerequisite |
+| Found; `overall_status` is `Cancelled` | Not ready — dependency abandoned (recreate prerequisite if needed) |
+| Missing in active and `archives/` | Not ready — broken dependency link |
+
+`Done` under `archives/` is the normal satisfied case after auto-archive. **Related tasks** never gates readiness.
+
 ### `index.md` status mirror
 
-`<tasks-root>/index.md` is the root-level summary for active tasks. Keep it synchronized with per-task files:
+`<tasks-root>/index.md` is the root-level summary for **active** (non-archived) tasks. Keep it synchronized with per-task files:
 
 - Maintain one row per non-archived task folder under `<tasks-root>/`.
 - `ID` is `task-<NNN-slug>`.
 - `Task` is the task title from `plan.md` frontmatter `name`.
 - `Status` mirrors `status.md` `overall_status` exactly.
 - On create: append a row with `Status` = `Not Started`.
-- On any lifecycle update that changes `overall_status`: update the matching row in `index.md` in the same run.
-- On archive: remove the row after moving the folder to `archive/`.
+- On any lifecycle update that changes `overall_status` while the task is still active: update the matching row in the same run.
+- On auto-archive (`Done` or `Cancelled`): remove the row after moving the folder to `archives/`.
 
 ### Step queue rules
 
-- Check off steps when completed.
-- Skipped steps stay in the queue with a skip reason in the session log; set todo `status: skipped` in plan frontmatter.
-- Never uncheck a completed step unless the user explicitly replans and confirms.
+- Check off steps when completed; set matching todo `status: completed` in `plan.md` frontmatter.
+- Never uncheck a completed step unless the user explicitly replans and confirms ([updating-task.md](./updating-task.md)).
 - `verify` is always the last step before `Done`.
 
 ### Resolving domain references (execute / plan)

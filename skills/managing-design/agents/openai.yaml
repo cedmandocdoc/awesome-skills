@@ -1,4 +1,0 @@
-interface:
-  display_name: "Managing Design"
-  short_description: "Create design.md systems, Stitch handoffs, Figma Make prompts, and Claude Design pass folders"
-  default_prompt: "Use $managing-design when the user wants design.md, a style guide, design tokens, visual language, prompt.md, Stitch prompt, Google Stitch handoff, Figma Make prompt, Figma showcase, Claude Design prompt, Claude Design handoff, Claude Design guide, phased design prompts, or UI-spec handoff workflow."

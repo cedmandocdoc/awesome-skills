@@ -115,9 +115,9 @@ If stop reason is `blocked`, you may add one sentence on what the user can do to
 - **One task per implementer launch** — do not batch multiple folders in one implementer call.
 - **Trust subagent one-liners** — do not re-read `status.md` to second-guess implementer outcomes unless a reply does not match the contract patterns.
 - **No extra git operations** — do not commit, push, or amend unless the user explicitly asked and implementer handles commits on Done.
-- **No replanning** — do not update task plans, unblock tasks, or archive unless the user explicitly asks outside this run.
+- **No replanning** — do not update task plans or unblock tasks unless the user explicitly asks outside this run.
 
-Each fully implemented task follows [executing-task.md](./executing-task.md) and [verifying-task.md](./verifying-task.md) inside the implementer subagent, not in the orchestrating session.
+Each fully implemented task follows [executing-task.md](./executing-task.md) (including verify and auto-archive on Done) inside the implementer subagent, not in the orchestrating session.
 
 ## Related
 

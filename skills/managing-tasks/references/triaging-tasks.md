@@ -2,9 +2,9 @@
 
 ## Overview
 
-**Read-only.** Among available tasks, identify which can begin or continue implementation now, which still need prep work, or build an **ordered execution roadmap** for backlog runs.
+**Read-only.** Report status for one or all tasks, identify which can begin or continue now, or build an **ordered execution roadmap** for backlog runs.
 
-Use when the user asks what to work on next, which tasks are unblocked, which tasks are waiting on something, or wants a roadmap/plan across the backlog.
+Use when the user asks for status, what to work on next, which tasks are unblocked, which tasks are waiting on something, or wants a roadmap/plan across the backlog.
 
 To triage and then implement tasks in sequence, use [executing-multiple-tasks.md](./executing-multiple-tasks.md) (which plans via execution-roadmap mode here, then delegates to `task-implementer`).
 
@@ -18,21 +18,25 @@ Per [task-contract.md](./task-contract.md) → **Resolve tasks root**.
 
 | Mode | Trigger phrasing | Output |
 | --- | --- | --- |
-| **readiness-report** (default) | "What can I start?", "Which tasks are ready?", "What's unblocked?" | Startable / not-ready tables (§5) |
-| **execution-roadmap** | "Roadmap for tasks", "execution plan", "what order should I implement?", parent prompt with `max_completed` | Ordered roadmap (§6–§7) |
+| **status-report** | "Status of `tasks/003-…`", "list all tasks", "task dashboard", "what's next on this task?" | Single-task or all-tasks status (§5) |
+| **readiness-report** (default when triage-shaped) | "What can I start?", "Which tasks are ready?", "What's unblocked?" | Startable / not-ready tables (§6) |
+| **execution-roadmap** | "Roadmap for tasks", "execution plan", "what order should I implement?", parent prompt with `max_completed` | Ordered roadmap (§7–§8) |
 
-When mode is unclear, default to **readiness-report**.
+When mode is unclear between readiness and status, prefer **readiness-report** if the user asks what to start; otherwise **status-report**.
 
 ### 2. Resolve scope
 
 | Scope | Trigger phrasing |
 | --- | --- |
-| All tasks | "What can I start?", "Which tasks are ready?", "What's unblocked?" |
-| Filtered | "Ready tasks in the app package", "Startable tasks that aren't in progress" |
+| Single task | "Status of `tasks/003-…`", "summarize the dark mode task" |
+| All tasks | "List all tasks", "What can I start?", "Which tasks are ready?" |
+| Filtered | "Ready tasks in the app package", "blocked tasks only" |
 
 Per [task-contract.md](./task-contract.md) → **Resolve tasks root** and **Finding existing tasks**.
 
-Discover every task folder under `<tasks-root>/`. **Exclude** `<tasks-root>/archive/` unless the user or parent explicitly asks to include archived tasks.
+For readiness and roadmap: discover every task folder under `<tasks-root>/`. **Exclude** `<tasks-root>/archives/` unless the user or parent explicitly asks to include archived tasks.
+
+For status-report of a single task: resolve under active root first; if missing and the user named an archived id, read under `archives/`.
 
 Parse from the user or parent prompt when in execution-roadmap mode:
 
@@ -42,7 +46,7 @@ Parse from the user or parent prompt when in execution-roadmap mode:
 
 ### 3. Read artifacts
 
-For each task folder:
+For each task folder in scope:
 
 1. Read `status.md` — **first**
 2. Read `plan.md` — goal, Requirements, Context, phases, frontmatter `todos`, verification checklist
@@ -55,16 +59,16 @@ Do **not** modify any files.
 
 A task is **startable now** when the executor can run `next_step_id` per [executing-task.md](./executing-task.md) without inventing missing prerequisites, guessing file paths, or doing preparatory work that belongs in another task or workflow.
 
-Evaluate **every** task. A task may appear in only one group.
+Evaluate **every** active task. A task may appear in only one group. Used by readiness-report and execution-roadmap modes.
 
 #### 4.1 Lifecycle gate (hard stop)
 
 | Condition | Verdict | Notes |
 | --- | --- | --- |
-| `overall_status` is `Done` or `Cancelled` | **Not ready** — lifecycle | No implementation work unless user reopens ([reopening-task.md](./reopening-task.md)) |
-| `overall_status` is `Blocked` or `blocking_reason` is set | **Not ready** — blocked | Report `blocking_reason`; unblock via [unblocking-task.md](./unblocking-task.md) |
-| `next_step_id` is `none` and status is not `Review` needing verify | **Not ready** — no next step | Task may be complete or misconfigured |
-| `overall_status` is `Not Started`, `In Progress`, or `Review` with a runnable `next_step_id` | Continue checks below | `Review` is startable when `next_step_id` is `verify` |
+| `overall_status` is `Done` or `Cancelled` | **Not ready** — lifecycle | Terminal; recreate via [creating-task.md](./creating-task.md) if needed |
+| `overall_status` is `Blocked` or `blocking_reason` is set | **Not ready** — blocked | Report `blocking_reason`; unblock via [blocking-task.md](./blocking-task.md) |
+| `next_step_id` is `none` | **Not ready** — no next step | Task may be misconfigured |
+| `overall_status` is `Not Started` or `In Progress` with a runnable `next_step_id` | Continue checks below | `In Progress` with `next_step_id: verify` is startable |
 
 #### 4.2 Task dependencies
 
@@ -73,20 +77,9 @@ Read `plan.md` → Context → **Depends on** only. Ignore **Related tasks**, ph
 | **Depends on** value | Action |
 | --- | --- |
 | `none`, empty, or field missing | Pass — no task prerequisites |
-| One or more folder names | Gate on each entry below |
+| One or more folder names | Gate each entry per [task-contract.md](./task-contract.md) → **Resolve task dependency** |
 
-For each listed prerequisite folder:
-
-1. Resolve `<tasks-root>/<NNN-slug>/` (accept bare folder name or `task-<NNN-slug>` → strip `task-` prefix)
-2. Read its `status.md` → `overall_status`
-
-| Condition | Verdict |
-| --- | --- |
-| Prerequisite `overall_status` is `Done` | Pass for that entry |
-| Prerequisite is `Not Started`, `In Progress`, `Blocked`, `Review`, or `Cancelled` | **Not ready** — task dependency |
-| Path missing or not a valid task folder | **Not ready** — broken dependency link |
-
-All listed entries must Pass. **Related tasks** never blocks.
+All listed entries must be **Satisfied** (`Done` in active or `archives/`). **Related tasks** never blocks.
 
 #### 4.3 Artifacts and references on disk
 
@@ -105,6 +98,8 @@ Check inputs the **next step** (and steps it explicitly builds on in the same ph
 | All required inputs exist or are produced by completed steps in this task | Pass |
 | Missing file, asset, design, or unresolved reference needed for the next step | **Not ready** — missing artifact |
 | Plan points to design work that does not exist yet (e.g. "implement from mockup" with no mockup path) | **Not ready** — missing design |
+
+**Design and asset gap examples:** no `style-guide.md` when the plan requires it; Figma URL with no export or spec file; `assets/` path empty when the step consumes assets; API contract referenced but not checked in.
 
 #### 4.4 Plan completeness for the next step
 
@@ -125,9 +120,29 @@ If the task passes **§4.1–§4.4**, mark it **Startable now**.
 
 Record a one-line **Why startable** (e.g. "In Progress; next step `step-2` has paths and deps satisfied").
 
-Treat tasks with `overall_status: Done` or `Cancelled` as already satisfied for dependency checks in roadmap simulation.
+Treat tasks with `overall_status: Done` (including under `archives/`) as already satisfied for dependency checks in roadmap simulation. Treat `Cancelled` as not satisfied.
 
-### 5. Readiness report (readiness-report mode)
+### 5. Status report (status-report mode)
+
+**Single task — include:**
+
+- Task folder path and title (`plan.md` frontmatter `name`)
+- `overall_status`, `current_step_id`, `next_step_id`
+- `blocking_reason`, `cancel_reason`, or `handoff_note` when set
+- Step queue progress: completed, pending, cancelled counts; list unchecked steps
+- Last 2–3 **Session log** rows
+- Plan revision (`plan_revision` from `plan.md`)
+- Suggested next action (execute, unblock, verify, cancel, create replacement) — **suggestion only**
+
+**All tasks — table columns:**
+
+| Task folder | Title | `overall_status` | `next_step_id` | `handoff_note` (truncated) |
+
+Sort by task id. Group or filter by status when the user asks (e.g. "blocked tasks only"). Default to active (non-archived) folders.
+
+Reply with the report. Do not advance the execution pointer, check off steps, or write application code unless the user switches intent (e.g. "continue this task" → [executing-task.md](./executing-task.md)).
+
+### 6. Readiness report (readiness-report mode)
 
 #### Startable now
 
@@ -135,10 +150,9 @@ Treat tasks with `overall_status: Done` or `Cancelled` as already satisfied for 
 
 Sort order:
 
-1. `In Progress` first (continue existing work)
-2. Then `Review` with `verify`
-3. Then `Not Started`
-4. Within each group, ascending task id
+1. `In Progress` first (continue existing work, including `next_step_id: verify`)
+2. Then `Not Started`
+3. Within each group, ascending task id
 
 #### Not ready
 
@@ -150,7 +164,7 @@ Sort order:
 | --- | --- |
 | lifecycle | Done, Cancelled, or no runnable next step |
 | blocked | `Blocked` status or `blocking_reason` |
-| task dependency | Sibling task not finished |
+| task dependency | Sibling task not finished (`Done`) |
 | missing artifact | File, fixture, or resolved reference missing on disk |
 | missing design | Design, mockup, or spec artifact missing |
 | missing input | Plan too vague or placeholder content for the next step |
@@ -162,23 +176,22 @@ When the user asked for a single recommendation, pick the top **Startable now** 
 
 Reply with the report. Do not advance execution pointers, check off steps, create tasks, or write application code unless the user switches intent (e.g. "continue `tasks/003-…`" → [executing-task.md](./executing-task.md)).
 
-### 6. Simulate execution roadmap (execution-roadmap mode)
+### 7. Simulate execution roadmap (execution-roadmap mode)
 
 Build the plan by simulating sequential completion — the same order [executing-multiple-tasks.md](./executing-multiple-tasks.md) will run — without implementing anything.
 
 Initialize:
 
 - `plan` — empty ordered list of `task-<NNN-slug>` ids
-- `simulated_done` — task ids whose `overall_status` is already `Done`
+- `simulated_done` — task ids whose `overall_status` is already `Done` (active or under `archives/` when scanning deps)
 - `remaining` — all non-archived task folders not in `simulated_done` and not `Cancelled`
 
 Repeat until `len(plan) >= max_completed` or no progress in an iteration:
 
 1. Re-evaluate **startable now** among `remaining` using §4, treating every id in `simulated_done` as a satisfied prerequisite (even if it was not `Done` at triage time but was added to the plan earlier in this simulation).
 2. If zero tasks are startable → stop simulation.
-3. Pick the top startable task using sort order from §5:
+3. Pick the top startable task using sort order from §6:
    - `In Progress` first
-   - Then `Review` with `verify`
    - Then `Not Started`
    - Within each group, ascending task id
 4. Append `task-<NNN-slug>` to `plan`.
@@ -186,7 +199,7 @@ Repeat until `len(plan) >= max_completed` or no progress in an iteration:
 
 This captures tasks that are not startable on disk yet but **will become** startable once earlier roadmap entries complete.
 
-### 7. Roadmap output (execution-roadmap mode)
+### 8. Roadmap output (execution-roadmap mode)
 
 When the user asked for a roadmap directly, reply with a short summary plus an ordered list:
 
@@ -197,9 +210,9 @@ Execution roadmap (max <N> tasks):
 2. ...
 ```
 
-If the plan is empty, say no tasks are runnable in the simulated series and point to the top blocker from §5 **Not ready** if helpful.
+If the plan is empty, say no tasks are runnable in the simulated series and point to the top blocker from §6 **Not ready** if helpful.
 
-### 8. Constraints
+### 9. Constraints
 
 - **Read-only** — do not modify task files, advance execution pointers, or write application code.
 - **Plan once** — the orchestrator does not call triage again mid-run unless the user starts a new backlog run.
@@ -208,4 +221,6 @@ If the plan is empty, say no tasks are runnable in the simulated series and poin
 
 ## Examples
 
-**Triage:** User asks "what can I work on?". Scan all tasks → split into startable now vs not ready with blocker type and unblock action.
+**Status:** User asks "what's the status of the dark mode task?". Read `status.md` → report without mutating files.
+
+**Triage:** User asks "what can I work on?". Scan all active tasks → split into startable now vs not ready with blocker type and unblock action.

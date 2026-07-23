@@ -20,7 +20,7 @@ Same as [executing-task.md](./executing-task.md) → step 1.
 
 1. Read `status.md`, then `plan.md`
 2. Note `overall_status`, completed steps, and `next_step_id`
-3. If `overall_status` is `Cancelled` → confirm with the user before replanning; to restore execution state, prefer [reopening-task.md](./reopening-task.md)
+3. If `overall_status` is `Cancelled` (or the folder is only under `archives/` as cancelled) → stop; tell the user to create a new task via [creating-task.md](./creating-task.md)
 
 ### 3. Gather changes
 
@@ -49,7 +49,7 @@ Ask **at most one** clarifying question if the amend scope is ambiguous.
 3. Edit Goal, Requirements, Non-goals, Context, Approach, Phases, Verification checklist, and Risks as needed
 4. When the user adds a URL or design link, append it to Requirements → **Sources** (verbatim); do not leave it only in chat or phase prose
 5. Sync frontmatter `todos`:
-   - **Preserve** todos with `status: completed` or `skipped` — do not reset them
+   - **Preserve** todos with `status: completed` — do not reset them
    - Add new todos for new steps; mark removed steps `status: cancelled` (do not delete rows)
    - Renumber or rename step ids only when necessary; if ids change, update `status.md` queue to match
 
