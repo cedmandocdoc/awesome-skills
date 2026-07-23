@@ -1,4 +1,0 @@
-interface:
-  display_name: "Managing Product Specifications"
-  short_description: "Create, update, and review PRD, FRD, TRD, user story, and UI specs"
-  default_prompt: "Use $managing-product-specifications when the user asks to draft, amend, or review prd.md, frd.md, trd, user-story, or ui-specs at product or feature level."

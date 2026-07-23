@@ -2,10 +2,9 @@
 doc_type: frd
 scope: feature
 feature: {{FEATURE_SLUG}}
-apps: [{{APP_LIST}}]
 tier: standard
 spec_revision: 1
-generated_by: managing-product-specifications
+generated_by: building-product-specifications
 depends_on:
   - ../../prd.md
 related:
@@ -59,5 +58,5 @@ related:
 | --- | --- | --- |
 | PRD | [../../prd.md](../../prd.md) | — |
 | User story | [user-story.md](user-story.md) | TBD |
-| UI specs (shared) | [ui-specs.md](ui-specs.md) | TBD |
-| TRD (shared) | [trd.md](trd.md) | TBD |
+| UI specs | [ui-specs.md](ui-specs.md) | TBD |
+| TRD | [trd.md](trd.md) | TBD |

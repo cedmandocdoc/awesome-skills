@@ -3,7 +3,7 @@ doc_type: prd
 scope: product
 tier: standard
 spec_revision: 1
-generated_by: managing-product-specifications
+generated_by: building-product-specifications
 ---
 
 # {{PRODUCT_NAME}}
@@ -60,6 +60,6 @@ generated_by: managing-product-specifications
 
 | Document | Path |
 | --- | --- |
-| Platform TRD | {{trd.md or "TBD"}} |
-| User story (overview) | {{user-story.md or "TBD"}} |
-| UI specs (visual language) | {{ui-specs.md or "TBD"}} |
+| TRD | {{trd.md or "TBD"}} |
+| User story | {{user-story.md or "TBD"}} |
+| UI specs | {{ui-specs.md or "TBD"}} |

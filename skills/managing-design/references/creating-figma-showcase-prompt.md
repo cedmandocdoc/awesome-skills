@@ -2,13 +2,13 @@
 
 ## Overview
 
-**Authoring mode.** Apply when generating a self-contained Figma Make prompt that produces a **complete design showcase** — a component library page plus a full screens page — from PRD/FRD, user stories, UI specs, and an existing style guide.
+**Authoring mode.** Apply when generating a self-contained Figma Make prompt that produces a **complete design showcase** — a component library page plus a full screens page — from PRD/FRD, user stories, UI specs, and an existing `design.md`.
 
 Produces one markdown file the user attaches to or pastes into Figma Make. Unlike the Stitch handoff (`design.md` + `prompt.md`), this prompt **embeds the design system inline** because Figma Make receives a single document.
 
 **Prerequisites (required before generating):**
 
-1. **Style guide** — complete visual tokens per [creating-style-guide.md](creating-style-guide.md) and [`style-guide.md`](../assets/style-guide.md). If missing, **stop** and ask the user to generate one first via [creating-style-guide.md](creating-style-guide.md). Do not invent tokens or proceed without a style guide.
+1. **`design.md`** — complete visual tokens per [creating-design.md](creating-design.md) and [`design.md`](../assets/design.md). If missing, **stop** and ask the user to generate one first via [creating-design.md](creating-design.md). Do not invent tokens or proceed without `design.md`.
 2. **PRD or FRD** — scope, requirements, acceptance criteria, feature boundaries
 3. **User story** — roles, goals, behaviors, permissions
 4. **UI specs** — flows, screens, states, validation, edge cases, content, layout
@@ -48,14 +48,14 @@ Ask when UI specs are missing or vague:
 - Layout templates — auth shell, app shell, sidebar vs tabs, modal/sheet patterns
 - Reference products for layout inspiration (not visual copy)
 
-Visual decisions come from the **style guide** (prerequisite). Behavioral and structural decisions go into the prompt.
+Visual decisions come from the **design.md** (prerequisite). Behavioral and structural decisions go into the prompt.
 
-#### 4. Style guide gate
+#### 4. `design.md` gate
 
-When no style guide exists:
+When no `design.md` exists:
 
-1. Tell the user a style guide is required before a Figma showcase prompt.
-2. Offer to run [creating-style-guide.md](creating-style-guide.md) first.
+1. Tell the user a `design.md` is required before a Figma showcase prompt.
+2. Offer to run [creating-design.md](creating-design.md) first.
 3. Do not generate the Figma prompt until tokens, typography, spacing, radius, and elevation are defined.
 
 ### Platform and viewports
@@ -92,12 +92,12 @@ On follow-up requests ("add settings screen", "update tokens"), **edit the exist
 
 ### Workflow
 
-1. **Gate on style guide** — if missing, stop and route to [creating-style-guide.md](creating-style-guide.md).
+1. **Gate on `design.md`** — if missing, stop and route to [creating-design.md](creating-design.md).
 2. **Assess inputs** — PRD/FRD, user story, UI specs; if insufficient, run gap-filling.
 3. **Confirm delivery** — agree on path and prompt slug.
 4. **Confirm platform type** — desktop/web vs mobile-only; set viewport matrix.
 5. **Extract** — map inputs using [Extraction checklist](#extraction-checklist).
-6. **Embed design system** — copy token tables and theme prose from the style guide into the prompt **Design System** section (exact values, not token-key references alone).
+6. **Embed design system** — copy token tables and theme prose from the design.md into the prompt **Design System** section (exact values, not token-key references alone).
 7. **Draft prompt** — use [`figma-showcase-prompt.md`](../assets/figma-showcase-prompt.md); see [Filling rules](#filling-rules).
 8. **Write file** — save at agreed path.
 
@@ -127,7 +127,7 @@ Single self-contained markdown file. Fixed section order:
 | — | Header + how to use | Self-contained; paste into Figma Make |
 | 1 | Objective | Deliverables, viewport matrix, frame naming, build rule |
 | 2 | Figma Make Execution Rules | Two pages, variables, auto-layout, layout-template discipline |
-| 3 | Design System | **Embedded** style guide — colors, type, spacing, radius, elevation, recipes |
+| 3 | Design System | **Embedded** design.md — colors, type, spacing, radius, elevation, recipes |
 | 4 | Product Scope | In scope / out of scope |
 | 5 | User Roles & Contexts | Role table + UI rules |
 | 6 | Information Architecture | Layout templates, navigation, flow map |
@@ -145,7 +145,7 @@ Template: [`figma-showcase-prompt.md`](../assets/figma-showcase-prompt.md).
 ### Filling rules
 
 1. **Replace every `[...]` placeholder** with concrete names from PRD/FRD, user story, and UI specs. Never ship bracket placeholders in the output.
-2. **Embed design system values** — copy exact hex, px, font family, and shadow values from the style guide into **Design System** tables. Figma Make does not receive a separate style guide file.
+2. **Embed design system values** — copy exact hex, px, font family, and shadow values from the design.md into **Design System** tables. Figma Make does not receive a separate design.md file.
 3. **Two Figma pages** — state explicitly in Execution Rules and Objective: `Components` page first, `Screens` page second.
 4. **Components before screens** — Build Plan Phase 1 lists every component set; Phases 2+ reference layout duplication. Screen steps never precede component steps.
 5. **Layout templates** — define at least one shell per auth/app/modal pattern before feature screens. Every screen in a flow names which template it duplicates.
@@ -182,23 +182,23 @@ Before filling the template, confirm you have:
 | Copy & content | Screen content blocks |
 | Responsive behavior | Responsive Variants, viewport matrix |
 
-| From style guide | Maps to |
+| From design.md | Maps to |
 | --- | --- |
-| §1 Visual theme | Design System → Visual theme |
-| §2 Colors | Design System → Color tokens |
-| §3 Typography | Design System → Typography |
-| §4–§6 Spacing & grid | Design System → Spacing |
-| §7 Depth | Design System → Elevation |
-| §8 Radius | Design System → Radius |
-| §9 Breakpoints | Design System → Breakpoints, Responsive Variants |
-| Component atoms | Design System → Component recipes, Component Library |
+| Overview | Design System → Visual theme |
+| YAML `colors:` + Colors | Design System → Color tokens |
+| YAML `typography:` + Typography | Design System → Typography |
+| YAML `spacing:` + Layout | Design System → Spacing / grid |
+| Elevation & Depth | Design System → Elevation |
+| YAML `rounded:` + Shapes | Design System → Radius |
+| Layout breakpoints (`bp-*`) | Design System → Breakpoints, Responsive Variants |
+| Components (+ motion) | Design System → Component recipes, Component Library |
 
 ### Authoring rules
 
-- **Style guide is source of truth for visuals** — embed values; do not paraphrase tokens into vague adjectives.
+- **design.md is source of truth for visuals** — embed values; do not paraphrase tokens into vague adjectives.
 - **User story drives role coverage** — every role with distinct behavior gets explicit screen coverage.
 - **Production intent** — named components, full variant coverage, layout-template discipline, Figma instance usage.
-- **Self-contained** — the prompt must work with no attachments. Do not tell Figma Make to "see style guide" or "see PRD."
+- **Self-contained** — the prompt must work with no attachments. Do not tell Figma Make to "see design.md" or "see PRD."
 
 ### Confirm to the user
 
@@ -215,21 +215,21 @@ When the user revises the prompt:
 
 1. Read the existing file at the agreed path.
 2. Apply requested changes.
-3. If the style guide changed, sync **Design System** embedded tables.
+3. If the design.md changed, sync **Design System** embedded tables.
 4. Overwrite the same file unless the user asks for a new path.
 
 Do not write to Figma directly; this recipe only produces the markdown prompt.
 
 ## Related
 
-- [creating-style-guide.md](creating-style-guide.md) — prerequisite visual tokens
+- [creating-design.md](creating-design.md) — prerequisite visual tokens
 - [creating-stitch-prompts.md](creating-stitch-prompts.md) — parallel handoff for Google Stitch (split `design.md` + `prompt.md`)
 
 ## Examples
 
-**Missing style guide:** User asks for a Figma Make prompt but has no tokens. Stop → offer [creating-style-guide.md](creating-style-guide.md) → resume this recipe after style guide exists.
+**Missing design.md:** User asks for a Figma Make prompt but has no tokens. Stop → offer [creating-design.md](creating-design.md) → resume this recipe after design.md exists.
 
-**Mobile MVP:** User shares PRD, user stories, UI specs, and style guide for a mobile-only app. Embed design system → full Build Plan with Components page + Screens page → write `design/prompts/figma/<slug>.md` with mobile-only viewport matrix.
+**Mobile MVP:** User shares PRD, user stories, UI specs, and design.md for a mobile-only app. Embed design system → full Build Plan with Components page + Screens page → write `design/prompts/figma/<slug>.md` with mobile-only viewport matrix.
 
 **Desktop SaaS:** Same inputs for a web app. Viewport matrix includes desktop, tablet, and mobile frames per screen. Layout templates include sidebar shell.
 

@@ -2,14 +2,11 @@
 doc_type: user-story
 scope: {{product|feature}}
 feature: {{FEATURE_SLUG_OR_OMIT}}
-app: {{APP_SLUG_OR_OMIT}}
 tier: standard
 spec_revision: 1
-generated_by: managing-product-specifications
+generated_by: building-product-specifications
 depends_on:
   - {{UPSTREAM_PATHS}}
-inherits_from:
-  - {{PARENT_USER_STORY_PATHS}}
 ---
 
 # {{USER_STORY_TITLE}}

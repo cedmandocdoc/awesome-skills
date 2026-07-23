@@ -2,14 +2,11 @@
 doc_type: trd
 scope: {{product|feature}}
 feature: {{FEATURE_SLUG_OR_OMIT}}
-app: {{APP_SLUG_OR_OMIT}}
 tier: standard
 spec_revision: 1
-generated_by: managing-product-specifications
+generated_by: building-product-specifications
 depends_on:
   - {{UPSTREAM_PATHS}}
-inherits_from:
-  - {{PARENT_TRD_PATHS}}
 ---
 
 # {{TRD_TITLE}}

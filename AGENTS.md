@@ -77,7 +77,7 @@ Examples: `creating-task.md`, `discovering-application.md`, `task-contract.md`.
 
 ### Assets and scripts
 
-- **assets/** — templates users or agents copy (`plan.md`, `style-guide.md`)
+- **assets/** — templates users or agents copy (`plan.md`, `design.md`)
 - **scripts/** — executable helpers; name by what they do (`add-registry-component.cjs`)
 
 ---

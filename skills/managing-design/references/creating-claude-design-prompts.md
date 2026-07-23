@@ -2,7 +2,7 @@
 
 ## Overview
 
-**Authoring mode.** Apply when generating an ordered folder of paste-ready prompts for [Claude Design](https://claude.ai/design) — design system setup, UI kit, layout shells, then feature screens — from PRD/FRD, user stories, UI specs, and an existing style guide.
+**Authoring mode.** Apply when generating an ordered folder of paste-ready prompts for [Claude Design](https://claude.ai/design) — design system setup, UI kit, layout shells, then feature screens — from PRD/FRD, user stories, UI specs, and an existing `design.md`.
 
 Produces a **multi-file folder**, not one megaprompt. Claude Design is conversational and design-system-first; phased passes keep each chat turn focused and prevent whole-app invention.
 
@@ -10,7 +10,7 @@ Produces a **multi-file folder**, not one megaprompt. Claude Design is conversat
 
 **Prerequisites (required before generating):**
 
-1. **Style guide** — complete visual tokens per [creating-style-guide.md](creating-style-guide.md) and [`style-guide.md`](../assets/style-guide.md). If missing, **stop** and ask the user to generate one first via [creating-style-guide.md](creating-style-guide.md). Do not invent tokens or proceed without a style guide.
+1. **`design.md`** — complete visual tokens per [creating-design.md](creating-design.md) and [`design.md`](../assets/design.md). If missing, **stop** and ask the user to generate one first via [creating-design.md](creating-design.md). Do not invent tokens or proceed without `design.md`.
 2. **PRD or FRD** — scope, requirements, acceptance criteria, feature boundaries
 3. **User story** — roles, goals, behaviors, permissions
 4. **UI specs** — flows, screens, states, validation, edge cases, content, layout
@@ -50,14 +50,14 @@ Ask when UI specs are missing or vague:
 - Layout templates — auth shell, app shell, sidebar vs tabs, modal/sheet patterns
 - Reference products for layout inspiration (not visual copy)
 
-Visual decisions come from the **style guide** (prerequisite). Behavioral and structural decisions go into the guide and pass files.
+Visual decisions come from the **design.md** (prerequisite). Behavioral and structural decisions go into the guide and pass files.
 
-#### 4. Style guide gate
+#### 4. `design.md` gate
 
-When no style guide exists:
+When no `design.md` exists:
 
-1. Tell the user a style guide is required before a Claude Design handoff.
-2. Offer to run [creating-style-guide.md](creating-style-guide.md) first.
+1. Tell the user a `design.md` is required before a Claude Design handoff.
+2. Offer to run [creating-design.md](creating-design.md) first.
 3. Do not generate the Claude Design pass folder until tokens, typography, spacing, radius, and elevation are defined.
 
 ### Platform and viewports
@@ -94,7 +94,7 @@ On follow-up requests ("add settings screen", "update tokens"), **edit the exist
 
 ### Workflow
 
-1. **Gate on style guide** — if missing, stop and route to [creating-style-guide.md](creating-style-guide.md).
+1. **Gate on `design.md`** — if missing, stop and route to [creating-design.md](creating-design.md).
 2. **Assess inputs** — PRD/FRD, user story, UI specs; if insufficient, run gap-filling.
 3. **Confirm delivery** — agree on folder path and prompt slug.
 4. **Confirm platform type** — desktop/web vs mobile-only; set viewport matrix.
@@ -136,7 +136,7 @@ design/prompts/claude-design/<prompt-slug>/
 | File | Role |
 | --- | --- |
 | `README.md` (or `00-guide.md`) | How to use in Claude Design; pass order; platform; out of scope summary; list of pass files |
-| `00-design-system.md` | Content for Claude Design **Design systems** setup — embed exact tokens from the style guide; do/don't; brand constraints |
+| `00-design-system.md` | Content for Claude Design **Design systems** setup — embed exact tokens from the design.md; do/don't; brand constraints |
 | `01-*.md` … `NN-*.md` | Numbered pass prompts in strict order |
 
 **Typical pass order** (adjust from IA / UI specs; do not invent screens):
@@ -152,7 +152,7 @@ Templates: [`claude-design-guide.md`](../assets/claude-design-guide.md), [`claud
 ### Filling rules
 
 1. **Replace every `[...]` placeholder** with concrete names from PRD/FRD, user story, and UI specs. Never ship unresolved bracket placeholders except intentional `[COPY TBD]`.
-2. **Embed design system in `00` only** — copy exact hex, px, font family, and shadow values from the style guide into `00-design-system.md`. Later passes remind token discipline; they do not re-embed full tables.
+2. **Embed design system in `00` only** — copy exact hex, px, font family, and shadow values from the design.md into `00-design-system.md`. Later passes remind token discipline; they do not re-embed full tables.
 3. **One concern per pass** — kit, shells, or one flow/archetype. Never pack the whole app into a single pass file.
 4. **Depends-on chain** — each pass lists prior pass IDs it assumes complete.
 5. **Reuse rule after kit** — screen and shell passes instruct: use UI kit components; duplicate shells; swap only the main content region.
@@ -188,20 +188,20 @@ Before filling templates, confirm you have:
 | Copy & content | Pass Content & copy |
 | Responsive behavior | Guide Viewport matrix; pass Viewport |
 
-| From style guide | Maps to |
+| From design.md | Maps to |
 | --- | --- |
-| §1 Visual theme | `00-design-system.md` theme / do-don't |
-| §2 Colors | `00` color tokens |
-| §3 Typography | `00` typography |
-| §4–§6 Spacing & grid | `00` spacing / grid |
-| §7 Depth | `00` elevation |
-| §8 Radius | `00` radius |
-| §9 Breakpoints | Guide viewport matrix; `00` breakpoints |
-| Component atoms | `00` recipes + `01` kit inventory |
+| Overview + Do's and Don'ts | `00-design-system.md` theme / do-don't |
+| YAML `colors:` + Colors | `00` color tokens |
+| YAML `typography:` + Typography | `00` typography |
+| YAML `spacing:` + Layout | `00` spacing / grid |
+| Elevation & Depth | `00` elevation |
+| YAML `rounded:` + Shapes | `00` radius |
+| Layout breakpoints (`bp-*`) | Guide viewport matrix; `00` breakpoints |
+| Components (+ motion) | `00` recipes + `01` kit inventory |
 
 ### Authoring rules
 
-- **Style guide is source of truth for visuals** — embed values in `00`; do not paraphrase tokens into vague adjectives.
+- **design.md is source of truth for visuals** — embed values in `00`; do not paraphrase tokens into vague adjectives.
 - **User story drives role coverage** — every role with distinct behavior gets explicit coverage in the relevant passes.
 - **Phased, not monolithic** — folder of ordered passes beats one megaprompt for Claude Design.
 - **Self-contained per turn** — each pass works as a single paste with design system already applied; do not tell Claude Design to "see the PRD."
@@ -221,22 +221,22 @@ When the user revises the handoff:
 
 1. Read the existing folder at the agreed path.
 2. Apply requested changes — add/edit numbered passes; update the guide pass-order table.
-3. If the style guide changed, sync `00-design-system.md` embedded tables.
+3. If the design.md changed, sync `00-design-system.md` embedded tables.
 4. Overwrite files in the same folder unless the user asks for a new path.
 
 Do not write to Claude Design directly; this recipe only produces the markdown folder.
 
 ## Related
 
-- [creating-style-guide.md](creating-style-guide.md) — prerequisite visual tokens
+- [creating-design.md](creating-design.md) — prerequisite visual tokens
 - [creating-figma-showcase-prompt.md](creating-figma-showcase-prompt.md) — parallel single-file Figma Make showcase
 - [creating-stitch-prompts.md](creating-stitch-prompts.md) — parallel handoff for Google Stitch (`design.md` + `prompt.md`)
 
 ## Examples
 
-**Missing style guide:** User asks for a Claude Design prompt but has no tokens. Stop → offer [creating-style-guide.md](creating-style-guide.md) → resume this recipe after style guide exists.
+**Missing design.md:** User asks for a Claude Design prompt but has no tokens. Stop → offer [creating-design.md](creating-design.md) → resume this recipe after design.md exists.
 
-**Mobile MVP:** User shares PRD, user stories, UI specs, and style guide for a mobile-only app. Write `design/prompts/claude-design/<slug>/` with `README` + `00` + kit + shells + one pass per in-scope flow; mobile-only viewport matrix.
+**Mobile MVP:** User shares PRD, user stories, UI specs, and design.md for a mobile-only app. Write `design/prompts/claude-design/<slug>/` with `README` + `00` + kit + shells + one pass per in-scope flow; mobile-only viewport matrix.
 
 **Desktop SaaS:** Same inputs for a web app. Viewport matrix includes desktop, tablet, and mobile. Shell pass includes sidebar chrome.
 

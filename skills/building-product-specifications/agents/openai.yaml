@@ -1,0 +1,4 @@
+interface:
+  display_name: "Building Product Specifications"
+  short_description: "Create PRD, FRD, TRD, user story, and UI specs with view states"
+  default_prompt: "Use $building-product-specifications when the user asks to draft or amend prd.md, frd.md, trd.md, user-story.md, or ui-specs.md at product or feature level — including UI view states and transitions."

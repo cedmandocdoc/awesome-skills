@@ -53,10 +53,10 @@ Use exact values from pass `00` / the project Design system. Do not invent hex, 
 
 **Key do / don't (short):**
 
-- Do: [1–2 constraints from style guide theme]
-- Don't: [1–2 anti-patterns from style guide]
+- Do: [1–2 constraints from `design.md` Overview / Do's and Don'ts]
+- Don't: [1–2 anti-patterns from `design.md`]
 
-[For pass `00` only: replace this short reminder with full embedded token tables — colors, typography, spacing, radius, elevation, breakpoints, component recipes — copied from the style guide. Later passes keep this section short.]
+[For pass `00` only: replace this short reminder with full embedded token tables — colors, typography, spacing, radius, elevation, breakpoints, component recipes — copied from `design.md`. Later passes keep this section short.]
 
 ---
 

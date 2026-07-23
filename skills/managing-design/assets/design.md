@@ -1,14 +1,18 @@
 ---
 version: alpha
 name: [Product / Project]
-description: [One-line design system summary]
+description: [One-line design system summary — product feel + aesthetic]
 colors:
+  background: [hex or oklch]
+  foreground: [hex or oklch]
+  card: [hex or oklch]
+  card-foreground: [hex or oklch]
+  popover: [hex or oklch]
+  popover-foreground: [hex or oklch]
   primary: [hex or oklch]
   primary-foreground: [hex or oklch]
   secondary: [hex or oklch]
   secondary-foreground: [hex or oklch]
-  background: [hex or oklch]
-  foreground: [hex or oklch]
   muted: [hex or oklch]
   muted-foreground: [hex or oklch]
   accent: [hex or oklch]
@@ -17,57 +21,83 @@ colors:
   border: [hex or oklch]
   input: [hex or oklch]
   ring: [hex or oklch]
+  chart-1: [hex or oklch]
+  chart-2: [hex or oklch]
+  chart-3: [hex or oklch]
+  chart-4: [hex or oklch]
+  chart-5: [hex or oklch]
 typography:
-  headline-lg:
+  text-heading-xl:
     fontFamily: [family]
     fontSize: [px]
     fontWeight: [number]
-    lineHeight: [unitless or px]
+    lineHeight: [unitless]
     letterSpacing: [em or px]
-  headline-md:
+  text-heading-lg:
     fontFamily: [family]
     fontSize: [px]
     fontWeight: [number]
-    lineHeight: [unitless or px]
+    lineHeight: [unitless]
     letterSpacing: [em or px]
-  body-md:
+  text-heading-md:
     fontFamily: [family]
     fontSize: [px]
     fontWeight: [number]
-    lineHeight: [unitless or px]
+    lineHeight: [unitless]
     letterSpacing: [em or px]
-  body-sm:
+  text-body-lg:
     fontFamily: [family]
     fontSize: [px]
     fontWeight: [number]
-    lineHeight: [unitless or px]
+    lineHeight: [unitless]
     letterSpacing: [em or px]
-  label-md:
+  text-body-base:
     fontFamily: [family]
     fontSize: [px]
     fontWeight: [number]
-    lineHeight: [unitless or px]
+    lineHeight: [unitless]
+    letterSpacing: [em or px]
+  text-body-sm:
+    fontFamily: [family]
+    fontSize: [px]
+    fontWeight: [number]
+    lineHeight: [unitless]
+    letterSpacing: [em or px]
+  text-label:
+    fontFamily: [family]
+    fontSize: [px]
+    fontWeight: [number]
+    lineHeight: [unitless]
+    letterSpacing: [em or px]
+  text-label-xs:
+    fontFamily: [family]
+    fontSize: [px]
+    fontWeight: [number]
+    lineHeight: [unitless]
     letterSpacing: [em or px]
 rounded:
-  sm: [px]
-  md: [px]
-  lg: [px]
-  xl: [px]
-  full: 9999px
+  radius-sm: [px]
+  radius-md: [px]
+  radius-lg: [px]
+  radius-xl: [px]
+  radius-full: 9999px
 spacing:
-  xs: [px]
-  sm: [px]
-  md: [px]
-  lg: [px]
-  xl: [px]
+  space-1: [px]
+  space-2: [px]
+  space-3: [px]
+  space-4: [px]
+  space-6: [px]
+  space-8: [px]
+  space-12: [px]
+  space-16: [px]
   gutter: [px]
   margin: [px]
 components:
   button-primary:
     backgroundColor: "{colors.primary}"
     textColor: "{colors.primary-foreground}"
-    typography: "{typography.label-md}"
-    rounded: "{rounded.md}"
+    typography: "{typography.text-label}"
+    rounded: "{rounded.radius-md}"
     padding: [px]
   button-primary-hover:
     backgroundColor: "{colors.accent}"
@@ -75,93 +105,155 @@ components:
   button-secondary:
     backgroundColor: "{colors.secondary}"
     textColor: "{colors.secondary-foreground}"
-    typography: "{typography.label-md}"
-    rounded: "{rounded.md}"
+    typography: "{typography.text-label}"
+    rounded: "{rounded.radius-md}"
     padding: [px]
   input-default:
     backgroundColor: "{colors.background}"
     textColor: "{colors.foreground}"
-    typography: "{typography.body-md}"
-    rounded: "{rounded.md}"
+    typography: "{typography.text-body-base}"
+    rounded: "{rounded.radius-md}"
     padding: [px]
   card-default:
-    backgroundColor: "{colors.background}"
-    textColor: "{colors.foreground}"
-    rounded: "{rounded.lg}"
+    backgroundColor: "{colors.card}"
+    textColor: "{colors.card-foreground}"
+    rounded: "{rounded.radius-lg}"
     padding: [px]
 ---
 
 # [Product / Project]
 
-> **Structure only** — used by [creating-stitch-design.md](../references/creating-stitch-design.md). Filled output follows the [Google Stitch DESIGN.md specification](https://stitch.withgoogle.com/docs/design-md/specification.md).
+> **Structure only** — used by [creating-design.md](../references/creating-design.md). Filled output follows the [DESIGN.md format specification](https://stitch.withgoogle.com/docs/design-md/specification.md): YAML front matter (normative tokens) + markdown body (rationale).
 >
-> YAML front matter holds normative token values. Markdown body explains rationale and usage. Token references in prose use backticks; literal values live in front matter only.
+> Token names follow this skill’s conventions (shadcn semantic colors, `text-*` type scale, `space-*`, `radius-*`). Reference token keys in specs and prompts — not raw hex, px literals, or ad-hoc font sizes.
+>
+> Source inputs: [brand brief / product specs / existing design system]
 
 ## Overview
 
-[Product feel, aesthetic direction, mood keywords, design references, target density, and brand personality — derived from style guide §1 Visual Theme & Atmosphere.]
+[Product feel, aesthetic direction, mood keywords (3–5), design references (inspiration only), target density, audience, and brand personality.]
+
+**Font families (`font-{group}`):**
+
+| Token | Family | Fallback | Usage |
+| --- | --- | --- | --- |
+| `font-brand` | [family] | [fallback] | [usage] |
+| `font-body` | [family] | [fallback] | [usage] |
+
+**Font weights (`font-{weight}`):**
+
+| Token | Weight | Usage |
+| --- | --- | --- |
+| `font-body` | 400 | Default UI text |
+| `font-body-medium` | 500 | Emphasized body, active nav |
+| `font-body-semibold` | 600 | Subheadings, button labels |
+| `font-body-bold` | 700 | Strong emphasis |
+
+**Pairing rules:** map elements → `text-*` + `font-{weight}` + `font-{group}` (values live in YAML `typography:`).
 
 ## Colors
 
-[Prose describing palette roles. Each bullet: **Descriptive name (token):** role and usage. Use light-mode values from the style guide; note dark-mode behavior when applicable.]
+[Palette roles. Light-mode values are normative in YAML. Document dark-mode counterparts here when the product supports dark mode.]
 
 - **[Role] (`token-name`):** [usage]
 
+**Dark mode (when applicable):**
+
+| Token | Dark value | Notes |
+| --- | --- | --- |
+| [`token`] | [value] | [usage delta vs light] |
+
+**Semantic mapping (optional):**
+
+| UI role | Token(s) |
+| --- | --- |
+| [role] | [`token-name`] |
+
 ## Typography
 
-[Prose describing font strategy, hierarchy, and pairing rules — derived from style guide §3 Typography.]
+[Hierarchy and pairing narrative. Reference YAML keys such as `text-heading-xl`, `text-body-base`.]
 
-- **Headlines:** [family, weight, usage]
-- **Body:** [family, size, usage]
-- **Labels:** [family, size, casing, usage]
+- **Headlines:** [`text-heading-*`; family, weight, usage]
+- **Body:** [`text-body-*`; family, size, usage]
+- **Labels / captions:** [`text-label`, `text-label-xs`; casing, usage]
 
 ## Layout
 
-[Grid, spacing rhythm, alignment, density, and breakpoints — derived from style guide §4–§6 and §9.]
+[Grid, spacing rhythm, alignment, density, breakpoints, and responsive adaptation.]
 
-- **Page structure:** [max width, columns, gutter]
-- **Spacing scale:** [base unit and rhythm]
-- **Density:** [alignment and touch-target rules]
-- **Breakpoints:** [mobile / tablet / desktop behavior summary]
+- **Page structure:** [max width, content column, gutter → `spacing.gutter` / `space-*`]
+- **Spacing scale:** [rhythm using `space-1` … `space-16`]
+- **Alignment & density:** [e.g. left-align labels; comfortable density — min `space-3` between controls]
+- **Breakpoints (`bp-*`):**
+
+| Token | Min width | Layout behavior |
+| --- | --- | --- |
+| `bp-mobile` | 0 | [behavior] |
+| `bp-tablet` | [px] | [behavior] |
+| `bp-desktop` | [px] | [behavior] |
+| `bp-wide` | [px] | [behavior] |
+
+- **Adaptation:** navigation, tables, forms, modals, typography scale on small viewports
+- **Touch & pointer:** minimum tap target; hover desktop-only
 
 ## Elevation & Depth
 
-[Shadow levels, focus rings, blur — derived from style guide §7 Depth & Elevation.]
+[Shadow / tonal hierarchy. No YAML `elevation` group in the DESIGN.md schema — keep values here; reference by name in component prose.]
 
-- **Elevation scale:** [elevation-0 through elevation-4 descriptions]
-- **Focus ring:** [outline style using `ring` token]
-- **Other depth:** [blur/glass or "not used"]
+| Token | Shadow / effect | Usage |
+| --- | --- | --- |
+| `elevation-0` | none | Flat surfaces |
+| `elevation-1` | [value] | Cards, dropdowns |
+| `elevation-2` | [value] | Popovers, sticky headers |
+| `elevation-3` | [value] | Modals, drawers |
+| `elevation-4` | [value] | Toasts, overlays |
+
+- **Focus ring:** [e.g. 2px outline using `ring`, 2px offset]
+- **Other depth:** [blur / glass or "not used"]
 
 ## Shapes
 
-[Corner radius language — derived from style guide §8 Roundness.]
+[Corner radius language — YAML `rounded.radius-*`.]
 
-- **Interactive elements:** [`rounded.sm` / `rounded.md` usage]
-- **Containers:** [`rounded.lg` / `rounded.xl` usage]
-- **Pills / avatars:** [`rounded.full` usage]
+- **Interactive elements:** [`radius-sm` / `radius-md`]
+- **Containers:** [`radius-lg` / `radius-xl`]
+- **Pills / avatars:** [`radius-full`]
 
 ## Components
 
-[Atom styling guidance — derived from style guide tokens and UI spec component inventory when available.]
+[Atom styling. YAML `components:` holds normative property tokens. Variants are separate keys (`button-primary-hover`), not nested objects.]
 
 ### Buttons
 
-- **Primary:** [`button-primary` token group; variants and states]
-- **Secondary:** [`button-secondary` token group]
+- **Primary:** [`button-primary`; hover / disabled]
+- **Secondary:** [`button-secondary`]
 
 ### Inputs
 
-- **Text fields:** [`input-default`; focus, error, disabled behavior]
+- **Text fields:** [`input-default`; focus, error, disabled]
 
 ### Cards / containers
 
 - **Default card:** [`card-default`; elevation reference]
 
-[Add ### blocks for other component categories from UI specs.]
+### Interaction & motion
+
+| Interaction | Behavior | Duration |
+| --- | --- | --- |
+| [e.g. button press] | [easing / feedback] | [ms] |
+| [e.g. modal open] | [enter / exit] | [ms] |
+
+[Omit unused rows. Keep motion restrained and consistent with Overview density.]
+
+[Add `###` blocks for chips, lists, checkboxes, etc. from product inventory.]
 
 ## Do's and Don'ts
 
-- Do: [from style guide §1 Do / Don't and cross-cutting rules]
-- Don't: [from style guide §1 Do / Don't and cross-cutting rules]
-- Do: [WCAG AA contrast; token-only styling in downstream prompts]
-- Don't: [invent colors, fonts, or spacing outside defined tokens]
+- Do: [from brand direction — e.g. generous whitespace, restrained accents]
+- Don't: [e.g. heavy gradients, decorative chrome outside tokens]
+- Do: Reference token keys only in downstream specs and prompts
+- Don't: Invent colors, fonts, spacing, or radii outside defined tokens
+- Do: Maintain WCAG AA contrast (4.5:1 normal text); visible focus via `ring`
+- Don't: Rely on color alone for state; hover-only affordances on touch
+- Do: [accessibility — labels, hit targets, reduced-motion preference when motion is defined]
+- Don't: Mix sharp and heavily rounded corners in the same view without a token rule

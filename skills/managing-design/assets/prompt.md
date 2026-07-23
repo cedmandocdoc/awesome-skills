@@ -61,7 +61,7 @@ From user stories — define who sees what and how behavior differs.
 
 ## Component Library
 
-Build these components **before** screens. Use token keys from `design.md` YAML front matter only — `colors.*`, `typography.*`, `spacing.*`, `rounded.*`, `components.*` — not inline hex, px, or font values.
+Build these components **before** screens. Use token keys from `design.md` YAML front matter only — `colors.*`, `typography.text-*`, `spacing.space-*`, `rounded.radius-*`, `components.*` — not inline hex, px, or font values.
 
 ### [Category — e.g. Buttons]
 
@@ -113,7 +113,7 @@ Organize screens into logical sections. Each screen lists layout, content, compo
 
 - [Structure — e.g. centered card, split hero + form, full-width dashboard]
 - [Regions — header, main, sidebar, footer]
-- [Spacing and grid — reference `spacing.*` tokens and Layout section in `design.md`]
+- [Spacing and grid — reference `spacing.space-*` tokens and Layout section in `design.md`]
 
 **Content:**
 

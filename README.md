@@ -46,8 +46,8 @@ Source formats also work: full GitHub URL, a path to a single skill, or a local 
 | Skill | What it does |
 | --- | --- |
 | [`managing-tasks`](skills/managing-tasks/) | Structured task folders (`plan.md`, `status.md`) for cross-session agent handoff — create, execute, triage, block, verify, and archive work on disk. |
-| [`managing-product-specifications`](skills/managing-product-specifications/) | Draft and review product specs (PRD, FRD, TRD, user stories, UI specs) with consistent layout and frontmatter — planning only, no implementation. |
-| [`managing-design`](skills/managing-design/) | Produce visual style guides and Google Stitch handoff files from PRDs, user stories, and UI specs. |
+| [`building-product-specifications`](skills/building-product-specifications/) | Create and amend product specs (PRD, FRD, TRD, user stories, UI specs with view states) with consistent layout and frontmatter — docs only, no implementation. |
+| [`managing-design`](skills/managing-design/) | Produce design.md visual systems and Google Stitch / Figma / Claude Design handoffs from PRDs, user stories, and UI specs. |
 | [`building-react-web-application`](skills/building-react-web-application/) | Build Vite + React SPAs with a fixed stack: Tailwind v4, TanStack Router/Query, Zustand, Axios, and shadcn-style UI in `src/ui`. |
 | [`building-react-native-application`](skills/building-react-native-application/) | Build Expo/React Native apps with NativeWind, React Navigation, TanStack Query, Zustand, Axios, and reusable primitives in `src/ui`. |
 | [`deploying-cloudflare-web-application`](skills/deploying-cloudflare-web-application/) | Deploy static web apps to Cloudflare via Workers Builds and GitHub integration — discovery, `wrangler.toml`, and dashboard settings. |

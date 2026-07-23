@@ -130,7 +130,7 @@ Run in strict numerical order. Each pass file is self-contained for one Claude D
 
 ## Final Deliverable Checklist
 
-- [ ] Design system created/updated from `00` with all style-guide tokens
+- [ ] Design system created/updated from `00` with all design.md tokens
 - [ ] UI kit pass complete — every component set, variants, and states from specs
 - [ ] Layout shells built before feature screens
 - [ ] Every feature screen duplicates the correct shell — only content region changes

@@ -66,11 +66,11 @@ Authenticated and unauthenticated flows each get a **base layout frame** on the 
 
 ## Design System
 
-> Embedded from the project style guide. Figma Make must not deviate from these values.
+> Embedded from the project `design.md`. Figma Make must not deviate from these values.
 
 ### Visual theme
 
-[§1 Visual Theme & Atmosphere from style guide — mood, do/don't, aesthetic direction]
+[Overview + Do's and Don'ts from `design.md` — mood, do/don't, aesthetic direction]
 
 ### Color tokens
 
@@ -78,7 +78,7 @@ Authenticated and unauthenticated flows each get a **base layout frame** on the 
 | --- | --- | --- |
 | [`token-name`] | [hex or rgba] | [usage] |
 
-[One row per color token from style guide §2]
+[One row per color token from YAML `colors:`]
 
 ### Typography
 
@@ -86,7 +86,7 @@ Authenticated and unauthenticated flows each get a **base layout frame** on the 
 | --- | --- | --- | --- | --- | --- | --- |
 | [`text-*`] | [px] | [px] | [px] | [family] | [weight] | [usage] |
 
-[Pairing rules table when style guide defines element → token mapping]
+[Pairing rules from `design.md` Overview when defined]
 
 ### Spacing
 
@@ -94,7 +94,7 @@ Authenticated and unauthenticated flows each get a **base layout frame** on the 
 | --- | --- | --- |
 | [`space-*`] | [px] | [usage] |
 
-[Grid and margin rules from style guide §4–§6]
+[Grid and margin rules from `design.md` Layout]
 
 ### Radius
 
@@ -106,7 +106,7 @@ Authenticated and unauthenticated flows each get a **base layout frame** on the 
 
 | Token | Value | Usage |
 | --- | --- | --- |
-| [`elevation-*` / `shadow-*`] | [value] | [usage] |
+| [`elevation-*`] | [value] | [usage] |
 
 ### Breakpoints
 
@@ -122,7 +122,7 @@ Use these specs when building component sets:
 | --- | --- | --- | --- | --- | --- |
 | [Component/Variant] | [token or hex] | [token or hex] | [token] | [token] | [constraints] |
 
-[One row per atomic component from style guide §10 or UI specs component inventory]
+[One row per atomic component from YAML `components:` or UI specs inventory]
 
 ---
 

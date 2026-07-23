@@ -106,8 +106,6 @@ Check inputs the **next step** (and steps it explicitly builds on in the same ph
 | Missing file, asset, design, or unresolved reference needed for the next step | **Not ready** — missing artifact |
 | Plan points to design work that does not exist yet (e.g. "implement from mockup" with no mockup path) | **Not ready** — missing design |
 
-**Design and asset gap examples:** no `style-guide.md` when the plan requires it; Figma URL with no export or spec file; `assets/` path empty when the step consumes assets; API contract referenced but not checked in.
-
 #### 4.4 Plan completeness for the next step
 
 Inspect the phase and todo matching `next_step_id`.
