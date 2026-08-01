@@ -1,0 +1,4 @@
+interface:
+  display_name: "Developing Application"
+  short_description: "Delivery map + wave loop; decide next work and run managing-tasks until the app ships"
+  default_prompt: "Use $developing-application when the user wants to develop or ship an application from PRD/TRD/specs, continue a delivery map, or decide the next implementation wave."

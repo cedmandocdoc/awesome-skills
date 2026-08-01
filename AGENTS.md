@@ -449,11 +449,12 @@ Use `.yaml` extension (existing convention in this repo). Content is the same if
 
 | Rule | Detail |
 | --- | --- |
-| No cross-skill links | Do not link to `skills/other-skill/...` or tell the agent to load another catalog skill |
+| No cross-skill path links | Do not link to `skills/other-skill/...` or other skills' files by relative/absolute path |
 | Repeat minimal context | If two skills need the same fact, state it briefly in each skill or link from **References** to external docs |
-| External skills | May mention third-party or user-installed skills only as optional context, not as dependencies |
+| External skills | May mention third-party or user-installed skills as optional context (discovery by description / user prefer list) |
+| Named companions | An **orchestration** skill may require another installed skill by frontmatter `name` only. Discover it under skill roots, then open that skill's own `SKILL.md` and follow its recipes by name. Document the companion as a hard prerequisite in Overview / contract. Never path-link into the companion's `references/` |
 
-A user may install one skill without the rest of the catalog. Each skill must stand alone.
+A user may install one skill without the rest of the catalog. Each skill stands alone unless it declares a **named companion** (for example `developing-application` requiring `managing-tasks`).
 
 ---
 
@@ -463,5 +464,5 @@ A user may install one skill without the rest of the catalog. Each skill must st
 - [ ] `skills/<name>/agents/openai.yaml` present and aligned with `name` / `description`
 - [ ] Reference files use kebab-case filenames and verb prefixes; body uses Overview → Prerequisites → Guidelines → Setup → Examples → Related → References (omit empty sections)
 - [ ] `SKILL.md` uses Overview → Agent workflow → Reference index (→ Templates if `assets/`); skill-specific blocks are subsections only
-- [ ] No links to other skills under `skills/`
+- [ ] No path links to other skills under `skills/` (named companion discovery by `name` is OK)
 - [ ] Active voice, concise tables, mode lines instead of repeated negatives
