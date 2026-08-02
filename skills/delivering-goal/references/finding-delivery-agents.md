@@ -2,11 +2,11 @@
 
 ## Overview
 
-**Read-only.** Checks whether required `developing-application` delivery agents exist before orchestration runs.
+**Read-only.** Checks whether required `delivering-goal` delivery agents exist before orchestration runs.
 
 ## Prerequisites
 
-Per [delivery-contract.md](./delivery-contract.md) → **Discovering project skills** when resolving `<skill-dir>` for templates and signature checks.
+Per [goal-contract.md](./goal-contract.md) → **Discovering project skills** when resolving `<skill-dir>` for templates and signature checks.
 
 ## Guidelines
 
@@ -17,15 +17,15 @@ Valid managed delivery-agent files must include all fields:
 | Field | Value |
 | --- | --- |
 | `author` | `d4a6b8c0-5e3f-7a9b-1c2d-6f8e0a3b5c7d` |
-| `generated_by` | `developing-application` |
+| `generated_by` | `delivering-goal` |
 
 ### Required agents by workflow
 
 | Workflow | Required agent ids |
 | --- | --- |
-| executing-delivery | `delivery-planner`, `wave-decider` |
-| planning-delivery via subagent | `delivery-planner` |
-| deciding-next-wave via subagent | `wave-decider` |
+| delivering-goal (loop) | `delivery-planner`, `phase-decider` |
+| planning-goal via subagent | `delivery-planner` |
+| deciding-next-phase via subagent | `phase-decider` |
 
 ### 1. Detect IDE and agent roots
 
@@ -54,7 +54,7 @@ For each required agent id:
 3. Accept the first file where:
    - `name` matches required id
    - `author` matches signature
-   - `generated_by` is `developing-application`
+   - `generated_by` is `delivering-goal`
 
 Track `found_agents` and `missing_agents`.
 
@@ -62,11 +62,11 @@ Track `found_agents` and `missing_agents`.
 
 If `missing_agents` is non-empty, stop immediately and reply with exactly:
 
-`Create the subagent first by running developing-application creating-delivery-agents.`
+`Create the subagent first by running delivering-goal creating-delivery-agents.`
 
 If every required agent is found, continue with the calling workflow.
 
 ## Related
 
 - [creating-delivery-agents.md](./creating-delivery-agents.md)
-- [executing-delivery.md](./executing-delivery.md)
+- [delivering-goal.md](./delivering-goal.md)

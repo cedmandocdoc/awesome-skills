@@ -4,7 +4,7 @@
 
 **Execution mode.** Implements the current step unless it is documentation-only. When `next_step_id` is `verify`, runs the verification checklist; on pass marks `Done` and auto-archives.
 
-**Runtime truth:** `<task-folder>/status.md` then `plan.md` (do not re-read create templates). For `task_type: spike`, also satisfy [findings-contract.md](./findings-contract.md) before Done. **Infra:** [task-contract.md](./task-contract.md) → **Resolve tasks root**, **Finding existing tasks**, **Resolving domain references**, **Step queue rules**, **Auto-archive**, **`index.md` status mirror**.
+**Runtime truth:** `<task-folder>/status.md` then `plan.md` (do not re-read create templates). **Infra:** [task-contract.md](./task-contract.md) → **Resolve tasks root**, **Finding existing tasks**, **Resolving domain references**, **Step queue rules**, **Auto-archive**, **`index.md` status mirror**.
 
 ## Prerequisites
 
@@ -51,8 +51,7 @@ Run when `next_step_id` is `verify` (or the user asks to verify / mark done and 
    - Automated checks (lint, typecheck, tests) when practical
    - Manual smoke steps when listed
    - Do **not** add new features; only verify existing work
-5. For spikes, also satisfy [findings-contract.md](./findings-contract.md)
-6. Record pass/fail per item
+5. Record pass/fail per item
 
 **If all checks pass** → go to **§5 Mark Done and archive**.
 

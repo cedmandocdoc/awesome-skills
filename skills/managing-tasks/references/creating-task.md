@@ -107,7 +107,6 @@ Reply with:
 ## Related
 
 - [creating-multiple-tasks.md](./creating-multiple-tasks.md) — orchestrate several new tasks via `task-planner` subagents
-- [creating-spike-task.md](./creating-spike-task.md) — research/investigation task with `findings.md`
 
 ## Examples
 

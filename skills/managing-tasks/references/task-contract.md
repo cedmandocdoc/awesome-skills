@@ -4,7 +4,7 @@
 
 Shared **system plumbing** for all `managing-tasks` workflows: tasks root discovery, folder layout, status fields, step queue, index mirror, and skill/reference resolution.
 
-Plan and findings **body structure** live in templates and create recipes — not here. Spike validation: [findings-contract.md](./findings-contract.md).
+Plan **body structure** lives in templates and create recipes — not here.
 
 ## Guidelines
 
@@ -38,12 +38,11 @@ Only this skill may establish a tasks root. The root is always marked by `<tasks
   <NNN>-<slug>/
     plan.md      # Stable spec (structure: assets/plan.md; rules: create/update recipes)
     status.md    # Mutable state: execution pointer, step queue, handoff note
-    findings.md  # Spike only (structure: assets/findings.md; rules: findings-contract.md)
   archives/       # Done and Cancelled tasks moved here automatically
     <NNN>-<slug>/
 ```
 
-Templates: [`../assets/plan.md`](../assets/plan.md), [`../assets/status.md`](../assets/status.md), [`../assets/findings.md`](../assets/findings.md), [`../assets/index.md`](../assets/index.md).
+Templates: [`../assets/plan.md`](../assets/plan.md), [`../assets/status.md`](../assets/status.md), [`../assets/index.md`](../assets/index.md).
 
 ### Plan frontmatter
 
@@ -54,7 +53,7 @@ Machine fields every `plan.md` includes (body sections come from the template + 
 | `name` | Task title |
 | `overview` | One-line summary |
 | `generated_by` | `managing-tasks` (legacy tasks may say `creating-tasks`) |
-| `task_type` | `implementation` (default) or `spike`; omit only on legacy plans |
+| `task_type` | `implementation` (default); omit only on legacy plans |
 | `plan_revision` | Integer; start at `1`, bump on each plan amend |
 | `todos` | Step queue: `id`, `content`, `status` (`pending` \| `completed` \| `cancelled`) |
 

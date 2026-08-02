@@ -454,7 +454,7 @@ Use `.yaml` extension (existing convention in this repo). Content is the same if
 | External skills | May mention third-party or user-installed skills as optional context (discovery by description / user prefer list) |
 | Named companions | An **orchestration** skill may require another installed skill by frontmatter `name` only. Discover it under skill roots, then open that skill's own `SKILL.md` and follow its recipes by name. Document the companion as a hard prerequisite in Overview / contract. Never path-link into the companion's `references/` |
 
-A user may install one skill without the rest of the catalog. Each skill stands alone unless it declares a **named companion** (for example `developing-application` requiring `managing-tasks`).
+A user may install one skill without the rest of the catalog. Each skill stands alone unless it declares a **named companion** (for example `delivering-goal` requiring `managing-tasks`).
 
 ---
 

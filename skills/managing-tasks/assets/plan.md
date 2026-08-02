@@ -2,7 +2,7 @@
 name: {{TASK_TITLE}}
 overview: {{ONE_LINE_OVERVIEW}}
 generated_by: managing-tasks
-task_type: {{implementation|spike}}
+task_type: implementation
 plan_revision: 1
 todos:
   - id: {{STEP_ID_1}}
@@ -45,7 +45,7 @@ todos:
 
 ## Approach
 
-{{STRATEGY_OR_RESEARCH_QUESTIONS_OR_OMIT}}
+{{STRATEGY_OR_OMIT}}
 
 ## Current vs target
 

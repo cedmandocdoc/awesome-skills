@@ -1,0 +1,4 @@
+interface:
+  display_name: "Delivering Goal"
+  short_description: "Plan goal.md then loop phases via managing-tasks until done"
+  default_prompt: "Use $delivering-goal when the user wants to plan or deliver a clear goal until done, or continue an existing goal.md."
