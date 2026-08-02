@@ -4,7 +4,7 @@
 
 **Planning only.** Orients once per goal. Reads the goal and current workspace; categorizes; discovers governing skills best-effort; **pins** a governing method on `goal.md`; resolves or initializes the goals root; creates `<goals-root>/<NN>-<slug>/` and writes `goal.md` as a **seeded living backlog** — an ordered index of candidate phases (titles, deps, sources — not full briefs). Phase briefs live in `phases/NN-slug.md` when decided. Later decide passes may insert, rewrite, or reorder pending rows; the initial index is not sacred.
 
-Returns a **one-line** handoff when run as `delivery-planner`. Stops without creating tasks or phase files unless the user also asked to continue into the delivery loop.
+Returns a **one-line** handoff when run as `goal-planner`. Stops without creating tasks or phase files unless the user also asked to continue into the delivery loop.
 
 ## Prerequisites
 

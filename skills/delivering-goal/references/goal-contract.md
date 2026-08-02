@@ -24,7 +24,7 @@ Static UUID identifying delivery agents owned by this skill:
 d4a6b8c0-5e3f-7a9b-1c2d-6f8e0a3b5c7d
 ```
 
-Managed agents (`delivery-planner`, `phase-decider`) must include frontmatter `author` (this UUID) and `generated_by: delivering-goal`.
+Managed agents (`goal-planner`, `phase-decider`) must include frontmatter `author` (this UUID) and `generated_by: delivering-goal`.
 
 ### Output layout
 

@@ -9,7 +9,7 @@ Trust subagent **one-line** handoffs. Do not paste `goal.md` / phase bodies into
 ## Prerequisites
 
 1. [goal-contract.md](./goal-contract.md) → **Require managing-tasks**, **Require clear goal**, **Resolve goals root**, **Assign goal id and slug**, **Pin governing method**, **Invoke companion recipes**
-2. [finding-delivery-agents.md](./finding-delivery-agents.md) for `delivery-planner`, `phase-decider`
+2. [finding-delivery-agents.md](./finding-delivery-agents.md) for `goal-planner`, `phase-decider`
 3. Companion `managing-tasks`: open its `SKILL.md` and confirm task agents (`task-planner`, `task-triager`, `task-implementer`) exist per that skill’s finding-task-agents flow
 
 If delivery agents are missing → stop: `Create the subagent first by running delivering-goal creating-delivery-agents.`
@@ -31,7 +31,7 @@ Before ensuring `goal.md`, run the contract’s **Require clear goal** gate inli
 
 ### Handoff contracts
 
-**delivery-planner** (one line):
+**goal-planner** (one line):
 
 | Reply | Meaning |
 | --- | --- |
@@ -53,7 +53,7 @@ Before ensuring `goal.md`, run the contract’s **Require clear goal** gate inli
 ### A — Ensure goal.md
 
 1. Resolve `goal.md` per [goal-contract.md](./goal-contract.md) (**Resolve goals root** + **Resolve goal.md**).
-2. If none → launch `delivery-planner`:
+2. If none → launch `goal-planner`:
    - Prompt: `Plan goal. Goal: <goal>. Goal name: <slug or none>. Sources: <paths or none>. Skills to prefer: <list or none>. Goals root: <path or ask — default goals/>. Follow planning-goal.md per delivering-goal. Return the one-line handoff only.`
    - `Planned goal: ...` → store path
    - `Failed` / `Skipped` → exit (reason: `plan_failed`)
@@ -103,7 +103,7 @@ Do not dump phase markdown or brief bodies.
 
 ### Constraints
 
-- **Delegate plan/decide** — use `delivery-planner` / `phase-decider` during this loop
+- **Delegate plan/decide** — use `goal-planner` / `phase-decider` during this loop
 - **Delegate task execute** — only via `managing-tasks` execute multiple
 - **Trust one-liners** — re-read full artifacts only when the reply breaks the contract patterns
 - **Halt on blocked** — never start the next phase after a blocked task

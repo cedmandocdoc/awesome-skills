@@ -25,7 +25,7 @@ Every created or refreshed delivery-agent file must include:
 
 | Agent id | `readonly` | Canonical template |
 | --- | --- | --- |
-| `delivery-planner` | `false` | [`../assets/agents/delivery-planner.md`](../assets/agents/delivery-planner.md) |
+| `goal-planner` | `false` | [`../assets/agents/goal-planner.md`](../assets/agents/goal-planner.md) |
 | `phase-decider` | `false` | [`../assets/agents/phase-decider.md`](../assets/agents/phase-decider.md) |
 
 ### 1. Detect IDE and target root

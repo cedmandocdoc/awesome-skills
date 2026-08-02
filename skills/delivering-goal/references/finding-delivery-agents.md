@@ -23,8 +23,8 @@ Valid managed delivery-agent files must include all fields:
 
 | Workflow | Required agent ids |
 | --- | --- |
-| delivering-goal (loop) | `delivery-planner`, `phase-decider` |
-| planning-goal via subagent | `delivery-planner` |
+| delivering-goal (loop) | `goal-planner`, `phase-decider` |
+| planning-goal via subagent | `goal-planner` |
 | deciding-next-phase via subagent | `phase-decider` |
 
 ### 1. Detect IDE and agent roots

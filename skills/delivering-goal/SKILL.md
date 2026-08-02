@@ -47,7 +47,7 @@ Follow this skill for goal folders under `<goals-root>/<NN>-<slug>/`. Before any
 
 Match one **Recipes** row; open exactly that reference. End-to-end ship → [delivering-goal.md](references/delivering-goal.md).
 
-Delivery agents: `delivery-planner` (seeds `goal.md` + pins method) and `phase-decider` (brief + create tasks). Gate with [finding-delivery-agents.md](references/finding-delivery-agents.md); create via [creating-delivery-agents.md](references/creating-delivery-agents.md).
+Delivery agents: `goal-planner` (seeds `goal.md` + pins method) and `phase-decider` (brief + create tasks). Gate with [finding-delivery-agents.md](references/finding-delivery-agents.md); create via [creating-delivery-agents.md](references/creating-delivery-agents.md).
 
 ### Recipes
 
@@ -56,7 +56,7 @@ Delivery agents: `delivery-planner` (seeds `goal.md` + pins method) and `phase-d
 | Plan goal only | "Plan this goal", "Create goal.md for …" | [planning-goal.md](references/planning-goal.md) |
 | Deliver goal (loop) | "Deliver this goal", "Ship until done", "Continue until done" | [delivering-goal.md](references/delivering-goal.md) |
 | Find delivery agents | "Check delivery agents", gate before orchestration | [finding-delivery-agents.md](references/finding-delivery-agents.md) |
-| Create delivery agents | "creating-delivery-agents", refresh planner/decider | [creating-delivery-agents.md](references/creating-delivery-agents.md) |
+| Create delivery agents | "creating-delivery-agents", refresh goal-planner/phase-decider | [creating-delivery-agents.md](references/creating-delivery-agents.md) |
 
 ## Reference index
 
@@ -70,7 +70,7 @@ Delivery agents: `delivery-planner` (seeds `goal.md` + pins method) and `phase-d
 | [planning-goal.md](references/planning-goal.md) | Seed `goal.md` under goals/ |
 | [delivering-goal.md](references/delivering-goal.md) | Parent loop: plan → decide → execute → re-decide |
 | [deciding-next-phase.md](references/deciding-next-phase.md) | Survey → read pin → meta brief → create-multiple (used by loop) |
-| [finding-delivery-agents.md](references/finding-delivery-agents.md) | Gate on `delivery-planner` / `phase-decider` |
+| [finding-delivery-agents.md](references/finding-delivery-agents.md) | Gate on `goal-planner` / `phase-decider` |
 | [creating-delivery-agents.md](references/creating-delivery-agents.md) | User-invoked create/refresh of delivery agents |
 
 ## Templates
@@ -78,5 +78,5 @@ Delivery agents: `delivery-planner` (seeds `goal.md` + pins method) and `phase-d
 - [`assets/index.md`](assets/index.md)
 - [`assets/goal.md`](assets/goal.md)
 - [`assets/phase.md`](assets/phase.md)
-- [`assets/agents/delivery-planner.md`](assets/agents/delivery-planner.md)
+- [`assets/agents/goal-planner.md`](assets/agents/goal-planner.md)
 - [`assets/agents/phase-decider.md`](assets/agents/phase-decider.md)
