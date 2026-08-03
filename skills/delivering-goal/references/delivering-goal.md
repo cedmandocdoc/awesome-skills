@@ -2,13 +2,11 @@
 
 ## Overview
 
-**Execution mode.** Parent orchestration loop for one goal. Resolves goal + goals root, seeds `<goals-root>/<NN>-<slug>/goal.md` if needed, then repeatedly: decide next phase (resurvey + read pinned governing method + create tasks) → execute via `managing-tasks` → decide again until the goal is complete or blocked. `goal.md` is a living backlog; decide may revise pending rows between execute cycles.
-
-Trust subagent **one-line** handoffs. Do not paste `goal.md` / phase bodies into the user reply.
+**Execution mode.** Parent orchestration loop for one goal: ensure `goal.md`, then repeatedly decide next phase → execute via `managing-tasks` → decide again until complete or blocked.
 
 ## Prerequisites
 
-1. [goal-contract.md](./goal-contract.md) → **Require managing-tasks**, **Require clear goal**, **Resolve goals root**, **Assign goal id and slug**, **Pin governing method**, **Invoke companion recipes**
+1. [goal-contract.md](./goal-contract.md) → **Require managing-tasks**, **Require clear goal**, **Resolve goals root**, **Assign goal id and slug**, **Pin governing method**, **Invoke companion recipes**, **Halt on blocked**, **Handoff style**
 2. [finding-delivery-agents.md](./finding-delivery-agents.md) for `goal-planner`, `phase-decider`
 3. Companion `managing-tasks`: open its `SKILL.md` and confirm task agents (`task-planner`, `task-triager`, `task-implementer`) exist per that skill’s finding-task-agents flow
 
@@ -27,7 +25,7 @@ If task agents are missing → stop: `Create the subagent first by running manag
 
 Carry user-named skills (e.g. “prefer the installed docs skills”) into every subagent prompt as **Skills to prefer**.
 
-Before ensuring `goal.md`, run the contract’s **Require clear goal** gate inline. On gaps, stop and ask the user what to adjust — never start the loop on an unclear goal. Then resolve `<goals-root>` (default suggestion `goals/` when initializing).
+Before ensuring `goal.md`, run **Require clear goal** inline. On gaps, stop and ask once. Then resolve `<goals-root>` (default suggestion `goals/` when initializing).
 
 ### Handoff contracts
 
@@ -57,7 +55,7 @@ Before ensuring `goal.md`, run the contract’s **Require clear goal** gate inli
    - Prompt: `Plan goal. Goal: <goal>. Goal name: <slug or none>. Sources: <paths or none>. Skills to prefer: <list or none>. Goals root: <path or ask — default goals/>. Follow planning-goal.md per delivering-goal. Return the one-line handoff only.`
    - `Planned goal: ...` → store path
    - `Failed` / `Skipped` → exit (reason: `plan_failed`)
-3. If `goal.md` exists for this goal → use it (do not re-plan unless user asked to replan). If multiple goals match and none named → ask which goal.
+3. If `goal.md` exists for this goal → use it (re-plan only when the user asked). If multiple goals match and none named → ask which goal.
 
 ### B — Delivery loop
 
@@ -73,18 +71,16 @@ While `phases_completed < max_phases`:
      - `Phase ready: <phase-path>; tasks: ...` → store `phase_path` and task id list; continue
      - Unmatched → exit (reason: `bad_handoff`)
 
-2. **Execute** — Per [goal-contract.md](./goal-contract.md) → **Invoke companion recipes**, run `managing-tasks` **Execute multiple** with:
+2. **Execute** — Per **Invoke companion recipes**, run `managing-tasks` **Execute multiple** with:
    - `stop_on_blocked: true`
    - `max_completed` ≥ number of task ids from the handoff (or that count exactly)
    - Prompt context: prefer executing the phase’s task ids; triager still owns readiness order
 3. Read the execute summary:
-   - If Last outcome matches `Blocked task-...` **or** stop reason is `blocked`:
-     - Mark phase file `blocked` when practical; mirror root `index.md`
-     - **Halt** exit (reason: `task_blocked`)
+   - If Last outcome matches `Blocked task-...` **or** stop reason is `blocked` → apply **Halt on blocked**; exit (reason: `task_blocked`)
    - If no tasks completed and stop is `no_task` → exit (reason: `no_task`)
-   - Otherwise increment `phases_completed`, set `last_outcome`, **loop to Decide** — do not re-run planning; decide resurveys and may revise the living `goal.md`
+   - Otherwise increment `phases_completed`, set `last_outcome`, **loop to Decide**
 
-Do not launch decide and execute in parallel. Order is always decide → execute → decide → …
+Order is always decide → execute → decide → … (never parallel). Delegate plan/decide to delivery agents; execute only via `managing-tasks`. Re-read full artifacts only when a handoff breaks the contract patterns. On clarity failures, surface gaps and stop.
 
 ### C — Report
 
@@ -98,18 +94,6 @@ Last outcome: <last one-liner or "none">
 ```
 
 If `task_blocked` / `decide_blocked`, add one sentence on what the user can do (unblock task, clarify the goal or its sources, then re-run deliver goal).
-
-Do not dump phase markdown or brief bodies.
-
-### Constraints
-
-- **Delegate plan/decide** — use `goal-planner` / `phase-decider` during this loop
-- **Delegate task execute** — only via `managing-tasks` execute multiple
-- **Trust one-liners** — re-read full artifacts only when the reply breaks the contract patterns
-- **Halt on blocked** — never start the next phase after a blocked task
-- **Living goal.md** — expect decide to revise pending rows; parent does not freeze the initial index
-- **Pinned method** — decide reads **Governing method** on `goal.md` each pass; parent does not re-resolve methods
-- **No invention** — if planner/decider fail on goal clarity, surface the gaps to the user and stop
 
 ## Related
 

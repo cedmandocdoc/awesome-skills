@@ -2,7 +2,7 @@
 
 ## Overview
 
-Shared plumbing for `delivering-goal`: author signatures, goals-root layout, living `goal.md`, clear-goal gate, pinned governing method, companion require, and halt-on-blocked. Recipe bodies live in planning / decide / deliver references — not here.
+Shared plumbing for `delivering-goal`: author signatures, goals-root layout, living `goal.md`, clear-goal gate, pinned governing method, companion require, halt-on-blocked, and delivery-agent roots.
 
 ## Guidelines
 
@@ -14,7 +14,7 @@ Static UUID identifying goals roots and goal artifacts created by this skill:
 c3f5a7b9-4d2e-6f8a-0b1c-5e7d9f2a4c6b
 ```
 
-Every `<goals-root>/index.md`, `goal.md`, and `phases/NN-slug.md` must include this value in frontmatter `author`. Search the repository for that field on `index.md` to locate the goals root — do not infer the root from `goal.md` or numbered goal folders alone.
+Every `<goals-root>/index.md`, `goal.md`, and `phases/NN-slug.md` must include this value in frontmatter `author`. Search the repository for that field on `index.md` to locate the goals root — infer the root from `index.md` only, not from `goal.md` or numbered goal folders alone.
 
 ### Subagent signature
 
@@ -49,7 +49,7 @@ Only this skill may establish a goals root. The root is always marked by `<goals
 | `<goal-id>` | Folder name `{NN}-{slug}` (e.g. `01-mvp`) |
 | `<goal-dir>` | `<goals-root>/<goal-id>/` — parent of `goal.md` |
 
-Templates: [`../assets/index.md`](../assets/index.md), [`../assets/goal.md`](../assets/goal.md), [`../assets/phase.md`](../assets/phase.md).
+Templates: [`../assets/index.md`](./../assets/index.md), [`../assets/goal.md`](./../assets/goal.md), [`../assets/phase.md`](./../assets/phase.md).
 
 The goal tree is independent of `<tasks-root>/`. Tasks live under the `managing-tasks` companion root. Phase files hold the phase brief so handoffs stay reference-only.
 
@@ -64,7 +64,7 @@ The goal tree is independent of `<tasks-root>/`. Tasks live under the `managing-
 | Multiple | Ask which root to use (list full paths to each `index.md`) |
 | None | On **plan** / **deliver**: ask where to create the folder (**default: `goals/`**), then **Initialize goals root**. On decide-only or other intents: stop — no goals root exists; do not initialize |
 
-Do not create goal folders outside the resolved root. Do not treat a folder as the goals root unless it contains a valid `index.md`.
+Create goal folders only under the resolved root. Treat a folder as the goals root only when it contains a valid `index.md`.
 
 ### Finding goals root
 
@@ -85,8 +85,8 @@ After resolving the root, list and read goal folders only under that directory.
 When **no** valid `index.md` exists and the user is planning or delivering a goal:
 
 1. **Ask once** for the target folder path. Default suggestion: `goals/`. Accept that default when the user confirms or leaves it unspecified after the ask.
-2. **Verify the folder is empty** (or does not exist yet). If non-empty without a valid `index.md`, do not write goals there — ask for another path.
-3. Write `<goals-root>/index.md` from [`../assets/index.md`](../assets/index.md) with the **Author signature** in `author`. This is the first file the skill creates in a new root.
+2. **Verify the folder is empty** (or does not exist yet). If non-empty without a valid `index.md`, ask for another path.
+3. Write `<goals-root>/index.md` from [`../assets/index.md`](./../assets/index.md) with the **Author signature** in `author`. This is the first file the skill creates in a new root.
 4. Proceed with the requested goal folder under that root.
 
 Only this skill may create or replace `index.md`.
@@ -131,15 +131,15 @@ If the folder already exists and the user did not ask to continue/replan that go
 
 ### Living goal.md
 
-`goal.md` is a **seeded, revisable backlog** — not a fixed schedule. It is the source of truth for **what** to deliver toward the goal (high-level deliverables as phase candidates).
+`goal.md` is a seeded, revisable backlog of high-level phase candidates (source of truth for **what** to deliver).
 
 | Rule | Detail |
 | --- | --- |
-| Plan seeds | Planning writes an initial ordered index of candidate phases and pins governing method |
-| Decide owns truth | After each executed phase, decide resurveys current state and may change what comes next |
-| Allowed edits | Insert pending rows, rewrite pending titles/outcomes, reorder pending rows, split/spill when >7 specs, drop obsolete pending rows |
-| Protected rows | Do not delete or rewrite rows whose phase file is `done`, `ready`, or `implementing` unless the user explicitly asks to replan |
-| Changelog | Every `goal.md` edit bumps `map_revision` and adds a changelog line |
+| Plan seeds | Initial ordered index + governing method pin |
+| Decide owns truth | After each executed phase, resurvey and may change what comes next |
+| Allowed edits | Insert / rewrite / reorder pending rows; split/spill when >7 specs; drop obsolete pending |
+| Protected rows | Rows with phase `done` / `ready` / `implementing` — change only when user asks to replan |
+| Changelog | Every edit bumps `map_revision` and adds a changelog line |
 
 ### Categorize goal
 
@@ -151,41 +151,34 @@ Record on `goal.md` (plan seeds; decide may revise):
 | `tags` | Finer labels — optional list |
 | Evidence | Short note: what justified the category |
 
-If domain is ambiguous on an inline run → ask **once**. Subagent without enough signal → leave `domain: unknown` and continue; do not invent a category.
+If domain is ambiguous on an inline run → ask **once**. Subagent without enough signal → leave `domain: unknown` and continue.
 
 ### Pin governing method
 
-`goal.md` stores a sticky **Governing method** so every decide pass uses the same how-to-decide rules.
+Sticky how-to-decide pin on `goal.md`:
 
-| Field on `goal.md` | Meaning |
+| Field | Meaning |
 | --- | --- |
-| **Governing skills** | Installed skill names that apply (best-effort list) |
-| **Governing method** | One pinned method: skill name + method reference basename, or `none` |
+| **Governing skills** | Installed skill names (best-effort) |
+| **Governing method** | One pin: skill name + method reference basename, or `none` |
 
-**Plan** (first pin):
-
-1. Bind governing skills best-effort.
-2. Resolve a delivery method once per **Resolve delivery method**.
-3. Write the pin on `goal.md` (`skill` + `method` basename, or `none`).
+**Plan** (first pin): bind skills → resolve once per **Resolve delivery method** → write pin (`skill` + basename, or `none`).
 
 **Decide** (every pass):
 
-1. **Read the pin first** — open the pinned skill’s method reference when present; honor it for this phase.
+1. **Read the pin first**; open and honor the method reference when present.
 2. Re-survey domain/tags and **Skills to prefer**.
-3. **Repin only when** one of these is true:
-   - pin is `none` and a clear method now matches
-   - domain / tags / **Skills to prefer** changed enough that a different method clearly fits
-   - user explicitly asks to rebind
-4. On repin: update **Governing skills** and **Governing method**, bump `map_revision`, changelog the reason.
+3. **Repin only when:** pin is `none` and a method now matches; domain/tags/Skills to prefer changed enough; or user asks to rebind.
+4. On repin: update both fields, bump `map_revision`, changelog the reason.
 
-Never stop the loop solely because the pin is `none`. Meta brief + goal + survey are enough when no method applies.
+Pin `none` is valid — continue with meta brief + goal + survey. Never stop the loop solely because no governing skill or method exists.
 
 ### Phase files
 
 | Rule | Detail |
 | --- | --- |
 | Path | `<goal-dir>/phases/NN-slug.md` — `NN` is two-digit sequence (`01`, `02`, …); slug from title |
-| Template | [`../assets/phase.md`](../assets/phase.md) |
+| Template | [`../assets/phase.md`](./../assets/phase.md) |
 | Frontmatter | `doc_type: delivery-phase`, `generated_by: delivering-goal`, `author` signature, `goal_id`, `phase_id`, `status` |
 | Status values | `ready` (tasks created, not executed), `implementing`, `done`, `blocked` |
 | Map index | Each phase row stores **Phase file** path and **Task ids** — not the brief body |
@@ -194,14 +187,15 @@ Assign next phase `NN` by listing `<goal-dir>/phases/*.md` and taking max + 1 (o
 
 ### `index.md` status mirror
 
-`<goals-root>/index.md` is the root-level summary for goals. Keep it synchronized:
+Keep `<goals-root>/index.md` synchronized — one row per goal folder:
 
-- Maintain one row per goal folder under `<goals-root>/` (excluding `index.md`).
-- `ID` is the folder name `<goal-id>` (e.g. `01-mvp`).
-- `Goal` is a short title from the `goal.md` frontmatter `goal` or Goal section.
-- `Status` mirrors overall progress: `planned` (`goal.md` only), `active` (has a ready/implementing phase or open tasks), `blocked`, `done`.
-- On plan create: append a row with `Status` = `planned`.
-- On phase ready / execute progress: set `active` (or `blocked` / `done` when applicable).
+| Column | Value |
+| --- | --- |
+| `ID` | `<goal-id>` folder name |
+| `Goal` | Short title from `goal.md` |
+| `Status` | `planned` / `active` / `blocked` / `done` |
+
+On plan create → `planned`. On phase ready / execute progress → `active` (or `blocked` / `done` when applicable).
 
 ### Require managing-tasks
 
@@ -212,35 +206,28 @@ Named companion (hard prerequisite for **decide**, **deliver**, and the delivery
 3. If missing → **stop**:
 
 ```text
-Install the managing-tasks skill before using delivering-goal.
-delivering-goal only decides what comes next; create/execute of task folders requires managing-tasks.
+Install managing-tasks before using delivering-goal (create/execute of task folders requires it).
 ```
 
-4. Open that skill’s `SKILL.md` and follow its recipes by name for create / execute. Do not invent parallel task-folder formats.
+4. Open that skill’s `SKILL.md` and follow its recipes by name for create / execute.
 
 ### Require clear goal
 
-A delivery starts from a **clear goal** in any form — document, ticket, user story, or plain prompt. The form does not matter; **answerability** does.
-
-**Hard gate** — before writing any goal file, both questions below must be answerable without inventing:
+**Hard gate** — before writing any goal file, both must be answerable without inventing (form of the goal does not matter):
 
 | Question | Answerable from |
 | --- | --- |
 | **Outcome** — what is true when the goal is done | Goal statement or its sources |
 | **Scope** — what is in and out of this goal | Goal statement or its sources |
 
-**Best-effort at plan/decide (not a hard gate):** use goal sources, the pinned governing method when present, and current workspace state to choose next work. Missing approach detail alone does not fail this gate.
-
-**Guard — never run on an unclear goal:**
+Missing approach detail alone does not fail this gate. Plan/decide may use sources, the pinned method, and workspace state best-effort.
 
 | Context | On gap (Outcome or Scope) |
 | --- | --- |
-| Inline (user-facing recipe) | Stop before writing files. List each gap and what would close it. Proceed only after the user answers. Ask **once**; do not invent a goal. |
-| Subagent | Never ask. Return `Failed goal plan: unclear goal — <gaps>` (planner) or `Blocked delivery: unclear goal — <gaps>` (decider). Parent surfaces the gaps and stops the loop. |
+| Inline | Stop before writing. List each gap and what would close it. Ask **once**; proceed only after the user answers. |
+| Subagent | Never ask. Return `Failed goal plan: unclear goal — <gaps>` (planner) or `Blocked delivery: unclear goal — <gaps>` (decider). Parent surfaces gaps and stops. |
 
-This skill does **not** research missing goal detail. When a gap needs investigation, stop and point at finishing or clarifying the goal sources.
-
-After the goal passes the gate, assign `<goal-id>` per **Assign goal id and slug** before creating `<goal-dir>` (on new goals).
+When a gap needs investigation, stop and point at clarifying the goal sources. After the gate passes, assign `<goal-id>` per **Assign goal id and slug** before creating `<goal-dir>` (on new goals).
 
 ### Discovering project skills
 
@@ -277,8 +264,6 @@ Match installed skills to the goal’s `domain`, `tags`, goal text, and **Skills
 | --- | --- |
 | Matches found | Open each skill’s `SKILL.md`. Resolve any **delivery method** per below. Carry skill names into phase briefs and task specs. |
 | None found | Continue. Meta brief + goal + survey are enough. |
-
-Never stop the loop solely because no governing skill exists.
 
 ### Resolve delivery method (best-effort)
 
@@ -327,3 +312,23 @@ When a recipe needs task create or execute:
 | Find task agents | Finding / creating task agents (per that skill’s index) |
 
 4. Follow only that companion reference. Never copy its file path into this skill’s docs.
+
+### Delivery agent roots
+
+Prefer project-level roots first:
+
+| IDE | Root | Filename pattern |
+| --- | --- | --- |
+| Cursor | `.cursor/agents/` | `<name>.md` |
+| Claude Code | `.claude/agents/` | `<name>.md` |
+| Codex | `.codex/agents/` | `<name>.md` |
+| Cline | `.cline/agents/` | `<name>.md` |
+| GitHub Copilot | `.github/agents/` | `<name>.agent.md` |
+| Gemini CLI | `.gemini/agents/` | `<name>.md` |
+| Antigravity | `.agent/agents/` | `<name>.md` |
+| Roo Code | `.roo/agents/` or `.roomodes` | `<name>.md` or mode entry |
+| Portable fallback | `.agents/agents/` | `<name>.md` |
+
+User-level fallback roots (reuse only): `~/.cursor/agents/`, `~/.claude/agents/`, `~/.codex/agents/`, `~/.copilot/agents/`.
+
+If no known root exists when **creating** agents, create `.agents/agents/` and write portable agents there.

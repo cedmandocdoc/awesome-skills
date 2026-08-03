@@ -2,15 +2,13 @@
 
 ## Overview
 
-**Execution mode.** Review + categorize/bind + phase brief + create in one pass. After each executed phase (or on first phase), resurveys current state, **reads the pinned governing method** on `goal.md` (repins only per contract), revises the living backlog when needed, writes `phases/NN-slug.md`, creates tasks via `managing-tasks` create multiple, finalizes task ids on the phase file. Returns a **one-line** handoff (path + task ids) — not phase body content.
+**Execution mode.** One decide pass: resurvey, read pin, revise living backlog when needed, write `phases/NN-slug.md`, create ≤7 tasks via `managing-tasks`, finalize task ids. One-line handoff (path + task ids). Used by `phase-decider` and the delivery loop.
 
-Used by `phase-decider` and by the delivering-goal loop. Not a standalone main recipe — open from [delivering-goal.md](./delivering-goal.md) or when the user asks only for the next phase.
-
-The brief is portable: meta questions below only ask; the pinned governing method (and its skill) answers when present. Emit task specs only after every meta question has a written answer in the phase file. If a question cannot be answered from the goal, sources, survey, and any pinned method → fail early per [goal-contract.md](./goal-contract.md) → **Require clear goal**.
+Emit task specs only after every meta question has a written answer in the phase file. Unanswerable from goal/sources/survey/pin → fail early per **Require clear goal**.
 
 ## Prerequisites
 
-Per [goal-contract.md](./goal-contract.md) → **Require managing-tasks**, **Resolve goals root**, **Resolve goal.md**, **Living goal.md**, **Categorize goal**, **Pin governing method**, **Bind governing skills**, **Resolve delivery method**, **Require clear goal**, **Phase files**, **Invoke companion recipes**, **`index.md` status mirror**.
+Per [goal-contract.md](./goal-contract.md) → **Require managing-tasks**, **Resolve goals root**, **Resolve goal.md**, **Living goal.md**, **Categorize goal**, **Pin governing method**, **Bind governing skills**, **Resolve delivery method**, **Require clear goal**, **Phase files**, **Phase sizing**, **Invoke companion recipes**, **`index.md` status mirror**, **Handoff style**.
 
 For create-multiple: companion `managing-tasks` must find `task-planner`. If missing → `Failed phase: Create the subagent first by running managing-tasks creating-task-agents.`
 
@@ -20,7 +18,7 @@ For create-multiple: companion `managing-tasks` must find `task-planner`. If mis
 
 Resolve `goal.md` under the goals root. If none → `Failed phase: no goal.md — run planning-goal`.
 
-Read the phase **index** (paths/status only). `<goal-dir>` is the parent of `goal.md`. Ensure `<goal-dir>/phases/` exists. Treat pending rows as **candidates**, not a fixed schedule. Read **Governing method** (the pin) before surveying.
+Read the phase **index** (paths/status only). `<goal-dir>` is the parent of `goal.md`. Ensure `<goal-dir>/phases/` exists. Treat pending rows as **candidates** per **Living goal.md**. Read **Governing method** before surveying.
 
 ### 2. Review prior phase
 
@@ -39,7 +37,7 @@ If **no** prior phase files → skip to §3 (first phase). Survey current state 
 
 1. Confirm or revise `domain` / `tags` from goal + survey.
 2. **Read the pinned Governing method** on `goal.md`. When present, open that method for this pass.
-3. Repin only per [goal-contract.md](./goal-contract.md) → **Pin governing method** (pin is `none` and a method now matches; domain/tags/Skills to prefer changed; or user asked). Otherwise keep the pin.
+3. Repin only per **Pin governing method**. Otherwise keep the pin.
 4. Update **Governing skills** on `goal.md` when the list changed.
 
 ### 4. Candidate outcome
@@ -56,9 +54,9 @@ When the pinned method requires unblock work before the candidate, revise `goal.
 1. Survey the target area for the **chosen** phase — existing structure, conventions, and what is already implemented (or greenfield)
 2. Answer every **Meta question** below into the phase file
 3. Copy the pin into the phase **Governing method** field (`skill` + method basename, or `none`)
-4. When a method is pinned, answer its questions under **Method notes** and honor its rules (see **Method notes**)
-5. Assign `NN-slug` per [goal-contract.md](./goal-contract.md) → **Phase files**
-6. Copy [`../assets/phase.md`](../assets/phase.md) → `<goal-dir>/phases/NN-slug.md`; set `goal_id`, Outcome, Sources, Skills, Governing method (pin copy), Method notes, meta answers, ordered **Task specs**, Verification
+4. When a method is pinned, answer its questions under **Method notes** and honor its rules
+5. Assign `NN-slug` per **Phase files**
+6. Copy [`../assets/phase.md`](./../assets/phase.md) → `<goal-dir>/phases/NN-slug.md`; set `goal_id`, Outcome, Sources, Skills, Governing method (pin copy), Method notes, meta answers, ordered **Task specs**, Verification
 7. Leave phase frontmatter `status` unset or non-`ready` until tasks exist (§7)
 8. Update `goal.md` for the chosen phase row as far as possible (phase file path; leave Status unset or non-`ready` until §7); bump changelog / `map_revision` when the map changed
 
@@ -74,7 +72,7 @@ When the pinned method requires unblock work before the candidate, revise `goal.
 
 #### Method notes
 
-When a governing method is pinned on `goal.md` ([goal-contract.md](./goal-contract.md) → **Pin governing method**):
+When a governing method is pinned ([goal-contract.md](./goal-contract.md) → **Pin governing method**):
 
 1. Answer that reference’s questions into the phase file **Method notes** section.
 2. Follow any sequencing or reuse rules it defines for this phase (including inserting a prior pending map row when it requires unblock work first).
@@ -84,33 +82,26 @@ When the pin is `none`, leave **Method notes** as `none` and complete the meta q
 
 ### 6. Create tasks
 
-1. Derive ≤7 ordered specs from the brief (**From brief to task specs** below)
-2. Spill extras as later **pending** rows on `goal.md`; revise as needed
-3. Per [goal-contract.md](./goal-contract.md) → **Invoke companion recipes**, run `managing-tasks` **Create multiple**:
+1. Derive ordered specs from the brief per **From brief to task specs** below and **Phase sizing** (≤7; spill extras as later pending rows on `goal.md`).
+2. Per **Invoke companion recipes**, run `managing-tasks` **Create multiple**:
    - Spec list = this phase’s specs
    - Carry shared Sources, governing skill names, and pinned method constraints into every planner prompt
    - `max_created` = spec count (≤7)
-4. On create failure / skip with `stop_on_failure` → return `Failed phase: <reason>`
+3. On create failure / skip with `stop_on_failure` → return `Failed phase: <reason>`
 
 #### From brief to task specs
 
-1. Follow meta Q3 order (and method order when present).
-2. Each spec must be actionable alone and cite shared Sources (goal paths, method constraints, **existing artifacts from Q5**).
-3. Attach governing skill names from the pin so `task-planner` can load them.
-4. Dynamic count: as many as needed for the smallest shippable unit, **at most 7**.
-5. If more than 7: keep the remainder as later **pending** rows on `goal.md`; do not emit them yet.
+Each emitted spec must be actionable alone so `task-planner` can write plan steps without inventing the goal:
 
-#### Spec quality bar
+| Include | Source |
+| --- | --- |
+| Goal sentence (outcome-sized) | Meta Q1 |
+| Verbatim Sources paths/URLs | `goal.md` and brief |
+| What already exists or explicit greenfield | Meta Q5 |
+| Constraints from method notes when present | Method notes |
+| Skill names from the pin when present | Governing method pin |
 
-A good emitted spec includes enough that `task-planner` can write plan steps without inventing the goal:
-
-- Goal sentence (outcome-sized)
-- Verbatim Sources paths/URLs from `goal.md` and brief
-- What already exists (from Q5) or explicit greenfield
-- Constraints from method notes when present
-- Skill names from the pin when present
-
-Bad specs invent requirements the goal and sources do not support, or say “do the next part” with no Sources and no current-state grounding.
+Follow meta Q3 order (and method order when present). Bad specs invent requirements the goal and sources do not support, or say “do the next part” with no Sources and no current-state grounding.
 
 ### 7. Finalize phase ready
 
@@ -125,8 +116,6 @@ Bad specs invent requirements the goal and sources do not support, or say “do 
 | Milestone done | `Goal complete: <path-to-goal.md>` |
 | Cannot proceed | `Blocked delivery: <reason>` |
 | Error | `Failed phase: <reason>` |
-
-Do not return phase brief text, method notes, or file body excerpts.
 
 When invoked **outside** the delivery loop (decide-only), the same one-liner is enough; suggest deliver goal or `managing-tasks` execute multiple next.
 

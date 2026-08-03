@@ -15,11 +15,7 @@ version: 1.2.0
 
 ## Overview
 
-Adaptive **delivery loop** that owns *what* and *when*; the named companion `managing-tasks` owns task folders and implementers. Portable across domains — software, docs, ops, or other — via a thin meta brief and a **pinned** governing method on `goal.md`.
-
-Effectiveness depends on two cores: a clear **`goal.md`** (high-level deliverables toward the goal) and **task-detail quality** grounded in current state plus the pinned method. Weak map or weak specs make the loop ineffective.
-
-Given a clear goal, open `<goals-root>/<NN>-<slug>/`, then repeat until the goal is met or blocked:
+Adaptive **delivery loop** that owns *what* and *when*; named companion `managing-tasks` owns task folders. Portable across domains via a meta brief and a sticky **Governing method** pin on living `goal.md`. Goal id: `{NN}-{slug}`. Subagents return one-line handoffs only.
 
 ```text
 plan goal.md (once) → decide next phase → create-multiple → execute-multiple
@@ -27,27 +23,17 @@ plan goal.md (once) → decide next phase → create-multiple → execute-multip
               resurvey + read pinned governing method
 ```
 
-Each **decide** pass re-reads current state and the goal. `goal.md` is a **living backlog** (seeded at plan time) — decide may insert, rewrite, or split pending rows. The **Governing method** pin on `goal.md` is sticky across phases; decide reads it every pass and repins only when the contract allows.
-
-**Goal id** is `{NN}-{slug}` under the goals root (e.g. `01-mvp`). Slug comes from the user or is derived from the goal; `NN` is assigned like task ids in `managing-tasks`.
-
-**Named companion:** `managing-tasks` must be installed. Discover by frontmatter `name`; follow that skill’s create-multiple / execute-multiple recipes. This skill does not reimplement task folders.
-
-**Subagents** return **one-line handoffs** (paths and task ids only). Parent orchestrates; it does not paste `goal.md` or phase bodies into chat.
-
-**Layering:** recipes own action rules; [`assets/`](assets/) are copy skeletons; [`references/goal-contract.md`](references/goal-contract.md) is plumbing; on-disk `goal.md` + `phases/NN-slug.md` are runtime truth.
-
-Out of scope: inventing a goal, researching missing goal detail, domain-specific methodology (lives in other skills when installed).
+Out of scope: inventing a goal, researching missing goal detail, domain-specific methodology.
 
 ## Agent workflow
 
-Follow this skill for goal folders under `<goals-root>/<NN>-<slug>/`. Before any recipe: a clear goal per the contract’s **Require clear goal** gate (Outcome + Scope), and a resolved goals root ([goal-contract.md](references/goal-contract.md)). On goal gaps, stop and ask the user what to adjust — never start on an unclear goal. Require `managing-tasks` for decide and deliver — not for plan-only. Soft cap: **at most 7** task specs per phase. Halt when implementation returns `Blocked`.
+Follow this skill for goal folders under `<goals-root>/<NN>-<slug>/`. Before any recipe: clear goal per **Require clear goal**, and a resolved goals root ([goal-contract.md](references/goal-contract.md)). On gaps, stop and ask once. Require `managing-tasks` for decide and deliver — not for plan-only. Soft cap: **at most 7** task specs per phase. Halt when implementation returns `Blocked`.
 
-**Goals root:** Located only via `<goals-root>/index.md` with the static **Author signature** UUID in frontmatter. If none exists, **ask once** for an empty folder path (default: `goals/`), then initialize with `index.md` before any goal folder. See [goal-contract.md](references/goal-contract.md) → **Resolve goals root**.
+**Goals root:** Locate via `<goals-root>/index.md` with the static **Author signature** UUID. If none exists, ask once for an empty folder path (default: `goals/`), then initialize. See [goal-contract.md](references/goal-contract.md) → **Resolve goals root**.
 
 Match one **Recipes** row; open exactly that reference. End-to-end ship → [delivering-goal.md](references/delivering-goal.md).
 
-Delivery agents: `goal-planner` (seeds `goal.md` + pins method) and `phase-decider` (brief + create tasks). Gate with [finding-delivery-agents.md](references/finding-delivery-agents.md); create via [creating-delivery-agents.md](references/creating-delivery-agents.md).
+Delivery agents: gate with [finding-delivery-agents.md](references/finding-delivery-agents.md); create via [creating-delivery-agents.md](references/creating-delivery-agents.md).
 
 ### Recipes
 
@@ -62,7 +48,7 @@ Delivery agents: `goal-planner` (seeds `goal.md` + pins method) and `phase-decid
 
 ### Contract
 
-[goal-contract.md](references/goal-contract.md) — signatures, goals root, living `goal.md`, goal gate, pinned governing method, companion require, halt-on-blocked.
+[goal-contract.md](references/goal-contract.md) — signatures, goals root, living `goal.md`, goal gate, pinned governing method, companion require, halt-on-blocked, delivery-agent roots.
 
 | Doc | When to use |
 | --- | --- |
