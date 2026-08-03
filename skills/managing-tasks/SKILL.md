@@ -8,17 +8,15 @@ version: 1.4.0
 
 ## Overview
 
-Skill collection for durable, handoff-ready task work on disk. Works in any environment where the agent can read and write repository files.
-
-**Layering:** recipes own action rules; [`assets/`](assets/) are copy skeletons; [`references/task-contract.md`](references/task-contract.md) is system plumbing (resolve root, status, discovery); on-disk `plan.md` / `status.md` are runtime truth after create.
+Durable task folders (`plan.md`, `status.md`) for cross-session agent handoff. Recipes own action rules; [`assets/`](assets/) are copy skeletons; [task-contract.md](references/task-contract.md) is system plumbing; on-disk plans/status are runtime truth after create.
 
 ## Agent workflow
 
-Follow this skill for every task-lifecycle action under `<tasks-root>/NNN-slug/`: planning, executing, checking status, amending scope, blocking, cancelling, or running backlog work via subagents.
+Follow this skill for every task-lifecycle action under `<tasks-root>/NNN-slug/`. Works wherever the agent can read and write repository files.
 
-**Tasks root:** Located only via `<tasks-root>/index.md` with the static **Author signature** UUID in frontmatter. If none exists, **ask the user** for an empty folder path, then initialize with `index.md` before any task folder. See [task-contract.md](references/task-contract.md) → **Resolve tasks root**.
+**Tasks root:** Locate via `<tasks-root>/index.md` with the static **Author signature** UUID. If none exists, ask the user for an empty folder path, then initialize. See [task-contract.md](references/task-contract.md) → **Resolve tasks root**.
 
-**Statuses:** `Not Started`, `In Progress`, `Blocked`, `Done`, `Cancelled`. Verify remaining keeps `In Progress` with `next_step_id: verify`. `Done` and `Cancelled` auto-move to `archives/`.
+**Statuses:** `Not Started`, `In Progress`, `Blocked`, `Done`, `Cancelled`. Verify-only remaining keeps `In Progress` with `next_step_id: verify`. `Done` and `Cancelled` auto-move to `archives/`.
 
 Match one **Recipes** row; open exactly that reference.
 
@@ -39,21 +37,21 @@ Match one **Recipes** row; open exactly that reference.
 
 ### Contract
 
-[task-contract.md](references/task-contract.md) — system plumbing only (resolve root, layout, status, auto-archive, dependency resolve, discovery).
+[task-contract.md](references/task-contract.md) — resolve root, layout, status, auto-archive, dependency resolve, discovery, task-agent roots.
 
 | Doc | When to use |
 | --- | --- |
-| [task-contract.md](references/task-contract.md) | Tasks root `index.md` marker, author UUID, layout, plan frontmatter fields, status fields, auto-archive, resolve Depends on, finding tasks, resolving domain references |
-| [creating-task.md](references/creating-task.md) | New task folder, plan + initial status; planning only — owns Requirements fill rules |
-| [creating-multiple-tasks.md](references/creating-multiple-tasks.md) | Multiple new task folders — parse spec list, require expected task agents, then delegate planning |
-| [executing-task.md](references/executing-task.md) | Run `next_step_id` for one task folder, verify when last step, auto-archive on Done |
-| [executing-multiple-tasks.md](references/executing-multiple-tasks.md) | Backlog loop — require expected task agents, plan execution series once, then implement in order |
-| [triaging-tasks.md](references/triaging-tasks.md) | Read-only status report, readiness report, or ordered execution roadmap |
-| [finding-task-agents.md](references/finding-task-agents.md) | Check whether required task agents already exist and decide whether to continue or stop early |
-| [creating-task-agents.md](references/creating-task-agents.md) | User-invoked creation and refresh flow for `task-planner`, `task-triager`, and `task-implementer` |
-| [updating-task.md](references/updating-task.md) | Amend `plan.md` and sync `status.md` when scope changes |
-| [blocking-task.md](references/blocking-task.md) | Mark task blocked with reason, or clear blocker and restore `In Progress` |
-| [cancelling-task.md](references/cancelling-task.md) | Mark task cancelled with reason and auto-archive |
+| [task-contract.md](references/task-contract.md) | Tasks root marker, layout, frontmatter, status, auto-archive, Depends on, discovery, task-agent roots |
+| [creating-task.md](references/creating-task.md) | New task folder; planning only |
+| [creating-multiple-tasks.md](references/creating-multiple-tasks.md) | Multiple new folders via `task-planner` |
+| [executing-task.md](references/executing-task.md) | Run `next_step_id` for one folder; verify and archive on Done |
+| [executing-multiple-tasks.md](references/executing-multiple-tasks.md) | Backlog loop via `task-triager` then `task-implementer` |
+| [triaging-tasks.md](references/triaging-tasks.md) | Status report, readiness report, or execution roadmap |
+| [finding-task-agents.md](references/finding-task-agents.md) | Gate orchestration on existing task agents |
+| [creating-task-agents.md](references/creating-task-agents.md) | User-invoked create/refresh of task agents |
+| [updating-task.md](references/updating-task.md) | Amend `plan.md` and sync `status.md` |
+| [blocking-task.md](references/blocking-task.md) | Mark blocked or clear blocker |
+| [cancelling-task.md](references/cancelling-task.md) | Cancel and auto-archive |
 
 ## Templates
 

@@ -12,7 +12,7 @@ Per [task-contract.md](./task-contract.md) → **Resolve tasks root**.
 
 ### 1. Resolve task folder
 
-Per [task-contract.md](./task-contract.md) → **Resolve tasks root** and **Finding tasks root**.
+Per [task-contract.md](./task-contract.md) → **Resolve tasks root**.
 
 Resolve `<task-folder>` from the user's message under `<tasks-root>/`. If unclear, list folders per **Finding existing tasks** and ask. Read `status.md`, then `plan.md`.
 
@@ -29,33 +29,17 @@ Capture `cancel_reason` from the user or context (e.g. duplicate task, wrong app
 ### 4. Update `status.md`
 
 1. Set `overall_status`: `Cancelled`
-2. Set `next_step_id`: `none`
-3. Set `current_step_id`: `none`
-4. Set `blocking_reason`: `None`
-5. Add to execution pointer: `cancel_reason`: `<reason>`
-6. Update `handoff_note`: task cancelled
-7. Append session log: date, `—`, `Cancelled`, reason
+2. Set `next_step_id`: `none`; `current_step_id`: `none`; `blocking_reason`: `None`
+3. Add `cancel_reason`: `<reason>` to the execution pointer
+4. Update `handoff_note`: task cancelled
+5. Append session log: date, `—`, `Cancelled`, reason
 
-**`plan.md` frontmatter (optional):**
-
-- Set pending todos to `status: cancelled`
-- Leave completed todos unchanged
+Optional in `plan.md` frontmatter: set pending todos to `status: cancelled`; leave completed todos unchanged.
 
 ### 5. Auto-archive
 
-Per [task-contract.md](./task-contract.md) → **Auto-archive**:
-
-1. Move folder to `<tasks-root>/archives/<NNN>-<slug>/`
-2. Update `task_folder` in `status.md`
-3. Remove the matching row from `<tasks-root>/index.md`
-
-Do not delete task folders unless the user explicitly requests deletion.
+Per [task-contract.md](./task-contract.md) → **Auto-archive**. Do not delete task folders unless the user explicitly requests deletion.
 
 ### 6. Confirm to the user
 
-Reply with:
-
-- Task folder (archived path) and `cancel_reason`
-- How to start fresh: new task via [creating-task.md](./creating-task.md)
-
-Do not implement application code in this workflow.
+Reply with archived path, `cancel_reason`, and how to start fresh via [creating-task.md](./creating-task.md).

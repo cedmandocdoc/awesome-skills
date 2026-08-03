@@ -2,7 +2,7 @@
 
 ## Overview
 
-**Backlog execution mode.** Plans then implements tasks in order until cap or exit.
+**Backlog execution mode.** Plans then implements tasks in order until cap or exit. Delegate only — never substitute parent-session triage or implementation for task-agent work.
 
 ## Prerequisites
 
@@ -26,13 +26,9 @@ Parse from the user's message. Use defaults when omitted.
 
 ### 3. Require expected task agents
 
-Before delegating, follow [finding-task-agents.md](./finding-task-agents.md) for required agents: **`task-triager`** and **`task-implementer`**.
-
-If the finder reports missing expected agents, stop immediately and reply:
+Follow [finding-task-agents.md](./finding-task-agents.md) for **`task-triager`** and **`task-implementer`**. If missing, stop and reply:
 
 `Create the subagent first by running managing-tasks creating-task-agents.`
-
-Do not continue into orchestration until required agents exist.
 
 ### 4. Task-agent contracts
 
@@ -42,7 +38,7 @@ Parse subagent replies exactly — one line each.
 
 | Reply | Meaning |
 | --- | --- |
-| `Execution Plan: task-<NNN-slug>, task-<NNN-slug>, ...` | Ordered implementation series (comma-separated) |
+| `Execution Plan: task-<NNN-slug>, task-<NNN-slug>, ...` | Ordered implementation series |
 | `No Task Available` | Nothing to run in this backlog pass |
 
 **task-implementer**:
@@ -57,45 +53,37 @@ Map `task-<NNN-slug>` to `<tasks-root>/<NNN-slug>/`.
 
 ### 5. Orchestration loop
 
-Run in two phases. Track:
-
-- `execution_plan` — ordered list of `task-<NNN-slug>` ids from phase A
-- `plan_index` — next index in `execution_plan` to run
-- `completed_count` — tasks that returned `Finished implementing ...`
-- `completed_tasks` — list of `task-<NNN-slug>` ids
-- `last_outcome` — last implementer reply line
+Track: `execution_plan`, `plan_index`, `completed_count`, `completed_tasks`, `last_outcome`.
 
 #### Phase A — Plan once
 
-1. **Plan** — Launch `task-triager` with `readonly: true`.
+1. Launch `task-triager` with `readonly: true`.
    - Prompt: `Build an execution plan for the task backlog. max_completed: <N>.`
-   - If reply is `No Task Available` → exit (reason: `no_task`).
-   - If reply matches `Execution Plan: ...` → split on commas, trim whitespace, store as `execution_plan`. Set `plan_index` to `0`.
+   - `No Task Available` → exit (reason: `no_task`)
+   - `Execution Plan: ...` → split on commas, trim, store as `execution_plan`; set `plan_index` to `0`
 
-Do not launch the implementer until phase A returns a plan.
+Do not launch the implementer until phase A returns a plan. Do not call `task-triager` again mid-loop.
 
 #### Phase B — Execute the plan
 
-For each entry in `execution_plan` starting at `plan_index`:
+For each entry in `execution_plan` starting at `plan_index` (one task per implementer launch; never parallel with triager):
 
 1. **Implement** — Launch `task-implementer` for the current `task-<NNN-slug>`.
    - Prompt: `Implement <tasks-root>/<NNN-slug> end-to-end per managing-tasks.` Append `Push to remote when Done.` only when `push_on_done` is true.
    - Parse the one-line reply:
-     - `Finished implementing task-<NNN-slug>` → append to `completed_tasks`, increment `completed_count`, set `last_outcome`.
-     - `Blocked task-<NNN-slug>: ...` → set `last_outcome`. If `stop_on_blocked`, exit loop (reason: `blocked`). Otherwise advance `plan_index` and continue.
-     - `Cancelled task-<NNN-slug>` → set `last_outcome`. Do not increment `completed_count`. Advance `plan_index` and continue.
+     - `Finished implementing task-<NNN-slug>` → append to `completed_tasks`, increment `completed_count`, set `last_outcome`
+     - `Blocked task-<NNN-slug>: ...` → set `last_outcome`; if `stop_on_blocked`, exit (reason: `blocked`); else advance and continue
+     - `Cancelled task-<NNN-slug>` → set `last_outcome`; do not increment `completed_count`; advance and continue
+2. **Cap check** — If `completed_count >= max_completed` → exit (reason: `max_completed`).
+3. Advance `plan_index` and run the next entry — do not re-triage between tasks.
 
-2. **Cap check** — If `completed_count >= max_completed` → exit loop (reason: `max_completed`).
+When `plan_index` reaches the end of `execution_plan` → exit (reason: `plan_exhausted`).
 
-3. Advance `plan_index` and run the next plan entry immediately — **do not** re-triage between tasks.
+Trust subagent one-liners unless a reply does not match the contract patterns. Do not update task plans or unblock tasks unless the user explicitly asks outside this run.
 
-When `plan_index` reaches the end of `execution_plan` → exit loop (reason: `plan_exhausted`).
-
-Do not launch triager and implementer in parallel. Order is always plan once -> implement -> implement -> ...
+Each fully implemented task follows [executing-task.md](./executing-task.md) (including verify and auto-archive) inside the implementer subagent.
 
 ### 6. Report results
-
-Reply with a short summary. Optional one-line progress per completed task is allowed; do not paste subagent logs, diffs, or step-by-step narration.
 
 ```
 Task run complete.
@@ -105,18 +93,7 @@ Stop reason: <no_task | max_completed | blocked | plan_exhausted>
 Last outcome: <last implementer one-liner, or "none">
 ```
 
-If stop reason is `blocked`, you may add one sentence on what the user can do to unblock.
-
-### 7. Constraints
-
-- **Require expected agents first** — run [finding-task-agents.md](./finding-task-agents.md) and return early when required agents are missing.
-- **Delegate only** — never substitute your own triage or implementation for task-agent work.
-- **Plan once per run** — do not call `task-triager` again mid-loop; follow `execution_plan` until an exit condition.
-- **One task per implementer launch** — do not batch multiple folders in one implementer call.
-- **Trust subagent one-liners** — do not re-read `status.md` to second-guess implementer outcomes unless a reply does not match the contract patterns.
-- **No replanning** — do not update task plans or unblock tasks unless the user explicitly asks outside this run.
-
-Each fully implemented task follows [executing-task.md](./executing-task.md) (including verify and auto-archive on Done) inside the implementer subagent, not in the orchestrating session.
+Optional one-line progress per completed task; do not paste subagent logs, diffs, or step-by-step narration. If stop reason is `blocked`, one sentence on how to unblock is allowed.
 
 ## Related
 
@@ -124,4 +101,4 @@ Each fully implemented task follows [executing-task.md](./executing-task.md) (in
 
 ## Examples
 
-**Execute multiple:** User says "finish all tasks". Verify expected agents per [finding-task-agents.md](./finding-task-agents.md) -> delegate to `task-triager` for the plan, then `task-implementer` for each planned task until cap or exit.
+**Execute multiple:** "Finish all tasks" → verify agents → `task-triager` for the plan → `task-implementer` per planned task until cap or exit.

@@ -2,9 +2,9 @@
 
 ## Overview
 
-**Planning only.** Amends `plan.md` and syncs `status.md` when scope changes.
+**Planning only.** Amends `plan.md` and syncs `status.md` when scope changes. Stop without implementing new phases unless the user also asks to continue in the same message.
 
-**Structure:** keep section order from [`../assets/plan.md`](../assets/plan.md); fill rules match [creating-task.md](./creating-task.md) §4. **Infra:** [task-contract.md](./task-contract.md) → **Resolve tasks root**, **Step queue rules**, **`index.md` status mirror**, **Discovering project skills**.
+Keep section order from [`../assets/plan.md`](../assets/plan.md); fill rules match [creating-task.md](./creating-task.md) §4. Infra: [task-contract.md](./task-contract.md) → **Resolve tasks root**, **Step queue rules**, **`index.md` status mirror**, **Discovering project skills**.
 
 ## Prerequisites
 
@@ -20,7 +20,7 @@ Same as [executing-task.md](./executing-task.md) → step 1.
 
 1. Read `status.md`, then `plan.md`
 2. Note `overall_status`, completed steps, and `next_step_id`
-3. If `overall_status` is `Cancelled` (or the folder is only under `archives/` as cancelled) → stop; tell the user to create a new task via [creating-task.md](./creating-task.md)
+3. If `overall_status` is `Cancelled` (or the folder is only under `archives/` as cancelled) → stop; create a new task via [creating-task.md](./creating-task.md)
 
 ### 3. Gather changes
 
@@ -36,7 +36,7 @@ Ask **at most one** clarifying question if the amend scope is ambiguous.
 ### 4. Update `plan.md`
 
 1. Bump `plan_revision` in frontmatter (e.g. `1` → `2`)
-2. Append a **Plan changelog** section entry (if missing, add the section before Phases):
+2. Append a **Plan changelog** entry (if missing, add the section before Phases):
 
    ```markdown
    ## Plan changelog
@@ -47,9 +47,9 @@ Ask **at most one** clarifying question if the amend scope is ambiguous.
    ```
 
 3. Edit Goal, Requirements, Non-goals, Context, Approach, Phases, Verification checklist, and Risks as needed
-4. When the user adds a URL or design link, append it to Requirements → **Sources** (verbatim); do not leave it only in chat or phase prose
+4. When the user adds a URL or design link, append it to Requirements → **Sources** (verbatim)
 5. Sync frontmatter `todos`:
-   - **Preserve** todos with `status: completed` — do not reset them
+   - **Preserve** todos with `status: completed`
    - Add new todos for new steps; mark removed steps `status: cancelled` (do not delete rows)
    - Renumber or rename step ids only when necessary; if ids change, update `status.md` queue to match
 
@@ -59,23 +59,17 @@ Re-run skill discovery from [task-contract.md](./task-contract.md) when the amen
 
 1. Update the **Step queue** to match plan todos (keep checkmarks for completed steps)
 2. Set `next_step_id`:
-   - If the current `next_step_id` still exists and is pending → keep it
-   - If it was removed or completed → set to the first unchecked pending step
+   - If current `next_step_id` still exists and is pending → keep it
+   - If removed or completed → set to the first unchecked pending step
    - If user asked to redo a step → uncheck only that step with explicit confirmation
 3. Clear `blocking_reason` if the amend resolves the blocker; set `overall_status` to `In Progress` if was `Blocked`
 4. Update `handoff_note` for the executor
-5. Sync `<tasks-root>/index.md` `Status` for this task when `overall_status` changed (per [task-contract.md](./task-contract.md) → **`index.md` status mirror**)
+5. Sync `<tasks-root>/index.md` when `overall_status` changed
 
 ### 6. Confirm to the user
 
-Reply with:
-
-- `plan_revision` and changelog summary
-- Updated `next_step_id`
-- What changed vs what was preserved
-
-**Stop without implementing** new phases unless the user also asked to continue in the same message.
+Reply with `plan_revision` and changelog summary, updated `next_step_id`, and what changed vs what was preserved.
 
 ## Examples
 
-**Update:** User adds a phase to an in-progress task. Bump `plan_revision` → sync step queue.
+**Update:** User adds a phase to an in-progress task → bump `plan_revision` → sync step queue.

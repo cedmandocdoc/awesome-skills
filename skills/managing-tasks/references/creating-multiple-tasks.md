@@ -2,7 +2,7 @@
 
 ## Overview
 
-**Planning only.** Creates multiple task folders from a user-provided list of goals. Requires `task-planner` to exist, then orchestrates delegation per spec; stops without implementing unless the user also asks to implement in the same message.
+**Planning only.** Creates multiple task folders from a user-provided list of goals. Requires `task-planner`, then delegates one spec at a time. Stop without implementing unless the user also asks to implement in the same message.
 
 ## Prerequisites
 
@@ -14,9 +14,9 @@ Per [finding-task-agents.md](./finding-task-agents.md) when this workflow requir
 
 ### 1. Resolve tasks root
 
-Per [task-contract.md](./task-contract.md) → **Resolve tasks root**, **Finding tasks root**, and **Initialize tasks root** when no `index.md` marker exists.
+Per [task-contract.md](./task-contract.md) → **Resolve tasks root**. Initialize when no `index.md` marker exists.
 
-If no tasks root exists and the user did not name one, **ask once** for an empty folder path before building the creation plan.
+If no tasks root exists and the user did not name one, ask once for an empty folder path before building the creation plan.
 
 ### 2. Parameters
 
@@ -39,31 +39,23 @@ Derive an ordered list of task specs from the user message. Each spec is a short
 | Multiple sentences with "and" | Split only when each clause is a distinct deliverable |
 | Single broad goal | One spec — use [creating-task.md](./creating-task.md) directly instead |
 
-Trim whitespace; drop empty entries. Preserve user order.
+Trim whitespace; drop empty entries. Preserve user order. Build this list in the parent — do not delegate decomposition.
 
-**Carry Sources into every spec** — when the user message includes shared URLs, Figma/design links, tickets, or `@` paths that apply to the backlog, append them to each delegated planner prompt (not only the first). Spec strings alone may drop links; the parent prompt to `task-planner` must still include them.
+**Carry Sources into every spec** — when the user message includes shared URLs, Figma/design links, tickets, or `@` paths that apply to the backlog, append them to each delegated planner prompt. Spec strings alone may drop links.
 
 If the list is empty after parsing → exit (reason: `no_specs`).
 
-Store as `creation_plan` — ordered list of spec strings. Set `plan_index` to `0`.
-
-Do not delegate this decomposition to a subagent.
+Store as `creation_plan` (ordered spec strings). Set `plan_index` to `0`.
 
 ### 4. Require expected task agents
 
-Before delegating, follow [finding-task-agents.md](./finding-task-agents.md) for required agents: **`task-planner`**.
-
-If the finder reports missing expected agents, stop immediately and reply:
+Follow [finding-task-agents.md](./finding-task-agents.md) for **`task-planner`**. If missing, stop and reply:
 
 `Create the subagent first by running managing-tasks creating-task-agents.`
-
-Do not continue into orchestration until required agents exist.
 
 ### 5. Task-agent contract
 
 Parse subagent replies exactly — one line each.
-
-**task-planner**:
 
 | Reply | Meaning |
 | --- | --- |
@@ -75,34 +67,24 @@ Map `task-<NNN-slug>` to `<tasks-root>/<NNN-slug>/`.
 
 ### 6. Orchestration loop
 
-Track:
-
-- `creation_plan` — ordered spec strings from §3
-- `plan_index` — next index in `creation_plan` to run
-- `created_count` — tasks that returned `Created task-...`
-- `created_tasks` — list of `task-<NNN-slug>` ids
-- `last_outcome` — last planner reply line
+Track: `creation_plan`, `plan_index`, `created_count`, `created_tasks`, `last_outcome`.
 
 For each entry in `creation_plan` starting at `plan_index`:
 
-1. **Plan** — Launch `task-planner` for the current spec.
+1. **Plan** — Launch `task-planner` for the current spec (one spec per launch; never parallel).
    - Prompt: `Create a task: <spec>. Sources (copy into plan Requirements): <shared URLs/paths or "none">. Tasks root: <tasks-root>/. Follow creating-task.md per managing-tasks. Planning only — do not implement.`
    - Parse the one-line reply:
-     - `Created task-<NNN-slug>` → append to `created_tasks`, increment `created_count`, set `last_outcome`.
-     - `Skipped spec: ...` → set `last_outcome`. If `stop_on_skip`, exit loop (reason: `skipped`). Otherwise advance `plan_index` and continue.
-     - `Failed spec: ...` → set `last_outcome`. If `stop_on_failure`, exit loop (reason: `failed`). Otherwise advance `plan_index` and continue.
+     - `Created task-<NNN-slug>` → append to `created_tasks`, increment `created_count`, set `last_outcome`
+     - `Skipped spec: ...` → set `last_outcome`; if `stop_on_skip`, exit (reason: `skipped`); else advance and continue
+     - `Failed spec: ...` → set `last_outcome`; if `stop_on_failure`, exit (reason: `failed`); else advance and continue
+2. **Cap check** — If `created_count >= max_created` → exit (reason: `max_created`).
+3. Advance `plan_index` and run the next spec — do not re-parse the user message between tasks.
 
-2. **Cap check** — If `created_count >= max_created` → exit loop (reason: `max_created`).
+When `plan_index` reaches the end of `creation_plan` → exit (reason: `plan_exhausted`).
 
-3. Advance `plan_index` and run the next spec immediately — do not re-parse the user message between tasks.
-
-When `plan_index` reaches the end of `creation_plan` → exit loop (reason: `plan_exhausted`).
-
-Do not launch multiple planners in parallel. Order is always plan spec -> plan spec -> ...
+Delegate only — never substitute parent-session task creation for planner work. Trust subagent one-liners unless a reply does not match the contract patterns.
 
 ### 7. Report results
-
-Reply with a short summary. Optional one-line note per created task is allowed; do not paste subagent logs or full plan bodies.
 
 ```
 Task creation complete.
@@ -112,29 +94,21 @@ Stop reason: <no_specs | max_created | skipped | failed | plan_exhausted>
 Last outcome: <last planner one-liner, or "none">
 ```
 
+Optional one-line note per created task; do not paste subagent logs or full plan bodies.
+
 When `created_count > 0`, suggest follow-up: _"Execute the backlog with executing-multiple-tasks"_ or name the first created folder for single-task execution.
 
-**Stop without implementing** unless the user also asked to implement in the same message. When they did, hand off to [executing-multiple-tasks.md](./executing-multiple-tasks.md) after reporting creation results.
-
-### 8. Constraints
-
-- **Require expected agents first** — run [finding-task-agents.md](./finding-task-agents.md) and return early when required agents are missing.
-- **Delegate only** — never substitute your own task creation for task-agent work.
-- **One spec per planner launch** — do not batch multiple specs in one planner call.
-- **Trust subagent one-liners** — do not re-read disk to second-guess planner outcomes unless a reply does not match the contract patterns.
-- **No execution** — do not advance `next_step_id`, run implementation steps, or call `task-implementer` unless the user explicitly asked to implement in the same message.
-
-Each created task follows [creating-task.md](./creating-task.md) inside the planner subagent, not in the orchestrating session.
+When the user also asked to implement, hand off to [executing-multiple-tasks.md](./executing-multiple-tasks.md) after reporting.
 
 ## Examples
 
-**Create multiple:** User says "Create tasks for dark mode toggle, user profile settings, and push notifications". Resolve tasks root -> build three-spec `creation_plan` -> verify `task-planner` exists via [finding-task-agents.md](./finding-task-agents.md) -> delegate once per spec until cap or exit -> report created ids.
+**Create multiple:** "Create tasks for dark mode, profile, notifications" → three-spec plan → verify `task-planner` → delegate once per spec → report ids.
 
-**Create then execute:** User says "Plan tasks for A and B, then implement them". Run this reference through §7, then [executing-multiple-tasks.md](./executing-multiple-tasks.md) in the same session.
+**Create then execute:** "Plan tasks for A and B, then implement" → this reference through §7, then [executing-multiple-tasks.md](./executing-multiple-tasks.md).
 
 ## Related
 
-- [creating-task.md](./creating-task.md) — single-task planning recipe used inside each planner run
+- [creating-task.md](./creating-task.md) — single-task planning used inside each planner run
 - [executing-multiple-tasks.md](./executing-multiple-tasks.md) — backlog execution after tasks exist
 - [finding-task-agents.md](./finding-task-agents.md) — checks whether `task-planner` exists
-- [creating-task-agents.md](./creating-task-agents.md) — user-invoked agent creation workflow
+- [creating-task-agents.md](./creating-task-agents.md) — user-invoked agent creation

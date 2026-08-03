@@ -2,9 +2,9 @@
 
 ## Overview
 
-Shared **system plumbing** for all `managing-tasks` workflows: tasks root discovery, folder layout, status fields, step queue, index mirror, and skill/reference resolution.
+Shared system plumbing for all `managing-tasks` workflows: tasks root discovery, folder layout, status fields, step queue, index mirror, skill/reference resolution, and task-agent roots.
 
-Plan **body structure** lives in templates and create recipes — not here.
+Plan body structure lives in templates and create recipes — not here.
 
 ## Guidelines
 
@@ -26,7 +26,23 @@ Static UUID identifying subagents owned by this skill:
 a7c9e1f3-5b2d-7e9f-1a3c-5d7e9f1b3a5c
 ```
 
-Managed task agents (`task-planner`, `task-triager`, `task-implementer`) must include frontmatter `author` (this UUID) and `generated_by: managing-tasks`. Discovery and explicit creation flows: [finding-task-agents.md](./finding-task-agents.md), [creating-task-agents.md](./creating-task-agents.md).
+Managed task agents (`task-planner`, `task-triager`, `task-implementer`) must include frontmatter `author` (this UUID) and `generated_by: managing-tasks`. Discovery and creation: [finding-task-agents.md](./finding-task-agents.md), [creating-task-agents.md](./creating-task-agents.md).
+
+### Task agent roots
+
+Prefer project-level roots. User-level fallbacks (reuse only): `~/.cursor/agents/`, `~/.claude/agents/`, `~/.codex/agents/`, `~/.copilot/agents/`.
+
+| IDE | Root | Filename pattern |
+| --- | --- | --- |
+| Cursor | `.cursor/agents/` | `<name>.md` |
+| Claude Code | `.claude/agents/` | `<name>.md` |
+| Codex | `.codex/agents/` | `<name>.md` |
+| Cline | `.cline/agents/` | `<name>.md` |
+| GitHub Copilot | `.github/agents/` | `<name>.agent.md` |
+| Gemini CLI | `.gemini/agents/` | `<name>.md` |
+| Antigravity | `.agent/agents/` | `<name>.md` |
+| Roo Code | `.roo/agents/` or `.roomodes` | `<name>.md` or mode entry |
+| Portable fallback | `.agents/agents/` | `<name>.md` |
 
 ### Output layout
 
@@ -46,8 +62,6 @@ Templates: [`../assets/plan.md`](../assets/plan.md), [`../assets/status.md`](../
 
 ### Plan frontmatter
 
-Machine fields every `plan.md` includes (body sections come from the template + create recipe):
-
 | Field | Purpose |
 | --- | --- |
 | `name` | Task title |
@@ -59,13 +73,11 @@ Machine fields every `plan.md` includes (body sections come from the template + 
 
 ### Resolve tasks root
 
-1. Search per **Finding tasks root** below.
+1. Search per **Finding tasks root**.
 2. **Decide location:**
-   - **One match** → use that folder; no need to ask.
-   - **Multiple matches** → ask the user which root to use (list full paths to each `index.md`).
-   - **No match** → on **create** intent: **ask the user where to create** the tasks folder. Do not assume a default path. Then follow **Initialize tasks root**. On any other intent: stop and report that no tasks root exists; do not initialize.
-
-Do not create task folders outside the resolved root. Do not treat a folder as the tasks root unless it contains a valid `index.md` per **Finding tasks root**.
+   - **One match** → use that folder.
+   - **Multiple matches** → ask which root (list full paths to each `index.md`).
+   - **No match** → on **create** intent: ask where to create the tasks folder, then **Initialize tasks root**. On any other intent: stop and report that no tasks root exists.
 
 ### Finding tasks root
 
@@ -77,27 +89,25 @@ Search the repository for `index.md` files whose YAML frontmatter contains **all
 | `generated_by` | `managing-tasks` |
 | `author` | `b2e4f6a8-3c1d-5e7f-9a2b-4d6e8f0c1a3b` (see **Author signature**) |
 
-The tasks root is the parent directory of each matching `index.md` (e.g. `tasks/index.md` → root is `tasks/`).
-
-After resolving the root, list and read task folders only under that directory.
+The tasks root is the parent directory of each matching `index.md` (e.g. `tasks/index.md` → `tasks/`). After resolving, list and read task folders only under that directory.
 
 ### Initialize tasks root
 
 When **no** valid `index.md` exists and the user is creating a task:
 
-1. **Ask the user** for the target folder path (relative to repository root, e.g. `tasks/`, `docs/tasks/`).
-2. **Verify the folder is empty:**
+1. **Ask** for the target folder path (relative to repository root, e.g. `tasks/`, `docs/tasks/`).
+2. **Verify empty:**
    - Path does not exist → OK; create the directory.
-   - Path exists and contains **no files and no subdirectories** → OK.
-   - Path exists and is **not empty** → stop. Tell the user the folder must be empty and ask for another path.
-3. Write `<tasks-root>/index.md` from [`../assets/index.md`](../assets/index.md) with the **Author signature** in `author`. This is the first file the skill creates in a new root.
+   - Path exists with no files and no subdirectories → OK.
+   - Path exists and is not empty → stop; ask for another path.
+3. Write `<tasks-root>/index.md` from [`../assets/index.md`](../assets/index.md) with the **Author signature** in `author`.
 4. Proceed with the requested task folder(s) under that root.
 
 Only this skill may create or replace `index.md`. If the user points at a non-empty folder without a valid `index.md`, do not write tasks there.
 
 ### Finding existing tasks
 
-After resolving the tasks root per **Finding tasks root**, search under `<tasks-root>/` and `<tasks-root>/archives/` for directories matching `[0-9][0-9][0-9]-*/` that contain `plan.md`.
+After resolving the tasks root, search under `<tasks-root>/` and `<tasks-root>/archives/` for folders matching `[0-9][0-9][0-9]-*/` that contain `plan.md`.
 
 Treat `plan.md` as a task when frontmatter contains `generated_by: managing-tasks` **or** `generated_by: creating-tasks` (legacy).
 
@@ -123,7 +133,7 @@ When `overall_status` becomes `Done` or `Cancelled`:
 3. Update `task_folder` in `status.md` to the new path.
 4. Remove the matching row from `<tasks-root>/index.md`.
 
-Do not leave `Done` or `Cancelled` folders under the active root. Archive is the terminal step of execute (on Done) and cancel — not a separate user intent.
+Archive is the terminal step of execute (on Done) and cancel — not a separate user intent.
 
 ### Resolve task dependency
 
@@ -140,25 +150,23 @@ For each folder name in `plan.md` → Context → **Depends on** (accept bare `N
 | Found; `overall_status` is `Cancelled` | Not ready — dependency abandoned (recreate prerequisite if needed) |
 | Missing in active and `archives/` | Not ready — broken dependency link |
 
-`Done` under `archives/` is the normal satisfied case after auto-archive. **Related tasks** never gates readiness.
+`Done` under `archives/` is the normal satisfied case. **Related tasks** never gates readiness.
 
 ### `index.md` status mirror
 
-`<tasks-root>/index.md` is the root-level summary for **active** (non-archived) tasks. Keep it synchronized with per-task files:
+`<tasks-root>/index.md` summarizes **active** (non-archived) tasks:
 
-- Maintain one row per non-archived task folder under `<tasks-root>/`.
-- `ID` is `task-<NNN-slug>`.
-- `Task` is the task title from `plan.md` frontmatter `name`.
-- `Status` mirrors `status.md` `overall_status` exactly.
-- On create: append a row with `Status` = `Not Started`.
-- On any lifecycle update that changes `overall_status` while the task is still active: update the matching row in the same run.
-- On auto-archive (`Done` or `Cancelled`): remove the row after moving the folder to `archives/`.
+- One row per non-archived task folder under `<tasks-root>/`
+- `ID` is `task-<NNN-slug>`; `Task` is `plan.md` frontmatter `name`; `Status` mirrors `status.md` `overall_status`
+- On create: append a row with `Status` = `Not Started`
+- On lifecycle update that changes `overall_status` while active: update the matching row in the same run
+- On auto-archive (`Done` or `Cancelled`): remove the row after moving the folder
 
 ### Step queue rules
 
-- Check off steps when completed; set matching todo `status: completed` in `plan.md` frontmatter.
-- Never uncheck a completed step unless the user explicitly replans and confirms ([updating-task.md](./updating-task.md)).
-- `verify` is always the last step before `Done`.
+- Check off steps when completed; set matching todo `status: completed` in `plan.md` frontmatter
+- Never uncheck a completed step unless the user explicitly replans and confirms ([updating-task.md](./updating-task.md))
+- `verify` is always the last step before `Done`
 
 ### Resolving domain references (execute / plan)
 
@@ -202,9 +210,9 @@ Each skill is `<skill-name>/SKILL.md` with optional `references/`, `scripts/`, a
 
 **Choose references for the plan** — per skill, in order:
 
-1. **Task recipes** — if `SKILL.md` has a `## Task recipes` table, copy the closest row's reference basenames.
-2. **Reference index** — pick rows whose "When to use" matches the task; add at most 1–2 extras if needed.
-3. **`references/` folder** — list `<skill-dir>/references/*.md` and select basenames that match the task.
-4. **Linked root docs** — include only when `SKILL.md` points to them for this task type.
+1. **Task recipes** — if `SKILL.md` has a `## Task recipes` table, copy the closest row's reference basenames
+2. **Reference index** — pick rows whose "When to use" matches the task; add at most 1–2 extras if needed
+3. **`references/` folder** — list `<skill-dir>/references/*.md` and select basenames that match the task
+4. **Linked root docs** — include only when `SKILL.md` points to them for this task type
 
 Record basenames without `.md`. Use `skill-name/reference-basename` when names collide across skills.
