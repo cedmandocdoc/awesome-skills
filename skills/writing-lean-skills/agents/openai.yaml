@@ -1,0 +1,4 @@
+interface:
+  display_name: "Writing Lean Skills"
+  short_description: "Review, create, and rewrite skill documents into lean versions"
+  default_prompt: "Use $writing-lean-skills when the user asks to lean, trim, tighten, de-noise, or slim a skill or SKILL.md, review one for verbosity or redundancy, or write a new skill lean from the start."

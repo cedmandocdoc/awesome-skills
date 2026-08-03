@@ -53,6 +53,7 @@ Source formats also work: full GitHub URL, a path to a single skill, or a local 
 | [`deploying-cloudflare-web-application`](skills/deploying-cloudflare-web-application/) | Deploy static web apps to Cloudflare via Workers Builds and GitHub integration — discovery, `wrangler.toml`, and dashboard settings. |
 | [`deploying-supabase-application`](skills/deploying-supabase-application/) | Prepare Supabase backends for production — validate migrations and Edge Functions, connect GitHub integration, document dashboard settings. |
 | [`deploying-expo-native-application`](skills/deploying-expo-native-application/) | Prepare Expo iOS/Android apps for EAS Build — discover the app package, configure `eas.json` profiles and EAS secrets, and validate release readiness. |
+| [`writing-lean-skills`](skills/writing-lean-skills/) | Review, create, and rewrite skill documents into lean versions — flag noise, redundancy, filler, and duplicates; restructure with shared references, active voice, and tables or diagrams. |
 
 After installation, your agent loads skills from its configured skills directory (for example `.cursor/skills/` or `~/.cursor/skills/`). Invoke a skill by describing the task in natural language; the agent reads `SKILL.md` and follows the linked recipes.
 
