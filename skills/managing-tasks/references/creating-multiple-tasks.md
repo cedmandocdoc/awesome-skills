@@ -122,7 +122,6 @@ When `created_count > 0`, suggest follow-up: _"Execute the backlog with executin
 - **Delegate only** — never substitute your own task creation for task-agent work.
 - **One spec per planner launch** — do not batch multiple specs in one planner call.
 - **Trust subagent one-liners** — do not re-read disk to second-guess planner outcomes unless a reply does not match the contract patterns.
-- **No git operations** — creating tasks does not commit unless the user explicitly asks outside this run.
 - **No execution** — do not advance `next_step_id`, run implementation steps, or call `task-implementer` unless the user explicitly asked to implement in the same message.
 
 Each created task follows [creating-task.md](./creating-task.md) inside the planner subagent, not in the orchestrating session.

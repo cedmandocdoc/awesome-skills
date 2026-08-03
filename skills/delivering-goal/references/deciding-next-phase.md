@@ -2,7 +2,7 @@
 
 ## Overview
 
-**Execution mode.** Review + categorize/bind + phase brief + create in one pass. After each executed phase (or on first phase), resurveys current state, **reads the pinned governing method** on `goal.md` (repins only per contract), revises the living backlog when needed, writes `phases/NN-slug.md`, creates tasks via `managing-tasks` create multiple. Returns a **one-line** handoff (path + task ids) — not phase body content.
+**Execution mode.** Review + categorize/bind + phase brief + create in one pass. After each executed phase (or on first phase), resurveys current state, **reads the pinned governing method** on `goal.md` (repins only per contract), revises the living backlog when needed, writes `phases/NN-slug.md`, creates tasks via `managing-tasks` create multiple, finalizes task ids on the phase file. Returns a **one-line** handoff (path + task ids) — not phase body content.
 
 Used by `phase-decider` and by the delivering-goal loop. Not a standalone main recipe — open from [delivering-goal.md](./delivering-goal.md) or when the user asks only for the next phase.
 
@@ -59,7 +59,8 @@ When the pinned method requires unblock work before the candidate, revise `goal.
 4. When a method is pinned, answer its questions under **Method notes** and honor its rules (see **Method notes**)
 5. Assign `NN-slug` per [goal-contract.md](./goal-contract.md) → **Phase files**
 6. Copy [`../assets/phase.md`](../assets/phase.md) → `<goal-dir>/phases/NN-slug.md`; set `goal_id`, Outcome, Sources, Skills, Governing method (pin copy), Method notes, meta answers, ordered **Task specs**, Verification
-7. Set phase frontmatter `status: ready` only after tasks exist (§6)
+7. Leave phase frontmatter `status` unset or non-`ready` until tasks exist (§7)
+8. Update `goal.md` for the chosen phase row as far as possible (phase file path; leave Status unset or non-`ready` until §7); bump changelog / `map_revision` when the map changed
 
 #### Meta questions
 
@@ -90,8 +91,6 @@ When the pin is `none`, leave **Method notes** as `none` and complete the meta q
    - Carry shared Sources, governing skill names, and pinned method constraints into every planner prompt
    - `max_created` = spec count (≤7)
 4. On create failure / skip with `stop_on_failure` → return `Failed phase: <reason>`
-5. Write created `task-<NNN-slug>` ids into the phase file **Task ids** section; set `status: ready`
-6. Update `goal.md` index: Phase file path, Task ids, Status `ready`; set root `index.md` to `active`; changelog + `map_revision` bump
 
 #### From brief to task specs
 
@@ -113,7 +112,12 @@ A good emitted spec includes enough that `task-planner` can write plan steps wit
 
 Bad specs invent requirements the goal and sources do not support, or say “do the next part” with no Sources and no current-state grounding.
 
-### 7. Confirm to the user
+### 7. Finalize phase ready
+
+1. Write created `task-<NNN-slug>` ids into the phase file **Task ids** section; set `status: ready`
+2. Update `goal.md` index: Phase file path, Task ids, Status `ready`; set root `index.md` to `active`; changelog + `map_revision` bump when needed
+
+### 8. Confirm to the user
 
 | Outcome | Reply |
 | --- | --- |

@@ -1,6 +1,6 @@
 ---
 name: task-planner
-description: Creates one managed task folder (plan.md and status.md) from a user spec. Use when the parent agent delegates a single task creation during creating-multiple-tasks. Follows managing-tasks creating-task protocol; returns minimal handoff to parent.
+description: Creates one managed task folder (plan.md and status.md) from a user spec. Use when the parent agent delegates a single task creation during creating-multiple-tasks. Follows managing-tasks creating-task protocol, commits on creation, returns minimal handoff to parent.
 model: inherit
 author: a7c9e1f3-5b2d-7e9f-1a3c-5d7e9f1b3a5c
 generated_by: managing-tasks
@@ -43,6 +43,7 @@ Run creating-task.md §1–§6 for the single spec:
 5. Copy [`../status.md`](../status.md); initialize per creating-task.md §5
 6. Sync `<tasks-root>/index.md`: append `task-<NNN-slug>` with title and `Status` = `Not Started` per `task-contract.md` → **`index.md` status mirror**
 7. Do **not** implement — planning only
+8. On success → go to **Commit on Created**; then reply with created pattern
 
 **Prompt fidelity** — copy every URL, Figma/design link, ticket, and `@` path from the parent prompt into Requirements → **Sources**. Put skill recipe basenames in Context → **References** only. If the parent prompt includes a URL and Sources would be empty, return `Skipped spec: missing source URL from parent prompt`.
 
@@ -59,13 +60,51 @@ When file writes fail:
 
 - Return `Failed spec: <reason>`
 
-On success, return only `Created task-<NNN-slug>`.
+## Commit on Created
+
+When the outcome is `Created task-<NNN-slug>`, commit this task’s **git-trackable** artifacts on the **current branch** before replying to the parent. Do **not** commit on `Skipped` or `Failed`.
+
+### Pre-commit
+
+Run in parallel:
+
+- `git status`
+- `git diff` (staged and unstaged)
+- `git log -5 --oneline` (match repo commit style)
+
+### Commit rules
+
+- **Meaningful messages** — derive from `plan.md` frontmatter `name` and `overview`; focus on _why_, not file lists
+- **One commit** for this task create
+- **Never** commit secrets (`.env`, credentials)
+- **Never** update git config, skip hooks, force-push, or push to remote unless the parent explicitly requests push
+- Stage **only git-tracked or newly trackable (non-ignored) files** changed for this task (typically the new folder under `<tasks-root>/` and `<tasks-root>/index.md` when a normal `git add` accepts them)
+- Omit paths ignored by `.gitignore` — never `git add -f`
+- Do **not** stage unrelated implementation work or other tasks’ folders
+
+### Commit message format
+
+Use HEREDOC:
+
+```bash
+git add <tracked-or-trackable paths>
+git commit -m "$(cat <<'EOF'
+docs: add task <NNN-slug>
+
+<optional 1-2 sentence body: task outcome or scope>
+EOF
+)"
+```
+
+Verify with `git status` after commit. Ignored task-folder edits may remain unstaged; that is expected.
+
+If there is nothing to commit (already committed, or all changes are gitignored), skip commit and still reply with the created pattern.
 
 ## Constraints
 
 - **Planning only** — no application code, no advancing execution pointers beyond initial status
 - **One task per invocation** — create exactly one folder per parent prompt
-- **No git commits** — task folders are planning artifacts; commit only when the parent or user explicitly asks outside this subagent
+- **Commit on Created** — planners own the create commit; parents do not re-commit task folders
 - **No cross-task edits** — do not modify other task folders unless creating-task context gathering requires read-only inspection
 
 ## What you do not report to the parent
@@ -73,5 +112,6 @@ On success, return only `Created task-<NNN-slug>`.
 - Plan summaries, phase lists, or verification checklists
 - Suggested follow-up phrasing (parent handles orchestration summary)
 - Skill discovery details or file paths beyond the handoff line
+- Commit SHAs or diff summaries
 
-Plan fully, write disk artifacts, then return only the one-line handoff.
+Plan fully, write disk artifacts, commit when Created, then return only the one-line handoff.

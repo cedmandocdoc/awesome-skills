@@ -49,7 +49,7 @@ Parse subagent replies exactly — one line each.
 
 | Reply | Meaning |
 | --- | --- |
-| `Finished implementing task-<NNN-slug>` | Task reached `Done` (committed locally) |
+| `Finished implementing task-<NNN-slug>` | Task reached `Done` |
 | `Blocked task-<NNN-slug>: <reason>` | Task blocked |
 | `Cancelled task-<NNN-slug>` | Task cancelled |
 
@@ -79,7 +79,7 @@ Do not launch the implementer until phase A returns a plan.
 For each entry in `execution_plan` starting at `plan_index`:
 
 1. **Implement** — Launch `task-implementer` for the current `task-<NNN-slug>`.
-   - Prompt: `Implement <tasks-root>/<NNN-slug> end-to-end per managing-tasks. Commit when Done.` Append `Push to remote when Done.` only when `push_on_done` is true.
+   - Prompt: `Implement <tasks-root>/<NNN-slug> end-to-end per managing-tasks.` Append `Push to remote when Done.` only when `push_on_done` is true.
    - Parse the one-line reply:
      - `Finished implementing task-<NNN-slug>` → append to `completed_tasks`, increment `completed_count`, set `last_outcome`.
      - `Blocked task-<NNN-slug>: ...` → set `last_outcome`. If `stop_on_blocked`, exit loop (reason: `blocked`). Otherwise advance `plan_index` and continue.
@@ -114,7 +114,6 @@ If stop reason is `blocked`, you may add one sentence on what the user can do to
 - **Plan once per run** — do not call `task-triager` again mid-loop; follow `execution_plan` until an exit condition.
 - **One task per implementer launch** — do not batch multiple folders in one implementer call.
 - **Trust subagent one-liners** — do not re-read `status.md` to second-guess implementer outcomes unless a reply does not match the contract patterns.
-- **No extra git operations** — do not commit, push, or amend unless the user explicitly asked and implementer handles commits on Done.
 - **No replanning** — do not update task plans or unblock tasks unless the user explicitly asks outside this run.
 
 Each fully implemented task follows [executing-task.md](./executing-task.md) (including verify and auto-archive on Done) inside the implementer subagent, not in the orchestrating session.
