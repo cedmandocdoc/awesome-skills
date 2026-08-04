@@ -2,7 +2,7 @@
 
 ## Overview
 
-**Docs only.** Creates or amends product or feature `trd.md` (technical design — architecture, stack, contracts). View states and screen presentation belong in `ui-specs.md`, not here.
+**Docs only.** Creates or amends product or feature `trd.md` (architecture, stack, contracts). View states and screen presentation belong in `ui-specs.md`. Infra: [spec-contract.md](./spec-contract.md) → **Resolve docs root**, **Path resolution**, **Upstream reading**, **Create or amend**, **Hub sync**, **Diagrams**, **Platform differences**.
 
 ## Prerequisites
 
@@ -12,52 +12,35 @@ Per [spec-contract.md](./spec-contract.md) → **Resolve docs root**.
 
 ### 1. Resolve docs root and path
 
-Per [spec-contract.md](./spec-contract.md) → **Resolve docs root** and **Path resolution**.
-
-| Scope | Examples | Path |
-| --- | --- | --- |
-| Product | "system architecture", "platform TRD" | `<docs-root>/trd.md` |
-| Feature | "checkout technical design" | `<docs-root>/features/<slug>/trd.md` |
+Per [spec-contract.md](./spec-contract.md) → **Resolve docs root** and **Path resolution**. Product phrasing ("system architecture", "platform TRD") → product `trd.md`; feature phrasing ("checkout technical design") → feature `trd.md`.
 
 ### 2. Read prerequisites
 
-| Target | Read first |
-| --- | --- |
-| Product `trd.md` | `prd.md` |
-| Feature `trd.md` | `frd.md`; product `trd.md` when present |
-
-Do not duplicate product-level stack or deploy detail in a feature TRD — reference the product TRD and extend for the feature.
+Per [spec-contract.md](./spec-contract.md) → **Upstream reading**. Feature TRDs reference the product TRD for shared stack/deploy and extend only for the feature.
 
 ### 3. Choose tier
 
-Default: **standard**. Use **comprehensive** when the user requests a full architecture package.
+Per [spec-contract.md](./spec-contract.md) → **Tier**. Use **comprehensive** when the user requests a full architecture package.
 
 ### 4. Write or amend TRD
 
 Use [`../assets/trd.md`](../assets/trd.md) for new files. Required:
 
 - Frontmatter: `doc_type: trd`, correct `scope`, `feature` when feature-scoped, `depends_on`
-- Mermaid diagrams for architecture and communication flows (minimum one diagram at standard tier)
+- Mermaid diagrams for architecture and communication flows (minimum one at standard tier)
 - Stack table, contracts, security, environments, tradeoffs per tier
-- Platform differences as sections (e.g. `## Web`, `## Mobile`, `## API`) when stacks or topologies diverge — one file, not parallel TRDs
+- Platform sections when stacks or topologies diverge — one file
 
-On amend: follow [spec-contract.md](./spec-contract.md) → **Create or amend** and **Spec changelog**.
+On amend: [spec-contract.md](./spec-contract.md) → **Create or amend**.
 
-### 5. Sync FRD hub
+### 5. Sync hubs
 
-If feature-scoped and `frd.md` exists → update `related.trd` and **Related documents**.
+Feature-scoped: [spec-contract.md](./spec-contract.md) → **Hub sync** (`related.trd`).
 
 ### 6. Confirm to the user
 
-Reply with:
-
-- Docs root path and file path written
-- Upstream docs read
-- Diagrams included
-- Suggested next docs when relevant
-
-**Stop without implementing** application code.
+Reply with docs root path, file path, upstream docs read, diagrams included, and suggested next docs when relevant.
 
 ## Examples
 
-**Create feature TRD:** User asks for checkout technical design. Read `frd.md` and product `trd.md` if present → write `<docs-root>/features/checkout/trd.md`.
+**Create feature TRD:** Read `frd.md` and product `trd.md` if present → write `features/checkout/trd.md`.

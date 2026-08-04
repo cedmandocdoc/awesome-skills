@@ -2,7 +2,7 @@
 
 ## Overview
 
-**Docs only.** Creates or amends product or feature `user-story.md`.
+**Docs only.** Creates or amends product or feature `user-story.md`. View states and transitions belong in `ui-specs.md` — stories name outcomes; UI specs define presentation. Infra: [spec-contract.md](./spec-contract.md) → **Resolve docs root**, **Path resolution**, **Upstream reading**, **Create or amend**, **Hub sync**, **Platform differences**.
 
 ## Prerequisites
 
@@ -12,25 +12,15 @@ Per [spec-contract.md](./spec-contract.md) → **Resolve docs root**.
 
 ### 1. Resolve docs root and path
 
-Per [spec-contract.md](./spec-contract.md) → **Resolve docs root** and **Path resolution**.
-
-| Scope | Examples | Path |
-| --- | --- | --- |
-| Product | "product user journeys" | `<docs-root>/user-story.md` |
-| Feature | "checkout user stories" | `<docs-root>/features/<slug>/user-story.md` |
+Per [spec-contract.md](./spec-contract.md) → **Resolve docs root** and **Path resolution**. Product phrasing ("product user journeys") → product `user-story.md`; feature phrasing ("checkout user stories") → feature `user-story.md`.
 
 ### 2. Read prerequisites
 
-| Target | Read first |
-| --- | --- |
-| Product `user-story.md` | `prd.md` |
-| Feature `user-story.md` | `frd.md`; product `user-story.md` when present |
-
-View states and transitions (loading, empty, validating, success, error) belong in `ui-specs.md`, not in the user story. Alternate and error paths here name outcomes; UI specs define how the interface moves between those presentations.
+Per [spec-contract.md](./spec-contract.md) → **Upstream reading**.
 
 ### 3. Choose tier
 
-Default: **standard**.
+Per [spec-contract.md](./spec-contract.md) → **Tier**.
 
 ### 4. Write or amend user story
 
@@ -40,18 +30,18 @@ Use [`../assets/user-story.md`](../assets/user-story.md) for new files. Required
 - **Stories** in As / I want / So that format with testable acceptance criteria
 - **User journey** table at standard tier for feature docs
 - Alternate and error paths for feature-level docs at standard tier
-- Platform differences as sections when journeys diverge materially
+- Platform sections when journeys diverge materially
 
-On amend: follow [spec-contract.md](./spec-contract.md) → **Create or amend** and **Spec changelog**.
+On amend: [spec-contract.md](./spec-contract.md) → **Create or amend**.
 
-Do not invent personas or flows unsupported by PRD / FRD.
+### 5. Sync hubs
 
-### 5. Sync FRD hub
-
-If feature-scoped and `frd.md` exists → update `related.user_story` and **Related documents**.
+Feature-scoped: [spec-contract.md](./spec-contract.md) → **Hub sync** (`related.user_story`).
 
 ### 6. Confirm to the user
 
 Reply with docs root path, file path, upstream docs read, suggested next docs (typically `ui-specs.md`).
 
-**Stop without implementing** application code.
+## Examples
+
+**Create feature stories:** Read `frd.md` → write `features/checkout/user-story.md` → sync FRD hub.

@@ -1,20 +1,20 @@
 ---
 name: building-product-specifications
 description: Creates and amends product specification markdown (PRD, FRD, TRD, user story, UI specs with view states) with consistent structure and frontmatter. Use when the user asks to draft or amend prd.md, frd.md, trd.md, user-story.md, or ui-specs.md at product or feature level — no code implementation.
-version: 2.0.0
+version: 2.1.0
 ---
 
 # Building Product Specifications
 
 ## Overview
 
-Writes pre-implementation product specs on disk: product vision (PRD), feature behavior (FRD), technical design (TRD), user journeys, and UI screens with view states. Works wherever the agent can read and write repository files.
+Writes pre-implementation product specs on disk: product vision (PRD), feature behavior (FRD), technical design (TRD), user journeys, and UI screens with view states. Recipes own doc-type rules; [spec-contract.md](references/spec-contract.md) is shared plumbing. Works wherever the agent can read and write repository files.
 
 ## Agent workflow
 
 Follow this skill when creating or amending product specification markdown. Stop without application code unless the user explicitly asks in the same message.
 
-**Docs root:** Located only via `<docs-root>/index.md` with the static **Author signature** UUID in frontmatter. If none exists, **ask the user** for an empty folder path, then initialize with `index.md` before any spec. See [spec-contract.md](references/spec-contract.md) → **Resolve docs root**.
+**Docs root:** Locate via `<docs-root>/index.md` with the static **Author signature** UUID. If none exists, ask the user for an empty folder path, then initialize. See [spec-contract.md](references/spec-contract.md) → **Resolve docs root**.
 
 Match one **Recipes** row; open exactly that reference. Each create recipe also covers amend when the target file already exists.
 
@@ -32,11 +32,11 @@ Match one **Recipes** row; open exactly that reference. Each create recipe also 
 
 ### Contract
 
-[spec-contract.md](references/spec-contract.md) — layout, frontmatter, resolve rules.
+[spec-contract.md](references/spec-contract.md) — resolve root, layout, frontmatter, tiers, hub sync, create-or-amend.
 
 | Doc | When to use |
 | --- | --- |
-| [spec-contract.md](references/spec-contract.md) | Docs root marker, paths, frontmatter, tiers, create-or-amend |
+| [spec-contract.md](references/spec-contract.md) | Docs root marker, paths, frontmatter, tiers, hub sync, create-or-amend |
 | [creating-prd.md](references/creating-prd.md) | New or amend `prd.md` |
 | [creating-frd.md](references/creating-frd.md) | New or amend `features/<slug>/frd.md` |
 | [creating-user-story.md](references/creating-user-story.md) | New or amend product or feature `user-story.md` |

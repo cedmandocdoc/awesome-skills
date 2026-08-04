@@ -2,7 +2,7 @@
 
 ## Overview
 
-Shared layout, naming, frontmatter, and tiers for all `building-product-specifications` workflows.
+Shared layout, frontmatter, resolve rules, and hub sync for all `building-product-specifications` workflows. Recipe bodies cover doc-type content only.
 
 ## Guidelines
 
@@ -13,7 +13,7 @@ Shared layout, naming, frontmatter, and tiers for all `building-product-specific
 | **Product** | `prd.md` | `trd.md`, `user-story.md`, `ui-specs.md` |
 | **Feature** | `frd.md` | `trd.md`, `user-story.md`, `ui-specs.md` |
 
-One file per doc type per scope. Platform differences (web, mobile, API) live as sections inside that file when they matter — not as separate `*-<app>.md` files.
+One file per doc type per scope. Platform differences (web, mobile, API) live as sections inside that file — not as separate `*-<app>.md` files.
 
 ### Author signature
 
@@ -48,13 +48,12 @@ Templates: [`../assets/`](../assets/), including [`../assets/index.md`](../asset
 
 ### Resolve docs root
 
-1. Search per **Finding docs root** below.
+1. Search per **Finding docs root**.
 2. **Decide location:**
-   - **One match** → use that folder; no need to ask.
-   - **Multiple matches** → ask the user which root to use (list full paths to each `index.md`).
-   - **No match** → **ask the user where to create** the specs folder. Do not assume a default path. Then follow **Initialize docs root**.
-
-Do not write spec files outside the resolved root. Do not treat a folder as the docs root unless it contains a valid `index.md` per **Finding docs root**.
+   - **One match** → use that folder.
+   - **Multiple matches** → ask which root (list full paths to each `index.md`).
+   - **No match** → ask where to create the specs folder (no default path), then **Initialize docs root**.
+3. Write specs only under the resolved root.
 
 ### Finding docs root
 
@@ -66,23 +65,21 @@ Search the repository for `index.md` files whose YAML frontmatter contains **all
 | `author` | `7f3a9c2e-1b4d-5e8f-a6c3-2d9e8f1b4c5a` (see **Author signature**) |
 | `generated_by` | `building-product-specifications` **or** legacy `managing-product-specifications` |
 
-The docs root is the parent directory of each matching `index.md` (e.g. `docs/index.md` → root is `docs/`).
-
-After resolving the root, list and read spec files only under that directory.
+The docs root is the parent directory of each matching `index.md` (e.g. `docs/index.md` → `docs/`). After resolving, list and read spec files only under that directory.
 
 ### Initialize docs root
 
 When **no** valid `index.md` exists:
 
-1. **Ask the user** for the target folder path (relative to repository root, e.g. `docs/`, `product-docs/`).
-2. **Verify the folder is empty:**
+1. **Ask** for the target folder path (relative to repository root, e.g. `docs/`, `product-docs/`).
+2. **Verify empty:**
    - Path does not exist → OK; create the directory.
-   - Path exists and contains **no files and no subdirectories** → OK.
-   - Path exists and is **not empty** → stop. Tell the user the folder must be empty and ask for another path.
-3. Write `<docs-root>/index.md` from [`../assets/index.md`](../assets/index.md) with the **Author signature** in `author`. This is the first file the skill creates in a new root.
+   - Path exists with no files and no subdirectories → OK.
+   - Path exists and is not empty → stop; ask for another path.
+3. Write `<docs-root>/index.md` from [`../assets/index.md`](../assets/index.md) with the **Author signature** in `author`.
 4. Proceed with the requested spec file(s) under that root.
 
-Only this skill may create or replace `index.md`. If the user points at a non-empty folder without a valid `index.md`, do not write specs there.
+Only this skill may create or replace `index.md`.
 
 ### Feature slug
 
@@ -118,7 +115,7 @@ Every create recipe handles both intents:
 
 Ask once before overwrite when the user said "create" and a file already exists with conflicting content the amend would replace wholesale.
 
-### Upstream reading (do not duplicate)
+### Upstream reading
 
 | Doc | Read before drafting |
 | --- | --- |
@@ -127,7 +124,7 @@ Ask once before overwrite when the user said "create" and a file already exists 
 | Product `trd.md` / `user-story.md` / `ui-specs.md` | `prd.md` |
 | Feature `trd.md` / `user-story.md` / `ui-specs.md` | `frd.md`; product companion of the same type when present |
 
-Missing upstream: ask once whether to proceed with TBD sections or create upstream first. Do not invent product facts unsupported by inputs.
+Missing upstream: ask once whether to proceed with TBD sections or create upstream first. Facts only from user input and upstream docs.
 
 ### Frontmatter (all generated specs)
 
@@ -151,15 +148,18 @@ Missing upstream: ask once whether to proceed with TBD sections or create upstre
 | **standard** | Default | Full template sections |
 | **comprehensive** | Enterprise, multi-team, user says "full spec" | Standard + appendices, extra diagrams, glossary |
 
-Infer tier from user phrasing; if unclear, default to **standard**.
+Infer tier from user phrasing; if unclear, default to **standard**. On amend, keep the existing tier unless the user asks to change depth.
 
 ### Platform differences
 
-When web, mobile, or API diverge, add a short section inside the same file (e.g. `## Web`, `## Mobile`). Omit sections that do not apply. Prefer one coherent doc over parallel files.
+When web, mobile, or API diverge, add a short section inside the same file (e.g. `## Web`, `## Mobile`). Omit sections that do not apply.
 
-### FRD hub (`related` block)
+### Hub sync
 
-`frd.md` is the feature index. When any sibling spec is created or amended, sync `related` in frontmatter and the **Related documents** body section.
+| When | Sync |
+| --- | --- |
+| Feature companion created/amended and `frd.md` exists | Update `related` in FRD frontmatter and **Related documents** body |
+| FRD created/amended and `prd.md` exists | Update PRD **Features** table row linking to this FRD |
 
 ```yaml
 related:
@@ -168,11 +168,7 @@ related:
   trd: trd.md
 ```
 
-Omit keys for files that do not exist yet; add them when those files are created.
-
-### PRD feature index
-
-`prd.md` lists features with links to each `features/<slug>/frd.md`. When creating or amending an FRD, sync the PRD feature index section.
+Omit keys for files that do not exist yet; add them when those files are created. If the user did not ask to update the PRD, note the suggested PRD edit in the confirmation message.
 
 ### Spec changelog
 
@@ -188,7 +184,7 @@ Every amend bumps `spec_revision` and appends a row to **Spec changelog** (add s
 
 ### No auto-spawn
 
-Creating or amending one spec writes **only** that file (plus required hub syncs: FRD `related`, PRD feature index). Suggest next docs in the confirmation message; do not create sibling specs unless the user explicitly requests them.
+Creating or amending one spec writes **only** that file (plus required hub syncs). Suggest next docs in the confirmation; create siblings only when the user requests them.
 
 ### Separate repositories
 
@@ -196,6 +192,7 @@ Same layout per repo. Cross-repo links use full URLs or paths the user provides 
 
 ### Diagrams
 
-Use **Mermaid** in TRD files for architecture, sequence, and data-flow diagrams. Prefer `flowchart`, `sequenceDiagram`, and `C4Context` where appropriate.
-
-Use **Mermaid `stateDiagram-v2`** in feature `ui-specs.md` for complex screen or flow state machines. Prefer transition tables alone when the flow is linear and short.
+| Doc | Format |
+| --- | --- |
+| TRD | Mermaid `flowchart`, `sequenceDiagram`, `C4Context` for architecture and flows |
+| Feature `ui-specs.md` | Mermaid `stateDiagram-v2` for multi-branch or multi-screen flows; transition tables alone when the flow is linear and short |
