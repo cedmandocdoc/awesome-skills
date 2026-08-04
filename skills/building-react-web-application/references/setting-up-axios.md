@@ -2,15 +2,9 @@
 
 ## Overview
 
-Axios for the browser via a small client factory and env-based base URL and options—one place to grow auth, timeouts, and interceptors.
+**Execution mode.** Sets up Axios with a small client factory and env-based configuration — one place to grow auth, timeouts, and interceptors.
 
 ## Guidelines
-
-### Install Axios
-
-```bash
-node ../scripts/install-packages.cjs axios
-```
 
 ### Create a client
 
@@ -37,13 +31,12 @@ export async function responseData<T>(
 }
 ```
 
-### Add environment variables
+### Environment variables
 
-- Use **`VITE_`** for public API base URLs and similar client config only.
-- Keep secrets out of `VITE_*`; they ship in the client bundle—use server-side config, auth, or proxy patterns instead.
+Read base URL and client config through a parsed `env` module per [managing-environment.md](./managing-environment.md). Export the shared `client` instance from `client.ts` using that parsed env.
+
+## Setup
 
 ```bash
-VITE_API_URL=http://localhost:3000
+node ../scripts/install-packages.cjs axios
 ```
-
-Read values through a parsed `env` module per [managing-environment.md](./managing-environment.md). Export the shared `client` instance from `client.ts` using that parsed env (see [managing-environment.md](./managing-environment.md#wire-api-client-to-parsed-env)).

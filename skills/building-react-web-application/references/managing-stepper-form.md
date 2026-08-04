@@ -2,13 +2,12 @@
 
 ## Overview
 
-Use this guide to build **multi-step forms** with **Stepperize + `useAppForm` + Zod**. Define per-step schemas on the step objects, read the current step schema from `stepper.state.current.data`, and wire it into form validators so each step validates only its own fields. Compose step UI with **`form.AppField`** and pre-bound **`field.*`** components from `@/ui/Form`.
+**Execution mode.** Builds **multi-step forms** with **Stepperize + `useAppForm` + Zod**. Per-step schemas on step objects drive validation; the form persists values across steps. Field values stay in TanStack Form — do not mirror form fields in Zustand.
 
 ## Prerequisites
 
-- [Stepperize — My first stepper](https://stepperize.vercel.app/docs/react/my-first-stepper)
-- [Stepperize — Scoped](https://stepperize.vercel.app/docs/react/api-references/scoped)
-- [Stepperize — Hook](https://stepperize.vercel.app/docs/react/api-references/hook)
+- [managing-stepper-hook.md](./managing-stepper-hook.md) — hook/provider pattern, `defineStepper`, exports
+- [creating-form-component.md](./creating-form-component.md) — pre-bound `*Field` components, `useAppForm`
 - [Stepperize — Schema Validation](https://stepperize.vercel.app/docs/react/api-references/schema-validation)
 
 ## Guidelines
@@ -16,27 +15,21 @@ Use this guide to build **multi-step forms** with **Stepperize + `useAppForm` + 
 ### Schema strategy
 
 - Define a Zod schema for each form step.
-- Attach each schema directly on the corresponding step object (for example `schema: PersonalSchema`).
+- Attach each schema on the corresponding step object (e.g. `schema: PersonalSchema`).
 - Read the active schema from `stepper.state.current.data.schema`.
-- Fallback to `z.object({})` when a step has no schema (for example confirmation/done steps).
-
-### Hook and provider convention
-
-- Keep step definitions in a dedicated hook file (`use<Feature>Stepper.ts`).
-- Export both:
-  - `use<Feature>Stepper`
-  - `<Feature>StepperScoped`
-- Use `<Feature>StepperScoped>` when splitting content and navigation into separate descendants.
+- Fall back to `z.object({})` for steps without a schema (e.g. confirmation).
 
 ### Form flow
 
-- Build one form instance with **`useAppForm`** from `@/ui/Form` (see [creating-form-component.md](./creating-form-component.md)) and persist values across steps.
-- Use `validators.onChange` (or the chosen validator timing) with the **current step schema**.
+- Build one form instance with `useAppForm` from `@/ui/Form` and persist values across steps.
+- Use `validators.onChange` (or chosen timing) with the current step schema.
 - In `onSubmit`, call `stepper.navigation.next()` when not on the last step.
-- Render per-step fields with `stepper.flow.switch(...)` and compose inputs via **`form.AppField`** + pre-bound **`field.*`** components.
-- Use `stepper.flow.is("done")` (or final step ID) for completion state.
+- Render per-step fields with `stepper.flow.switch(...)` and compose via `form.AppField` + pre-bound `field.*` components.
+- Use `stepper.flow.is("done")` for completion state.
 
-### Example
+## Examples
+
+### Multi-step form
 
 ```tsx
 import { useAppForm } from "@/ui/Form";
@@ -137,14 +130,12 @@ export function CheckoutStepForm() {
 
 ## Setup
 
-Install dependencies in the app project:
-
 ```bash
 node ../scripts/install-packages.cjs @stepperize/react @tanstack/react-form zod
 ```
 
 ## Related
 
-- [creating-form-component.md](./creating-form-component.md) — pre-bound TanStack Form composition in `src/ui/Form/`
-- [managing-stepper-hook.md](./managing-stepper-hook.md) — base hook/provider pattern for Stepperize
-- [managing-state.md](./managing-state.md) — decide local/store/server responsibilities around forms
+- [creating-form-component.md](./creating-form-component.md) — pre-bound TanStack Form composition
+- [managing-stepper-hook.md](./managing-stepper-hook.md) — base hook/provider pattern
+- [managing-state.md](./managing-state.md) — state tool responsibilities around forms

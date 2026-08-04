@@ -2,7 +2,7 @@
 
 ## Overview
 
-Use this guide when a *feature*, *API backend folder*, or other module reads configuration from the environment. Each such module keeps a dedicated `env.ts` that validates every variable that module needs with Zod, exports `parseSchema`, and exports the parsed values (for example `env`). That file is the only place that defines and validates env for the module; the parsed export is what the rest of the module uses at runtime.
+**Execution mode.** Validates environment variables per module with Zod. Each module that reads configuration keeps a dedicated `env.ts` that defines a Zod schema, parses `import.meta.env`, and exports the typed result.
 
 ## Prerequisites
 
@@ -12,28 +12,28 @@ Use this guide when a *feature*, *API backend folder*, or other module reads con
 
 ### Structure
 
-- Add `env.ts` at the boundary of the unit that owns the configuration:
-  - `src/features/<feature-name>/env.ts` when only that feature reads those variables.
-  - `src/api/<backend-name>/env.ts` when the API client layer for that backend reads them.
-  - Another folder may use the same pattern when a cohesive module has its own env surface.
-- List every key that module reads from **`import.meta.env`** in that single `env.ts`; other files in the same module import the parsed `env` (or equivalent) only.
+- Place `env.ts` at the boundary of the owning unit:
+  - `src/features/<feature-name>/env.ts` — feature-scoped variables.
+  - `src/api/<backend-name>/env.ts` — API-client variables.
+  - Other cohesive modules follow the same pattern.
+- List every key the module reads from `import.meta.env` in that single `env.ts`; other files import the parsed `env` only.
 
 ### Validation rules
 
-- Define one Zod object schema that describes all required (and optional) variables for the module.
+- Define one Zod object schema for all required (and optional) variables the module uses.
 - Parse once when the module loads. Export:
-  - `parseSchema`: the Zod object schema for this module (tests, composition, or reuse).
-  - The parsed, typed result (convention: `env` or a module-specific name such as `appApiEnv`). **The parsed export is the source of truth** for runtime values elsewhere in the module.
-- Prefer `.safeParse` at the app root if the app should show a controlled startup error; inside leaf modules, failing fast with `.parse` is acceptable when misconfiguration should crash during development or CI.
+  - `parseSchema` — the Zod object schema (for tests, composition, or reuse).
+  - The parsed result (convention: `env` or a module-specific name such as `appApiEnv`). The parsed export is the source of truth for runtime values.
+- Prefer `.safeParse` at the app root for controlled startup errors; `.parse` is acceptable in leaf modules where misconfiguration should crash during development or CI.
 
 ### Vite and public variables
 
-- Client-visible values must be defined in `.env` with the **`VITE_`** prefix so Vite exposes them on `import.meta.env` (see [Vite — Env variables](https://vitejs.dev/guide/env-and-mode.html)).
+- Client-visible values require the **`VITE_`** prefix in `.env` so Vite exposes them on `import.meta.env` (see [Vite — Env variables](https://vitejs.dev/guide/env-and-mode.html)).
 - `VITE_*` values ship in the client bundle; store secrets in server-side config, auth, or proxy patterns instead.
 
 ### TypeScript
 
-- Reference types for `import.meta.env` via Vite’s client types (e.g. `/// <reference types="vite/client" />` in `src/vite-env.d.ts` or equivalent).
+- Reference types for `import.meta.env` via Vite's client types (e.g. `/// <reference types="vite/client" />` in `src/vite-env.d.ts`).
 
 ## Setup
 

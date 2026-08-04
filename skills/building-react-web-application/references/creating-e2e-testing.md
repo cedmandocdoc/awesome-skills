@@ -2,37 +2,28 @@
 
 ## Overview
 
-Use this guide to test complete user journeys and page interactions with Playwright. Use the Page Object Model for maintainable test code focused on critical user workflows.
+Tests complete user journeys and page interactions with Playwright using the Page Object Model.
 
 ## Guidelines
 
 ### Core principles
 
-1. **Test complete journeys** — Focus on full page interactions and user flows.
-2. **Use Page Object Model** — Encapsulate page interactions in reusable objects.
-3. **Organize by structure** — Maintain clear directories for scalability.
-4. **Use TestId locators** — Apply `data-testid` with namespace conventions.
-5. **Configure browser projects** — Set up different viewports in config, not mid-test.
+1. **Test complete journeys** — full page interactions and user flows.
+2. **Use Page Object Model** — encapsulate page interactions in reusable objects.
+3. **Organize by structure** — keep specs, page objects, fixtures, and utils under `tests/`.
+4. **Use TestId locators** — `data-testid` with namespace conventions.
+5. **Configure browser projects** — set up viewports in config, not mid-test.
 
-### When to create E2E tests
-
-Choose the test type based on what you are protecting.
-
-**Single page test** — Use for mostly static marketing or informational pages (for example home, about us, contact us). Assert that key content, layout, and interactive elements render correctly on one route. These are visual and content smoke tests; they do not cross routes.
-
-**Flow page test** — Prefer this when testing user behavior or a feature end to end (for example logging in, booking, checking out). The test navigates across pages and verifies the full workflow. Flow tests are the most valuable E2E coverage because they catch routing, state, and integration issues that single-page tests miss.
+### Test types
 
 | Test type | Best for | Examples |
 | --- | --- | --- |
 | Single page | One-route content and layout | Home hero, about page copy, contact form visible |
 | Flow page | Multi-step user behavior | Login → dashboard, browse → book → confirm |
 
-**Use E2E for:**
+**Single page test** — asserts that key content, layout, and interactive elements render correctly on one route. Does not cross routes.
 
-- Complete user journeys (login → navigate → action)
-- Cross-page navigation and routing
-- Critical business workflows
-- Marketing page content and layout smoke checks (single page tests)
+**Flow page test** — navigates across pages and verifies the full workflow. Prefer flow tests for multi-step user behavior.
 
 **Do not use E2E for:**
 
@@ -76,19 +67,7 @@ data-testid="workshops:list:create-button"
 data-testid="nav:header:logo"
 ```
 
-Add `data-testid` in feature or route components when building UI that E2E tests must target. Prefer test IDs over CSS selectors or brittle text matches.
-
-### Review checklist
-
-- Focus on pages and user journeys only
-- Choose single page vs flow test type deliberately
-- Use Page Object Model for all page interactions
-- Organize tests in the proper directory structure
-- Follow file naming conventions
-- Use fixtures for test data management
-- Implement proper wait strategies
-- Use `data-testid` locators with namespace conventions
-- Test complete user workflows for flow tests
+Add `data-testid` in feature or route components when building UI that E2E tests target. Prefer test IDs over CSS selectors or brittle text matches.
 
 ## Examples
 
@@ -161,47 +140,4 @@ test.describe('User Login Journey', () => {
     await expect(page).toHaveURL('/login');
   });
 });
-```
-
-### Test fixtures
-
-```typescript
-// tests/fixtures/auth.ts
-export const authFixture = {
-  validUser: {
-    email: 'test@example.com',
-    password: 'password123',
-  },
-  invalidUser: {
-    email: 'invalid@example.com',
-    password: 'wrongpassword',
-  },
-  adminUser: {
-    email: 'admin@example.com',
-    password: 'admin123',
-  },
-};
-```
-
-### Test utilities
-
-```typescript
-// tests/utils/helpers.ts
-import type { Page } from '@playwright/test';
-
-export class TestHelpers {
-  static async clearStorage(page: Page): Promise<void> {
-    await page.evaluate(() => localStorage.clear());
-  }
-
-  static async mockApi(page: Page, url: string, response: object): Promise<void> {
-    await page.route(url, (route) =>
-      route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify(response),
-      }),
-    );
-  }
-}
 ```

@@ -2,7 +2,7 @@
 
 ## Overview
 
-Use [date-fns](https://github.com/date-fns/date-fns) for parsing, formatting, comparing, and manipulating dates. Keep API and storage boundaries on ISO 8601 strings; convert to `Date` (or `TZDate` when time zones matter) at feature and UI boundaries through shared helpers in `src/libs/date-utils/`.
+Handles date parsing, formatting, comparison, and manipulation with [date-fns](https://github.com/date-fns/date-fns). Keeps API and storage boundaries on ISO 8601 strings; converts to `Date` (or `TZDate` for time zones) at feature and UI boundaries through shared helpers in `src/libs/date-utils/`.
 
 ## Prerequisites
 
@@ -12,7 +12,7 @@ Use [date-fns](https://github.com/date-fns/date-fns) for parsing, formatting, co
 
 ### Library choice
 
-- Use **date-fns** for all date logic. Import only the functions each module needs so bundlers can tree-shake.
+- Use **date-fns** for all date logic. Import only the functions each module needs for tree-shaking.
 - Use native `Date` as the in-memory type.
 - When a dependency returns non-ISO strings, wrap parsing in `date-utils`.
 
@@ -20,50 +20,33 @@ Use [date-fns](https://github.com/date-fns/date-fns) for parsing, formatting, co
 
 - Put shared date helpers in `src/libs/date-utils/` (file or folder with `index.ts` per [managing-project-structure.md](./managing-project-structure.md)).
 - Import from app code as `@/libs/date-utils`.
-- Keep format tokens, locale defaults, and parse rules in `date-utils`; features call named helpers from `date-utils`.
+- Keep format tokens, locale defaults, and parse rules in `date-utils`; features call named helpers.
 - Feature components may call date-fns directly for one-off cases; promote repeated patterns into `date-utils`.
 
 ### API and storage boundaries
 
 - Transmit and persist **ISO 8601 strings** (`2024-03-15T14:30:00.000Z` or date-only `2024-03-15` when the API contract is calendar dates).
 - Parse API strings with `parseISO` and validate with `isValid` before use.
-- Serialize outbound payloads with `toISOString()` on a validated `Date`, or a project helper that matches the API contract.
+- Serialize outbound payloads with `toISOString()` on a validated `Date`, or a project helper matching the API contract.
 
 ### Formatting and locales
 
-- Centralize display format strings in `date-utils` (for example `DISPLAY_DATE`, `DISPLAY_DATETIME`).
-- Pass an explicit locale to `format`, `formatDistance`, and `formatRelative` when the app is not English-only:
+- Centralize display format strings in `date-utils` (e.g. `DISPLAY_DATE`, `DISPLAY_DATETIME`).
+- Pass an explicit locale from `date-fns/locale` to `format`, `formatDistance`, and `formatRelative` when the app is not English-only; include only locales the app ships.
 
-```ts
-import { format } from "date-fns";
-import { enUS } from "date-fns/locale";
+### Comparisons and calendar math
 
-format(date, "PPP", { locale: enUS });
-```
-
-- Import locales from `date-fns/locale`; include only locales the app ships.
-
-### Comparisons and intervals
-
-- Use `isAfter`, `isBefore`, `isEqual`, `isWithinInterval`, and `compareAsc` for ordering and range checks.
-- Use `startOfDay`, `endOfDay`, `addDays`, `subDays`, `differenceInDays`, and related helpers for calendar math.
+Use date-fns helpers for ordering, range checks, and calendar arithmetic.
 
 ### Time zones
 
 - For **UTC-only** or **device-local** display, native `Date` plus date-fns is enough.
-- When a specific IANA time zone matters (scheduling, reporting, “office hours”), use **date-fns v4** time zone support via `@date-fns/tz` and `TZDate`.
-- Store and exchange instants as UTC ISO strings; convert to the user or resource time zone only for display and input.
+- When a specific IANA time zone matters (scheduling, reporting), use `@date-fns/tz` and `TZDate`.
+- Store and exchange instants as UTC ISO strings; convert to the target time zone only for display and input.
 
 ### Forms and UI
 
-- Keep form state as `Date | null` or an ISO string — pick one per form and document it in the feature; convert at submit with `date-utils` helpers.
-- Date pickers supply `Date` values; wire them through the same parse/format helpers as API data.
-- For relative labels (“3 days ago”), use `formatDistanceToNow` with `{ addSuffix: true }`.
-
-### Testing
-
-- Use fixed ISO strings and `parseISO` in tests when asserting formatted output.
-- Construct `TZDate` with an explicit zone when testing time zones.
+Keep form state as `Date | null` or an ISO string — pick one per form; convert at submit with `date-utils` helpers. Date pickers supply `Date` values; wire them through the same parse/format helpers as API data.
 
 ## Setup
 
@@ -81,21 +64,7 @@ node ../scripts/install-packages.cjs @date-fns/tz
 
 ## Examples
 
-### `src/libs/date-utils/index.ts`
-
-```ts
-export {
-  DISPLAY_DATE,
-  DISPLAY_DATETIME,
-  formatDisplayDate,
-  formatDisplayDateTime,
-  formatRelativeToNow,
-  parseApiDateTime,
-  toApiDateTimeString,
-} from "./format";
-```
-
-### Parse and format API values
+### Parse and format helpers (`src/libs/date-utils/format.ts`)
 
 ```ts
 import { format, formatDistanceToNow, isValid, parseISO } from "date-fns";
@@ -114,40 +83,8 @@ export function formatDisplayDate(date: Date | null | undefined): string {
   return format(date, DISPLAY_DATE);
 }
 
-export function formatDisplayDateTime(date: Date | null | undefined): string {
-  if (!date) return "";
-  return format(date, DISPLAY_DATETIME);
-}
-
 export function toApiDateTimeString(date: Date): string {
   return date.toISOString();
-}
-
-export function formatRelativeToNow(iso: string): string {
-  const date = parseISO(iso);
-  if (!isValid(date)) return "";
-  return formatDistanceToNow(date, { addSuffix: true });
-}
-```
-
-### Compare and sort
-
-```ts
-import { compareAsc, parseISO } from "date-fns";
-
-const items = [...rows].sort((a, b) =>
-  compareAsc(parseISO(a.startsAt), parseISO(b.startsAt)),
-);
-```
-
-### Relative time in a component
-
-```tsx
-import { formatRelativeToNow } from "@/libs/date-utils";
-
-export function UpdatedAt({ iso }: { iso: string }) {
-  const label = formatRelativeToNow(iso);
-  return <time dateTime={iso}>{label}</time>;
 }
 ```
 
@@ -157,11 +94,8 @@ export function UpdatedAt({ iso }: { iso: string }) {
 import { format } from "date-fns";
 import { TZDate } from "@date-fns/tz";
 
-const DISPLAY_IN_TZ = "MMM d, yyyy h:mm a zzz";
-
 export function formatInTimeZone(iso: string, timeZone: string): string {
-  const date = new TZDate(iso, timeZone);
-  return format(date, DISPLAY_IN_TZ);
+  return format(new TZDate(iso, timeZone), "MMM d, yyyy h:mm a zzz");
 }
 ```
 

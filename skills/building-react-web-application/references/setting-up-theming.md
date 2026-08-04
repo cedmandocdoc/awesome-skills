@@ -2,9 +2,7 @@
 
 ## Overview
 
-Shared design tokens and light/dark variables as the single source for Tailwind, registry UI, and the rest of the app. Use the **same two-file pattern as the React Native skill**: project-root **`global.css`** (Tailwind entry + upstream imports) and **`src/theme.css`** (token wiring). Pull **only** the [shadcn manual **Configure styles**](https://ui.shadcn.com/docs/installation/manual.md) *content* into `theme.css`—split so Tailwind’s `@import "tailwindcss"` lives in `global.css` only.
-
-**Class merging and primitives:** use **`cva`** and **`cx`** from **`class-variance-authority`**, with shared components under **`src/ui/`** (see [managing-project-structure.md](./managing-project-structure.md)). **Add registry output** with [`add-registry-component.cjs`](../scripts/add-registry-component.cjs); it uses [`run-package.cjs`](../scripts/run-package.cjs) for `shadcn view` and aligns paths and **`cn` → `cx`** for this layout.
+**Execution mode.** Shared design tokens and light/dark variables as the single source for Tailwind, registry UI, and the app. Two files: project-root **`global.css`** (Tailwind entry + upstream imports) and **`src/theme.css`** (token wiring). Pull **only** the [shadcn manual **Configure styles**](https://ui.shadcn.com/docs/installation/manual.md) *content* into `theme.css`—keep `@import "tailwindcss"` in `global.css` only.
 
 ## Prerequisites
 
@@ -22,17 +20,17 @@ node ../scripts/install-packages.cjs tailwindcss @tailwindcss/vite
 
 ### 2. Install registry-related dependencies
 
-From [Manual installation — Add dependencies](https://ui.shadcn.com/docs/installation/manual.md), install the packages the doc lists for styling and components (for example `class-variance-authority`, `lucide-react`, `tw-animate-css`, and any `shadcn` package your tooling expects).
+From [Manual installation — Add dependencies](https://ui.shadcn.com/docs/installation/manual.md), install the packages the doc lists (for example `class-variance-authority`, `lucide-react`, `tw-animate-css`).
 
 ```bash
 node ../scripts/install-packages.cjs class-variance-authority lucide-react tw-animate-css
 ```
 
-Merge `className` strings with **`import { cx } from "class-variance-authority"`** (CVA re-exports `clsx` as **`cx`**); omit **`tailwind-merge`** and the manual’s standalone **`cn`** utility file for this stack.
+Merge `className` strings with **`import { cx } from "class-variance-authority"`**. Omit **`tailwind-merge`** and a standalone **`cn`** utility file. Shared primitives live under **`src/ui/`**; add registry output with [`add-registry-component.cjs`](../scripts/add-registry-component.cjs) (rewrites paths and **`cn` → `cx`**).
 
 ### 3. Create `global.css` (project root)
 
-Keep **`global.css` at the project root** as the only CSS entry imported from `main.tsx` (mirrors keeping `global.css` at the project root in the React Native skill). It loads Tailwind and shadcn’s Tailwind layer, then pulls in tokens:
+Keep **`global.css` at the project root** as the only CSS entry imported from `main.tsx`:
 
 ```css
 @import "tailwindcss";
@@ -42,19 +40,19 @@ Keep **`global.css` at the project root** as the only CSS entry imported from `m
 @import "./src/theme.css";
 ```
 
-Import it once from the app entry, for example:
+Import once from the app entry:
 
 ```ts
 import "../global.css";
 ```
 
-(Adjust the relative path if your entry file lives somewhere other than `src/main.tsx`.)
+(Adjust the relative path if the entry is not `src/main.tsx`.)
 
 ### 4. Create `src/theme.css`
 
-Keep **design tokens and theme wiring in `src/theme.css` only**, like [setting-up-theming.md](../../building-react-native-application/references/setting-up-theming.md) does for the Native app.
+Keep **design tokens and theme wiring in `src/theme.css` only**.
 
-Open [Manual installation — Configure styles](https://ui.shadcn.com/docs/installation/manual.md) and copy the **Configure styles** block into **`src/theme.css`**. **Leave out** the lines that **`global.css` already imports** (duplicate imports break the split):
+Open [Manual installation — Configure styles](https://ui.shadcn.com/docs/installation/manual.md) and copy the **Configure styles** block into **`src/theme.css`**. Omit lines that **`global.css` already imports**:
 
 - `@import "tailwindcss";`
 - `@import "tw-animate-css";`
@@ -68,16 +66,17 @@ Keep everything else from that section in order—for example:
 - `.dark { ... }`
 - `@layer base { ... }`
 
-**`global.css`** stays the Tailwind + shadcn import entry; **`src/theme.css`** holds semantic variables and `@theme` mapping (two files replace pasting the manual’s styles into a single `globals.css`).
-
-**Optional (cross-platform parity):** If you want CSS variables to match the React Native skill’s HSL-style tokens exactly, you can instead define variables in `@layer base` in `src/theme.css` the same way as the Native [setting-up-theming.md](../../building-react-native-application/references/setting-up-theming.md) snippet, then map them to Tailwind utilities via `@theme inline` as needed. Prefer one approach per app and stay consistent.
-
 ### Dark mode
 
-Use the **class-based** pattern from the manual (e.g. `.dark` on `<html>`). Toggle it from the root layout or a small provider when you add a theme switcher.
+Use the **class-based** pattern from the manual (e.g. `.dark` on `<html>`). Toggle from the root layout or a small provider when adding a theme switcher.
 
-### Next
+## Related
 
-- For how semantic token names map to usage in components, see [setting-up-tailwind-theme.md](./setting-up-tailwind-theme.md).
-- For day-to-day utility rules, see [styling.md](./managing-styling.md).
-- For vendoring registry files into `src/ui/` with `cx` and path fixes, see [creating-ui-component.md](./creating-ui-component.md).
+- [setting-up-tailwind-theme.md](./setting-up-tailwind-theme.md) — semantic token usage in components
+- [managing-styling.md](./managing-styling.md) — day-to-day utility rules
+- [creating-ui-component.md](./creating-ui-component.md) — vendoring registry files into `src/ui/`
+
+## References
+
+- [shadcn — Manual installation](https://ui.shadcn.com/docs/installation/manual.md)
+- [Tailwind CSS — Using Vite](https://tailwindcss.com/docs/installation/using-vite)

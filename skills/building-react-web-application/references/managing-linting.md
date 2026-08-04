@@ -2,38 +2,33 @@
 
 ## Overview
 
-Use this guide to set up ESLint and Prettier for this Vite + React TypeScript stack with flat config.
+**Execution mode.** Configures ESLint and Prettier for the Vite + React TypeScript stack with flat config.
 
 ## Prerequisites
 
-- [creating-route-component.md](./creating-route-component.md) for where `routeTree.gen.ts` comes from
-- [TanStack Router — Installation with Vite](https://tanstack.com/router/latest/docs/installation/with-vite.md) for official ignore patterns and plugin setup
+- [creating-route-component.md](./creating-route-component.md) — where `routeTree.gen.ts` comes from
+- [TanStack Router — Installation with Vite](https://tanstack.com/router/latest/docs/installation/with-vite.md) — official ignore patterns and plugin setup
 
 ## Guidelines
 
 ### Tool ownership
 
-- Let Prettier own formatting.
-- Let ESLint own correctness, React rules, and TypeScript rules.
+- Prettier owns formatting.
+- ESLint owns correctness, React rules, and TypeScript rules.
 
 ### File-type scoped linting
 
-- Use one config block for TypeScript source files (`**/*.{ts,tsx}`) with `@typescript-eslint/parser`.
-- Use a separate block for JavaScript and config files (`**/*.{js,cjs,mjs,jsx}`) with lighter rules.
+- One config block for TypeScript source files (`**/*.{ts,tsx}`) with `@typescript-eslint/parser`.
+- A separate block for JavaScript and config files (`**/*.{js,cjs,mjs,jsx}`) with lighter rules.
 - Keep React Hooks and strict TypeScript rules in TypeScript app code.
 
-### Generated route tree
+### Ignoring generated files
 
-- `routeTree.gen.ts` (typical path: `src/routeTree.gen.ts`) is **generated** from `src/routes/`; edits belong in route modules, not this file.
-- **Lint / format ignore:** exclude it from ESLint and Prettier (or Biome) so generated code stays untouched. The TanStack doc links patterns for [Prettier ignore](https://prettier.io/docs/en/ignore.html#ignoring-files) and [ESLint ignore](https://eslint.org/docs/latest/use/configure/ignore#ignoring-files).
-- **VS Code:** optionally mark the file readonly and exclude from search/watch, as recommended in the installation doc, for quieter diffs after renames.
-
-### Usage
+`routeTree.gen.ts` (typical path: `src/routeTree.gen.ts`) is generated from `src/routes/`; edits belong in route modules (see [creating-route-component.md](./creating-route-component.md)). Exclude it from ESLint and Prettier so generated code stays untouched. Optionally mark it readonly in VS Code and exclude from search/watch for quieter diffs.
 
 ### CI and editors
 
-- Apply the same ignore patterns in CI as locally so `npm run lint` and Prettier skip the generated file.
-- After changing route files, regenerate (or let the dev server regenerate) and confirm the generated file stays ignored.
+- Apply the same ignore patterns in CI as locally so `npm run lint` and Prettier skip generated files.
 - Run `npm run lint` in CI without `--fix`.
 - Optionally run `prettier --check src/` in CI.
 
@@ -117,10 +112,6 @@ module.exports = defineConfig([
   },
 ]);
 ```
-
-### Ignore generated routes
-
-In `eslint.config` or `.eslintignore`, exclude `**/routeTree.gen.ts`. Add the same pattern to `.prettierignore`.
 
 ### Add package scripts
 

@@ -2,9 +2,9 @@
 
 ## Overview
 
-**Read-only.** Use this reference to map a UI request to candidate web registry components before validation and vendoring.
+**Read-only.** Map a UI request to candidate web registry components before validation and vendoring.
 
-Source registry folder: [shadcn-ui/ui base-luma](https://github.com/shadcn-ui/ui/tree/main/apps/v4/styles/base-luma/ui).
+Source registry: [shadcn-ui/ui base-luma](https://github.com/shadcn-ui/ui/tree/main/apps/v4/styles/base-luma/ui).
 
 ## Guidelines
 
@@ -12,8 +12,7 @@ Source registry folder: [shadcn-ui/ui base-luma](https://github.com/shadcn-ui/ui
 
 - Each `.tsx` filename in the source folder is a registry component candidate.
 - `slug` = filename without `.tsx`.
-- `description` summarizes the UI purpose for routing.
-- `labels` are retrieval tags for decision procedures (search by intent, behavior, layout, form, feedback, navigation).
+- `labels` are retrieval tags (intent, behavior, layout, form, feedback, navigation).
 
 ### Component lookup
 
@@ -85,6 +84,5 @@ Source registry folder: [shadcn-ui/ui base-luma](https://github.com/shadcn-ui/ui
 1. Normalize request intent (`date input`, `confirm delete`, `toast`, `sidebar`).
 2. Match by `labels` first, then by exact `slug`.
 3. Prefer exact semantic component (`calendar`, `alert-dialog`, `sonner`) before composition.
-4. For composite requests, pick a primary component then supporting pieces (example: date input -> `calendar` + `popover` + `button`).
+4. For composite requests, pick a primary component then supporting pieces (example: date input → `calendar` + `popover` + `button`).
 5. Validate each candidate with `shadcn view` before running add script.
-

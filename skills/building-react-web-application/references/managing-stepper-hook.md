@@ -2,9 +2,7 @@
 
 ## Overview
 
-Use this guide to standardize **Stepperize** base usage in React web features. Create one dedicated hook module per flow (for example `useBookingStepper.ts`) that exports the typed `useStepper` hook and `Scoped` provider from one `defineStepper` declaration.
-
-This keeps step definitions centralized, makes step IDs type-safe across the feature, and allows both local (hook-owned) and shared (provider-backed) stepper state patterns.
+**Execution mode.** Creates one dedicated hook module per stepper flow (e.g. `useBookingStepper.ts`) that exports the typed `useStepper` hook and `Scoped` provider from a single `defineStepper` declaration.
 
 ## Prerequisites
 
@@ -14,35 +12,34 @@ This keeps step definitions centralized, makes step IDs type-safe across the fea
 
 ## Guidelines
 
-### File placement and naming
+### Placement and exports
 
-- Create one hook file per workflow in `src/features/<feature>/hooks/`, named `use<Feature>Stepper.ts` (for example `useBookingStepper.ts`).
-- Define steps once with `defineStepper(...)` in that file.
+- One hook file per workflow in `src/features/<feature>/hooks/`, named `use<Feature>Stepper.ts`.
+- Define steps once with `defineStepper(...)`.
 - Export at minimum:
-  - `use<Feature>Stepper` (alias of Stepperize `useStepper`)
-  - `<Feature>StepperScoped` (alias of Stepperize `Scoped`)
+  - `use<Feature>Stepper` (alias of `useStepper`)
+  - `<Feature>StepperScoped` (alias of `Scoped`)
 
 ### Step shape
 
-- Each step must have a unique `id`.
-- Add display fields such as `title` or `description` for rendering labels and headings.
-- Keep business-specific step metadata on the step object so rendering and validation logic can read from `stepper.state.current.data`.
+- Each step has a unique `id`.
+- Add display fields (`title`, `description`) for rendering labels and headings.
+- Keep business-specific metadata on the step object so rendering and validation read from `stepper.state.current.data`.
 
-### State sharing rules
+### State sharing
 
-- Use `use<Feature>Stepper()` directly in a component for local stepper state (no provider required).
-- Use `<Feature>StepperScoped>` when multiple descendants must share the same stepper instance.
-- Do not mix different `defineStepper` instances for the same flow.
+- `use<Feature>Stepper()` directly → local stepper state (no provider).
+- `<Feature>StepperScoped>` → multiple descendants share the same instance.
 
-### Navigation and rendering
+### Navigation API
 
-- Prefer `stepper.flow.switch(...)` for multi-step rendering branches.
-- Use `stepper.flow.is(id)` for simple conditionals.
-- Use `stepper.navigation.next()`, `prev()`, `goTo(id)`, and `reset()` for transitions.
+- `stepper.flow.switch(...)` for multi-step rendering branches.
+- `stepper.flow.is(id)` for simple conditionals.
+- `stepper.navigation.next()`, `prev()`, `goTo(id)`, `reset()` for transitions.
 
-### Example
+## Examples
 
-### Feature hook: `useBookingStepper`
+### Feature hook
 
 ```ts
 import { defineStepper } from "@stepperize/react";
@@ -58,7 +55,7 @@ export const useBookingStepper = bookingStepper.useStepper;
 export const BookingStepperScoped = bookingStepper.Scoped;
 ```
 
-### Shared-state usage with `Scoped`
+### Shared state with `Scoped`
 
 ```tsx
 import { BookingStepperScoped, useBookingStepper } from "@/features/booking/hooks/useBookingStepper";
@@ -87,23 +84,17 @@ function BookingStepActions() {
   const stepper = useBookingStepper();
 
   return stepper.state.isLast ? (
-    <button type="button" onClick={() => stepper.navigation.reset()}>
-      Reset
-    </button>
+    <button type="button" onClick={() => stepper.navigation.reset()}>Reset</button>
   ) : (
     <>
-      <button type="button" onClick={() => stepper.navigation.prev()} disabled={stepper.state.isFirst}>
-        Back
-      </button>
-      <button type="button" onClick={() => stepper.navigation.next()}>
-        Next
-      </button>
+      <button type="button" onClick={() => stepper.navigation.prev()} disabled={stepper.state.isFirst}>Back</button>
+      <button type="button" onClick={() => stepper.navigation.next()}>Next</button>
     </>
   );
 }
 ```
 
-### Local-state usage without provider
+### Local state without provider
 
 ```tsx
 import { useBookingStepper } from "@/features/booking/hooks/useBookingStepper";
@@ -124,13 +115,11 @@ export function BookingMiniStepper() {
 
 ## Setup
 
-Install Stepperize in the app project:
-
 ```bash
 node ../scripts/install-packages.cjs @stepperize/react
 ```
 
 ## Related
 
-- [managing-state.md](./managing-state.md) — choose where wizard state should live
+- [managing-state.md](./managing-state.md) — where wizard state lives
 - [creating-feature.md](./creating-feature.md) — feature hook/file organization

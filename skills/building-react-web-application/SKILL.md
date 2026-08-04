@@ -26,16 +26,11 @@ Opinionated ecosystem for building Vite-based React SPAs with a consistent archi
 
 ## Agent workflow
 
-Follow this skill for Vite + React SPA work. Match **Entry points** and **Task types**; open every linked reference before coding.
-
-1. **Pick an entry** — use **Entry points** below.
-2. **Classify the task** — match every applicable row in **Task types** (many tasks span multiple rows).
-3. **Component work** — when the task involves any component, open [creating-component](./references/creating-component.md) and follow its decision tree.
-4. **Read before coding** — open every linked doc from matched task rows and from the decision tree.
+Follow this skill for Vite + React SPA work. Match **Entry points** and **Task types**; open every linked reference from matched rows and from the component decision tree before coding.
 
 ### Entry points
 
-Four ways into this skill. Use the first row that matches; combine rows when the task spans types (e.g. new route + form).
+Use the first row that matches; combine rows when the task spans types (e.g. new route + form).
 
 | Entry | When | Go to |
 | --- | --- | --- |
@@ -46,7 +41,7 @@ Four ways into this skill. Use the first row that matches; combine rows when the
 
 ### Task types
 
-Match every row that applies. Open every link in the **Docs** column from each matching row before coding.
+Match every row that applies. Open every link in the **Docs** column from each matching row.
 
 | Task type                 | Docs                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -58,7 +53,7 @@ Match every row that applies. Open every link in the **Docs** column from each m
 | API + data hooks          | [creating-api](./references/creating-api.md), [setting-up-axios](./references/setting-up-axios.md), [managing-api-error](./references/managing-api-error.md), [managing-state](./references/managing-state.md), [managing-date](./references/managing-date.md)                                                                                                                                                                                                                                                                                      |
 | Date / time               | [managing-date](./references/managing-date.md)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | Refactor / move component | [creating-component](./references/creating-component.md)                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| Styling / theme           | [managing-styling](./references/managing-styling.md), [managing-styling-preference](./references/managing-styling-preference.md), [setting-up-theming](./references/setting-up-theming.md), [setting-up-tailwind-theme](./references/setting-up-tailwind-theme.md), [overriding-classname](./references/overriding-classname.md), [Tailwind CSS — Using Vite](https://tailwindcss.com/docs/installation/using-vite)                                                                                                                     |
+| Styling / theme           | [managing-styling](./references/managing-styling.md), [setting-up-theming](./references/setting-up-theming.md), [setting-up-tailwind-theme](./references/setting-up-tailwind-theme.md), [overriding-classname](./references/overriding-classname.md), [Tailwind CSS — Using Vite](https://tailwindcss.com/docs/installation/using-vite)                                                                                                                     |
 | Fonts                     | [MDN — @font-face](https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face), [Google Fonts](https://fonts.google.com/), [setting-up-theming](./references/setting-up-theming.md), [setting-up-tailwind-theme](./references/setting-up-tailwind-theme.md)                                                                                                                                                                                                                                        |
 | Project bootstrap         | [managing-project-structure](./references/managing-project-structure.md), [managing-environment](./references/managing-environment.md), [managing-linting](./references/managing-linting.md), [managing-package-installs](./references/managing-package-installs.md), [Tailwind CSS — Using Vite](https://tailwindcss.com/docs/installation/using-vite), [TanStack Router — Installation with Vite](https://tanstack.com/router/latest/docs/installation/with-vite.md)                                                                                                                        |
 | Routing only              | [creating-route-component](./references/creating-route-component.md), [creating-navigation-component](./references/creating-navigation-component.md), [TanStack Router — Installation with Vite](https://tanstack.com/router/latest/docs/installation/with-vite.md), [TanStack Router — File-based routing](https://tanstack.com/router/latest/docs/routing/file-based-routing.md)                                                                                                                  |
@@ -67,12 +62,10 @@ Match every row that applies. Open every link in the **Docs** column from each m
 
 ## Reference index
 
-Catalog of every local reference. **Entry** marks hub docs. **Layer** groups docs by concern. Use **Task types** for curated bundles.
-
 | Reference | Entry | Layer | Purpose |
 | --- | --- | --- | --- |
 | [creating-api](./references/creating-api.md) | | API | HTTP modules under `src/api/` |
-| [creating-component](./references/creating-component.md) | Component | Component | Decision tree for any component work |
+| [creating-component](./references/creating-component.md) | Component | Component | Decision tree and shared rules for any component work |
 | [creating-e2e-testing](./references/creating-e2e-testing.md) | | Testing | Playwright E2E tests |
 | [creating-feature](./references/creating-feature.md) | | Feature | Feature module folders and barrels |
 | [creating-feature-component](./references/creating-feature-component.md) | | Component | Domain UI blocks in features |
@@ -92,8 +85,7 @@ Catalog of every local reference. **Entry** marks hub docs. **Layer** groups doc
 | [managing-state](./references/managing-state.md) | | State | TanStack Query hooks and Zustand stores |
 | [managing-stepper-form](./references/managing-stepper-form.md) | | Form | Multi-step form UI |
 | [managing-stepper-hook](./references/managing-stepper-hook.md) | | Form | Multi-step form state hook |
-| [managing-styling](./references/managing-styling.md) | | Styling | Styling conventions |
-| [managing-styling-preference](./references/managing-styling-preference.md) | | Styling | Styling preferences and defaults |
+| [managing-styling](./references/managing-styling.md) | | Styling | Styling conventions and token preference |
 | [managing-wrapper-components](./references/managing-wrapper-components.md) | | Component | Wrapper and composition patterns |
 | [overriding-classname](./references/overriding-classname.md) | | Styling | `className` override rules |
 | [setting-up-axios](./references/setting-up-axios.md) | | API | Axios client setup |

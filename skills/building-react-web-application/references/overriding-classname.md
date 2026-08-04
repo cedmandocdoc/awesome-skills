@@ -2,44 +2,35 @@
 
 ## Overview
 
-Use this guide when a consumer passes Tailwind utilities through a component `className` prop and those utilities overlap with classes the base component already applies.
+When a consumer passes Tailwind utilities through a `className` prop that overlap classes the base component already applies, mark every conflicting consumer utility with Tailwind’s important modifier (`!`). This stack uses **Tailwind CSS v4**: place `!` at the **end** of the class name (for example `text-lg!`, `sm:p-0!`).
 
-Mark every conflicting consumer utility with Tailwind's important modifier (`!`) so the override applies reliably. This stack uses **Tailwind CSS v4**: place `!` at the **end** of the class name (for example `text-lg!`, `sm:p-0!`).
+`cx` concatenates class strings and does not dedupe Tailwind utilities. Suffix `!` on conflicting consumer tokens so they win.
 
 ## Guidelines
 
 ### When to use `!`
 
-- Use this whenever a consumer's `className` includes utilities in the same Tailwind category as the base component (typography, spacing, color, layout, etc.).
-- Inspect the base component's default and variant classes to find overlaps; do not wait until a style fails to appear.
+- Use when a consumer’s `className` includes utilities in the same Tailwind category as the base (typography, spacing, color, layout, etc.).
+- Inspect the base component’s default and variant classes for category overlap before shipping overrides.
 - Two utilities conflict when they target the same category—for example `text-sm` vs `text-lg`, or `p-4` vs `p-2`.
 
 ### Which utilities get `!`
 
-- Add `!` at the **end** of **every** conflicting consumer utility—not the full `className` string, and not only the first conflict you notice.
+- Add `!` at the **end** of **every** conflicting consumer utility—not the full `className` string.
 - Leave non-conflicting utilities without `!`.
 
 ### Variants
 
-Classes like `sm:p-0` and `hover:bg-primary` stack one or more **variants** (responsive, state, `dark:`, etc.) before the utility. When a variant-prefixed utility conflicts with the base, still suffix `!` at the very end of that token:
+When a variant-prefixed utility conflicts, still suffix `!` at the very end of that token:
 
 - `sm:p-0!` — not `sm:!p-0`
 - `hover:bg-primary!` — not `hover:!bg-primary`
 - `md:hover:bg-primary!` when multiple variants apply
 
-### Component authors
+### Authors and consumers
 
-- Keep base classes minimal when a `className` override is part of the component API.
-- Prefer dedicated variants (`size`, `variant`, etc.) for standard visual options.
-
-### Consumers
-
-- Read the base component's default `className` and variant output before overriding.
-- Apply `!` at the end of each conflicting token (for example `text-lg!`, `p-2!`, `text-primary!`).
-
-### Why `!` is needed
-
-This stack merges classes with **`cx`** from `class-variance-authority`, which concatenates class strings but does **not** deduplicate Tailwind utilities (there is no `tailwind-merge`). When base and consumer classes target the same utility category, both remain in the DOM and CSS source order decides the winner—not the consumer's intent. The `!` modifier forces the consumer utility to win.
+- Keep base classes minimal when `className` override is part of the API; prefer dedicated variants (`size`, `variant`) for standard options.
+- Consumers: read the base default `className` and variant output before overriding; apply `!` at the end of each conflicting token.
 
 ## Examples
 
