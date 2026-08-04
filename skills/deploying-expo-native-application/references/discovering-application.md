@@ -6,6 +6,18 @@
 
 ## Guidelines
 
+### Discovery questions
+
+| Question | How to resolve | If unclear |
+| --- | --- | --- |
+| Which package is the native app? | `app.json` / `app.config.*`, `expo` dependency, `eas.json` | List candidates; ask user |
+| Monorepo working directory | Path to the package containing `app.json` and `eas.json` | Ask user |
+| Bundle ID / package name | `app.json` → `ios.bundleIdentifier`, `android.package` | Confirm with user before first store build |
+| Expo project linked? | `extra.eas.projectId` in app config | Run `eas init` from the app package if missing |
+| Build profiles needed | `eas.json` `build` section | Default: `development`, `preview`, `production` |
+| Runtime env vars | `EXPO_PUBLIC_*` usage in source; project docs | List required vars per EAS environment |
+| Store accounts ready? | User confirms Apple Developer + Play Console | Note as blocker for `production` profile |
+
 ### Required layout
 
 Minimum structure at the Expo app package root:
@@ -29,8 +41,6 @@ One `package.json` with `expo` in dependencies and an `app.json` at the same lev
 
 #### Monorepo
 
-Check workspace manifests:
-
 | File | What to read |
 | --- | --- |
 | `pnpm-workspace.yaml` | Package globs (`apps/*`, `packages/*`) |
@@ -43,7 +53,7 @@ For each candidate package:
 2. `app.json` or `app.config.*` beside `package.json`
 3. Optional `eas.json` and `eas:*` scripts in `package.json`
 
-**If more than one package is an Expo app**, list them and ask the user which one to prepare for release.
+If more than one package is an Expo app, list them and ask the user which one to prepare for release.
 
 #### Existing EAS linkage
 
@@ -72,8 +82,6 @@ Accept creating or linking an Expo project. This writes `projectId` into app con
 
 ### 2. Validate app.json
 
-Before first EAS build:
-
 | Field | Why it matters |
 | --- | --- |
 | `expo.name`, `expo.slug` | Display name and Expo project slug |
@@ -84,34 +92,30 @@ Before first EAS build:
 | `expo.plugins` | Native modules (e.g. `expo-build-properties` for min OS) |
 | `expo.extra.eas.projectId` | Links local project to EAS |
 
-Validate public config:
-
 ```bash
 cd <app-package>
 npx expo config --type public
 ```
 
-Confirm `ios.bundleIdentifier` and `android.package` match what the user intends for store records. Changing bundle ID after store apps are created requires new store listings and regenerated credentials.
+Confirm `ios.bundleIdentifier` and `android.package` match the intended store records. Changing bundle ID after store apps exist requires new listings and regenerated credentials.
 
 ### 3. Monorepo conventions
 
 | Concern | Pattern |
 | --- | --- |
-| **Commands run from** | App package directory (`cd apps/mobile`) or `pnpm --filter <name> <script>` from repo root |
-| **EAS CLI context** | `eas.json` and `app.json` must live in the same package EAS builds |
-| **Node / pnpm versions** | Optional `build.base` in `eas.json` pins toolchain for cloud builds |
-| **Lockfile** | Install at monorepo root; EAS Build respects workspace layout when configured |
+| Commands run from | App package directory (`cd apps/mobile`) or `pnpm --filter <name> <script>` from repo root |
+| EAS CLI context | `eas.json` and `app.json` must live in the same package EAS builds |
+| Node / pnpm versions | Optional `build.base` in `eas.json` pins toolchain for cloud builds |
+| Lockfile | Install at monorepo root; EAS Build respects workspace layout when configured |
 
 ### 4. Local smoke (optional)
-
-Before cloud build:
 
 ```bash
 cd <app-package>
 npx expo start
 ```
 
-On simulators/emulators, confirm the app boots with the intended env vars.
+Confirm the app boots with the intended env vars on simulators/emulators.
 
 ## Examples
 

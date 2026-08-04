@@ -8,38 +8,25 @@ version: 1.0.0
 
 ## Overview
 
-Deploy backend changes using **Supabase GitHub integration**: connect Git in the dashboard, then merge to the production branch to apply migrations and deploy declared Edge Functions. No `supabase link` or manual `db push` is required for the default workflow.
-
-### What GitHub integration deploys
+Deploy backend changes with **Supabase GitHub integration**: connect Git in the dashboard, then merge to the production branch to apply migrations and deploy declared Edge Functions. No `supabase link` or manual `db push` for the default workflow.
 
 | Deployed on merge to production branch | Not deployed automatically |
 | --- | --- |
 | New files in `migrations/` | Seed files (`seed.sql`, etc.) |
 | Edge Functions declared in `config.toml` | Undeclared functions |
-| Storage buckets declared in `config.toml` | Edge Function secrets |
-| | Auth, SMTP, Site URL, API settings in `config.toml` |
+| Storage buckets declared in `config.toml` | Edge Function secrets; Auth, SMTP, Site URL, API settings in `config.toml` |
 
 Configure secrets and auth in the Supabase dashboard after deploy.
 
 ## Agent workflow
 
-Run these steps **in order**. Works wherever the agent can read and write repository files.
+Run these steps in order. Works wherever the agent can read and write repository files.
 
 ### Steps
 
-1. **Discovery (required)** — Locate the Supabase project root in the repository. Ask the user when multiple candidates exist.
+1. **Discovery** — Locate the Supabase root (`config.toml` + `migrations/`), dashboard working directory, production branch, declared Edge Functions, and storage buckets. Ask the user when multiple candidates exist. Default production branch to `main` only when repo convention is obvious. Follow [discovering-supabase-root.md](references/discovering-supabase-root.md).
 
-   | Question | How to resolve | If unclear |
-   | --- | --- | --- |
-   | **Supabase root** | Directory containing `config.toml` and `migrations/` | List candidates; ask user to pick one |
-   | **Working directory** | Repo-relative path to the Supabase root (used in dashboard) | See [discovering-supabase-root.md](references/discovering-supabase-root.md) |
-   | **Production branch** | User's deploy branch (`main`, `master`, `production`, etc.) | Ask user; default `main` only when repo convention is obvious |
-   | **Edge Functions** | `[functions.*]` entries in `config.toml` | List declared functions |
-   | **Storage buckets** | `[storage.buckets.*]` entries in `config.toml` | List declared buckets |
-
-   Full discovery heuristics: [discovering-supabase-root.md](references/discovering-supabase-root.md).
-
-2. **Validate locally (required before first connect)** — From the Supabase root:
+2. **Validate locally** — From the Supabase root, before first connect:
 
    ```bash
    supabase db start
@@ -47,13 +34,9 @@ Run these steps **in order**. Works wherever the agent can read and write reposi
    supabase db lint
    ```
 
-   If the project has Edge Functions, run any project-specific checks (e.g. `deno check`, `deno test` under `functions/`).
+   If Edge Functions exist, run project-specific checks (e.g. `deno check`, `deno test` under `functions/`). Fix errors before connecting GitHub or merging to the production branch.
 
-   Fix migration or function errors **before** connecting GitHub or merging to the production branch.
-
-3. **Document dashboard settings for the user** — The agent validates repo readiness; the user connects Git in **Project Settings → Integrations → GitHub**. Provide a filled-in table from [configuring-github-integration.md](references/configuring-github-integration.md).
-
-   Minimum settings:
+3. **Document dashboard settings** — User connects Git in **Project Settings → Integrations → GitHub**. Provide a filled-in table from [configuring-github-integration.md](references/configuring-github-integration.md):
 
    | Setting | Value |
    | --- | --- |
@@ -62,14 +45,12 @@ Run these steps **in order**. Works wherever the agent can read and write reposi
    | Production branch | User's branch |
    | Deploy to production | **Enabled** |
 
-4. **Post-connect verification** — After the user enables integration and merges (or pushes) to the production branch:
+4. **Post-connect verification** — After the user enables integration and merges to the production branch:
 
-   - Confirm deploy succeeded in the Supabase dashboard (integration logs / deployment status)
-   - For schema or function behavior changes, run project-specific smoke checks
+   - Confirm deploy succeeded in the Supabase dashboard
+   - Run project-specific smoke checks for schema or function behavior changes
 
-   First merge to the production branch populates a new remote project — no separate bootstrap deploy is needed.
-
-   Troubleshooting: [troubleshooting-deployment.md](references/troubleshooting-deployment.md).
+   First merge to the production branch populates a new remote project. Troubleshooting: [troubleshooting-deployment.md](references/troubleshooting-deployment.md).
 
 ### Decision tree
 

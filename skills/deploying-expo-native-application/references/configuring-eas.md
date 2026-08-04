@@ -2,7 +2,7 @@
 
 ## Overview
 
-Configure `eas.json` and EAS environments so the app is ready for cloud builds. For running builds and submissions after config is valid, hand off to the external **`expo-deployment`** skill.
+Configure `eas.json` and EAS environments for cloud builds. Build and submit commands: external **`expo-deployment`** skill.
 
 ## Prerequisites
 
@@ -13,17 +13,13 @@ Configure `eas.json` and EAS environments so the app is ready for cloud builds. 
 
 ### eas.json structure
 
-Typical native release setup uses **three build profiles** and **named submit profiles**.
-
-#### Build profiles
+Three build profiles and named submit profiles:
 
 | Profile | `distribution` | Typical purpose |
 | --- | --- | --- |
 | `development` | `internal` | Dev client; simulator (iOS) or APK (Android) |
-| `preview` | `internal` | Team QA via EAS install link (Ad Hoc iOS, APK Android) — **not** TestFlight/Play |
+| `preview` | `internal` | Team QA via EAS install link (Ad Hoc iOS, APK Android) — not TestFlight/Play |
 | `production` | `store` | Store-signed binary for TestFlight / Play submit |
-
-Example skeleton (adapt names, env vars, and extends to the project):
 
 ```json
 {
@@ -71,20 +67,18 @@ Example skeleton (adapt names, env vars, and extends to the project):
 }
 ```
 
-#### Key settings
+Adapt names, env vars, and extends to the project.
 
 | Setting | Purpose |
 | --- | --- |
-| `cli.appVersionSource: "remote"` | EAS stores build numbers; avoids manual bump errors |
+| `cli.appVersionSource: "remote"` | EAS stores build numbers |
 | `autoIncrement: true` on `production` | Increments iOS build number / Android version code per build |
 | `build.<profile>.environment` | Maps profile to Expo dashboard environment variables |
 | `developmentClient: true` | Required for dev client profile |
 | `distribution: "store"` | Required for App Store / Play store submission |
 | `ios.simulator: true` | Development builds for iOS Simulator only (no signing) |
 
-#### Submit profiles
-
-Submit profile names are project-defined. Android `track` maps to Play Console testing tracks. iOS has no track in `eas.json` — `eas submit` uploads to App Store Connect; TestFlight vs App Store release is managed in App Store Connect.
+Submit profile names are project-defined. Android `track` maps to Play Console testing tracks. iOS has no track in `eas.json` — `eas submit` uploads to App Store Connect; TestFlight vs App Store release is managed there.
 
 | Submit profile | Android track | iOS destination |
 | --- | --- | --- |
@@ -106,21 +100,15 @@ Document a matrix for the user:
 | --- | --- | --- | --- | --- |
 | `EXPO_PUBLIC_*` | … | … | … | List each var the app reads |
 
-**Rules:**
-
 - Never commit API keys, anon keys, or service account JSON.
 - `preview` and `production` often share the same backend URL in single-environment setups — confirm with the user.
 - Feature flags (e.g. `EXPO_PUBLIC_FEATURE_*`) belong in the same environments as the builds that need them.
-
-Verify variables are present before cloud build:
 
 ```bash
 eas env:list --environment production
 ```
 
 ### package.json scripts (optional)
-
-Wrap EAS commands for consistent team usage:
 
 ```json
 {
@@ -137,8 +125,6 @@ Run from the app package or via `pnpm --filter <package> <script>` in a monorepo
 
 ### Recommended release order
 
-Configuration-ready apps typically follow:
-
 ```text
 1. eas build --profile preview     → internal QA (EAS install link)
 2. eas build --profile production  → store-signed binary
@@ -146,7 +132,7 @@ Configuration-ready apps typically follow:
 4. eas submit --profile production → App Store + Play production (when ready)
 ```
 
-Command details and platform guides: **`expo-deployment`**.
+Command details: **`expo-deployment`**.
 
 ### Version management
 

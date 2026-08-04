@@ -2,7 +2,7 @@
 
 ## Overview
 
-Diagnose build, deploy, and runtime failures for Cloudflare Workers Builds static hosting.
+**Read-only.** Diagnose build, deploy, and runtime failures for Cloudflare Workers Builds static hosting.
 
 ## Guidelines
 
@@ -46,3 +46,8 @@ Diagnose build, deploy, and runtime failures for Cloudflare Workers Builds stati
 - Cloudflare dashboard → Worker → Deployments → view build log
 - Retry build after fixing config (retry uses settings at retry time)
 - Local smoke: run build command, then `npx wrangler deploy` (requires `wrangler login`)
+
+## Related
+
+- [configuring-wrangler.md](./configuring-wrangler.md)
+- [configuring-github-integration.md](./configuring-github-integration.md)

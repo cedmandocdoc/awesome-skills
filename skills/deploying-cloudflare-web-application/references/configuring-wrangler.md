@@ -4,6 +4,10 @@
 
 Workers Builds runs `npx wrangler deploy`, which reads `wrangler.toml` or `wrangler.jsonc` from the dashboard **root directory**.
 
+## Prerequisites
+
+Deploy target, build output path, and SPA mode from [discovering-application.md](./discovering-application.md).
+
 ## Guidelines
 
 ### Minimum — static site
@@ -23,7 +27,7 @@ directory = "./dist"
 | `assets.directory` | Yes | Path to built static files, relative to Wrangler root |
 | `assets.not_found_handling` | SPAs only | See below |
 
-`main` is **not** required for static-only hosting.
+`main` is not required for static-only hosting.
 
 ### SPA client-side routing
 
@@ -34,8 +38,6 @@ not_found_handling = "single-page-application"
 ```
 
 Serves `index.html` with `200` for paths that do not match a static file. Required for React Router, Vue Router, TanStack Router, Expo web, and similar SPAs.
-
-Alternatives:
 
 | Mode | Use when |
 | --- | --- |
@@ -58,8 +60,6 @@ html_handling = "auto-trailing-slash"
 | `run_worker_first` | Route patterns that invoke Worker before static assets (hybrid apps) |
 
 ### Static + Worker API (hybrid)
-
-When the app needs server logic at the edge:
 
 ```toml
 name = "my-app"
@@ -91,7 +91,7 @@ Worker fetches static assets via `env.ASSETS.fetch(request)` for non-API routes.
 
 ### Pin Wrangler version
 
-Add to the `package.json` at the Wrangler project root:
+In `package.json` at the Wrangler project root:
 
 ```json
 {
@@ -105,7 +105,7 @@ Workers Builds uses the version from `package.json` when present.
 
 ### `.assetsignore`
 
-Optional file beside `wrangler.toml` (same syntax as `.gitignore`) to exclude files from upload:
+Optional file beside `wrangler.toml` (same syntax as `.gitignore`):
 
 ```
 *.map
@@ -114,4 +114,13 @@ Optional file beside `wrangler.toml` (same syntax as `.gitignore`) to exclude fi
 
 ### Environments (staging / production)
 
-For multiple Workers environments, use `wrangler deploy --env <name>` in the dashboard deploy command and define `[env.staging]` blocks. See [Cloudflare advanced setups](https://developers.cloudflare.com/workers/ci-cd/builds/advanced-setups/).
+For multiple Workers environments, use `wrangler deploy --env <name>` in the dashboard deploy command and define `[env.staging]` blocks.
+
+## Related
+
+- [discovering-application.md](./discovering-application.md)
+- [configuring-github-integration.md](./configuring-github-integration.md)
+
+## References
+
+- [Cloudflare advanced setups](https://developers.cloudflare.com/workers/ci-cd/builds/advanced-setups/)

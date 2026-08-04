@@ -2,7 +2,7 @@
 
 ## Overview
 
-**Review mode.** Walk through this checklist before the first `preview` or `production` EAS build. Items in the configuration group are in scope for this skill; handoff items defer to **`expo-deployment`** or project-specific docs.
+**Review mode.** Checklist before the first `preview` or `production` EAS build. Configuration items are in scope; handoff items defer to **`expo-deployment`** or project docs.
 
 ## Prerequisites
 
@@ -55,7 +55,7 @@
 - [ ] TestFlight / Play internal testers added before wider release
 ```
 
-Use the project's manual smoke checklist and task docs when they exist. This skill does not define product acceptance criteria.
+Use the project's manual smoke checklist and task docs when they exist.
 
 ### After configuration is green
 

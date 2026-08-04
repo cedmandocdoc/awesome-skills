@@ -2,7 +2,7 @@
 
 ## Overview
 
-Diagnose local validation failures, deploy failures on merge, and wrong-target integration issues.
+**Read-only.** Diagnose local validation failures, deploy failures on merge, and wrong-target integration issues.
 
 ## Guidelines
 
@@ -37,7 +37,7 @@ Diagnose local validation failures, deploy failures on merge, and wrong-target i
 - GitHub → repository → Checks tab on the merge commit
 - Re-run by pushing a fix to the production branch after resolving the failure
 
-### Official docs
+## References
 
 - [GitHub integration](https://supabase.com/docs/guides/deployment/branching/github-integration)
 - [Deployment overview](https://supabase.com/docs/guides/deployment)
