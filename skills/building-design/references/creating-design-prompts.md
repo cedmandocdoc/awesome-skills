@@ -2,223 +2,138 @@
 
 ## Overview
 
-**Authoring mode.** Generates a **shared** application-design prompt folder from PRD/FRD, user stories, UI specs, and an existing `design.md`. The same passes work on Claude Design, Google Stitch, and Figma Make. Platform differences live only in the task `README.md` adapters.
+**Authoring mode.** Generates a shared application-design prompt folder from PRD/FRD, user stories, UI specs, and an existing `design.md`. The same passes run on Claude Design, Google Stitch, and Figma Make; platform differences live only in README adapters.
 
-Produces screen/flow passes — not a UI-kit or empty-shell generation phase. Chrome rules and component **names** sit in the README; each pass designs real screens.
+Produces screen/flow passes. Chrome rules and component names sit in the README; each pass designs real screens.
 
 ## Prerequisites
 
-**Required before generating:**
+| Input | Rule |
+| --- | --- |
+| `design.md` | Complete visual tokens per [creating-design.md](creating-design.md). If missing, stop and offer to create it first |
+| PRD or FRD | Scope, requirements, acceptance criteria, feature boundaries |
+| User story | Roles, goals, behaviors, permissions |
+| UI specs | Flows, screens, states, validation, edge cases, content, layout |
 
-1. **`design.md`** — complete visual tokens per [creating-design.md](creating-design.md). If missing, **stop** and offer to create it first. Do not invent tokens.
-2. **PRD or FRD** — scope, requirements, acceptance criteria, feature boundaries
-3. **User story** — roles, goals, behaviors, permissions
-4. **UI specs** — flows, screens, states, validation, edge cases, content, layout
-
-If PRD/FRD, user story, or UI specs are missing or too thin, **stop and gather information** before generating. Mark `[COPY TBD]` for content gaps — never fabricate flows, roles, or features.
+If PRD/FRD, user story, or UI specs are missing or too thin, stop and gather (gap-filling below) before generating. Mark `[COPY TBD]` for content gaps — invent neither flows, roles, nor features.
 
 ## Guidelines
 
-### Gap-filling (when inputs are insufficient)
+### 1. Gate and gather
 
-Ask in this order. Wait for answers before proceeding unless the user provides everything at once.
+1. Confirm `design.md` exists (default path `design/design.md`). If not, offer [creating-design.md](creating-design.md) and stop.
+2. Assess PRD/FRD, user story, UI specs. When thin, ask in this order and wait for answers unless the user provides everything at once:
 
-#### 1. Product or feature expectations
+| Gap | Ask |
+| --- | --- |
+| Product / feature | What product or feature? What should it do? In vs out of scope? Hard requirements / acceptance criteria? |
+| Roles | Roles? Goals per role? Behavior differences (screens, actions, visibility)? Permission / gating rules? |
+| UI / platform | Screens, flows, states in scope? **Platform:** desktop/web or mobile-only? Layout chrome (auth vs app nav)? Reference products for layout inspiration (not visual copy)? |
 
-Ask when PRD/FRD is missing or vague:
+Visual decisions come from `design.md`. Behavioral and structural decisions go into the README and pass files.
 
-- What product or feature are we designing?
-- What should the application do for the user?
-- What is in scope vs out of scope for this prompt task?
-- Any hard requirements or acceptance criteria?
+### 2. Confirm delivery and platform
 
-#### 2. User roles and behavior
+Ask before generating unless the user already gave paths.
 
-Ask when user story is missing or vague:
+| Path | Default |
+| --- | --- |
+| `design.md` | `design/design.md` |
+| Prompt task folder | `design/prompts/<task>/` (`<task>` = kebab-case slug: `mvp`, `checkout-v2`, …) |
 
-- What are the different user roles in the app?
-- What does each role need to accomplish?
-- How does behavior differ per role (screens, actions, visibility)?
-- Any permission or gating rules?
+Confirm design root (if not `design/`) and task slug. On follow-ups ("add settings screen"), edit the existing task folder unless the user asks for a new path.
 
-#### 3. UI specs and platform
-
-Ask when UI specs are missing or vague:
-
-- What screens, flows, and states are in scope?
-- **Platform type:** desktop/web application or mobile-only?
-- Layout chrome — auth vs app navigation (sidebar, tabs, header)
-- Reference products for layout inspiration (not visual copy)
-
-Visual decisions come from **`design.md`**. Behavioral and structural decisions go into the README and pass files.
-
-#### 4. `design.md` gate
-
-When no `design.md` exists:
-
-1. Tell the user a `design.md` is required before design prompts.
-2. Offer to run [creating-design.md](creating-design.md) first.
-3. Do not generate the prompt folder until tokens are defined.
-
-### Platform and viewports
-
-Infer platform type from PRD/FRD and UI specs. Confirm with the user when ambiguous.
-
-| Platform type | Frames per screen | Default sizes (adjust per spec) |
+| Platform type | Frames per screen | Default sizes |
 | --- | --- | --- |
-| **Desktop / web application** | Desktop, tablet, mobile | 1440×900 · 768×1024 · 390×844 |
-| **Mobile-only application** | Mobile portrait only | 390×844 (e.g. iPhone 14) |
+| Desktop / web | Desktop, tablet, mobile | 1440×900 · 768×1024 · 390×844 |
+| Mobile-only | Mobile portrait only | 390×844 |
 
-Record sizes in the README viewport matrix and each pass **Viewport** section.
+Infer platform from specs; confirm when ambiguous. Record sizes in the README viewport matrix and each pass **Viewport** section.
 
-### Delivery preference
+### 3. Extract and plan passes
 
-**Always ask before generating** (unless the user already gave an explicit path).
+Map inputs with the extraction checklist, then plan one pass per major flow or screen group from IA / UI specs only — invent neither screens nor kit-only / empty-shell passes.
 
-| Path | Default | Notes |
-| --- | --- | --- |
-| **`design.md`** | `design/design.md` | Created or updated via [creating-design.md](creating-design.md) |
-| **Prompt task folder** | `design/prompts/<task>/` | `<task>` = kebab-case slug from intent (`mvp`, `checkout-v2`, `landing-v2`) |
+| From | Maps to |
+| --- | --- |
+| PRD/FRD feature scope & boundaries | README → Objective, Product Scope |
+| Requirements & acceptance criteria | Pass content, Done checklist |
+| In/out of scope | README + every pass Out of scope |
+| User story roles / goals / permissions | README → User Roles; pass role notes and gated UI |
+| UI flows / screens / routes | README IA; numbered passes |
+| Layout chrome | README → Chrome rules |
+| Component inventory | README → Component reference (names) |
+| Validation, errors, edge cases | Pass Screens / states |
+| Copy & content | Pass Content & copy |
+| Responsive behavior | README + pass Viewport |
+| `design.md` path, Overview, Do's/Don'ts, YAML keys | README visual source; pass design-system reminder and token lines |
 
-Confirm both the design root (if not using `design/`) and the task slug. Skip the ask only when the user already specified paths (e.g. "write to `docs/design/prompts/checkout-v2/`").
+Include when specs support them: role-gated UI, interaction notes, live/instrument screens as their own pass when they invert chrome.
 
-On follow-up requests ("add settings screen", "update checkout prompts"), **edit the existing task folder** — do not create duplicates unless the user asks.
+### 4. Fill and write
 
-**File and chat delivery:**
-
-- Write README and pass files as plain markdown on disk.
-- Do not wrap file bodies in chat code fences — nested markdown breaks inside fences.
-- In chat, return paths, summary, gaps, and usage only — not full file bodies.
-
-### Workflow
-
-1. **Gate on `design.md`** — if missing, stop and route to [creating-design.md](creating-design.md). Confirm path (default `design/design.md`).
-2. **Assess inputs** — PRD/FRD, user story, UI specs; if insufficient, run gap-filling.
-3. **Confirm delivery** — agree on design root and `design/prompts/<task>/` slug.
-4. **Confirm platform type** — desktop/web vs mobile-only; set viewport matrix.
-5. **Extract** — map inputs using [Extraction checklist](#extraction-checklist).
-6. **Plan pass list** — one pass per major flow or screen group from IA / UI specs only. Do not invent screens. Do **not** add kit-only or empty-shell passes.
-7. **Fill templates** — README from [`prompts-readme.md`](../assets/prompts-readme.md); each pass from [`design-pass.md`](../assets/design-pass.md); see [Filling rules](#filling-rules).
-8. **Write folder** — save all files at the agreed path.
-
-### What makes prompts succeed
-
-| Priority | Artifact | Why |
-| --- | --- | --- |
-| 1 | `design.md` applied first | Native visual contract on every platform |
-| 2 | One flow/screen group per pass | Matches how design AIs generate accurately |
-| 3 | README chrome + component names | Consistency without a separate kit/shell phase |
-| 4 | Per-pass out of scope | Stops invented screens |
-| 5 | Platform adapters in README | Same content; correct run instructions |
-| 6 | Numbered pass order | Prevents whole-app megaprompts |
-
-**Include when specs support them:** role-gated UI, interaction notes, live/instrument screens as their own pass when they invert chrome.
-
-**Omit by default:** dedicated UI-kit passes, empty layout-shell passes, Figma Components/Screens showcase structure, embedding full token tables into every pass.
-
-### File contract
+Templates: [`prompts-readme.md`](../assets/prompts-readme.md), [`design-pass.md`](../assets/design-pass.md).
 
 ```text
 design/
-├── design.md                      # visual system (creating-design)
+├── design.md
 └── prompts/
-    └── <task>/                    # e.g. mvp, checkout-v2
-        ├── README.md              # scope, IA, chrome, adapters
-        ├── 01-<flow>.md           # first screen/flow pass
-        └── 02-<flow>.md …         # further passes
+    └── <task>/
+        ├── README.md
+        ├── 01-<flow>.md
+        └── 02-<flow>.md …
 ```
 
 | File | Role |
 | --- | --- |
-| `README.md` | Product scope, roles, IA, chrome rules, component name inventory, **platform adapters**, pass index |
+| `README.md` | Product scope, roles, IA, chrome rules, component names, platform adapters, pass index |
 | `01-*.md` … `NN-*.md` | Numbered screen/flow passes in strict order |
 
-Templates: [`prompts-readme.md`](../assets/prompts-readme.md), [`design-pass.md`](../assets/design-pass.md).
+**Filling rules:**
 
-### Filling rules
+1. Replace every `[...]` placeholder with concrete names from inputs; ship unresolved brackets only as intentional `[COPY TBD]`
+2. Passes reference `design.md` token **keys** and short do/don't reminders — not full hex/px tables
+3. One major flow or tightly related screen group per pass
+4. Chrome rules and component names belong in the README; passes build real screens that apply those rules
+5. Each pass lists prior pass IDs it assumes complete
+6. List every in-scope screen, sheet, state, and role variant from inputs by name across the pass set
+7. README and every pass include out-of-scope bullets from PRD/FRD exclusions
+8. Viewport matrix matches platform type (three frames desktop/web; one mobile-only)
+9. Keep the three README adapter sections (Claude Design, Google Stitch, Figma Make); adjust only paths and scope wording
+10. Use hierarchical component names (`Button/Primary`), screen names, and exact copy from UI specs
+11. `design.md` is source of truth for visuals — reference keys, not vague adjectives
+12. Every role with distinct behavior gets explicit coverage in the relevant passes
+13. Each pass is self-contained for one paste with `design.md` already applied — point tools at the pass, not the PRD
+14. Structure output as product screens; Figma Components/Screens showcase only when the user asks for that deliverable
 
-1. **Replace every `[...]` placeholder** with concrete names from PRD/FRD, user story, and UI specs. Never ship unresolved brackets except intentional `[COPY TBD]`.
-2. **Reference `design.md`** — passes use token **keys** and short do/don't reminders. Do not re-embed full hex/px tables in every pass.
-3. **One concern per pass** — one major flow or tightly related screen group. Never pack the whole app into a single pass.
-4. **No kit/shell-only passes** — chrome rules and component names belong in the README; passes build real screens that apply those rules.
-5. **Depends-on chain** — each pass lists prior pass IDs it assumes complete.
-6. **Coverage** — list every in-scope screen, sheet, state, and role variant from inputs by name across the pass set. Expand fully; do not summarize with "repeat for all screens."
-7. **Explicit out of scope** — README and every pass include out-of-scope bullets from PRD/FRD exclusions.
-8. **Viewport matrix** — match platform type. Desktop/web gets three frames per screen; mobile-only gets one.
-9. **Platform adapters** — keep the three README adapter sections (Claude Design, Google Stitch, Figma Make). Adjust only paths and scope wording — not the shared pass model.
-10. **Be specific** — hierarchical component names (`Button/Primary`, `Input/Text/Error`), screen names, and exact copy from UI specs.
+Write README and pass files as plain markdown on disk. In chat, return paths, summary, gaps, and usage only — nested markdown breaks inside fences.
 
-### Extraction checklist
+This recipe produces markdown files only — it does not write into Claude Design, Stitch, or Figma.
 
-Before filling templates, confirm you have:
+### 5. Confirm to the user
 
-| From PRD/FRD | Maps to |
-| --- | --- |
-| Feature scope & boundaries | README → Objective, Product Scope |
-| Requirements & acceptance criteria | Pass content, Done checklist |
-| In/out of scope | README + every pass Out of scope |
-
-| From user story | Maps to |
-| --- | --- |
-| Roles | README → User Roles; pass role notes |
-| Goals per role | Pass objectives, navigation |
-| Permission rules | README role rules; gated UI in relevant passes |
-
-| From UI specs | Maps to |
-| --- | --- |
-| User flows | README → IA / flow map; pass list |
-| Screens and routes | Numbered passes |
-| Layout chrome | README → Chrome rules |
-| Component inventory | README → Component reference (names) |
-| Validation & error states | Pass Screens / states |
-| Edge cases | Relevant pass |
-| Copy & content | Pass Content & copy |
-| Responsive behavior | README + pass Viewport |
-
-| From design.md | Maps to |
-| --- | --- |
-| Path | README visual source link |
-| Overview + Do's and Don'ts | Pass design-system reminder |
-| YAML token keys | Pass token reference lines |
-
-### Authoring rules
-
-- **`design.md` is source of truth for visuals** — reference keys; do not paraphrase into vague adjectives.
-- **User story drives role coverage** — every role with distinct behavior gets explicit coverage in the relevant passes.
-- **Shared prompts, adapter README** — one pass set for all platforms; platform how-to only in README.
-- **Application design, not showcase** — prompts design product screens. Do not structure output as a Figma Components + Screens library showcase unless the user explicitly asks for that separate deliverable.
-- **Self-contained per turn** — each pass works as a single paste with `design.md` already applied; do not tell the tool to "see the PRD."
-
-### Confirm to the user
-
-Return in chat:
-
-1. **Paths** — `design.md` path and prompt task folder path.
-2. **Summary** — one sentence: platform type, task slug, pass count.
-3. **Gaps** — any `[COPY TBD]` or missing spec detail.
-4. **Usage** — open `README.md` → apply `design.md` on the chosen platform → run `01` → `02` → … in order.
+1. **Paths** — `design.md` and prompt task folder
+2. **Summary** — platform type, task slug, pass count
+3. **Gaps** — `[COPY TBD]` or missing spec detail
+4. **Usage** — open `README.md` → apply `design.md` on the chosen platform → run `01` → `02` → … in order
 
 ### Follow-up updates
 
-When the user revises the handoff:
-
-1. Read the existing folder at the agreed path.
-2. Apply requested changes — add/edit numbered passes; update the README pass-order table.
-3. If `design.md` changed, confirm README still points at the correct path; refresh do/don't reminders if needed.
-4. Overwrite files in the same folder unless the user asks for a new path or task slug.
-
-Do not write into Claude Design, Stitch, or Figma directly; this recipe only produces markdown files.
+1. Read the existing folder at the agreed path
+2. Add/edit numbered passes; update the README pass-order table
+3. If `design.md` changed, confirm the README path and refresh do/don't reminders
+4. Overwrite in the same folder unless the user asks for a new path or task slug
 
 ## Related
 
-- [creating-design.md](creating-design.md) — prerequisite visual tokens (`design/design.md`)
+- [creating-design.md](creating-design.md) — prerequisite visual tokens
 
 ## Examples
 
-**Missing design.md:** User asks for design prompts but has no tokens. Stop → offer [creating-design.md](creating-design.md) → resume after `design/design.md` exists.
+**Missing design.md:** Stop → offer [creating-design.md](creating-design.md) → resume after tokens exist.
 
-**Mobile MVP:** User shares PRD, user stories, UI specs, and design.md. Ask to confirm `design/prompts/mvp/`. Write README + one pass per in-scope flow; mobile-only viewport matrix.
+**Mobile MVP:** Confirm `design/prompts/mvp/` → README + one pass per in-scope flow; mobile-only viewport matrix.
 
-**Desktop SaaS slice:** Same inputs for checkout. Confirm `design/prompts/checkout-v2/`. Desktop/tablet/mobile viewports. Chrome rules describe sidebar shell in README; passes build checkout screens only.
+**Desktop SaaS slice:** Confirm `design/prompts/checkout-v2/` → three viewports; chrome rules in README; passes build checkout screens only.
 
-**Update:** User says "add settings screen." Read existing task folder → add next numbered pass → update README pass-order table → overwrite in place.
+**Update:** "Add settings screen" → next numbered pass → update README pass-order → overwrite in place.

@@ -2,110 +2,102 @@
 
 ## Overview
 
-**Authoring mode.** Creates or amends `design.md` — the single visual system document for this skill.
+**Authoring mode.** Creates or amends `design.md` — the single visual system for this skill. Follows the [DESIGN.md format specification](https://stitch.withgoogle.com/docs/design-md/specification.md) with this skill’s token naming (shadcn semantic colors, `text-*`, `space-*`, `radius-*`). Structure from [`../assets/design.md`](../assets/design.md).
 
-Follows the [DESIGN.md format specification](https://stitch.withgoogle.com/docs/design-md/specification.md) (YAML front matter + canonical markdown sections) while using this skill’s token naming (shadcn semantic colors, `text-*`, `space-*`, `radius-*`). Structure from [`../assets/design.md`](../assets/design.md).
-
-**Delivery:** Write `design.md` to disk by default. Paste the full body in chat only when the user asks for in-chat delivery.
+Write `design.md` to disk by default. Paste the full body in chat only when the user asks.
 
 ## Prerequisites
 
 Gather or confirm:
 
-1. **Brand direction** — mood, references, light/dark intent
-2. **Brand colors** — primary, neutrals, semantic colors, or permission to use shadcn neutral defaults
-3. **Typography** — font families, or permission to use default `font-brand` / `font-body` stack
-4. **Density and layout** — compact vs spacious, mobile-first vs desktop-first, or permission to use default spacing and breakpoints
-5. **Product name** — for YAML `name` and document title
-6. **Component inventory** (optional) — from UI specs or user input; enriches `## Components` and YAML `components:`
-7. **Motion / accessibility notes** (optional) — from product specs when present
+| Input | Required | Notes |
+| --- | --- | --- |
+| Brand direction | Yes | Mood, references, light/dark intent |
+| Brand colors | Yes | Primary, neutrals, semantic — or permission to use shadcn neutral defaults |
+| Typography | Yes | Families — or permission to use default `font-brand` / `font-body` |
+| Density and layout | Yes | Compact vs spacious, mobile-first vs desktop-first — or defaults |
+| Product name | Yes | YAML `name` and document title |
+| Component inventory | Optional | From UI specs; enriches `## Components` and YAML `components:` |
+| Motion / accessibility | Optional | From product specs when present |
 
-If inputs are thin, ask briefly then proceed with convention defaults and note any `[TBD]` values in the delivery summary. Do not invent brand colors without user input unless they explicitly accept defaults.
+If inputs are thin: ask briefly, proceed with convention defaults, note `[TBD]` in the delivery summary. Ask before inventing brand colors unless the user accepts defaults.
 
 ## Guidelines
 
-### When to use
+### 1. Detect existing system
 
-- User asks for a style guide, design tokens, visual language, or `design.md`
-- Design prompts (Claude Design, Stitch, Figma Make) need a visual system file
-- User supplies a foreign guide to normalize into DESIGN.md format
+Search user inputs, repo, and linked docs for an existing `design.md` or foreign guide.
 
-### Official spec compliance
+| Situation | Action |
+| --- | --- |
+| Foreign / custom style guide | Parse and normalize onto canonical tokens below; record original names in the delivery summary if useful |
+| User names another framework as **target** output | Map framework roles onto the same canonical structure; keep framework names only when the user requires them as-is |
+| Existing `design.md` on disk | Amend in place; preserve section order and token naming |
+| No existing system | Use all defaults in the convention sections below |
 
-Follow the [DESIGN.md format specification](https://stitch.withgoogle.com/docs/design-md/specification.md):
+### 2. Parse foreign guides
 
-- **Two layers:** YAML front matter (`---` delimiters) + markdown body with `##` sections
-- **Section order:** Overview → Colors → Typography → Layout → Elevation & Depth → Shapes → Components → Do's and Don'ts. Omit only when truly irrelevant; never reorder
-- **Tokens are normative** in YAML; prose explains roles and usage
-- **Token references** in YAML use `{path.to.token}` (e.g. `{colors.primary}`, `{rounded.radius-md}`)
-- **Component variants** are separate keys (`button-primary`, `button-primary-hover`), not nested objects
-- **Valid component properties:** `backgroundColor`, `textColor`, `typography`, `rounded`, `padding`, `size`, `height`, `width`
-- **Unknown token names** are allowed when values are valid — use this skill’s naming conventions below
+When the user supplies an existing guide (markdown, Figma tokens, CSS variables, Tailwind config, etc.):
 
-Optional validation after write:
+1. **Extract** — colors, type, spacing, radii, shadows, breakpoints, motion, a11y, theme/mood prose
+2. **Map colors** → shadcn semantic tokens (`primary`, `muted-foreground`, …)
+3. **Map typography** → `text-{variant}-{size}` in YAML; `font-{group}` / `font-{weight}` in Overview tables
+4. **Map layout** → `space-*`, `radius-*`, `elevation-*` (prose), `bp-*` (Layout prose)
+5. **Preserve theme prose** → Overview and Do's and Don'ts
+6. **Fill template** — every required YAML group and all eight `##` sections in [`design.md`](../assets/design.md)
+7. **Flag unmapped values** — `[TBD]` or propose tokens matching naming patterns
+
+### 3. Build `design.md`
+
+1. Map brand inputs onto semantic roles, font families, and spacing density
+2. Build YAML front matter — concrete values under `colors`, `typography`, `rounded`, `spacing`, `components` using canonical keys
+3. Draft markdown body — all eight canonical sections; include dark mode, breakpoints, elevation, motion, and a11y where inputs support them
+4. Ask for the write path unless the user already gave one (default `design/design.md`)
+5. Write the file
+
+Optional validation:
 
 ```bash
 npx @google/design.md lint design.md
 ```
 
-### Convention selection
+### 4. Output contract
 
-**Before generating**, determine inputs and normalize to the canonical token system below.
-
-| Situation | Action |
+| Rule | Detail |
 | --- | --- |
-| User provides a custom or foreign style guide | **Parse and normalize** — map values onto canonical token names in [Color](#color-token-convention-shadcn), [Typography](#typography-token-convention), and [Layout](#layout-token-convention). Record original names in the delivery summary if useful. |
-| User names another framework (Material, Tailwind palette) as the **target** output | Map framework roles onto the same canonical structure; use framework names only when the user explicitly requires them as-is. |
-| Existing `design.md` on disk | Amend in place; preserve section order and token naming. |
-| No existing system | Use all defaults in the convention sections below. |
-
-### Parsing foreign guides
-
-When the user supplies an existing guide (markdown, Figma tokens, CSS variables, Tailwind config, etc.):
-
-1. **Extract** — colors, type styles, spacing, radii, shadows, breakpoints, motion, a11y notes, and theme/mood prose.
-2. **Map colors** — foreign names → canonical shadcn semantic tokens (`primary`, `muted-foreground`, etc.).
-3. **Map typography** — foreign sizes/weights → `text-{variant}-{size}` in YAML; record `font-{group}` / `font-{weight}` in Overview tables.
-4. **Map layout** — foreign spacing → `space-*`; radii → `radius-*`; shadows → `elevation-*` (prose); breakpoints → `bp-*` (Layout prose).
-5. **Preserve theme prose** — mood, references, do/don't → Overview and Do's and Don'ts.
-6. **Fill template** — every required YAML group and all eight `##` sections in [`design.md`](../assets/design.md).
-7. **Flag unmapped values** — list in delivery summary as `[TBD]` or propose new tokens following the same naming patterns.
-
-### Workflow
-
-1. **Detect existing system** — search user inputs, repo, and linked docs for an existing `design.md` or foreign guide.
-2. **Parse and normalize** — if a foreign guide exists, run [Parsing foreign guides](#parsing-foreign-guides).
-3. **Read conventions** — color, typography, and layout sections when defaults apply.
-4. **Map brand inputs** — assign colors to semantic roles; fonts to families; density to spacing scale.
-5. **Build YAML front matter** — concrete values under `colors`, `typography`, `rounded`, `spacing`, `components` using canonical keys.
-6. **Draft markdown body** — fill canonical sections; include dark mode, breakpoints, elevation, motion, and a11y where inputs support them.
-7. **Write file** — save as `design.md` at the agreed path. **Always ask** before writing unless the user already gave a path. Default: `design/design.md`.
-8. **Summarize in chat** — path, one-line summary, unmapped tokens, lint result if run.
+| Layers | YAML front matter (`---` delimiters) + markdown body with `##` sections |
+| Section order | Overview → Colors → Typography → Layout → Elevation & Depth → Shapes → Components → Do's and Don'ts. Omit only when truly irrelevant; never reorder |
+| Tokens | Normative in YAML; prose explains roles. References use `{path.to.token}` |
+| Component variants | Separate keys (`button-primary-hover`), not nested objects |
+| Valid component properties | `backgroundColor`, `textColor`, `typography`, `rounded`, `padding`, `size`, `height`, `width` |
+| Required YAML groups | At least `name`, `colors`, `typography`, `rounded`, `spacing` |
+| Naming | Canonical tokens from this recipe — one name per token; unknown names allowed when values are valid |
+| Concrete values | No `[...]` placeholders in final output |
+| Light-first YAML | Dark mode in Colors prose when both modes exist |
+| Concerns | Size in `text-*`; weight/family in Overview + YAML fields; spacing in `space-*`; corners in `radius-*` |
+| Component refs | `{colors.*}`, `{typography.*}`, `{rounded.*}` — not raw hex when a color token exists |
+| Prompt handoff minimum | `button-primary`, `input-default`, `card-default` when building for design-tool prompts |
 
 ### Color token convention (shadcn)
 
-Default color naming. Based on [shadcn theming](https://ui.shadcn.com/docs/theming.md).
+Based on [shadcn theming](https://ui.shadcn.com/docs/theming.md).
 
-#### Principles
-
-1. **Semantic tokens, not palette slots** — name by role (`primary`, `muted-foreground`), not by hue (`blue-500`).
-2. **Background / foreground pairs** — each surface token pairs with a `-foreground` token for text and icons on that surface.
-3. **Light and dark** — YAML holds light-mode (or sole-mode) values; dark counterparts go in `## Colors` prose when dark mode applies.
-4. **No raw hex in downstream specs** — reference token names only; values live in YAML / Colors prose.
-
-#### Token naming pattern
+| Principle | Practice |
+| --- | --- |
+| Semantic names | Role (`primary`, `muted-foreground`), not hue (`blue-500`) |
+| Surface pairs | Each surface pairs with a `-foreground` token |
+| Light and dark | YAML = light (or sole) mode; dark counterparts in `## Colors` when dark mode applies |
+| Downstream specs | Token names only; values live in YAML / Colors prose |
 
 | Pattern | Example | Controls |
 | --- | --- | --- |
-| `{surface}` | `background`, `card`, `primary` | Surface / fill color |
-| `{surface}-foreground` | `foreground`, `card-foreground`, `primary-foreground` | Text and icons on that surface |
-| `{role}` (standalone) | `border`, `input`, `ring`, `destructive` | Borders, inputs, focus rings, destructive emphasis |
-| `chart-{n}` | `chart-1` … `chart-5` | Chart and data-viz palette |
-| `sidebar-*` | `sidebar`, `sidebar-primary`, `sidebar-border` | Sidebar-specific surfaces (add to YAML when used) |
+| `{surface}` | `background`, `card`, `primary` | Surface / fill |
+| `{surface}-foreground` | `foreground`, `card-foreground` | Text and icons on that surface |
+| `{role}` | `border`, `input`, `ring`, `destructive` | Borders, inputs, focus, destructive |
+| `chart-{n}` | `chart-1` … `chart-5` | Data-viz palette |
+| `sidebar-*` | `sidebar`, `sidebar-primary` | Sidebar surfaces (add when used) |
 
-#### Standard token catalog
-
-Use the full set unless the project explicitly omits tokens (e.g. no sidebar / charts). Defaults when the user has not supplied brand colors:
+Use the full set unless the project omits tokens (e.g. no sidebar / charts). Defaults when brand colors are not supplied:
 
 | Token | Light default | Dark default |
 | --- | --- | --- |
@@ -123,19 +115,15 @@ Use the full set unless the project explicitly omits tokens (e.g. no sidebar / c
 | `ring` | `oklch(0.708 0 0)` | `oklch(0.556 0 0)` |
 | `chart-1` … `chart-5` | see shadcn neutral preset | see shadcn neutral preset |
 
-When the user supplies brand hex values, map them onto these semantic roles and record hex (or converted oklch) in YAML.
+Map user-supplied brand hex onto these roles; record hex or converted oklch in YAML.
 
 ### Typography token convention
-
-#### Token categories
 
 | Category | Pattern | Example | Where |
 | --- | --- | --- | --- |
 | Type scale | `text-{variant}-{size}` | `text-body-base`, `text-heading-lg` | YAML `typography:` |
-| Weight | `font-{weight}` | `font-body-medium`, `font-body-semibold` | Overview tables |
+| Weight | `font-{weight}` | `font-body-medium` | Overview tables |
 | Family / group | `font-{group}` | `font-body`, `font-brand` | Overview tables; resolve into YAML `fontFamily` |
-
-#### Default type scale (YAML keys)
 
 | Token | Size | Line height | Letter spacing | Usage |
 | --- | --- | --- | --- | --- |
@@ -150,14 +138,10 @@ When the user supplies brand hex values, map them onto these semantic roles and 
 
 Convert line-height percentages to unitless ratios in YAML (e.g. 150% → `1.5`).
 
-#### Default font families
-
 | Token | Family | Fallback | Usage |
 | --- | --- | --- | --- |
 | `font-brand` | Cherry Bomb One | cursive, sans-serif | Wordmark only |
 | `font-body` | Bricolage Grotesque | system-ui, sans-serif | All UI and marketing text except wordmark |
-
-#### Default font weights
 
 | Token | Weight | Usage |
 | --- | --- | --- |
@@ -165,8 +149,6 @@ Convert line-height percentages to unitless ratios in YAML (e.g. 150% → `1.5`)
 | `font-body-medium` | 500 | Emphasized body, active nav labels |
 | `font-body-semibold` | 600 | Subheadings, button labels, table headers |
 | `font-body-bold` | 700 | Strong emphasis within body scale |
-
-#### Default pairing rules
 
 | Element | Type scale | Weight | Family |
 | --- | --- | --- | --- |
@@ -181,8 +163,6 @@ Resolve each YAML typography entry’s `fontFamily` and `fontWeight` from pairin
 
 ### Layout token convention
 
-#### Spacing (`space-*` in YAML `spacing:`)
-
 | Token | Default | Usage |
 | --- | --- | --- |
 | `space-1` | 4px | Tight inline gaps |
@@ -196,14 +176,7 @@ Resolve each YAML typography entry’s `fontFamily` and `fontWeight` from pairin
 
 Also set `gutter` and `margin` from grid defaults when defined.
 
-#### Grid defaults (Layout prose)
-
-- Page max width: 1280px centered (adjust per product type)
-- Content column: 720px for forms; 12-column grid for dashboards
-- Gutter: `space-6` → YAML `spacing.gutter`
-- Section rhythm: `space-12` between major blocks; `space-6` within cards
-
-#### Elevation (`elevation-*` — Layout / Elevation prose only)
+**Grid defaults** (Layout prose): page max width 1280px centered; content column 720px for forms / 12-column for dashboards; gutter `space-6` → YAML `spacing.gutter`; section rhythm `space-12` between major blocks, `space-6` within cards.
 
 | Token | Default shadow | Usage |
 | --- | --- | --- |
@@ -213,9 +186,7 @@ Also set `gutter` and `margin` from grid defaults when defined.
 | `elevation-3` | `0 10px 15px rgb(0 0 0 / 10%)` | Modals, drawers |
 | `elevation-4` | `0 20px 25px rgb(0 0 0 / 12%)` | Toasts, top-level overlays |
 
-Focus ring: 2px outline using `ring` color token, 2px offset.
-
-#### Roundness (`radius-*` in YAML `rounded:`)
+Focus ring: 2px outline using `ring` color token, 2px offset. Elevation lives in Layout / Elevation prose only (no YAML `elevation` group).
 
 | Token | Default | Usage |
 | --- | --- | --- |
@@ -224,8 +195,6 @@ Focus ring: 2px outline using `ring` color token, 2px offset.
 | `radius-lg` | 8px | Cards, panels |
 | `radius-xl` | 12px | Modals, large containers |
 | `radius-full` | 9999px | Avatars, pills |
-
-#### Breakpoints (`bp-*` — Layout prose)
 
 | Token | Default min width | Layout behavior |
 | --- | --- | --- |
@@ -238,7 +207,7 @@ Adaptation rules and touch/pointer guidance go under `## Layout`.
 
 ### Components
 
-Derive from tokens when UI specs do not define component-level detail:
+Derive from tokens when UI specs omit component-level detail:
 
 | Component key | Typical mapping |
 | --- | --- |
@@ -248,43 +217,20 @@ Derive from tokens when UI specs do not define component-level detail:
 | `input-default` | background / foreground; `rounded.radius-md`; `text-body-base` |
 | `card-default` | `card` / `card-foreground`; `rounded.radius-lg`; padding from `space-8` |
 
-Add keys from product inventory (chips, lists, checkboxes, etc.) using the property whitelist.
+Add keys from product inventory using the property whitelist. Put **Interaction & motion** under `## Components` (Interaction \| Behavior \| Duration). Put expanded accessibility guardrails in `## Do's and Don'ts`.
 
-Put **Interaction & motion** under `## Components` (table: Interaction \| Behavior \| Duration). Put expanded **accessibility** guardrails in `## Do's and Don'ts`.
+### 5. Confirm to the user
 
-### Output contract
-
-The file must include:
-
-1. Valid YAML front matter with at least `name`, `colors`, `typography`, `rounded`, `spacing`
-2. All eight canonical `##` sections in order (content may be brief but present)
-3. Canonical token names from this recipe — not ad-hoc aliases
-4. No duplicate `##` headings
-5. Concrete values — no `[...]` placeholders in final output
-
-### Filling rules
-
-1. **Normalize foreign names** — map onto canonical tokens unless the user explicitly requires foreign names preserved.
-2. **Light-first YAML** — dark mode documented in Colors prose when both modes exist.
-3. **Separate concerns** — size in `text-*`; weight/family documented in Overview and resolved into YAML fields; spacing in `space-*`; corners in `radius-*`.
-4. **Reference syntax** — component YAML uses `{colors.*}`, `{typography.*}`, `{rounded.*}`; not raw hex in component tokens when a color token exists.
-5. **Components before handoff** — ensure `button-primary`, `input-default`, and `card-default` at minimum when building for design-tool prompts.
-6. **No duplicate naming** — one canonical name per token.
-
-### Output format
+Reply with:
 
 1. **Path** — repo-relative path to `design.md`
-2. **Summary** — product name, token counts, any normalized mappings
-3. **Gaps** — unmapped tokens, missing component variants, `[TBD]` values, lint warnings
-4. **Lint** — note if `@google/design.md lint` was run and result
-
-### Confirm to the user
-
-Reply with file path, convention used, upstream inputs read, and suggested next step ([creating-design-prompts.md](./creating-design-prompts.md), or feature `ui-specs.md` for view states when product specs are in progress).
+2. **Summary** — product name, convention used, token counts, normalized mappings
+3. **Gaps** — unmapped tokens, missing component variants, `[TBD]` values, lint result if run
+4. **Next step** — [creating-design-prompts.md](./creating-design-prompts.md), or feature `ui-specs.md` when product specs are in progress
 
 ### Follow-up updates
 
-When the user revises visual tokens, update `design.md` in place using the same output contract. Keep downstream design prompt folders consistent with YAML keys.
+Amend `design.md` in place under the same output contract. Keep downstream prompt folders aligned with YAML keys.
 
 ## Related
 
