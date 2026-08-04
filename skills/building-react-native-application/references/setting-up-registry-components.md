@@ -2,7 +2,7 @@
 
 ## Overview
 
-Shell setup for `src/ui/` registry primitives: Lucide, NativeWind `inlineRem`, root `PortalHost`, and animation helpers for overlays. After [setting-up-theming.md](./setting-up-theming.md) and aligned Tailwind.
+**Execution mode.** Shell setup for `src/ui/` registry primitives: Lucide icons, NativeWind `inlineRem`, root `PortalHost`, and animation helpers for overlays. Run after [setting-up-theming.md](./setting-up-theming.md) and aligned Tailwind.
 
 ## Prerequisites
 
@@ -18,7 +18,7 @@ node ../scripts/run-package.cjs -- expo install lucide-react-native
 
 ### Update the default inlined `rem` value
 
-Change the default rem value by setting `inlineRem` in the project’s `metro.config.js`:
+Set `inlineRem` in `metro.config.js`:
 
 ```js
 withNativeWind(config, { input: "./global.css", inlineRem: 16 });

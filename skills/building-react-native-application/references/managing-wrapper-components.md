@@ -2,30 +2,31 @@
 
 ## Overview
 
-Use this guide to keep layout trees shallow. Prefer a single wrapper with merged Tailwind classes over stacked `View` components that only exist to hold one utility group each.
+Keep layout trees shallow. Prefer a single wrapper with merged Tailwind classes over stacked `View` components that only hold one utility group each.
 
-For utility merging, see [managing-styling.md](./managing-styling.md). For how primitives accept `className`, see [creating-ui-component.md](./creating-ui-component.md).
+## Prerequisites
+
+- [managing-styling.md](./managing-styling.md) — NativeWind utilities and class merging
+- [creating-ui-component.md](./creating-ui-component.md) — how primitives accept `className`
 
 ## Guidelines
 
-### Prefer one wrapper
+### Default rule
 
-- Merge layout, spacing, and visual classes onto one `View` (or primitive) when they apply to the same box.
-- Use `cx` from `class-variance-authority` (or the project’s class-merge helper) to combine base styles, variants, and a caller `className` prop on that single node.
-- Avoid a chain of nested `View` elements whose only job is to attach separate `className` strings.
+Merge layout, spacing, and visual classes onto one `View` (or primitive) using `cx` from `class-variance-authority`.
 
 ### When extra wrappers are justified
 
-Add another wrapper only when the layout or platform behavior requires a distinct box, for example:
-
-- Different flex or alignment contexts (e.g. row vs column sections that cannot be expressed on one node without hurting readability).
-- Touch targets, hit slop, or `Pressable` boundaries that must wrap a subset of children.
-- Scroll or keyboard-avoiding containers that need their own layout rules.
-- Third-party components that require a specific child structure.
+| Reason | Example |
+| --- | --- |
+| Different flex/alignment context | Row vs column sections on one node hurts readability |
+| Touch target / hit slop boundary | `Pressable` wrapping a subset of children |
+| Scroll or keyboard-avoiding container | Own layout rules required |
+| Third-party child structure | Component expects specific children nesting |
 
 ### Screens and features
 
-- Apply the same rule in screens and feature components: default to one outer container with merged classes, then split only for the cases above.
+Same rule applies: default to one outer container with merged classes, split only for justified cases above.
 
 ## Examples
 
@@ -45,7 +46,7 @@ import { View } from "react-native";
 ```tsx
 import { View } from "react-native";
 
-// Prefer: one wrapper with merged classes (omit bg-background on screen roots; see managing-screen-background.md)
+// Prefer: one wrapper with merged classes
 <View className="flex-1 gap-2 p-4">{children}</View>
 ```
 
@@ -75,11 +76,9 @@ export function Card({ children, className }: CardProps) {
 ```tsx
 import { Text, View } from "react-native";
 
-// Row for actions, column for content — intentional split
 <View className="gap-4 p-4">
   <View className="flex-row items-center justify-between gap-2">
     <Text className="text-lg font-semibold">Title</Text>
-    {/* trailing actions */}
   </View>
   <View className="gap-2">{children}</View>
 </View>

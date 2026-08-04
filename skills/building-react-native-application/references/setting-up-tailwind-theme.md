@@ -2,7 +2,7 @@
 
 ## Overview
 
-Wires Tailwind theme keys to the CSS variables in [setting-up-theming.md](./setting-up-theming.md) so utilities track light/dark and token updates. NativeWind and those variables must exist first.
+**Execution mode.** Wire Tailwind theme keys to the CSS variables in [setting-up-theming.md](./setting-up-theming.md) so utilities track light/dark and token updates. NativeWind and those variables must exist first.
 
 ## Prerequisites
 
@@ -12,7 +12,7 @@ Wires Tailwind theme keys to the CSS variables in [setting-up-theming.md](./sett
 
 ### Extend `tailwind.config.js`
 
-Merge these values into the existing config from [NativeWind — Installation](https://www.nativewind.dev/docs/getting-started/installation). Do not replace the whole file if the project already has one.
+Merge these values into the existing config. Do not replace the whole file if the project already has one.
 
 ```js
 const { hairlineWidth } = require("nativewind/theme");
@@ -89,3 +89,7 @@ module.exports = {
   plugins: [require("tailwindcss-animate")],
 };
 ```
+
+## References
+
+- [NativeWind — Installation](https://www.nativewind.dev/docs/getting-started/installation)

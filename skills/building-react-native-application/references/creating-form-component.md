@@ -2,72 +2,58 @@
 
 ## Overview
 
-Create **pre-bound form fields and shells** under `src/ui/Form/` with TanStack Form. Screens compose `*Field` components and stay free of repeated wiring (labels, errors, field state).
-
-Start from [creating-component.md](./creating-component.md). TanStack Form is **headless** — this guide covers **where code lives** and **how to compose and reuse** fields in this stack.
+Create pre-bound form fields and shells under `src/ui/Form/` with TanStack Form. Screens compose `*Field` components and stay free of repeated wiring (labels, errors, field state).
 
 ## Prerequisites
 
-- [TanStack Form — Basic concepts](https://tanstack.com/form/latest/docs/framework/react/guides/basic-concepts.md) — form instances, fields, meta, subscribers
-- [TanStack Form — Form composition](https://tanstack.com/form/latest/docs/framework/react/guides/form-composition.md) — `createFormHook`, pre-bound components, contexts
+- [creating-component.md](./creating-component.md) — start here for general component rules
+- TanStack Form basic concepts and form composition (see [References](#references))
 
 ## Guidelines
 
-### Library and folder placement
+### Placement
 
-- Use **`@tanstack/react-form`** for form state. Bind field values and handlers to React Native controls in pre-bound components (for example **`TextInput`**, switches, pickers).
-- Keep **all pre-bound form pieces** under **`src/ui/Form/`**: contexts, `createFormHook`, shared shells, and every component passed into `fieldComponents` / `formComponents`. Export the app hook from **`src/ui/Form/index.tsx`** so screens import `@/ui/Form` — not from scattered helpers.
-- Put **one pre-bound field per file** when it grows beyond a few lines (for example `InputField.tsx`). Keep small shared pieces such as **`FieldShell.tsx`** and **`SubscribeButton.tsx`** alongside `index.tsx`.
-
-Expected layout:
+- Use `@tanstack/react-form` for form state. Bind field values and handlers to React Native controls in pre-bound components.
+- Keep all pre-bound form pieces under `src/ui/Form/`: contexts, `createFormHook`, shared shells, and every component passed into `fieldComponents` / `formComponents`. Export the app hook from `src/ui/Form/index.tsx` so screens import `@/ui/Form`.
+- One pre-bound field per file when it grows beyond a few lines (e.g. `InputField.tsx`). Keep small shared pieces (`FieldShell.tsx`, `SubscribeButton.tsx`) alongside `index.tsx`.
 
 ```text
 src/ui/Form/
-  contexts.ts         — createFormHookContexts (avoids circular imports with field files)
+  contexts.ts         — createFormHookContexts
   index.tsx           — createFormHook, registrations, exports
-  FieldShell.tsx      — label + children + error slot (optional if tiny → index.tsx)
+  FieldShell.tsx      — label + children + error slot
   InputField.tsx      — pre-bound field for Input
-  SubscribeButton.tsx — pre-bound submit (optional if tiny → index.tsx)
+  SubscribeButton.tsx — pre-bound submit
 ```
 
 ### Pre-bound strategy
 
-- **Abstract field state in pre-bound components** — each field file uses `useFieldContext` and is registered in `fieldComponents`. Call sites pass **name** via `form.AppField` and domain props (for example `label`) only; they do not reimplement `useField` wiring per screen.
-- **Reuse a shared field shell** (`FieldShell` or an existing registry **`Field`**) for label, layout, and the error slot. Pass the control inside the pre-bound field so **style and layout stay centralized**.
-- **If no shell exists**, add **`FieldShell.tsx`** under `Form/` (see [Creating field components](#creating-field-components)). Do not duplicate that wrapper in every feature.
+- Each field file uses `useFieldContext` and is registered in `fieldComponents`. Call sites pass `name` via `form.AppField` and domain props only.
+- Reuse a shared field shell (`FieldShell` or existing registry `Field`) for label, layout, and the error slot. If none exists, add `FieldShell.tsx` under `Form/`.
 
 ### Naming
 
-- Pre-bound fields use **`NameOfControl + Field`** (for example `Input` → **`InputField`**, registered key `InputField` → **`field.InputField`**).
-- Form-level components use a clear name (for example **`SubscribeButton`**, **`TransientServerError`**).
+| Element | Convention | Example |
+| --- | --- | --- |
+| Pre-bound field | `NameOfControl + Field` | `InputField` → `field.InputField` |
+| Form component | Descriptive name | `SubscribeButton`, `TransientServerError` |
 
 ### Submit actions
 
-- Pre-bind the app’s **submit control** in `formComponents` (the TanStack docs often use **`SubscribeButton`**). Implement it with **`@/ui/Button`**, or **`Pressable`** + **`Text`**, wired through `useFormContext` and `form.Subscribe` for `isSubmitting` and related state. Keep the control in the `Form/` folder and register it from `index.tsx`.
-- The key in **`formComponents`** becomes **`form.<Key>`** (for example `SubscribeButton` → **`form.SubscribeButton`**). Same for **`fieldComponents`**: **`InputField`** → **`field.InputField`** in **`form.AppField`** children.
+- Pre-bind the submit control in `formComponents` (e.g. `SubscribeButton`). Implement with `@/ui/Button` or `Pressable` + `Text`, wired through `useFormContext` and `form.Subscribe` for `isSubmitting`. Register from `index.tsx`.
+- Keys in `formComponents` → `form.<Key>`. Keys in `fieldComponents` → `field.<Key>` in `form.AppField` children.
 
-### Screens and features
+### Screens
 
-- Screens in `src/features/<feature>/` **compose** fields and the form hook; they **do not** redefine `createFormHook` or field contexts.
-- Keep API submission beside other server logic (TanStack Query mutations, Axios clients) per [creating-api.md](./creating-api.md); use the form’s submit handler to call validated values into those layers.
-
-### Official guides (behavior and APIs)
-
-Use these for validation timing, submit lifecycle, and fine-grained reactivity. This skill does not duplicate those pages.
-
-| Topic          | Doc                                                                                                        |
-| -------------- | ---------------------------------------------------------------------------------------------------------- |
-| **Validation** | [Form and field validation](https://tanstack.com/form/latest/docs/framework/react/guides/validation.md)    |
-| **Submission** | [Submission handling](https://tanstack.com/form/latest/docs/framework/react/guides/submission-handling.md) |
-| **Reactivity** | [Reactivity](https://tanstack.com/form/latest/docs/framework/react/guides/reactivity.md)                   |
+- Screens in `src/features/<feature>/` compose fields and the form hook.
+- Keep API submission beside server logic per [creating-api.md](./creating-api.md).
 
 ### Composition shape
 
-Build contexts in **`contexts.ts`**, define field and form components in sibling files, then pass them into **`createFormHook`** from **`index.tsx`**.
+Build contexts in `contexts.ts`, define components in sibling files, pass them into `createFormHook` from `index.tsx`.
 
 ```tsx
 // src/ui/Form/contexts.ts
-
 import { createFormHookContexts } from "@tanstack/react-form";
 
 export const { fieldContext, formContext, useFieldContext, useFormContext } =
@@ -75,8 +61,7 @@ export const { fieldContext, formContext, useFieldContext, useFormContext } =
 ```
 
 ```tsx
-// src/ui/Form/index.tsx — illustrative layout
-
+// src/ui/Form/index.tsx
 import { createFormHook } from "@tanstack/react-form";
 import { fieldContext, formContext } from "./contexts";
 import { InputField } from "./InputField";
@@ -85,28 +70,23 @@ import { SubscribeButton } from "./SubscribeButton";
 const { useAppForm, withForm } = createFormHook({
   fieldContext,
   formContext,
-  fieldComponents: {
-    InputField,
-  },
-  formComponents: {
-    SubscribeButton,
-  },
+  fieldComponents: { InputField },
+  formComponents: { SubscribeButton },
 });
 
 export { useAppForm, withForm };
 ```
 
-Registered field components appear on the **`field`** object inside **`form.AppField`** (for example `<field.InputField label="…" />`). Registered form components appear on **`form`** (for example `<form.SubscribeButton label="…" />` inside **`form.AppForm`**). See [Form composition](https://tanstack.com/form/latest/docs/framework/react/guides/form-composition.md) for `withForm`, lazy loading, and tree-shaking.
+Registered field components appear on `field` inside `form.AppField`. Registered form components appear on `form` inside `form.AppForm`.
 
 ### Creating field components
 
-### 1) Shared field shell
+#### 1) Shared field shell
 
-Create **`FieldShell.tsx`** so every field gets consistent label and error rendering. Wire the error slot to accept values from field meta and server mapping (see [managing-form-error.md](./managing-form-error.md)).
+Create `FieldShell.tsx` for consistent label and error rendering. Wire the error slot per [managing-form-error.md](./managing-form-error.md).
 
 ```tsx
 // src/ui/Form/FieldShell.tsx
-
 import type { ReactNode } from "react";
 import { View } from "react-native";
 import type { ApiError } from "@/libs/ApiError";
@@ -137,15 +117,14 @@ export function FieldShell({
 }
 ```
 
-When the project already has a registry **`Field`** primitive with label and error slots, use that instead of `FieldShell` and keep the same pre-bound field pattern below.
+When a registry `Field` primitive with label and error slots exists, use that instead.
 
-### 2) Pre-bound field file
+#### 2) Pre-bound field file
 
-Add one file per control, for example **`InputField.tsx`**. Use **`useFieldContext`**, connect the control to field state, and wrap with **`FieldShell`**.
+One file per control (e.g. `InputField.tsx`). Use `useFieldContext`, connect the control, wrap with `FieldShell`.
 
 ```tsx
 // src/ui/Form/InputField.tsx
-
 import { useFieldContext } from "./contexts";
 import { FieldShell } from "./FieldShell";
 import { Input } from "@/ui/Input";
@@ -165,13 +144,9 @@ export function InputField({ label }: { label: string }) {
 }
 ```
 
-Register **`InputField`** in `fieldComponents` inside **`index.tsx`**. Add Zod validators on the form so front-end validation runs automatically; error display in the shell is covered in [managing-form-error.md](./managing-form-error.md).
-
-Repeat for other controls using the same **`NameOfControl + Field`** naming.
+Register in `fieldComponents` inside `index.tsx`. Error display covered in [managing-form-error.md](./managing-form-error.md).
 
 ## Setup
-
-Install the package in the app project:
 
 ```bash
 node ../scripts/install-packages.cjs @tanstack/react-form
@@ -179,9 +154,7 @@ node ../scripts/install-packages.cjs @tanstack/react-form
 
 ## Examples
 
-### Feature screen composes `AppField` and pre-bound components
-
-Screens call **`useAppForm`** from `@/ui/Form`, then use **`form.AppField`** so **`AppField`** supplies field context to pre-bound components.
+### Screen composes pre-bound components
 
 ```tsx
 import { useAppForm } from "@/ui/Form";
@@ -190,7 +163,7 @@ export function SignInScreen() {
   const form = useAppForm({
     defaultValues: { email: "", password: "" },
     onSubmit: async ({ value }) => {
-      /* call mutation / API — see submission guide */
+      /* call mutation / API */
     },
   });
 
@@ -210,10 +183,16 @@ export function SignInScreen() {
 }
 ```
 
-Use **`form.AppForm`** where the composition guide requires the form context wrapper (for example around **`form.SubscribeButton`**). Rename keys in `formComponents` / `fieldComponents` if the app prefers different **`form.*`** / **`field.*`** names.
-
 ## Related
 
 - [managing-form-error.md](./managing-form-error.md) — `onServer`, `onSubmit.fields`, and wiring errors into `FieldShell`
 - [managing-state.md](./managing-state.md) — where API and client state live relative to forms
 - [creating-api.md](./creating-api.md) — submitting validated payloads through feature hooks
+
+## References
+
+- [TanStack Form — Basic concepts](https://tanstack.com/form/latest/docs/framework/react/guides/basic-concepts.md)
+- [TanStack Form — Form composition](https://tanstack.com/form/latest/docs/framework/react/guides/form-composition.md)
+- [TanStack Form — Validation](https://tanstack.com/form/latest/docs/framework/react/guides/validation.md)
+- [TanStack Form — Submission handling](https://tanstack.com/form/latest/docs/framework/react/guides/submission-handling.md)
+- [TanStack Form — Reactivity](https://tanstack.com/form/latest/docs/framework/react/guides/reactivity.md)

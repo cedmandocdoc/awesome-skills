@@ -2,99 +2,85 @@
 
 ## Overview
 
-Create **shared presentational primitives** in `src/ui/`. Start from the [creating-component.md](./creating-component.md) decision tree.
-
-**Registry-first:** check `src/ui/` for an existing primitive. If missing, validate with React Native Reusables via `shadcn view` before vendoring. Build manually only when validation fails or no registry item fits.
+Create shared presentational primitives in `src/ui/`. Registry-first: check `src/ui/` for an existing primitive, then validate with React Native Reusables via `shadcn view`. Build manually only when no registry item fits.
 
 ## Prerequisites
 
-- [creating-component.md](./creating-component.md) — placement and shared rules
-- [setting-up-registry-components.md](./setting-up-registry-components.md) — one-time shell (Lucide, `inlineRem`, `PortalHost`) when the app has not been set up yet
-- [managing-wrapper-components.md](./managing-wrapper-components.md) — `className` merging on shared components
-- [discovering-registry-components.md](./discovering-registry-components.md) — intent-to-component lookup and labels
+- [creating-component.md](./creating-component.md) — placement, shared rules, naming baseline
+- [setting-up-registry-components.md](./setting-up-registry-components.md) — one-time shell (Lucide, `inlineRem`, `PortalHost`)
+- [managing-wrapper-components.md](./managing-wrapper-components.md) — `className` merging
+- [discovering-registry-components.md](./discovering-registry-components.md) — intent-to-component lookup
 
 ## Guidelines
 
-- Use React Native primitives or `@/ui/*` when composing.
-- Keep components presentation-only — props in, UI out.
-- Normalize **`cn` → `cx`**: import **`cx`** from **`class-variance-authority`** when editing registry output by hand.
-
 ### Folder layout
 
-`src/ui/` stays **flat and presentation-only** — no business logic, features, API, or stores. The layout below is the default; group files when a subsystem owns multiple related pieces.
+`src/ui/` stays flat and presentation-only. Group files only when a subsystem owns multiple related pieces.
 
 ```text
 src/ui/
-├── Button.tsx                # single primitive — one export per file
-├── ButtonText.tsx            # compound part (sibling file)
-├── hooks/                    # reusable UI-only hooks (e.g. useMediaQuery)
-├── Form/                     # composition root — see creating-form-component.md
-│   ├── index.tsx             # public barrel for the group
+├── Button.tsx
+├── ButtonText.tsx
+├── hooks/              # reusable UI-only hooks (e.g. useMediaQuery)
+├── Form/               # composition root — see creating-form-component.md
+│   ├── index.tsx
 │   └── InputField.tsx
-├── Async/                    # composition root — see creating-async-component.md
-└── BottomSheet/              # composition root — see creating-bottom-sheet-component.md
+├── Async/              # composition root — see creating-async-component.md
+└── BottomSheet/        # composition root — see creating-bottom-sheet-component.md
 ```
 
 ### Layout rules
 
-- Prefer `src/ui/<Component>.tsx` for standalone primitives; import with `@/ui/<Component>`.
-- Group related files under `src/ui/<GroupName>/` when the subsystem has multiple files; export the public API from `index.tsx` or `index.ts`.
-- Put reusable UI-only hooks in `src/ui/hooks/` — not feature or data hooks.
-- Named composition roots (`Form/`, `Async/`, `BottomSheet/`) follow the same group + barrel pattern.
+| Pattern | Rule |
+| --- | --- |
+| Standalone primitive | `src/ui/<Component>.tsx`; import `@/ui/<Component>` |
+| Multi-file subsystem | `src/ui/<GroupName>/` with `index.tsx` barrel |
+| UI-only hooks | `src/ui/hooks/` — no feature or data hooks |
+| Composition roots | `Form/`, `Async/`, `BottomSheet/` — same group + barrel pattern |
 
 ### Naming
 
-- Generic, unprefixed names: `Button`, `TextInput`, `Modal`, `Card`.
-- Compound parts share the root prefix: `Button`, `ButtonText`, `ButtonIcon` — **one export per file**.
-- Do not encode variant state in the name (`PrimaryButton` → `Button` with `tone` prop).
+- Generic, unprefixed: `Button`, `TextInput`, `Modal`, `Card`.
+- Compound parts share root prefix: `Button`, `ButtonText`, `ButtonIcon` — one export per file.
+- Encode state in props/variants, not the name.
+
+### Normalize `cn` → `cx`
+
+Import `cx` from `class-variance-authority` when editing registry output by hand.
 
 ### Lookup registry candidates
 
-Before `shadcn view`, map the request to candidates with [discovering-registry-components.md](./discovering-registry-components.md):
+Before `shadcn view`, map intent to candidates with [discovering-registry-components.md](./discovering-registry-components.md):
 
-1. Normalize the request intent (`picker`, `confirm delete`, `settings toggle`, `menu`).
-2. Match by `labels`, then by exact `slug`.
+1. Normalize intent (`picker`, `confirm delete`, `settings toggle`, `menu`).
+2. Match by `labels`, then exact `slug`.
 3. Prefer exact semantic match before composition.
-4. For composite requests, choose a primary primitive and supporting primitives (for example `alert-dialog` + `button`).
+4. For composite requests, choose primary + supporting primitives (e.g. `alert-dialog` + `button`).
 
 ### Validate with `shadcn view`
 
-Before running the add script, confirm the registry entry resolves:
+```bash
+node ../scripts/run-package.cjs -- shadcn@latest view "${url}"
+```
 
-1. Run (replace `url` with the React Native Reusables registry URL):
+1. Confirm exit code **0**.
+2. Parse stdout as JSON (strip markdown code fences if present).
+3. Expect a JSON array with `"$schema": "https://ui.shadcn.com/schema/registry-item.json"`.
 
-   ```bash
-   node ../scripts/run-package.cjs -- shadcn@latest view "${url}"
-   ```
-
-2. Confirm exit code **0**.
-
-3. Parse stdout as JSON (strip markdown code fences if present).
-
-4. Expect a **JSON array** with at least one object containing:
-
-   `"$schema": "https://ui.shadcn.com/schema/registry-item.json"`
-
-If validation fails, **do not** run the add script. Build manually per [Manual primitive](#add-a-custom-srcui-primitive-no-registry-item) below.
+If validation fails, build manually (see Examples below).
 
 ### Run the add script
-
-From the app **project root**:
 
 ```bash
 node ../scripts/run-package.cjs -- shadcn@latest view "https://reactnativereusables.com/r/nativewind/button.json"
 node ../scripts/add-registry-component.cjs "https://reactnativereusables.com/r/nativewind/button.json"
 ```
 
-Use `--root <project-dir>` when the cwd is not the app root.
-
-The script vendors files into `src/ui/` (for example `Button.tsx`), rewrites `cn` → `cx`, and fixes import paths. Import with `@/ui/Button`.
-
-When the script cannot resolve a dependency, add the component by hand and keep it presentation-only.
+Use `--root <project-dir>` when cwd is not app root. The script vendors into `src/ui/`, rewrites `cn` → `cx`, and fixes imports.
 
 ## Examples
 
-### Use a vendored primitive in a feature
+### Use a vendored primitive
 
 ```ts
 import { Button } from "@/ui/Button";
@@ -104,7 +90,7 @@ export function WorkshopCta() {
 }
 ```
 
-### Add a custom `src/ui/` primitive (no registry item)
+### Custom `src/ui/` primitive (no registry item)
 
 ```ts
 import type { ReactNode } from "react";
@@ -127,9 +113,7 @@ export function Button({ tone, className, label }: ButtonProps) {
 }
 ```
 
-### Split complex controls into parts
-
-Put each part in its own file under `src/ui/`:
+### Compound parts (separate files)
 
 `src/ui/Button.tsx`:
 

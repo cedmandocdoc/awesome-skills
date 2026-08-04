@@ -2,32 +2,23 @@
 
 ## Overview
 
-Use this guide to set up ESLint and Prettier for Expo + React Native TypeScript projects with flat config.
+**Execution mode.** Set up ESLint and Prettier for Expo + React Native TypeScript projects with flat config.
 
 ## Guidelines
 
 ### Tool ownership
 
-- Let Prettier own formatting.
-- Let ESLint own correctness, TypeScript rules, and React Native rules.
+| Tool | Owns |
+| --- | --- |
+| Prettier | Formatting |
+| ESLint | Correctness, TypeScript rules, React Native rules |
 
 ### File-type scoped linting
 
-- Use one config block for TypeScript source files (`**/*.{ts,tsx}`) with `@typescript-eslint/parser`.
-- Use a separate block for JavaScript and config files (`**/*.{js,cjs,mjs,jsx}`) with lighter rules.
-- Keep React Native UI rules primarily in TypeScript app code.
+- One config block for TypeScript source (`**/*.{ts,tsx}`) with `@typescript-eslint/parser`.
+- Separate block for JavaScript/config files (`**/*.{js,cjs,mjs,jsx}`) with lighter rules.
 
-### Usage
-
-### Run checks locally
-
-```bash
-npm run lint
-npm run lint -- --fix
-npm run format
-```
-
-### Keep CI and editor behavior aligned
+### CI and editor alignment
 
 - Run `npm run lint` in CI without `--fix`.
 - Optionally run `prettier --check src/` in CI.
@@ -41,7 +32,7 @@ npm run format
 node ../scripts/install-packages.cjs --dev eslint prettier eslint-plugin-prettier eslint-config-prettier eslint-config-expo @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint-plugin-react eslint-plugin-react-native
 ```
 
-### Add a Prettier config
+### Add Prettier config
 
 ```json
 {
@@ -53,7 +44,20 @@ node ../scripts/install-packages.cjs --dev eslint prettier eslint-plugin-prettie
 }
 ```
 
-### Add ESLint rules (example)
+### Add package scripts
+
+```json
+{
+  "scripts": {
+    "lint": "eslint .",
+    "format": "prettier --write src/"
+  }
+}
+```
+
+## Examples
+
+### ESLint flat config
 
 ```js
 const { defineConfig } = require("eslint/config");
@@ -116,13 +120,10 @@ module.exports = defineConfig([
 ]);
 ```
 
-### Add package scripts
+### Run checks locally
 
-```json
-{
-  "scripts": {
-    "lint": "eslint .",
-    "format": "prettier --write src/"
-  }
-}
+```bash
+npm run lint
+npm run lint -- --fix
+npm run format
 ```

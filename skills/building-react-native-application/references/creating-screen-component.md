@@ -2,51 +2,46 @@
 
 ## Overview
 
-Create **route-facing screen components** exported from a feature module and registered in `src/routes/`. Screens own feature UI composition and may read route params; route modules stay thin.
-
-Start from [creating-component.md](./creating-component.md). For feature module structure, see [creating-feature.md](./creating-feature.md).
+Create route-facing screen components exported from a feature module and registered in `src/routes/`. Screens own feature UI composition and may read route params; route modules stay thin.
 
 ## Prerequisites
 
+- [creating-component.md](./creating-component.md) — placement, shared rules, naming baseline
 - [creating-feature.md](./creating-feature.md) — barrels and export contract
 - [creating-feature-component.md](./creating-feature-component.md) — smaller blocks inside the screen
-- [creating-route-component.md](./creating-route-component.md) — static `screens` registration and navigation component wiring
+- [creating-route-component.md](./creating-route-component.md) — static `screens` registration
 
 ## Guidelines
 
-### Screen responsibilities
+### Responsibilities
 
 - Compose sibling feature components and `@/ui/*` primitives for the route's UI.
 - Read route params with React Navigation hooks when needed (`useRoute`, typed params).
 - Wire TanStack Query hooks, mutations, and feature stores for this flow.
-- Keep route registration in `src/routes/` — one-line import of the exported screen.
+- Keep route registration a one-line import of the exported screen.
 
-### What to avoid
+### Navigation components
 
-- Duplicating header, tab bar, or drawer navigation components inside the screen tree — wire from `src/routes/` via `@/features/navigation` per [creating-navigation-component.md](./creating-navigation-component.md), unless localized composition is clearer.
-- Defining reusable presentation-only primitives inline — extract to `src/ui/` or feature components.
+Prefer navigation components from `src/features/navigation/` wired via `src/routes/` per [creating-navigation-component.md](./creating-navigation-component.md). Inline only when localized composition is clearer.
 
 ### Size and structure
 
-- Keep screens focused; extract sub-trees to sibling feature components in the same `components/` folder when the file grows.
+- Extract sub-trees to sibling feature components when the file grows.
 - Async list/content wrappers: [creating-async-component.md](./creating-async-component.md).
 
 ### Placement
 
-Route-facing screen files **always** live under the feature's `components/` folder:
-
 ```text
-src/features/<feature-name>/components/<Feature>Screen.tsx
+src/features/<feature>/components/<Feature>Screen.tsx
+src/features/<feature>/components/<Feature>Layout.tsx   # shared layout wrappers
 ```
-
-Examples: `src/features/workshop-list/components/WorkshopListScreen.tsx`, `src/features/settings/components/SettingsScreen.tsx`.
-
-Shared layout wrappers exported from a feature (`AuthLayout`, `MainLayout`) also live in `components/`: `src/features/<feature-name>/components/<Feature>Layout.tsx`.
 
 ### Naming
 
-- Use the **`Screen`** suffix for components rendered as a route destination: `WorkshopListScreen`, `SettingsScreen`.
-- Use **`Layout`** for structural wrappers shared across route entries when exported from a feature: `AuthLayout`, `MainLayout`.
+| Suffix | Use |
+| --- | --- |
+| `Screen` | Route destination: `WorkshopListScreen`, `SettingsScreen` |
+| `Layout` | Structural wrapper shared across route entries: `AuthLayout`, `MainLayout` |
 
 ## Examples
 
@@ -97,6 +92,6 @@ screens: {
 
 ## Related
 
-- [creating-route-component.md](./creating-route-component.md) — register screens and wire navigation components in `src/routes/`
+- [creating-route-component.md](./creating-route-component.md) — register screens and wire navigation in `src/routes/`
 - [creating-navigation-component.md](./creating-navigation-component.md) — shared header / tab icon components
-- [creating-async-component.md](./creating-async-component.md) — loading, error, and list states in screens
+- [creating-async-component.md](./creating-async-component.md) — loading, error, and list states

@@ -2,47 +2,48 @@
 
 ## Overview
 
-Use this guide to standardize **Stepperize** base usage in React Native features. Create one dedicated hook module per flow (for example `useBookingStepper.ts`) that exports the typed `useStepper` hook and `Scoped` provider from one `defineStepper` declaration.
-
-This centralizes step definitions, keeps step IDs type-safe, and supports both local (hook-owned) and shared (provider-backed) stepper state patterns.
-
-## Prerequisites
-
-- [Stepperize — My first stepper](https://stepperize.vercel.app/docs/react/my-first-stepper)
-- [Stepperize — Scoped](https://stepperize.vercel.app/docs/react/api-references/scoped)
-- [Stepperize — Hook](https://stepperize.vercel.app/docs/react/api-references/hook)
+Standardize Stepperize base usage in React Native features. Create one dedicated hook module per flow (e.g. `useBookingStepper.ts`) that exports the typed `useStepper` hook and `Scoped` provider from one `defineStepper` declaration.
 
 ## Guidelines
 
 ### File placement and naming
 
-- Create one hook file per workflow in `src/features/<feature-name>/hooks/`, named `use<Feature>Stepper.ts` (for example `useBookingStepper.ts`).
+- One hook file per workflow in `src/features/<feature-name>/hooks/`, named `use<Feature>Stepper.ts`.
 - Define steps once with `defineStepper(...)` in that file.
 - Export at minimum:
-  - `use<Feature>Stepper` (alias of Stepperize `useStepper`)
-  - `<Feature>StepperScoped` (alias of Stepperize `Scoped`)
+  - `use<Feature>Stepper` (alias of `useStepper`)
+  - `<Feature>StepperScoped` (alias of `Scoped`)
 
 ### Step shape
 
-- Every step must have a unique `id`.
-- Add display fields such as `title` and `description` for UI labels.
-- Keep step-specific metadata on step objects so screens can read `stepper.state.current.data`.
+- Every step has a unique `id`.
+- Add display fields (`title`, `description`) for UI labels.
+- Keep step-specific metadata on step objects so screens read `stepper.state.current.data`.
 
-### State sharing rules
+### State sharing
 
-- Use `use<Feature>Stepper()` directly in one screen component for local stepper state (no provider required).
-- Use `<Feature>StepperScoped>` when multiple descendants need the same stepper instance.
-- Keep one `defineStepper` source per flow; do not duplicate it across files.
+| Pattern | When |
+| --- | --- |
+| `use<Feature>Stepper()` directly | One screen owns stepper state (no provider) |
+| `<Feature>StepperScoped` wrapper | Multiple descendants share the same instance |
+
+Keep one `defineStepper` source per flow.
 
 ### Navigation and rendering
 
 - Prefer `stepper.flow.switch(...)` for step-by-step rendering.
 - Use `stepper.flow.is(id)` for small conditional blocks.
-- Use `stepper.navigation.next()`, `prev()`, `goTo(id)`, and `reset()` for transitions.
+- Use `stepper.navigation.next()`, `prev()`, `goTo(id)`, `reset()` for transitions.
 
-### Example
+## Setup
 
-### Feature hook: `useBookingStepper`
+```bash
+node ../scripts/install-packages.cjs @stepperize/react
+```
+
+## Examples
+
+### Feature hook
 
 ```ts
 import { defineStepper } from "@stepperize/react";
@@ -108,15 +109,13 @@ function BookingStepActions() {
 }
 ```
 
-## Setup
-
-Install Stepperize in the app project:
-
-```bash
-node ../scripts/install-packages.cjs @stepperize/react
-```
-
 ## Related
 
-- [managing-state.md](./managing-state.md) — decide where stepper state should live
+- [managing-state.md](./managing-state.md) — decide where stepper state lives
 - [creating-feature.md](./creating-feature.md) — feature hook/file organization
+
+## References
+
+- [Stepperize — My first stepper](https://stepperize.vercel.app/docs/react/my-first-stepper)
+- [Stepperize — Scoped](https://stepperize.vercel.app/docs/react/api-references/scoped)
+- [Stepperize — Hook](https://stepperize.vercel.app/docs/react/api-references/hook)

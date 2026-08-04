@@ -2,31 +2,19 @@
 
 ## Overview
 
-Create **reusable navigation components** in `src/features/navigation/` — stack headers, bottom tab bars, drawer content, and related hooks. These components are wired from `src/routes/` by default; feature screens and other features may import them when route-level wiring is impractical.
+Create **reusable navigation components** in `src/features/navigation/` — stack headers, bottom tab bars, drawer content, and related hooks. Wire from `src/routes/` by default; feature screens import them when route-level wiring is impractical.
 
 This module is **navigation infrastructure**, not a user-facing product feature. Import via `@/features/navigation`.
 
-Start from [creating-component.md](./creating-component.md). For wiring navigation components in navigator options, see [creating-route-component.md](./creating-route-component.md).
+Start from [creating-component.md](./creating-component.md).
 
 ## Prerequisites
 
 - [creating-ui-component.md](./creating-ui-component.md) — when the navigation component is a reusable primitive
-- [creating-route-component.md](./creating-route-component.md) — default wiring in `src/routes/`
-- [creating-screen-component.md](./creating-screen-component.md) — route-facing screens (navigation components stay out of screen trees by default)
+- [creating-route-component.md](./creating-route-component.md) — navigator→slot wiring table and default wiring path
+- [creating-screen-component.md](./creating-screen-component.md) — route-facing screens
 
 ## Guidelines
-
-### Prefer whole navigation components
-
-**Default:** replace the entire navigator navigation slot with a custom component. Keep icons, labels, and layout inside that component so navigation UI changes stay in one place.
-
-Whether to use a custom navigation component at all depends on the prompt; when unspecified, **use custom navigation components**.
-
-| Navigator | Slot | Wire via |
-| --- | --- | --- |
-| Stack | `[Module]StackHeader` | `screenOptions.header` |
-| Bottom tabs | `[Module]BottomTabBar` | `tabBar` |
-| Drawer | `[Module]DrawerContent` | `drawerContent` |
 
 ### Placement
 
@@ -50,39 +38,11 @@ src/features/navigation/
 
 Promote a component to `src/ui/` only when it is reused outside navigation and carries no route-specific wiring.
 
-### Default path — wire from routes
+### Wiring
 
-- Build navigation components once in `src/features/navigation/`.
-- Plug them into navigator options in `src/routes/` — see [creating-route-component.md](./creating-route-component.md).
-- Keep screen components focused on feature UI.
+**Default:** build navigation components once in `src/features/navigation/`, then wire slots per [creating-route-component.md](./creating-route-component.md#wiring-navigation-components). Keep screen components focused on feature UI.
 
-### Exception — compose in a feature screen
-
-When route-level wiring is too complex (dynamic navigation UI driven by screen-local state, navigation components tightly coupled to screen data), import navigation components directly in the feature screen. Prefer this only when `src/routes/` wiring would be harder to follow than localized composition.
-
-### Stack header
-
-- Accept stack header props (`options`, `navigation`, `route`) when wrapping the native header slot.
-- Register `[Module]StackHeader` via `screenOptions.header` on the stack navigator.
-
-### Bottom tab bar
-
-- Accept bottom-tab bar props from React Navigation when implementing `[Module]BottomTabBar`.
-- Register `[Module]BottomTabBar` via the navigator `tabBar` option.
-- Keep tab items, icons, labels, and spacing inside the custom tab bar component.
-
-### Drawer content
-
-- Accept drawer content props when implementing `[Module]DrawerContent`.
-- Register `[Module]DrawerContent` via `drawerContent` on the drawer navigator.
-- Keep drawer labels, icons, and layout inside the custom drawer component.
-
-Navigation components are usually **presentation-only**; navigation actions come from React Navigation props (`navigation`, `route`, `state`, `descriptors`).
-
-### What to avoid
-
-- Copying the same header, tab bar, or drawer JSX into every screen file.
-- Putting domain business logic in navigation components — navigation components are presentation and layout.
+**Exception:** when route-level wiring is too complex (dynamic navigation UI driven by screen-local state), import navigation components directly in the feature screen. Prefer this only when `src/routes/` wiring would be harder to follow than localized composition.
 
 ### Naming
 
@@ -94,11 +54,22 @@ Derive the component name from the **navigator module name** in `src/routes/` (s
 | `ProfileStackNavigator` | `ProfileStackHeader` |
 | `MainDrawerNavigator` | `MainDrawerContent` |
 
-- **Stack:** `[Module]StackHeader` — e.g. `ProfileStackNavigator` → `ProfileStackHeader`.
-- **Bottom tabs:** `[Module]BottomTabBar` — e.g. `MainBottomNavigator` → `MainBottomTabBar`.
-- **Drawer:** `[Module]DrawerContent` — e.g. `MainDrawerNavigator` → `MainDrawerContent`.
-- Hooks: `useProfileStackHeader`, `useMainBottomTabBar` — live in `src/features/navigation/hooks/`.
-- Use one navigator-scoped component per slot instead of screen-local duplicates.
+Hooks: `useProfileStackHeader`, `useMainBottomTabBar` — live in `src/features/navigation/hooks/`. Use one navigator-scoped component per slot instead of screen-local duplicates.
+
+### Per-type guidance
+
+| Type | Props to accept | Register via | Keep inside |
+| --- | --- | --- | --- |
+| `[Module]StackHeader` | `options`, `navigation`, `route` | `screenOptions.header` | Title, back button, actions |
+| `[Module]BottomTabBar` | `BottomTabBarProps` | `tabBar` | Tab items, icons, labels, spacing |
+| `[Module]DrawerContent` | Drawer content props | `drawerContent` | Drawer labels, icons, layout |
+
+### Component design
+
+- Navigation components are **presentation-only**; navigation actions come from React Navigation props (`navigation`, `route`, `state`, `descriptors`).
+- Build shared navigation UI once and wire at the navigator level — avoid copying header, tab bar, or drawer JSX into every screen file.
+- Keep domain business logic out of navigation components.
+- When unspecified, **use custom navigation components**.
 
 ## Examples
 
@@ -119,22 +90,6 @@ export function ProfileStackHeader({ options }: NativeStackHeaderProps) {
     </View>
   );
 }
-```
-
-`src/features/navigation/index.ts`:
-
-```ts
-export { ProfileStackHeader } from "./components/ProfileStackHeader";
-```
-
-Wire in `src/routes/ProfileStackNavigator.tsx`:
-
-```tsx
-import { ProfileStackHeader } from "@/features/navigation";
-
-screenOptions: {
-  header: (props) => <ProfileStackHeader {...props} />,
-},
 ```
 
 ### Shared bottom tab bar
@@ -170,15 +125,7 @@ export function MainBottomTabBar({ state, descriptors, navigation }: BottomTabBa
 }
 ```
 
-Wire in `src/routes/MainBottomNavigator.tsx`:
-
-```tsx
-import { MainBottomTabBar } from "@/features/navigation";
-
-tabBar: (props) => <MainBottomTabBar {...props} />,
-```
-
-### Feature screen imports navigation components directly (exception)
+### Feature screen imports navigation component (exception)
 
 ```tsx
 import { WorkshopToolbar } from "@/features/navigation";
@@ -201,4 +148,4 @@ Use when toolbar state is owned by the screen and navigator-level wiring would o
 - [creating-route-component.md](./creating-route-component.md) — register screens and wire navigation components in `src/routes/`
 - [creating-screen-component.md](./creating-screen-component.md) — feature screen components
 - [setting-up-navigation-theme.md](./setting-up-navigation-theme.md) — theme colors for navigation components
-- [reusing-navigation-background.md](./reusing-navigation-background.md) — shared background patterns
+- [managing-screen-background.md](./managing-screen-background.md) — shared background patterns

@@ -2,30 +2,25 @@
 
 ## Overview
 
-Use this guide to handle form failures in TanStack Form with a clear split:
+Handle form failures in TanStack Form with a clear split:
 
-- **Server submit errors** are stored in `errorMap.onServer` as `ApiError` and shown via a pre-bound form-level component.
-- **Local validation errors** come from validators (for example Zod) and render via pre-bound `*Field` components and **`FieldShell`** (see [creating-form-component.md](./creating-form-component.md)).
+- **Server submit errors** — stored in `errorMap.onServer` as `ApiError`, shown via a pre-bound form-level component.
+- **Local validation errors** — from validators (e.g. Zod), rendered via pre-bound `*Field` components and `FieldShell`.
 
 ## Prerequisites
 
 - [managing-api-error.md](./managing-api-error.md)
-- [creating-form-component.md](./creating-form-component.md) — `src/ui/Form/` layout, `FieldShell`, and pre-bound `*Field` components
+- [creating-form-component.md](./creating-form-component.md) — `src/ui/Form/` layout, `FieldShell`, pre-bound `*Field` components
 
 ## Guidelines
 
-### Workflow
+### 1) Define error UI (expects `ApiError`)
 
-### 1) Define error UI first (expects `ApiError`)
-
-Build shared error UI that accepts `ApiError` (or `unknown` narrowed to `ApiError`) and renders user-facing copy from `error.message`.
-
-- Keep error presentation reusable (inline message, toast, banner).
-- Keep message ownership in API layer per [managing-api-error.md](./managing-api-error.md).
+Build shared error UI that accepts `ApiError` and renders `error.message`. Keep message ownership in API layer per [managing-api-error.md](./managing-api-error.md).
 
 ### 2) Handle submit server error (`onServer`)
 
-In form submit handlers, catch API or mutation failures and write them to `onServer`:
+Catch API failures and write them to `onServer`:
 
 ```tsx
 try {
@@ -35,18 +30,14 @@ try {
 }
 ```
 
-At runtime `onServer` holds `ApiError` from typed mutations (`useMutation<…, ApiError, …>`) and the API layer in [managing-api-error.md](./managing-api-error.md). Use `as never` because TanStack Form’s `setErrorMap` typing does not accept `ApiError` on `onServer` directly.
+Use `as never` because TanStack Form's `setErrorMap` typing does not accept `ApiError` on `onServer` directly. At runtime `onServer` holds `ApiError` from typed mutations.
 
-Create a pre-bound form component that subscribes to `errorMap.onServer`, then use it as `form.TransientServerError`. Place the implementation in `src/ui/Form/` (for example `TransientServerError.tsx`) and register it in `formComponents` from `index.tsx`:
+Create a pre-bound form component that subscribes to `errorMap.onServer`. Place in `src/ui/Form/` (e.g. `TransientServerError.tsx`) and register in `formComponents`:
 
 ```tsx
 import { useCallback } from "react";
 import type { ReactElement } from "react";
 
-/**
- * Pre-bound form component that subscribes to server-time form errors
- * and shows a transient bottom toast when the error is an Error instance.
- */
 export function TransientServerError(): ReactElement {
   const form = useFormContext();
 
@@ -65,7 +56,7 @@ export function TransientServerError(): ReactElement {
 }
 ```
 
-Render it in form composition:
+Render in form composition:
 
 ```tsx
 <form.AppForm>
@@ -77,9 +68,9 @@ Render it in form composition:
 
 ### 3) Handle local validation errors (Zod)
 
-- Add Zod validators on the form so front-end validation runs automatically.
-- Pass the first field meta error (or the mapped submit error) into **`FieldShell`**’s `error` prop from each pre-bound `*Field` in `src/ui/Form/` — see [creating-form-component.md](./creating-form-component.md).
-- Reuse **`FormError`** inside **`FieldShell`** so `ApiError` and Zod errors render consistently.
+- Add Zod validators on the form for automatic front-end validation.
+- Pass the first field meta error into `FieldShell`'s `error` prop from each pre-bound `*Field` — see [creating-form-component.md](./creating-form-component.md).
+- Reuse `FormError` inside `FieldShell` so `ApiError` and Zod errors render consistently.
 
 ### 4) Set field-level API errors on submit
 
@@ -95,11 +86,4 @@ formApi.setErrorMap({
 });
 ```
 
-Map the corresponding error into each pre-bound field’s **`FieldShell`** `error` prop (same slot as Zod validation). This keeps API-backed field errors inline with local validation.
-
-### Conventions
-
-- Keep server-level failures in `onServer`.
-- Keep per-field submit failures in `onSubmit.fields`.
-- Reuse one error UI path (`FormError` via `FieldShell`) so `ApiError` and Zod errors render consistently.
-- Do not redefine `FieldShell` or `*Field` here — extend `src/ui/Form/` per [creating-form-component.md](./creating-form-component.md).
+Map the error into each pre-bound field's `FieldShell` `error` prop (same slot as Zod validation).

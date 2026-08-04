@@ -2,21 +2,23 @@
 
 ## Overview
 
-React Navigation already applies the app background through the navigation theme (`colors.background`), which maps to the same token as NativeWind `bg-background`. Because of this, screen roots inside the navigator usually do not need an extra `bg-background`.
+React Navigation’s theme already paints the screen area via `colors.background` (same token as NativeWind `bg-background`). Prefer that single fill on screen roots under the themed navigator.
+
+## Prerequisites
+
+- [setting-up-navigation-theme.md](./setting-up-navigation-theme.md)
 
 ## Guidelines
 
-- **Default case (most screens)**: Do not add `bg-background` to the root screen container when the screen is rendered inside the themed navigator.
-- **Add only when different**: Add a background class only when the screen or section needs a background that is intentionally different from the default navigation background.
-- **Surface-level UI**: Apply background classes to components that establish their own surface (for example cards, sheets, insets, or panels), not to duplicate the page fill.
-- **Keep tokens aligned**: Keep Tailwind `bg-background` aligned with the navigation theme background token so both systems stay consistent.
-
-### Verdict
-
-React Navigation theme already provides the default background. Do not set `bg-background` again on every screen component by default.
+| Case | Rule |
+| --- | --- |
+| Default screen root | Omit `bg-background` (or equivalent) on the outermost screen container |
+| Feature / layout wrappers | Omit `bg-background` when it only duplicates the nav fill |
+| Own surface | Apply background classes on cards, sheets, insets, panels, modals, or floating regions |
+| Outside navigator | Apply `bg-background` on roots that render outside the themed navigator tree |
+| Tokens | Keep `bg-background` aligned with `NAV_THEME` / `THEME.*.background` in `src/theme.ts` |
 
 ## Related
 
 - [creating-route-component.md](./creating-route-component.md)
 - [setting-up-navigation-theme.md](./setting-up-navigation-theme.md)
-- [reusing-navigation-background.md](./reusing-navigation-background.md)

@@ -2,47 +2,41 @@
 
 ## Overview
 
-Create **domain UI components** in `src/features/<feature-name>/components/`. These compose `@/ui/*` primitives and may contain feature-specific logic, hooks, and event handlers.
-
-Start from [creating-component.md](./creating-component.md). For module barrels and exports, see [creating-feature.md](./creating-feature.md).
+Create domain UI components in `src/features/<feature>/components/`. These compose `@/ui/*` primitives and may contain feature-specific logic, hooks, and event handlers.
 
 ## Prerequisites
 
-- [creating-component.md](./creating-component.md) — placement and shared rules
-- [creating-ui-component.md](./creating-ui-component.md) — when you need a missing shared primitive first
+- [creating-component.md](./creating-component.md) — placement, shared rules, naming baseline
+- [creating-ui-component.md](./creating-ui-component.md) — when a shared primitive is missing
 
 ## Guidelines
 
-### What belongs here
+### Placement
 
-- Route-facing screens (`*Screen.tsx`) — see [creating-screen-component.md](./creating-screen-component.md).
-- UI blocks tied to product rules or feature state.
-- Event handlers and side effects specific to the feature.
-- Composition of `@/ui/*` primitives and other feature components.
-- Derived display logic that callers should not duplicate.
-
-### What does not belong here
-
-- Reusable presentation-only primitives → [creating-ui-component.md](./creating-ui-component.md).
-- Route registration → `src/routes/` per [creating-route-component.md](./creating-route-component.md).
-- HTTP clients and request functions → `src/api/` per [creating-api.md](./creating-api.md).
+| Belongs here | Does not belong here |
+| --- | --- |
+| UI blocks tied to product rules or feature state | Reusable presentation-only primitives → `src/ui/` |
+| Event handlers and side effects for this feature | Route registration → `src/routes/` |
+| Composition of `@/ui/*` and sibling feature components | HTTP clients → `src/api/` |
+| Derived display logic callers should not duplicate | |
+| Route-facing screens (`*Screen.tsx`) — see [creating-screen-component.md](./creating-screen-component.md) | |
 
 ### Composition
 
 - Prefer smaller feature components over one large file.
-- Feature components may import sibling feature components in the same module.
-- Import shared primitives from `@/ui/<file>` — run the UI registry path first when a primitive is missing.
+- Feature components may import siblings in the same module.
+- Import shared primitives from `@/ui/<file>` — run registry path first when a primitive is missing.
 
 ### Extraction heuristic
 
-When building a screen, split recurring rendering blocks into named feature components if they clarify the tree and stay under **200 lines**. If a block is presentation-only and reused across features, promote it to `src/ui/` instead.
+Split recurring rendering blocks into named feature components when they clarify the tree. If a block is presentation-only and reused across features, promote to `src/ui/`.
 
 ### Naming
 
-- Use **`<Feature><Entity><Type>`** when the component carries domain meaning: `AuthLoginForm`, `CartItemRow`, `OrderSummaryCard`.
-- Prefix with the feature when the name only makes sense in that product area: `CheckoutButton`, `SearchInput`.
-- Group related parts with a shared prefix: `CartItem`, `CartItemImage`, `CartItemPrice`, `CartItemQuantity`.
-- Suffixes: `Card`, `Item` / `Row`, `Form`, `Modal` / `Dialog` — pick one list pattern and stay consistent.
+- **`<Feature><Entity><Type>`** for domain meaning: `AuthLoginForm`, `CartItemRow`, `OrderSummaryCard`.
+- Feature prefix when name only makes sense in that product area: `CheckoutButton`, `SearchInput`.
+- Related parts share a prefix: `CartItem`, `CartItemImage`, `CartItemPrice`, `CartItemQuantity`.
+- Suffixes: `Card`, `Item`/`Row`, `Form`, `Modal`/`Dialog` — pick one list pattern, stay consistent.
 
 ## Examples
 

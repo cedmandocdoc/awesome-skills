@@ -2,116 +2,62 @@
 
 ## Overview
 
-Use this guide to write *feature modules* in `src/features/<feature-name>/`.
+Write feature modules in `src/features/<feature-name>/`. A feature packages domain logic with feature UI and exposes a small barrel surface for routes and other features.
 
-A feature module packages domain logic with the feature UI, and exposes a small export surface for routes and other features — commonly a screen, plus hooks, types, helpers, and components as needed. This keeps reusable primitives in `src/ui/`, navigation components in `src/features/navigation/`, and data fetching/API code in `src/api/` (usually via feature hooks).
-
-For components inside a feature folder, see [creating-feature-component.md](./creating-feature-component.md). For route-facing screens, see [creating-screen-component.md](./creating-screen-component.md). For navigation components, see [creating-navigation-component.md](./creating-navigation-component.md).
+For components inside a feature folder, see [creating-feature-component.md](./creating-feature-component.md). For screens, see [creating-screen-component.md](./creating-screen-component.md). For navigation, see [creating-navigation-component.md](./creating-navigation-component.md).
 
 ## Guidelines
 
-### Mental model
+### Placement
 
-Feature categorization is intentionally predictable, even though real features can be grouped in different ways.
+| What | Where |
+| --- | --- |
+| Feature domain logic + UI | `src/features/<feature>/` |
+| Shared navigation components | `src/features/navigation/` |
+| Presentation-only primitives | `src/ui/` |
+| HTTP clients and request functions | `src/api/` (called from feature hooks) |
 
-**Isolated vs grouped features**
+### Grouping
 
-- **Isolated features**: one complete package that typically exports one primary screen (for example, `WorkshopListScreen`) plus the hooks, types, and helpers callers need.
-- **Grouped features**: a feature exports multiple related public pieces when they are meant to be used together — for example a screen, a toolbar component, and a search helper.
+| Strategy | When |
+| --- | --- |
+| Isolated feature | Callers use it as a single package (one screen + hooks + types) |
+| Grouped feature | Exports are inseparable in practice (screen + toolbar + search helper) |
+| Per-screen module | Logic primarily owned by one screen flow |
 
-A feature is **not limited to screen exports**. The barrel may also publish components, hooks, pure functions, types, and constants that belong in the public API.
-
-This guide favors isolated features first, but it allows grouped features when it improves clarity.
-
-**Per-route is the most common grouping**
-
-- Route modules in `src/routes/` map static `screens` entries to feature exports (see [creating-route-component.md](./creating-route-component.md)).
-- The feature export should be **route-ready** (read params with React Navigation hooks when needed) so registration stays a one-line import.
-- The feature folder owns the behavior so route files stay focused on registration and navigation component wiring.
-
-**Isolation is about dependency boundaries**
-
-- Callers use the module through its barrel; the folder layout can change behind that stable surface.
-- Other features and route modules use the barrel as the only import path for that feature's public API.
-
-**Respect the team's categorization when it helps**
-
-Some teams categorize features based on product language (e.g. "billing", "onboarding") rather than UI structure. When that makes the app easier to maintain, this guide allows that variation.
-
-### Placement rules
-
-- Follow [Feature folder layout](#feature-folder-layout) for internal files.
-- Place shared navigation components in `src/features/navigation/` — not inside domain feature folders.
-- Place shared presentation-only primitives in `src/ui/`.
-- Keep HTTP clients and request functions in `src/api/` and call them from feature hooks.
-
-### Grouping rules
-
-- Prefer an isolated feature when callers can use it as a single package.
-- Prefer a grouped feature when the exports are inseparable in practice.
-- Prefer per-screen feature modules when the logic is primarily owned by one screen flow.
-
-### Module size heuristic
-
-- If a feature folder becomes hard to reason about, split it into smaller feature modules and compose them from the parent feature or from route registration.
-- When the same pieces are repeatedly composed across multiple screens, that repetition is usually a signal to extract a reusable feature module.
+Split into smaller modules when the folder is hard to reason about. Repeated composition across screens signals a reusable module.
 
 ### Export contract
 
-- Each feature folder must expose a barrel (commonly `src/features/<feature-name>/index.ts`). Import it from other modules (`@/features/...`, `@/routes/...`, app shells) whenever you use that feature from outside its folder.
-- Export only what other modules need: screens, components, hooks, pure helpers, types, and constants that form the public API.
-- An isolated feature typically exports one primary screen plus supporting hooks and types.
-- A grouped feature exports multiple named parts (for example a screen, a component, and a helper function).
-- Keep internal implementation files off the barrel.
+- Each feature exposes a barrel: `src/features/<feature>/index.ts`.
+- Export only what other modules need: screens, components, hooks, helpers, types, constants.
+- Keep internal implementation off the barrel.
+- Route modules in `src/routes/` map static `screens` entries to feature exports per [creating-route-component.md](./creating-route-component.md). Feature exports are route-ready (read params via React Navigation hooks) so registration stays a one-line import.
 
 ### Type-based organization
 
-**First-class strategy.** Organize feature internals by **file type** — not by a fixed folder checklist. Only a few types are common enough to list in examples (`components`, `hooks`, `types`, `utils`, `schemas`, `constants`); add any other type the feature needs using the same file-or-folder pattern.
+Organize internals by file type, not a fixed folder checklist.
 
 | Phase | Rule |
 | --- | --- |
-| Start | One **file** at the feature root, named after the type: `types.ts`, `utils.ts`, `schemas.ts`, `constants.ts`. |
-| Multi-file from day one | Use a **folder** immediately when the type naturally has several exports — `components/` and `hooks/` (one export per file). |
-| Scale | When a single type file exceeds **~200 lines**, replace it with a **folder** of the same name. Inside the folder, one file per export; each file exports exactly one thing. |
-
-Apply the same scaling rule to every type — `utils`, `types`, `schemas`, `mappers`, `validators`, and any new type you introduce.
+| Start | One file at feature root: `types.ts`, `utils.ts`, `schemas.ts`, `constants.ts` |
+| Multi-file from day one | Folder immediately when the type has several exports — `components/`, `hooks/` (one export per file) |
+| Scale | When a type file exceeds ~200 lines, replace with a folder of the same name; one file per export inside |
 
 ### Feature folder layout
 
-The tree below shows **common** types, not an exhaustive list. Add type-named files or folders as the feature grows.
-
 ```text
 src/features/<feature-name>/
-├── index.ts                  # public barrel
-├── components/               # domain UI — folder from the start (one component per file)
-│   └── <Feature>Screen.tsx  # route-facing screen (see creating-screen-component.md)
-├── hooks/                    # query hooks, stores — folder from the start (one hook per file)
-├── types.ts                  # shared types → types/ when > ~200 lines
-├── utils.ts                  # shared pure helpers → utils/ when > ~200 lines
-├── schemas.ts                # Zod/form schemas → schemas/ when > ~200 lines
-├── constants.ts              # shared constants → constants/ when > ~200 lines
-└── env.ts                    # when this feature reads env (see managing-environment.md)
-
-# scaled examples (same type name, folder form):
-├── types/
-│   └── Workshop.ts           # one type per file
-├── utils/
-│   ├── formatDate.ts         # one helper per file
-│   └── mapWorkshop.ts
-└── schemas/
-    └── workshopFormSchema.ts # one schema per file
+├── index.ts              # public barrel
+├── components/           # domain UI (one component per file)
+│   └── <Feature>Screen.tsx
+├── hooks/                # query hooks, stores (one hook per file)
+├── types.ts              # → types/ when > ~200 lines
+├── utils.ts              # → utils/ when > ~200 lines
+├── schemas.ts            # → schemas/ when > ~200 lines
+├── constants.ts          # → constants/ when > ~200 lines
+└── env.ts                # when this feature reads env (see managing-environment.md)
 ```
-
-### Layout rules
-
-- Follow [Type-based organization](#type-based-organization) for every file type — including types not shown in the tree.
-- Place the route-facing screen in `components/`: `src/features/<feature-name>/components/<Feature>Screen.tsx`.
-- Place other supporting UI in the same `components/` folder — one component per file.
-- Place hooks in `hooks/` — including Zustand stores (`use<Feature>Store.ts`); one hook per file.
-- Start `types`, `utils`, `schemas`, `constants`, and other shared types as a single `<type>.ts` file; promote to `<type>/` when the file exceeds **~200 lines**.
-- Inside a type folder, name files after what they export; each file exports exactly one thing.
-- Add `env.ts` when only this feature reads those variables — see [managing-environment.md](./managing-environment.md).
-- Keep internal implementation files off the barrel unless they are part of the public API.
 
 ## Examples
 
@@ -124,8 +70,6 @@ export type { Workshop } from "./types";
 ```
 
 ### Grouped feature barrel
-
-Exports a screen plus related components and helpers — not every feature needs a primary screen:
 
 ```ts
 export { WorkshopListScreen } from "./components/WorkshopListScreen";

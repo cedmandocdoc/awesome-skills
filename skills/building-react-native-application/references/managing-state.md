@@ -2,40 +2,47 @@
 
 ## Overview
 
-Use this guide to decide where state belongs. Use TanStack Query for server data, Zustand for feature-owned client state, navigation params for route state, and local React state for UI owned by one component.
+Decide where state belongs. Use TanStack Query for server data, Zustand for feature-owned client state, navigation params for route state, and local React state for UI owned by one component.
 
 ## Guidelines
 
 ### Structure
 
-- Put Zustand stores in `src/features/<feature-name>/hooks/use<Feature>Store.ts`.
-- Put query hooks in `src/features/<feature-name>/hooks/`.
-- Keep API calls in `src/api/`.
+- Zustand stores: `src/features/<feature-name>/hooks/use<Feature>Store.ts`
+- Query hooks: `src/features/<feature-name>/hooks/`
+- API calls: `src/api/`
 
 ### Choose the right state tool
 
-1. Use TanStack Query for data fetched from an API.
-2. Use Zustand for client-only state owned by a feature (including stores consumed by multiple features, such as auth).
-3. Use navigation params for route state that should survive back navigation and deep links.
-4. Use `useState` or `useReducer` for local component state.
+| Kind | Tool |
+| --- | --- |
+| Data fetched from an API | TanStack Query |
+| Client-only state owned by a feature (including cross-feature stores like auth) | Zustand |
+| Route state surviving back navigation and deep links | Navigation params |
+| UI owned by one component | `useState` / `useReducer` |
 
 ### State rules
 
 - Derive values in render when possible.
-- Do not copy props or query data into local state without a clear reason.
-- Store semantic state such as `isOpen` or `step`, not visual output such as `opacity`.
+- Store semantic state (`isOpen`, `step`), not visual output (`opacity`).
 - Use selectors with Zustand to reduce re-renders.
-- Name store hooks with the `useXStore` pattern and keep the file name aligned.
+- Name store hooks `useXStore`; keep the file name aligned.
+
+### Stepper and wizard state
+
+See [managing-stepper-hook.md](./managing-stepper-hook.md) and [managing-stepper-form.md](./managing-stepper-form.md).
+
+- Keep step index and navigation in the stepper hook (`useXStepper`).
+- Keep field values and validation in TanStack Form; do not mirror form fields in Zustand.
+- Use Zustand only when step progress or draft data must survive leaving the screen.
 
 ## Setup
-
-### Install dependencies
 
 ```bash
 node ../scripts/install-packages.cjs @tanstack/react-query zustand
 ```
 
-### Add `QueryClientProvider` at the root
+### `QueryClientProvider` at the root
 
 ```tsx
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -58,9 +65,7 @@ export default function App() {
 
 ## Examples
 
-### Create a query hook
-
-Module functions own the shared client; feature hooks import only the module function (see [creating-api.md](./creating-api.md)).
+### Query hook
 
 ```ts
 import { useQuery } from "@tanstack/react-query";
@@ -74,9 +79,9 @@ export function useWorkshops() {
 }
 ```
 
-### Create a Zustand store
+### Zustand store
 
-Example path: `src/features/auth/hooks/useAuthStore.ts`
+Path: `src/features/auth/hooks/useAuthStore.ts`
 
 ```ts
 import { create } from "zustand";
@@ -94,18 +99,9 @@ export const useAuthStore = create<AuthState>((set) => ({
 }));
 ```
 
-### Prefer derived values
+### Derived values
 
 ```tsx
 const [raw, setRaw] = useState<string | undefined>(undefined);
 const value = raw ?? serverDefault;
 ```
-
-### Stepper and wizard state
-
-For multi-step flows built with Stepperize (see [managing-stepper-hook.md](./managing-stepper-hook.md)):
-
-- Keep **active step index and step navigation** in the stepper hook (`useXStepper`) when the wizard is scoped to one screen or feature flow.
-- Keep **field values and validation** in TanStack Form (see [managing-stepper-form.md](./managing-stepper-form.md)); do not mirror form fields in Zustand.
-- Use **Zustand** only when step progress or draft data must survive leaving the screen or be shared across features.
-- Use **navigation params** when a step or sub-flow should be deep-linkable or restored after back navigation.

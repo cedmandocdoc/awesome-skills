@@ -2,9 +2,7 @@
 
 ## Overview
 
-**Read-only.** Use this reference to map a UI request to candidate React Native registry components before validation and vendoring.
-
-Source registry folder: [react-native-reusables nativewind components](https://github.com/founded-labs/react-native-reusables/tree/main/packages/registry/src/nativewind/components/ui).
+**Read-only.** Map a UI request to candidate React Native registry components before validation and vendoring.
 
 ## Guidelines
 
@@ -57,6 +55,9 @@ Source registry folder: [react-native-reusables nativewind components](https://g
 1. Normalize request intent (`date picker`, `confirm delete`, `settings toggle`, `menu`).
 2. Match by `labels` first, then by exact `slug`.
 3. Prefer exact semantic component (`alert-dialog`, `select`, `tabs`) before composition.
-4. For composite requests, pick a primary component then supporting pieces (example: confirm flow -> `alert-dialog` + `button`).
+4. For composite requests, pick a primary component then supporting pieces (example: confirm flow → `alert-dialog` + `button`).
 5. Validate candidates with `shadcn view` URL before running add script.
 
+## References
+
+- [react-native-reusables nativewind components](https://github.com/founded-labs/react-native-reusables/tree/main/packages/registry/src/nativewind/components/ui)

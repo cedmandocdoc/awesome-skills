@@ -2,17 +2,23 @@
 
 ## Overview
 
-Axios for Expo via a small client factory and env-based base URL and options—one place to grow auth, timeouts, and interceptors.
+**Execution mode.** Install Axios and create a small client factory with env-based base URL — one place to grow auth, timeouts, and interceptors.
+
+## Prerequisites
+
+- [managing-environment.md](./managing-environment.md)
 
 ## Guidelines
 
-### Install Axios
+### Install
 
 ```bash
 node ../scripts/install-packages.cjs axios
 ```
 
-### Create a client
+### Create client factory
+
+Write `src/api/<backend-name>/client.ts`:
 
 ```ts
 import axios from "axios";
@@ -37,13 +43,15 @@ export async function responseData<T>(
 }
 ```
 
-### Add environment variables
+### Environment variables
 
 - Use `EXPO_PUBLIC_*` for public API config only.
-- Do not store secrets in `EXPO_PUBLIC_*` variables.
+- Secrets must not be stored in `EXPO_PUBLIC_*` variables.
 
 ```bash
 EXPO_PUBLIC_API_URL=http://localhost:3000
 ```
 
-Export the shared `client` instance from `client.ts` using parsed env (see [managing-environment.md](./managing-environment.md#wire-api-client-to-parsed-env)).
+### Wire client to env
+
+Export the shared `client` instance using parsed env (see [managing-environment.md](./managing-environment.md#wire-api-client-to-parsed-env)).

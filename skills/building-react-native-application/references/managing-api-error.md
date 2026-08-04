@@ -2,7 +2,7 @@
 
 ## Overview
 
-Use this guide to keep **user-facing error copy** in `src/api/`. Every failed API call throws **`ApiError`**; feature hooks pass it through; screens and async wrappers only choose **where** and **when** to show `error.message`.
+Keep user-facing error copy in `src/api/`. Every failed API call throws `ApiError`; feature hooks pass it through; screens and async wrappers show `error.message`.
 
 ## Prerequisites
 
@@ -13,13 +13,13 @@ Use this guide to keep **user-facing error copy** in `src/api/`. Every failed AP
 
 ### `ApiError` contract
 
-Use one class in `src/libs/ApiError.ts` that extends `Error`.
+One class in `src/libs/ApiError.ts` extending `Error`.
 
 | Field | Role |
-| ----- | ---- |
+| --- | --- |
 | `message` | User-facing copy. UI reads this only. |
-| `status` | Optional HTTP status (logging, API-layer branching—not new UI copy). |
-| `code` | Optional app-level code (domain enum). Not raw transport strings in UI. |
+| `status` | Optional HTTP status (logging, API-layer branching). |
+| `code` | Optional app-level code (domain enum). |
 | `cause` | Optional original error for debugging. |
 
 ### Structure
@@ -35,50 +35,48 @@ src/api/<backend-name>/
 └── modules/        # endpoint functions; inline custom mapping in catch
 ```
 
-- Put domain error enums in `models/<Domain>.ts` only when UI needs a stable app code.
+- Domain error enums go in `models/<Domain>.ts` only when UI needs a stable app code.
 - Keep `toApiError` in `utils.ts` for the default path.
-- Put rare, endpoint-specific mapping **inline** in that function’s `catch`—no separate `*.errors.ts` files.
+- Rare endpoint-specific mapping goes inline in that function's `catch`.
 
 ### Layer responsibilities
 
 | Layer | Owns | Does not own |
-| ----- | ---- | ------------- |
-| **`src/api/`** | Map transport failures to `ApiError`; finalize `message` (reuse backend copy when safe; else fallback). | React, navigation, toast vs inline layout. |
-| **Feature hooks** | Call API functions; let failures propagate. | Rewriting messages for display. |
-| **Screens / async UI** | Pass `query.error` through; show `error.message` on initial failure. | Parsing Axios or duplicating fallback strings. |
+| --- | --- | --- |
+| `src/api/` | Map transport failures to `ApiError`; finalize `message`. | React, navigation, toast vs inline layout. |
+| Feature hooks | Call API functions; let failures propagate. | Rewriting messages. |
+| Screens / async UI | Pass `query.error` through; show `error.message`. | Parsing Axios or duplicating fallback strings. |
 
 ### Mapping rules
 
-1. Reuse backend user copy when the payload already has a safe message (`response.data.message`, documented `error` field, etc.).
-2. Map only when needed—missing payload, network offline, or non-user-facing text. Use a short generic fallback (for example “Something went wrong. Please try again.”).
+1. Reuse backend user copy when the payload has a safe message.
+2. Map only when needed — missing payload, network offline, or non-user-facing text. Use a short generic fallback.
 3. Always throw `ApiError` from exported module functions.
 4. Fall back to `toApiError(err)` when no special case matches.
 
-Export `FALLBACK_MESSAGE` from `utils.ts` so UI fallbacks stay aligned with the API layer.
+Export `FALLBACK_MESSAGE` from `utils.ts` so UI fallbacks stay aligned.
 
 ### App codes vs transport codes
 
 | Aspect | Transport | App (`models` + `ApiError.code`) |
 | --- | --- | --- |
 | Parsed in | `modules/<domain>.ts` `catch` | `new ApiError(…, { code: ProfileError.… })` |
-| UI usage | Never branch on raw transport strings | Branch on domain enum only when layout/flow differs; otherwise use `message` |
+| UI usage | Never branch on raw transport strings | Branch on domain enum only when layout/flow differs |
 
 ### Custom mapping (uncommon)
 
-Use only when `toApiError` cannot produce the right `message` or `code` for that endpoint.
-
 | Situation | Approach |
-| --------- | -------- |
+| --- | --- |
 | Safe user copy on the payload | `throw toApiError(err)` |
 | Non-user-facing transport signal | Inline map → domain enum + `message`, then `throw new ApiError(…)` |
 | Pre-request validation | `throw new ApiError("…", { code: … })` before the network call |
 
 ### TanStack Query
 
-- `queryFn` / `mutationFn` call API functions directly; do not catch and reword for display.
-- On failure, `query.error` / `mutation.error` is `ApiError` in normal operation.
+- `queryFn` / `mutationFn` call API functions directly; do not catch and reword.
+- On failure, `query.error` / `mutation.error` is `ApiError`.
 - **Initial load error:** show `query.error.message` in async wrappers (see [creating-async-component.md](./creating-async-component.md)).
-- **Pull-to-refresh / background refetch:** keep cached data visible; do not replace the screen with a new error layout.
+- **Pull-to-refresh / background refetch:** keep cached data visible; do not replace the screen with an error layout.
 - **Mutations:** show `mutation.error.message` beside the control or in a toast.
 
 ## Examples
@@ -112,7 +110,9 @@ export async function getWorkshops(): Promise<Workshop[]> {
 }
 ```
 
-### Wire into async UI
+### Async UI wiring
+
+See [creating-async-component.md](./creating-async-component.md) for `ErrorMessage` and full async wrapper patterns.
 
 ```tsx
 <AsyncView
@@ -122,12 +122,4 @@ export async function getWorkshops(): Promise<Workshop[]> {
 >
   {/* ... */}
 </AsyncView>
-```
-
-```tsx
-function ErrorMessage({ error }: { error: unknown }) {
-  const message =
-    error instanceof ApiError ? error.message : FALLBACK_MESSAGE;
-  return <Text className="text-center text-destructive">{message}</Text>;
-}
 ```

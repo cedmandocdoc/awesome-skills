@@ -4,8 +4,6 @@
 
 Create the **route layer** under `src/routes/`: navigator modules that register screen components from features and wire navigation components from `src/features/navigation/`.
 
-Each route entry configures a **screen and/or navigation**:
-
 | Configures | Source | Guide |
 | --- | --- | --- |
 | Screen UI | `src/features/<feature-name>/components/*Screen.tsx` | [creating-screen-component.md](./creating-screen-component.md) |
@@ -18,8 +16,6 @@ Keep navigator files focused on the tree, types, and options. Domain UI stays in
 - [managing-project-structure.md](./managing-project-structure.md)
 - [creating-screen-component.md](./creating-screen-component.md)
 - [creating-navigation-component.md](./creating-navigation-component.md)
-- [React Navigation — Hello React Navigation (static)](https://reactnavigation.org/docs/hello-react-navigation.md?config=static)
-- [React Navigation — Type checking with TypeScript](https://reactnavigation.org/docs/typescript.md)
 
 ## Guidelines
 
@@ -33,11 +29,9 @@ Name navigator modules **`[Name][NavigatorType]`** — prefix with a module or f
 | `ProfileStackNavigator.tsx` | Stack |
 | `MainDrawerNavigator.tsx` | Drawer |
 
-- Use **PascalCase** for file and export names.
-- Match navigation component names to the navigator — see [creating-navigation-component.md](./creating-navigation-component.md#naming).
-- Split navigators into more files when the tree grows; keep one navigator per file when possible.
+Use **PascalCase** for file and export names. Match navigation component names to the navigator — see [creating-navigation-component.md](./creating-navigation-component.md#naming). Keep one navigator per file when possible; split into more files when the tree grows.
 
-### Structure
+### Structure and config
 
 ```text
 src/routes/
@@ -48,23 +42,23 @@ src/routes/
 └── RootStackNavigator.tsx    # optional root navigator split
 ```
 
-- Prefer **static navigation config** for route registration:
-  - Static config defines routes in a config object passed to `createNativeStackNavigator` / `createBottomTabNavigator` / etc., then wraps the root with `createStaticNavigation(...)`.
-  - Dynamic config defines routes with `<Stack.Navigator>` and `<Stack.Screen>`.
+Prefer **static navigation config** for route registration:
+
+- Define routes in a config object passed to `createNativeStackNavigator` / `createBottomTabNavigator` / etc., then wrap the root with `createStaticNavigation(...)`.
 - Register routes and route options in `src/routes/`. Import **feature screen exports** as each route's `component`.
-- Import navigation components from `@/features/navigation` and wire through whole navigator slots — `header`, `tabBar`, or `drawerContent`.
-- Split navigators into more files when the tree grows.
+- Use dynamic `<Stack.Navigator>` / `<Stack.Screen>` only when runtime composition requires it.
 
 ### Route responsibilities
 
 - Map route names to feature screen exports in static `screens` config.
 - Wire shared header, tab bar, and drawer navigation components at the navigator level.
 - Type route params and extend `RootNavigator` for typed `useNavigation`.
-- Do not embed domain UI or reusable navigation components — import from features.
+- Import domain UI and navigation components from features — keep navigator files focused on tree, types, and options.
+- Export **route-ready screen components** from features (they call `useRoute` / `useNavigation` for params). Place thin param adapters **beside the navigator** in `src/routes/`.
 
 ### Wiring navigation components
 
-**Default:** plug whole navigation components from `@/features/navigation` into navigator options — see [creating-navigation-component.md](./creating-navigation-component.md#prefer-whole-navigation-components).
+Plug whole navigation components from `@/features/navigation` into navigator slots. Configure header, tab bar, and drawer content at the navigator level. Keep screen components focused on feature UI.
 
 | Navigator | Option | Component |
 | --- | --- | --- |
@@ -72,13 +66,7 @@ src/routes/
 | Bottom tabs | `tabBar` | `[Module]BottomTabBar` |
 | Drawer | `drawerContent` | `[Module]DrawerContent` |
 
-- **Exception:** when route-level wiring is too complex (per-screen dynamic navigation components tied to screen state), compose navigation components directly in the feature screen — see [creating-navigation-component.md](./creating-navigation-component.md).
-
-### Prefer navigator-owned navigation UI
-
-- Configure header, tab bar, and drawer content at the navigator level with whole custom components.
-- Keep screen components focused on feature UI and behavior.
-- Use shared navigator options to keep navigation components consistent.
+**Exception:** when route-level wiring is too complex (per-screen dynamic navigation UI tied to screen state), compose navigation components directly in the feature screen — see [creating-navigation-component.md](./creating-navigation-component.md).
 
 ### Choosing navigators
 
@@ -89,12 +77,6 @@ Compose as needed (for example, a stack inside each tab).
 | **Stack** | Linear flow: list → detail, auth, onboarding, anything that pushes and pops. |
 | **Bottom tabs** | A few peer sections users switch between often. |
 | **Drawer** | Many destinations, secondary navigation, or a slide-out menu fits the product. |
-
-Copy setup from each doc's **Usage** section:
-
-- [Native stack — Usage](https://reactnavigation.org/docs/native-stack-navigator.md)
-- [Native bottom tabs — Usage](https://reactnavigation.org/docs/native-bottom-tab-navigator.md)
-- [Drawer — Usage](https://reactnavigation.org/docs/drawer-navigator.md)
 
 ## Setup
 
@@ -118,17 +100,7 @@ Install `@react-navigation/native` and shared dependencies from [React Navigatio
 
 ## Examples
 
-### Render navigation in `App.tsx`
-
-```tsx
-import { Navigation } from "@/routes";
-
-export default function App() {
-  return <Navigation />;
-}
-```
-
-### Register screens and wire navigation components
+### Stack navigator with wired header
 
 `src/routes/ProfileStackNavigator.tsx`:
 
@@ -165,6 +137,8 @@ declare module "@react-navigation/core" {
 export const Navigation = createStaticNavigation(ProfileStackNavigator);
 ```
 
+### Bottom tab navigator with wired tab bar
+
 `src/routes/MainBottomNavigator.tsx`:
 
 ```tsx
@@ -182,34 +156,18 @@ export const MainBottomNavigator = createBottomTabNavigator({
 });
 ```
 
-Use static config to keep route definitions declarative. Avoid dynamic `<Stack.Navigator>` / `<Stack.Screen>` registration unless runtime composition requires it.
-
-For static TypeScript setup:
-
-- Type each screen's `route.params` with `StaticScreenProps<...>` when params are needed.
-- Export the root navigator type with `type RootStackType = typeof ProfileStackNavigator`.
-- Extend `@react-navigation/core` `RootNavigator` so `useNavigation`, links, and refs infer from the app's root navigator.
-
-Prefer exporting a **route-ready screen component** from the feature (it can call `useRoute` / `useNavigation` when it needs params). When you need a thin adapter for props or params, place it **beside the navigator** in `src/routes/` so bridging stays next to the static `screens` config entry.
-
-### Navigate from a screen component
-
-```tsx
-import { useNavigation } from "@react-navigation/native";
-
-export function HomeScreen() {
-  const navigation = useNavigation();
-
-  const openDetail = () => {
-    navigation.navigate("WorkshopDetail", { workshopId: "123" });
-  };
-
-  return null;
-}
-```
+Type each screen's `route.params` with `StaticScreenProps<...>` when params are needed. Extend `@react-navigation/core` `RootNavigator` (shown above) so `useNavigation`, links, and refs infer from the app's root navigator.
 
 ## Related
 
 - [creating-screen-component.md](./creating-screen-component.md) — feature screen components
 - [creating-navigation-component.md](./creating-navigation-component.md) — shared header, tab bar, and drawer components
 - [setting-up-navigation-theme.md](./setting-up-navigation-theme.md) — theme colors for navigation components
+
+## References
+
+- [React Navigation — Hello React Navigation (static)](https://reactnavigation.org/docs/hello-react-navigation.md?config=static)
+- [React Navigation — Type checking with TypeScript](https://reactnavigation.org/docs/typescript.md)
+- [Native stack — Usage](https://reactnavigation.org/docs/native-stack-navigator.md)
+- [Native bottom tabs — Usage](https://reactnavigation.org/docs/native-bottom-tab-navigator.md)
+- [Drawer — Usage](https://reactnavigation.org/docs/drawer-navigator.md)

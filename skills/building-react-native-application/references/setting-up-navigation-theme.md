@@ -2,17 +2,21 @@
 
 ## Overview
 
-Maps [setting-up-theming.md](./setting-up-theming.md) tokens into React Navigation so stack and tab navigation components matches light and dark. After base tokens exist.
+Maps [setting-up-theming.md](./setting-up-theming.md) tokens into React Navigation so navigation components match light and dark modes.
 
 ## Prerequisites
 
-- [setting-up-theming.md](./setting-up-theming.md)
+- [setting-up-theming.md](./setting-up-theming.md) — base design tokens
 
 ## Guidelines
 
 ### Create `src/theme.ts`
 
-Keep the React Navigation theme aligned with the same tokens.
+Define `THEME` with light/dark token values and `NAV_THEME` mapping them to React Navigation's `Theme` shape. Keep values aligned with the same tokens used by NativeWind.
+
+## Examples
+
+### `src/theme.ts`
 
 ```ts
 import { DarkTheme, DefaultTheme, type Theme } from "@react-navigation/native";
@@ -85,3 +89,8 @@ export const NAV_THEME: Record<"light" | "dark", Theme> = {
   },
 };
 ```
+
+## Related
+
+- [setting-up-theming.md](./setting-up-theming.md) — base design tokens
+- [creating-navigation-component.md](./creating-navigation-component.md) — custom navigation components
