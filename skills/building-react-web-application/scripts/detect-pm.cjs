@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 /**
- * Detect the package manager for a project root.
+ * Detect the package manager for an app package root.
  *
- * Resolution order: explicit override → package.json#packageManager → lockfiles → npm.
+ * Resolution order: explicit override → walk up from the package root for
+ * package.json#packageManager or lockfiles → npm.
+ * Install/run cwd stays at the package root (--root); only detection walks up.
  */
 
 const fs = require("fs");
@@ -10,9 +12,9 @@ const path = require("path");
 
 const VALID_PM = new Set(["npm", "pnpm", "yarn", "bun"]);
 
-function readPackageManagerField(projectRoot) {
+function readPackageManagerField(dir) {
   try {
-    const pkgPath = path.join(projectRoot, "package.json");
+    const pkgPath = path.join(dir, "package.json");
     const raw = fs.readFileSync(pkgPath, "utf8");
     const pkg = JSON.parse(raw);
     const spec = pkg.packageManager;
@@ -24,19 +26,46 @@ function readPackageManagerField(projectRoot) {
   }
 }
 
-/** Prefer explicit override, then package.json#packageManager, then lockfiles. */
+function detectFromDir(dir) {
+  const fromPkg = readPackageManagerField(dir);
+  if (fromPkg) return fromPkg;
+  if (fs.existsSync(path.join(dir, "pnpm-lock.yaml"))) return "pnpm";
+  if (fs.existsSync(path.join(dir, "yarn.lock"))) return "yarn";
+  if (
+    fs.existsSync(path.join(dir, "bun.lockb")) ||
+    fs.existsSync(path.join(dir, "bun.lock"))
+  ) {
+    return "bun";
+  }
+  return null;
+}
+
+/** Nearest ancestor path (inclusive) that contains `fileName`, or null. */
+function findUpFile(startDir, fileName) {
+  let dir = path.resolve(startDir);
+  while (true) {
+    const candidate = path.join(dir, fileName);
+    if (fs.existsSync(candidate)) return candidate;
+    const parent = path.dirname(dir);
+    if (parent === dir) return null;
+    dir = parent;
+  }
+}
+
+/**
+ * Prefer explicit override, then nearest packageManager/lockfile walking up
+ * from the app package root (monorepo-safe).
+ */
 function detectPackageManager(projectRoot, { pmOverride = null } = {}) {
   if (pmOverride && VALID_PM.has(pmOverride)) return pmOverride;
 
-  const fromPkg = readPackageManagerField(projectRoot);
-  if (fromPkg) return fromPkg;
-  if (fs.existsSync(path.join(projectRoot, "pnpm-lock.yaml"))) return "pnpm";
-  if (fs.existsSync(path.join(projectRoot, "yarn.lock"))) return "yarn";
-  if (
-    fs.existsSync(path.join(projectRoot, "bun.lockb")) ||
-    fs.existsSync(path.join(projectRoot, "bun.lock"))
-  ) {
-    return "bun";
+  let dir = path.resolve(projectRoot);
+  while (true) {
+    const detected = detectFromDir(dir);
+    if (detected) return detected;
+    const parent = path.dirname(dir);
+    if (parent === dir) break;
+    dir = parent;
   }
   return "npm";
 }
@@ -44,4 +73,5 @@ function detectPackageManager(projectRoot, { pmOverride = null } = {}) {
 module.exports = {
   VALID_PM,
   detectPackageManager,
+  findUpFile,
 };

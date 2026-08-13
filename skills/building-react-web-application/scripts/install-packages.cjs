@@ -3,12 +3,14 @@
  * Install npm packages using the project's detected package manager.
  *
  * Usage (from your project root):
- *   node <path-to-skill>/scripts/install-packages.cjs [options] <pkg> [more...]
+ *   node <path-to-skill>/scripts/install-packages.cjs [options] [<pkg> ...]
+ *
+ * No package args runs a lockfile install (`pnpm install` / `npm install` / …).
  *
  * Options:
- *   --root <dir>              Project root (default: cwd)
+ *   --root <dir>              App package root (default: cwd); PM detection walks up
  *   --pm <npm|pnpm|yarn|bun>  Package manager override
- *   --dev                     Save as devDependency
+ *   --dev                     Save as devDependency (ignored for lockfile install)
  *   --dry-run                 Print resolved command without executing
  */
 
@@ -18,7 +20,10 @@ const { detectPackageManager, VALID_PM } = require("./detect-pm.cjs");
 
 function resolveInstallCommand(pm, { dev = false, packages = [] } = {}) {
   if (!packages.length) {
-    throw new Error("resolveInstallCommand requires at least one package");
+    if (pm === "pnpm") return { file: "pnpm", args: ["install"] };
+    if (pm === "yarn") return { file: "yarn", args: ["install"] };
+    if (pm === "bun") return { file: "bun", args: ["install"] };
+    return { file: "npm", args: ["install"] };
   }
 
   if (pm === "pnpm") {
@@ -94,14 +99,6 @@ function installPackages(projectRoot, pm, options) {
 
 function main() {
   const parsed = parseArgs(process.argv);
-  if (parsed.packages.length === 0) {
-    console.error(
-      "Usage: node install-packages.cjs [options] <pkg> [more...]\n" +
-        "Options: --root <dir> --pm npm|pnpm|yarn|bun --dev --dry-run",
-    );
-    process.exit(1);
-  }
-
   const projectRoot = path.resolve(parsed.root);
   const pm = detectPackageManager(projectRoot, { pmOverride: parsed.pm });
   console.error(`[install-packages] package manager: ${pm}`);

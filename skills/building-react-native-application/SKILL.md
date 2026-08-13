@@ -61,6 +61,7 @@ Match every row that applies. Open every local link in **Docs** before coding.
 | Keyboard | [Keyboard controller — Components](https://kirillzyusko.github.io/react-native-keyboard-controller/docs/guides/components-overview.md) |
 | Fonts | [setting-up-theming](./references/setting-up-theming.md), [setting-up-tailwind-theme](./references/setting-up-tailwind-theme.md), [Expo — Fonts](https://docs.expo.dev/develop/user-interface/fonts/index.md) |
 | Splash screen | [Expo — SplashScreen](https://docs.expo.dev/versions/latest/sdk/splash-screen.md) |
+| Scaffold new app | [scaffolding-application](./references/scaffolding-application.md) |
 | Project bootstrap | [managing-project-structure](./references/managing-project-structure.md), [managing-environment](./references/managing-environment.md), [managing-linting](./references/managing-linting.md), [managing-package-installs](./references/managing-package-installs.md), [setting-up-registry-components](./references/setting-up-registry-components.md) |
 | Routing only | [creating-route-component](./references/creating-route-component.md), [creating-navigation-component](./references/creating-navigation-component.md) |
 
@@ -94,6 +95,7 @@ Match every row that applies. Open every local link in **Docs** before coding.
 | [managing-styling](./references/managing-styling.md) | | Styling | Styling conventions and tokens |
 | [managing-wrapper-components](./references/managing-wrapper-components.md) | | Component | Wrapper and composition patterns |
 | [overriding-classname](./references/overriding-classname.md) | | Styling | `className` override rules |
+| [scaffolding-application](./references/scaffolding-application.md) | | Setup | Expo `blank-typescript` scaffold |
 | [setting-up-axios](./references/setting-up-axios.md) | | API | Axios client setup |
 | [setting-up-navigation-theme](./references/setting-up-navigation-theme.md) | | Styling | React Navigation theme objects |
 | [setting-up-registry-components](./references/setting-up-registry-components.md) | | Setup | Registry / `src/ui/` bootstrap |

@@ -10,20 +10,23 @@
  *   node .../run-package.cjs -- expo install tailwindcss-animate lucide-react-native
  *
  * Options:
- *   --root <dir>              Project root (default: cwd)
+ *   --root <dir>              App package root (default: cwd); PM detection walks up
  *   --pm <npm|pnpm|yarn|bun>  Package manager override
  *   --dry-run                 Print resolved command without executing
  *
  * Yarn 1 (no .yarnrc.yml): uses npx for dlx-style runs.
  */
 
-const fs = require("fs");
 const path = require("path");
 const { execFileSync } = require("child_process");
-const { detectPackageManager, VALID_PM } = require("./detect-pm.cjs");
+const {
+  detectPackageManager,
+  findUpFile,
+  VALID_PM,
+} = require("./detect-pm.cjs");
 
 function isYarnBerry(projectRoot) {
-  return fs.existsSync(path.join(projectRoot, ".yarnrc.yml"));
+  return Boolean(findUpFile(projectRoot, ".yarnrc.yml"));
 }
 
 function resolveDlxCommand(pm, projectRoot, pkg, runArgs = []) {
