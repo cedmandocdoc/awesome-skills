@@ -2,7 +2,7 @@
 
 ## Overview
 
-How TypeScript code crosses package boundaries, and how a JIT library aliases its own internals. One consumer rule for library → library and library → app.
+How TypeScript code crosses package boundaries, and how a JIT library aliases its own internals.
 
 ## Prerequisites
 
@@ -21,17 +21,15 @@ Import via the package name and `exports` subpaths, with `workspace:*` in the co
 | `packages/b` → `apps/x` | never — apps are leaves |
 | Any → another package’s `src/` by relative path or `compilerOptions.paths` | never |
 
-`compilerOptions.paths` never points at another package.
-
 ### In-package
 
 | Kind | Rule |
 | --- | --- |
 | Nearby files | Relative imports (`./foo`, `../bar`) |
-| JIT library internals | Node.js subpath imports: `"imports": { "#*": "./src/*" }`, then `import { x } from "#utils/x"` |
+| JIT library internals | `"imports": { "#*": "./src/*" }`, then `import { x } from "#utils/x"` |
 | App-only alias | `@/*` → `./src/*` (plus bundler alias) is optional for leaves that nothing else compiles |
 
-TypeScript `paths` inside a JIT library break when a consumer compiles that library as source. Use `"imports"`, not `compilerOptions.paths`, for that alias.
+Use `"imports"`, not `compilerOptions.paths`, when a consumer compiles this library as source.
 
 ### `exports` shape
 
@@ -46,8 +44,6 @@ TypeScript `paths` inside a JIT library break when a consumer compiles that libr
 }
 ```
 
-Consumer:
-
 ```json
 {
   "dependencies": {
@@ -58,16 +54,6 @@ Consumer:
 
 ```ts
 import { Button } from "@scope/ui/button";
-```
-
-### JIT `"imports"`
-
-```json
-{
-  "imports": {
-    "#*": "./src/*"
-  }
-}
 ```
 
 ## Examples
@@ -97,7 +83,3 @@ import { api } from "@scope/web-app";
   }
 }
 ```
-
-## Related
-
-- [managing-package-scripts.md](./managing-package-scripts.md)

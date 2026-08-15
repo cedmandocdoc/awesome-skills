@@ -1,4 +1,4 @@
 interface:
   display_name: "Managing Monorepo"
-  short_description: "TypeScript workspace imports and canonical package scripts"
-  default_prompt: "Use $managing-monorepo when adding a package, choosing import style, or naming a script other packages must run."
+  short_description: "TypeScript pnpm + Turborepo workspace layout, imports, and canonical scripts"
+  default_prompt: "Use $managing-monorepo when adding a package, choosing apps vs packages, wiring a cross-package import, or naming a script other packages must run."

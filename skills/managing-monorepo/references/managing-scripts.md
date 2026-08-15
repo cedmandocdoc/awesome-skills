@@ -1,8 +1,8 @@
-# Managing Package Scripts
+# Managing Scripts
 
 ## Overview
 
-Canonical task names live on each package. The root only delegates to `turbo run`. Task logic stays in the package so Turbo can parallelize and cache.
+Wire canonical tasks into the Turbo graph.
 
 ## Prerequisites
 
@@ -12,9 +12,10 @@ Canonical task names live on each package. The root only delegates to `turbo run
 
 ### Graph rules
 
-1. Each participating package defines the script (`typecheck`, `build`, `lint`, `test`, `dev`).
-2. Root `package.json` scripts only call `turbo run <task>`.
-3. Register the same names in root `turbo.json`. Use `dependsOn: ["^build"]` / `^typecheck` when the task needs workspace dependencies built or checked first.
+Canonical names and root `turbo run`: [monorepo-contract.md](./monorepo-contract.md) → **Canonical tasks**.
+
+1. Register the same names in root `turbo.json`. Use `dependsOn: ["^build"]` / `^typecheck` when the task needs workspace dependencies built or checked first.
+2. Keep task logic in the package so Turbo can parallelize and cache.
 
 ### Root
 
@@ -70,16 +71,6 @@ A package that has no build artifact still defines `typecheck` (and `lint` / `te
   }
 }
 ```
-
-### Framework tasks
-
-`ios`, `android`, `prebuild`, Vite `preview`, and similar stay on the stack package. They are not universal Turbo names in this skill.
-
-If a `turborepo` skill is installed, use it for remote cache, `--filter` / `--affected`, env hashing, and CI. Those topics are not defined here.
-
-## Related
-
-- [managing-imports.md](./managing-imports.md)
 
 ## References
 
