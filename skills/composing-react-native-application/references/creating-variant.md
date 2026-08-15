@@ -12,7 +12,7 @@
 
 ### 1. Resolve the runtime
 
-Find the JIT Expo package that exports the app factory and slot factories (`createRuntimeApp`, config factory, navigator factories). Confirm `exports` subpaths with companion `managing-monorepo`.
+Find the JIT Expo package that exports the app factory and slot factories (`createRuntimeApp`, config factory, navigator factories). Confirm `exports` subpaths with dependency `managing-monorepo`.
 
 ### 2. Choose package shape
 

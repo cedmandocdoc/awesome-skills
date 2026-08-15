@@ -1,5 +1,6 @@
 ---
 name: deploying-cloudflare-web-application
+id: 72a302f7-9799-45be-a982-a1ab7ebe6222
 description: Deploy static web applications to Cloudflare via Workers Builds and GitHub dashboard integration — discover the target app, build command, and output path; configure wrangler.toml for static assets and SPA routing; document dashboard build settings. Use when deploying a web app to Cloudflare, connecting a repository to Workers & Pages, setting up wrangler.toml for static hosting, or preparing a monorepo package for Cloudflare Git integration.
 version: 1.0.0
 ---

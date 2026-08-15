@@ -1,5 +1,6 @@
 ---
 name: building-react-native-application
+id: ddfed93c-f419-4c5f-8832-85acc8f85f00
 description: Guides building Expo/React Native apps with TypeScript using a consistent architecture and library stack (NativeWind, React Navigation static config, TanStack Query, Zustand, Axios, React Native Reusables-style primitives in src/ui). Use when creating a new React Native app or updating architecture, UI, state, API, navigation, or styling to follow these conventions.
 version: 1.1.0
 ---

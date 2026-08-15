@@ -1,20 +1,32 @@
 ---
 name: composing-react-native-application
-description: Composes product variants from one complete Expo runtime via declared slots (identity, home, theme) and shared toolchain factories (Metro, Babel, ESLint, Tailwind, app.config). Use when adding a product variant, filling or declaring slots, or wiring a host that reuses the runtime’s config. Requires managing-monorepo for cross-package imports.
-version: 1.0.0
+id: aef3864f-fbd4-415a-8540-0e7ef0ea0f9f
+description: Composes product variants from one complete Expo runtime via declared slots (identity, home, theme) and shared toolchain factories (Metro, Babel, ESLint, Tailwind, app.config). Use when adding a product variant, filling or declaring slots, or wiring a host that reuses the runtime’s config. Requires managing-monorepo for workspace packages and imports.
+version: 1.1.0
 ---
 
 # Composing React Native Application
 
 ## Overview
 
-A complete Expo app ships as a JIT runtime package. Variants fill **declared slots**; they keep that app rather than forking it. Hosts wrap the runtime’s toolchain factories (Babel, Metro, ESLint, Tailwind, `app.config`) instead of copying config files. Named companion `managing-monorepo` owns `exports` and cross-package imports — variants import the runtime by package name and `exports` subpaths.
+A complete Expo app ships as a JIT runtime package. Variants fill **declared slots**; they keep that app rather than forking it. Hosts wrap the runtime’s toolchain factories (Babel, Metro, ESLint, Tailwind, `app.config`) instead of copying config files. Dependency [`managing-monorepo`](https://github.com/cedmandocdoc/awesome-skills/tree/main/skills/managing-monorepo) owns workspace layout, `exports`, and cross-package imports — the runtime lives in `packages/`; variants import it by package name and `exports` subpaths.
+
+Two unrelated apps that share a UI kit are a library plus `managing-monorepo`, not this skill.
+
+## Dependencies
+
+Resolve every **hard** row before composing. Skill discovery and missing-skill stop text: [composition-contract.md](./references/composition-contract.md) → **Require managing-monorepo**.
+
+| Item | Required | When | How |
+| --- | --- | --- | --- |
+| [managing-monorepo](https://github.com/cedmandocdoc/awesome-skills/tree/main/skills/managing-monorepo) `e0e993e7-a5f9-4bea-9923-166b503df045` | hard | Always | `npx skills add cedmandocdoc/awesome-skills --skill managing-monorepo` |
+| [building-react-native-application](https://github.com/cedmandocdoc/awesome-skills/tree/main/skills/building-react-native-application) `ddfed93c-f419-4c5f-8832-85acc8f85f00` | optional | Screens, `src/ui`, navigation, forms | `npx skills add cedmandocdoc/awesome-skills --skill building-react-native-application` |
+
+Install hard pair: `npx skills add cedmandocdoc/awesome-skills --skill composing-react-native-application --skill managing-monorepo`
 
 ## Agent workflow
 
-Follow this skill when one Expo runtime is extended into product variants, or when a host reuses the runtime’s toolchain. Discover `managing-monorepo` (hard); open that skill’s `SKILL.md` and follow its entry points by name for `exports` and imports. Match **Entry points**. When the variant writes screens, `src/ui`, navigation internals, or forms, also discover `building-react-native-application` (optional). Runtime-internal UI uses that sibling when it is installed.
-
-Two unrelated apps that share a UI kit are a library plus `managing-monorepo`, not this skill.
+Follow this skill when one Expo runtime is extended into product variants, or when a host reuses the runtime’s toolchain. Match **Entry points**. Runtime-internal UI uses `building-react-native-application` when that optional skill dependency is installed.
 
 ### Entry points
 
@@ -43,11 +55,11 @@ Match every row that applies. Open every local link in **Docs** before coding.
 
 ### Contract
 
-[composition-contract.md](./references/composition-contract.md) — runtime, slot, variant, host; companion require; factory surface.
+[composition-contract.md](./references/composition-contract.md) — runtime, slot, variant, host; skill dependencies; factory surface.
 
 | Doc | When to use |
 | --- | --- |
-| [composition-contract.md](./references/composition-contract.md) | Terms, what composing is, companion invoke |
+| [composition-contract.md](./references/composition-contract.md) | Terms, what composing is, dependency invoke |
 | [creating-variant.md](./references/creating-variant.md) | Fill declared slots |
 | [creating-slot.md](./references/creating-slot.md) | Add an extension point on the runtime |
 | [managing-shared-config.md](./references/managing-shared-config.md) | Toolchain factories, host wrap, native deps |

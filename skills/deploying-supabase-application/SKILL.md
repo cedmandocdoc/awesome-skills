@@ -1,5 +1,6 @@
 ---
 name: deploying-supabase-application
+id: 489208cd-16f5-4e4f-92c3-35813f082ce3
 description: Prepare a Supabase app for production deploy and connect it to a remote project via Supabase GitHub integration — discover the working directory, validate migrations and functions locally, and document dashboard settings (production branch, deploy to production). Use when deploying Supabase, connecting a repository to Supabase GitHub integration, setting up backend auto-deploy on merge, or validating migrations and Edge Functions before production release.
 version: 1.0.0
 ---

@@ -1,5 +1,6 @@
 ---
 name: writing-lean-skills
+id: 890f6e40-337a-47a7-a3c8-5652ff6fd936
 description: Reviews, creates, and updates agent skills to produce lean versions. Flags noise, redundancy, negative redundancy, motivational filler, commentary, and duplicate phrases; restructures with shared references, categorization, active voice, and tables or diagrams. Use when the user asks to lean, trim, tighten, de-noise, or slim a skill or SKILL.md, or to review one for verbosity.
 version: 1.0.0
 ---

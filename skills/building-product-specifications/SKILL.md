@@ -1,5 +1,6 @@
 ---
 name: building-product-specifications
+id: c4912b84-e88f-4515-8c83-e99288abca07
 description: Creates and amends product specification markdown (PRD, FRD, TRD, user story, UI specs with view states) with consistent structure and frontmatter. Use when the user asks to draft or amend prd.md, frd.md, trd.md, user-story.md, or ui-specs.md at product or feature level — no code implementation.
 version: 2.1.0
 ---

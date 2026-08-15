@@ -1,5 +1,6 @@
 ---
 name: delivering-goal
+id: 317e7227-bf0b-42d4-a288-4650802eace5
 description: >-
   Portable delivery loop that ships a clear goal until done. Seeds goal.md under
   goals/, pins a governing method, decides the next phase (resurvey + method +
@@ -8,14 +9,14 @@ description: >-
   shipping until done. Guards on goal clarity; requires managing-tasks for
   deliver/decide (not plan-only). Domain skills boost phase quality when present
   and are never required to run. Halts when a task is Blocked.
-version: 1.2.0
+version: 1.3.0
 ---
 
 # Delivering Goal
 
 ## Overview
 
-Adaptive **delivery loop** that owns *what* and *when*; named companion `managing-tasks` owns task folders. Portable across domains via a meta brief and a sticky **Governing method** pin on living `goal.md`. Goal id: `{NN}-{slug}`. Subagents return one-line handoffs only.
+Adaptive **delivery loop** that owns *what* and *when*; `managing-tasks` owns task folders. Portable across domains via a meta brief and a sticky **Governing method** pin on living `goal.md`. Goal id: `{NN}-{slug}`. Subagents return one-line handoffs only.
 
 ```text
 plan goal.md (once) → decide next phase → create-multiple → execute-multiple
@@ -25,15 +26,28 @@ plan goal.md (once) → decide next phase → create-multiple → execute-multip
 
 Out of scope: inventing a goal, researching missing goal detail, domain-specific methodology.
 
+## Dependencies
+
+Resolve every **hard** row before recipes that need it. Skill discovery and missing-skill stop text: [goal-contract.md](references/goal-contract.md) → **Require managing-tasks**.
+
+| Item | Required | When | How |
+| --- | --- | --- | --- |
+| [managing-tasks](https://github.com/cedmandocdoc/awesome-skills/tree/main/skills/managing-tasks) `34d10b1d-f2fb-4121-b7bf-0c17401658a3` | hard | Decide, deliver, loop | `npx skills add cedmandocdoc/awesome-skills --skill managing-tasks` |
+
+Install both: `npx skills add cedmandocdoc/awesome-skills --skill delivering-goal --skill managing-tasks`
+
+## Setup
+
+| Item | Required | When | How |
+| --- | --- | --- | --- |
+| Delivery agents `goal-planner`, `phase-decider` | hard | Deliver, decide via subagent | [finding-delivery-agents.md](references/finding-delivery-agents.md), then [creating-delivery-agents.md](references/creating-delivery-agents.md) |
+| Task agents on `managing-tasks` | hard | Create / execute multiple | That skill’s finding- then creating-task-agents recipes |
+
 ## Agent workflow
 
-Follow this skill for goal folders under `<goals-root>/<NN>-<slug>/`. Before any recipe: clear goal per **Require clear goal**, and a resolved goals root ([goal-contract.md](references/goal-contract.md)). On gaps, stop and ask once. Require `managing-tasks` for decide and deliver — not for plan-only. Soft cap: **at most 7** task specs per phase. Halt when implementation returns `Blocked`.
-
-**Goals root:** Locate via `<goals-root>/index.md` with the static **Author signature** UUID. If none exists, ask once for an empty folder path (default: `goals/`), then initialize. See [goal-contract.md](references/goal-contract.md) → **Resolve goals root**.
+Follow this skill for goal folders under `<goals-root>/<NN>-<slug>/`. Before any recipe: **Require clear goal** and a resolved goals root ([goal-contract.md](references/goal-contract.md)). On gaps, stop and ask once. Soft cap: **at most 7** task specs per phase. Halt when implementation returns `Blocked`.
 
 Match one **Recipes** row; open exactly that reference. End-to-end ship → [delivering-goal.md](references/delivering-goal.md).
-
-Delivery agents: gate with [finding-delivery-agents.md](references/finding-delivery-agents.md); create via [creating-delivery-agents.md](references/creating-delivery-agents.md).
 
 ### Recipes
 
@@ -48,11 +62,11 @@ Delivery agents: gate with [finding-delivery-agents.md](references/finding-deliv
 
 ### Contract
 
-[goal-contract.md](references/goal-contract.md) — signatures, goals root, living `goal.md`, goal gate, pinned governing method, companion require, halt-on-blocked, delivery-agent roots.
+[goal-contract.md](references/goal-contract.md) — signatures, goals root, living `goal.md`, goal gate, pinned governing method, dependency `managing-tasks`, halt-on-blocked, delivery-agent roots.
 
 | Doc | When to use |
 | --- | --- |
-| [goal-contract.md](references/goal-contract.md) | Root resolve, `NN-slug` layout, living `goal.md`, pin method, companion invoke |
+| [goal-contract.md](references/goal-contract.md) | Root resolve, `NN-slug` layout, living `goal.md`, pin method, dependency invoke |
 | [planning-goal.md](references/planning-goal.md) | Seed `goal.md` under goals/ |
 | [delivering-goal.md](references/delivering-goal.md) | Parent loop: plan → decide → execute → re-decide |
 | [deciding-next-phase.md](references/deciding-next-phase.md) | Survey → read pin → meta brief → create-multiple (used by loop) |

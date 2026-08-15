@@ -6,9 +6,9 @@
 
 ## Prerequisites
 
-1. [goal-contract.md](./goal-contract.md) → **Require managing-tasks**, **Require clear goal**, **Resolve goals root**, **Assign goal id and slug**, **Pin governing method**, **Invoke companion recipes**, **Halt on blocked**, **Handoff style**
+1. [goal-contract.md](./goal-contract.md) → **Require managing-tasks**, **Require clear goal**, **Resolve goals root**, **Assign goal id and slug**, **Pin governing method**, **Invoke dependency recipes**, **Halt on blocked**, **Handoff style**
 2. [finding-delivery-agents.md](./finding-delivery-agents.md) for `goal-planner`, `phase-decider`
-3. Companion `managing-tasks`: open its `SKILL.md` and confirm task agents (`task-planner`, `task-triager`, `task-implementer`) exist per that skill’s finding-task-agents flow
+3. Confirm `managing-tasks` task agents (`task-planner`, `task-triager`, `task-implementer`) exist per that skill’s finding-task-agents flow
 
 If delivery agents are missing → stop: `Create the subagent first by running delivering-goal creating-delivery-agents.`
 
@@ -71,7 +71,7 @@ While `phases_completed < max_phases`:
      - `Phase ready: <phase-path>; tasks: ...` → store `phase_path` and task id list; continue
      - Unmatched → exit (reason: `bad_handoff`)
 
-2. **Execute** — Per **Invoke companion recipes**, run `managing-tasks` **Execute multiple** with:
+2. **Execute** — Per **Invoke dependency recipes**, run `managing-tasks` **Execute multiple** with:
    - `stop_on_blocked: true`
    - `max_completed` ≥ number of task ids from the handoff (or that count exactly)
    - Prompt context: prefer executing the phase’s task ids; triager still owns readiness order

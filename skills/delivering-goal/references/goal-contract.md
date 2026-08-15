@@ -2,7 +2,7 @@
 
 ## Overview
 
-Shared plumbing for `delivering-goal`: author signatures, goals-root layout, living `goal.md`, clear-goal gate, pinned governing method, companion require, halt-on-blocked, and delivery-agent roots.
+Shared plumbing for `delivering-goal`: author signatures, goals-root layout, living `goal.md`, clear-goal gate, pinned governing method, dependency `managing-tasks`, halt-on-blocked, and delivery-agent roots.
 
 ## Guidelines
 
@@ -51,7 +51,7 @@ Only this skill may establish a goals root. The root is always marked by `<goals
 
 Templates: [`../assets/index.md`](./../assets/index.md), [`../assets/goal.md`](./../assets/goal.md), [`../assets/phase.md`](./../assets/phase.md).
 
-The goal tree is independent of `<tasks-root>/`. Tasks live under the `managing-tasks` companion root. Phase files hold the phase brief so handoffs stay reference-only.
+The goal tree is independent of `<tasks-root>/`. Tasks live under the `managing-tasks` dependency root. Phase files hold the phase brief so handoffs stay reference-only.
 
 ### Resolve goals root
 
@@ -199,17 +199,28 @@ On plan create → `planned`. On phase ready / execute progress → `active` (or
 
 ### Require managing-tasks
 
-Named companion (hard prerequisite for **decide**, **deliver**, and the delivery **loop**). Not required for **plan-only**. Discover by frontmatter `name` only — never path-link into that skill.
+Hard skill dependency for **decide**, **deliver**, and the delivery **loop**. Not required for **plan-only**. [`managing-tasks`](https://github.com/cedmandocdoc/awesome-skills/tree/main/skills/managing-tasks) owns task folders (`plan.md`, `status.md`) — create, execute, triage.
 
-1. Discover skills per **Discovering project skills**.
-2. Accept when `SKILL.md` frontmatter `name` is `managing-tasks`.
-3. If missing → **stop**:
+| Field | Value |
+| --- | --- |
+| `name` | `managing-tasks` |
+| `id` | `34d10b1d-f2fb-4121-b7bf-0c17401658a3` |
+| Source | https://github.com/cedmandocdoc/awesome-skills/tree/main/skills/managing-tasks |
+| Install | `npx skills add cedmandocdoc/awesome-skills --skill managing-tasks` |
+
+1. Discover and accept per **Discovering project skills** (`name` + `id` from the table).
+2. If missing → **stop**:
 
 ```text
 Install managing-tasks before using delivering-goal (create/execute of task folders requires it).
+
+npx skills add cedmandocdoc/awesome-skills --skill managing-tasks
+
+Source: https://github.com/cedmandocdoc/awesome-skills/tree/main/skills/managing-tasks
+Id: 34d10b1d-f2fb-4121-b7bf-0c17401658a3
 ```
 
-4. Open that skill’s `SKILL.md` and follow its recipes by name for create / execute.
+3. Open that skill’s `SKILL.md` and follow its recipes by intent name for create / execute.
 
 ### Require clear goal
 
@@ -231,9 +242,7 @@ When a gap needs investigation, stop and point at clarifying the goal sources. A
 
 ### Discovering project skills
 
-Each skill is `<skill-name>/SKILL.md` with optional `references/`, `scripts/`, and `assets/`.
-
-**Find skills:**
+Each skill is `<skill-name>/SKILL.md`.
 
 1. **Explicit pointers** — `AGENTS.md`, the user request, `@`-mentioned or attached skills, **Skills to prefer**
 2. **Project skill roots** — glob `<root>/<skill-name>/SKILL.md` under each existing root:
@@ -252,9 +261,12 @@ Each skill is `<skill-name>/SKILL.md` with optional `references/`, `scripts/`, a
 | `.continue/skills/` | Continue |
 | `.roo/skills/` | Roo Code |
 
-3. **Custom roots** — additional paths named in `AGENTS.md` or by the user
+3. **User-level skill roots** — same folder names under `~/` (for example `~/.cursor/skills/`, `~/.agents/skills/`, `~/.claude/skills/`). Use when the skill is not in a project root.
+4. **Custom roots** — additional paths named in `AGENTS.md` or by the user
 
-**Deduplicate** — one copy per skill `name` in frontmatter; prefer `AGENTS.md` path, else first matching root in the table order.
+**Deduplicate** — one copy per skill `id` (then `name`); prefer `AGENTS.md` path, else first matching **project** root in the table order, else first user-level match.
+
+**Accept a dependency skill** when frontmatter `name` **and** `id` match the required skill. Unique `name` with no `id` still counts (legacy install). Skip when `name` matches but `id` is present and different.
 
 ### Bind governing skills (best-effort)
 
@@ -275,7 +287,7 @@ For each governing skill, open its `SKILL.md` and look for **one** recipe or ref
 | Multiple candidates | Prefer the row that best matches `domain` / `tags`; if still tied, use **Skills to prefer**, else pick the most specific and note it on `goal.md` |
 | None | Pin `none`; skip method notes; complete the meta brief only |
 
-Never path-link into another skill from this skill’s docs. Discover by `name`, then follow that skill’s own index.
+Discover governing skills by `name` / description; follow that skill’s own index.
 
 ### Phase sizing
 
@@ -297,21 +309,17 @@ When `managing-tasks` execute-multiple (or a task-implementer) returns `Blocked 
 
 Subagents and parent summaries return **references** (`goal.md` path, phase path, `task-<NNN-slug>` ids), not document bodies or brief dumps.
 
-### Invoke companion recipes
+### Invoke dependency recipes
 
-When a recipe needs task create or execute:
+When a recipe needs task create or execute, resolve `managing-tasks` per **Require managing-tasks**, then match by intent name:
 
-1. Resolve the installed `managing-tasks` skill (see **Require managing-tasks**).
-2. Open its `SKILL.md`.
-3. Match the recipe by intent name:
-
-| Intent | Companion recipe name |
+| Intent | Dependency recipe name |
 | --- | --- |
 | Create multiple tasks | Create multiple |
 | Execute multiple tasks | Execute multiple |
 | Find task agents | Finding / creating task agents (per that skill’s index) |
 
-4. Follow only that companion reference. Never copy its file path into this skill’s docs.
+Follow only that reference. Never copy its file path into this skill’s docs.
 
 ### Delivery agent roots
 

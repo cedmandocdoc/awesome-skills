@@ -1,5 +1,6 @@
 ---
 name: deploying-expo-native-application
+id: ba26301f-928c-4984-9b30-7009e3dc5db5
 description: Prepare an Expo native app (iOS/Android) for EAS Build and store release — discover the app package, validate app.json and eas.json profiles, configure EAS environments and secrets, and verify release readiness. Use when setting up mobile deployment, configuring eas.json build/submit profiles, linking an Expo project, or preparing the first EAS build.
 version: 1.0.0
 ---

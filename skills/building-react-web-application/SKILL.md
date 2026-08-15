@@ -1,5 +1,6 @@
 ---
 name: building-react-web-application
+id: 83101311-e63c-4973-811e-5a84cc1a9e19
 description: Guides building Vite + React SPA apps with TypeScript using a consistent architecture and library stack (Tailwind CSS v4, class-variance-authority, TanStack Router file-based routes, TanStack Query, Zustand, Axios, shadcn-style primitives in src/ui). Use when creating a new React web project or updating architecture, UI, state, API, routing, or styling to follow these conventions.
 version: 1.0.0
 ---

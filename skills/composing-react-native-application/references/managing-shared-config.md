@@ -27,7 +27,7 @@ Copying those files into the host is not the pattern.
 
 ### Metro and JIT source
 
-Metro may receive filesystem `workspacePackageSrcPaths` so it compiles JIT workspace packages. That is bundler config. TypeScript and app imports still use `@scope/runtime` and `exports`, per companion `managing-monorepo`.
+Metro may receive filesystem `workspacePackageSrcPaths` so it compiles JIT workspace packages. That is bundler config. TypeScript and app imports still use `@scope/runtime` and `exports`, per dependency `managing-monorepo`.
 
 ### `tsconfig`
 

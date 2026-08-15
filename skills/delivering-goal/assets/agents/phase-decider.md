@@ -30,7 +30,7 @@ Resolve `<skill-dir>` as the directory containing `delivering-goal/SKILL.md`.
 1. Read `<skill-dir>/SKILL.md`
 2. Follow `<skill-dir>/references/deciding-next-phase.md` end to end
 3. Enforce `<skill-dir>/references/goal-contract.md` headings listed in that recipe’s Prerequisites
-4. For task creation: discover installed `managing-tasks` by frontmatter `name`, open its `SKILL.md`, follow **Create multiple**. Require `task-planner` via that skill’s finding-task-agents. If missing → `Failed phase: Create the subagent first by running managing-tasks creating-task-agents.`
+4. For task creation: resolve `managing-tasks` per goal-contract **Require managing-tasks**; if missing → `Failed phase:` plus that heading’s stop text. Open its `SKILL.md`, follow **Create multiple**. Require `task-planner` via that skill’s finding-task-agents. If `task-planner` is missing → `Failed phase: Create the subagent first by running managing-tasks creating-task-agents.`
 
 Honor **Skills to prefer** from the parent prompt.
 

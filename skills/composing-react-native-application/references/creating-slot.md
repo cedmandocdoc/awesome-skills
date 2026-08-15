@@ -49,7 +49,7 @@ The runtime’s own app fills every required slot so it remains a complete worki
 
 ### 4. Export the factory
 
-Add or keep the factory on `package.json` `exports`. Follow companion `managing-monorepo` for the `exports` map. Consumers import `@scope/runtime` or a subpath — not the runtime’s `src/` by path.
+Add or keep the factory on `package.json` `exports`. Follow dependency `managing-monorepo` for the `exports` map. Consumers import `@scope/runtime` or a subpath — not the runtime’s `src/` by path.
 
 ### 5. Confirm to the user
 

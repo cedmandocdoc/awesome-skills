@@ -1,5 +1,6 @@
 ---
 name: managing-tasks
+id: 34d10b1d-f2fb-4121-b7bf-0c17401658a3
 description: Manages structured task folders (plan.md, status.md) for cross-session agent handoff. Creates, creates multiple (plan a backlog of new tasks), executes, executes multiple (plan then implement backlog), triages (status, readiness, roadmap), updates, blocks, unblocks, or cancels tasks. Done and Cancelled tasks auto-archive. Use when the user works with tasks/NNN-slug folders or asks about task status, blockers, readiness, or lifecycle.
 version: 1.4.0
 ---

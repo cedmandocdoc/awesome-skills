@@ -2,7 +2,7 @@
 
 This repository is a **catalog of installable agent skills** under `skills/`. Users download or copy a skill into their own agent environment (for example `~/.cursor/skills/` or `.cursor/skills/`). Skills here are **not** loaded automatically by this repo.
 
-Each skill is **self-contained**. A skill may link only to files inside its own directory. Do not reference other skills in this catalog.
+Each skill is **installable on its own**. In-skill links stay inside that skill’s directory. Installable needs go under **Dependencies** (one table); one-time steps go under **Setup** (see **Skill independence and dependencies**).
 
 ---
 
@@ -89,6 +89,7 @@ Examples: `creating-task.md`, `discovering-application.md`, `task-contract.md`.
 ```yaml
 ---
 name: skill-name
+id: 00000000-0000-4000-8000-000000000000   # UUID v4; stable identity
 description: What the skill does and when to use it — third person, includes trigger terms.
 version: 1.0.0   # optional but recommended for workflow skills
 ---
@@ -96,7 +97,8 @@ version: 1.0.0   # optional but recommended for workflow skills
 
 | Field | Rules |
 | --- | --- |
-| `name` | Same as folder name; kebab-case |
+| `name` | Same as folder name; kebab-case. CLI install identifier (`--skill <name>`). |
+| `id` | UUID v4 that identifies **this catalog’s** skill. Generate once (`uuidgen` or `python3 -c "import uuid; print(uuid.uuid4())"`). Never reuse; never change after publish. Distinct from author / subagent signatures. |
 | `description` | Non-empty; **what** + **when**; discovery-friendly keywords; third person |
 | `version` | Semver when the skill has a defined workflow contract |
 
@@ -108,6 +110,8 @@ Every `SKILL.md` uses the **same major sections in the same order**. Skill-speci
 # <Human title>
 
 ## Overview
+## Dependencies       # omit section entirely if none
+## Setup              # omit section entirely if none
 ## Agent workflow
 ## Reference index
 ## Templates          # omit section entirely if no assets/
@@ -118,11 +122,30 @@ Every `SKILL.md` uses the **same major sections in the same order**. Skill-speci
 | Section | Required | Purpose |
 | --- | --- | --- |
 | **Overview** | Yes | One short paragraph: outcome, mechanism, or stack. Optional `### Tech stack` subsection when context is needed up front. |
+| **Dependencies** | If something must be **installed** first | One table of installable gates: Item \| Required \| When \| How. Hard rows block; optional rows do not. |
+| **Setup** | If one-time **steps** must run first | Create agents, init a root, connect a dashboard. Not installs — those live in **Dependencies**. |
 | **Agent workflow** | Yes | Triggers, scope, routing rule, and how the agent proceeds. Always the routing hub — absorbs what would otherwise be a separate “when to use” section. |
 | **Reference index** | Yes | Full catalog of `references/` files. Single table: Doc \| When to use (add Purpose or Layer columns when helpful). |
 | **Templates** | If `assets/` exists | Links to copyable templates under `assets/`. |
 
-Omit **Templates** when the skill has no `assets/`. Do not add **Examples** sections to `SKILL.md` — put scenarios in reference docs; put platform URLs in the reference doc **References** section or inline where a step needs them.
+Omit **Dependencies** and **Setup** when they do not apply. Omit **Templates** when the skill has no `assets/`. Do not add **Examples** sections to `SKILL.md` — put scenarios in reference docs; put platform URLs in the reference doc **References** section or inline where a step needs them.
+
+#### Table under **Dependencies**
+
+No child headings. Mix skills, tools, MCP, or any other installable in the same rows.
+
+| Column | Content |
+| --- | --- |
+| Item | Name. Catalog skills: GitHub URL on the name, then `id` in backticks. |
+| Required | `hard` or `optional` |
+| When | Recipes or entry points that need this row |
+| How | Install command, docs URL, or check that implies how to install |
+
+Every row has **How**. Catalog-skill rows repeat in the skill contract with the discovery procedure. A combined install command may sit under the table when a hard skill pair is the usual path.
+
+#### Subsections under **Setup**
+
+No required child headings. Use a table: Item \| Required \| When \| How. Link How to an in-skill recipe when the step is documented there.
 
 #### Subsections under **Agent workflow**
 
@@ -138,7 +161,7 @@ Pick the subsections the skill needs. Use **only** these names for consistency:
 
 A skill may combine subsections (e.g. **Steps** + **Decision tree** for deploy; **Entry points** + **Task types** for framework skills). A recipe-only skill may use **Recipes** alone with no **Steps**.
 
-Put the **routing rule** in **Agent workflow** intro (one or two sentences before subsections): triggers, scope, environment note, then how to proceed — e.g. “Follow this skill for task folders under `<tasks-root>/`. Match one **Recipes** row; open exactly that reference.”
+Put the **routing rule** in **Agent workflow** intro (one or two sentences before subsections): triggers, scope, environment note, then how to proceed — e.g. “Follow this skill for task folders under `<tasks-root>/`. Match one **Recipes** row; open exactly that reference.” When **Dependencies** or **Setup** exists, resolve every **hard** row before opening a recipe.
 
 #### Subsections under **Reference index**
 
@@ -155,6 +178,7 @@ Do not duplicate the recipe table here — **Recipes** routes; **Reference index
 | Deploy / linear workflow | Steps, Decision tree | Former “What this skill covers” merges into Reference index |
 | Recipe collection | Recipes | Contract under Reference index |
 | Framework / conventions | Entry points, Task types | Tech stack under Overview |
+| Skill with dependencies | Recipes or Entry points | **Dependencies** (and **Setup** if steps) before Agent workflow; skill discovery in contract |
 
 #### Minimal skeleton
 
@@ -162,6 +186,21 @@ Do not duplicate the recipe table here — **Recipes** routes; **Reference index
 # Human title
 
 One paragraph: what this skill achieves and how.
+
+## Dependencies
+
+Resolve every **hard** row before recipes that need it.
+
+| Item | Required | When | How |
+| --- | --- | --- | --- |
+| [other-skill](https://github.com/cedmandocdoc/awesome-skills/tree/main/skills/other-skill) `uuid` | hard | All recipes | `npx skills add cedmandocdoc/awesome-skills --skill other-skill` |
+| `pnpm` | hard | All recipes | https://pnpm.io/installation |
+
+## Setup
+
+| Item | Required | When | How |
+| --- | --- | --- | --- |
+| Named agents | hard | Orchestration recipes | [creating-….md](references/creating-….md) |
 
 ## Agent workflow
 
@@ -193,7 +232,7 @@ Follow this skill for … Works wherever the agent can read and write repository
 
 - Stay under **~500 lines**; move detail to `references/`
 - Tables route agents to the **one** reference to open for the current intent
-- Link only to files under the same skill directory
+- Link only to files under the same skill directory, except GitHub URLs on **Dependencies** catalog-skill rows
 
 ---
 
@@ -220,7 +259,7 @@ Omit optional sections when they do not apply. Do not add other top-level sectio
 | Section | Required | Purpose |
 | --- | --- | --- |
 | **Overview** | Yes | What this reference does, when to run it, and the mode boundary. Start with a **mode line** when the doc mutates files or is read-only (see below). One short paragraph; bullets for triggers if needed. |
-| **Prerequisites** | Optional | What must be resolved or read first — contract links, upstream docs, repo paths, dashboard access, prerequisite files. |
+| **Prerequisites** | Optional | Recipe-local: contract links, upstream docs, repo paths. Skill-wide installs live on `SKILL.md` → **Dependencies**; skill-wide steps on `SKILL.md` → **Setup**. |
 | **Guidelines** | Yes | **Main content.** Procedures, rules, tables, decision trees, checklists, troubleshooting phases, and contract definitions. Use `###` subsections; numbered steps (`### 1.` … `### N.`) for lifecycle recipes. |
 | **Setup** | Optional | One-time bootstrap separate from the main procedure — install packages, minimum config, env vars, initialize a root folder. |
 | **Examples** | Optional | Copy-paste samples: code, config snippets, filled templates, report formats. |
@@ -276,8 +315,8 @@ Use only what the reference needs:
 - Recipe → contract: link from **Prerequisites** or step 1 in **Guidelines**
 - Recipe → asset: `[../assets/plan.md](../assets/plan.md)` from a Guidelines step
 - In-skill navigation: **Related** section — not mixed into **Guidelines**
-- External URLs: **References** section — not mixed into **Guidelines**
-- Keep links **flat** — same skill only; no reference → reference → reference chains
+- External URLs: **References** section — not mixed into **Guidelines** (dependency-skill GitHub URLs live in `SKILL.md` **Dependencies** / the contract, not **References**)
+- Keep links **flat** — same skill only, plus GitHub URLs to dependency skills; no reference → reference → reference chains
 
 ### Minimal skeletons
 
@@ -445,24 +484,47 @@ Use `.yaml` extension (existing convention in this repo). Content is the same if
 
 ---
 
-## Skill independence
+## Skill independence and dependencies
+
+A user may install one skill without the rest of the catalog. In-skill markdown links stay inside that skill’s directory.
+
+**Dependencies** are installable needs (other skills, CLIs, MCP, or any other fetchable). **Setup** is one-time steps (create agents, init a root). Formal name for an installable need: **dependency** (`hard` or `optional`).
 
 | Rule | Detail |
 | --- | --- |
-| No cross-skill path links | Do not link to `skills/other-skill/...` or other skills' files by relative/absolute path |
-| Repeat minimal context | If two skills need the same fact, state it briefly in each skill or link from **References** to external docs |
-| External skills | May mention third-party or user-installed skills as optional context (discovery by description / user prefer list) |
-| Named companions | An **orchestration** skill may require another installed skill by frontmatter `name` only. Discover it under skill roots, then open that skill's own `SKILL.md` and follow its recipes by name. Document the companion as a hard prerequisite in Overview / contract. Never path-link into the companion's `references/` |
+| Identity | Every `SKILL.md` has `name` (folder / CLI) and `id` (UUID). Dependency **skills** match **both**. `id` never changes after publish. |
+| Declare | `SKILL.md` → **Dependencies**, one table (Item \| Required \| When \| How). Catalog-skill rows include GitHub URL + `id`. Repeat those rows in the contract with discovery. |
+| GitHub URL | Full URL: `https://github.com/cedmandocdoc/awesome-skills/tree/main/skills/<name>`. Relative `skills/other-skill/` links break when only one skill is installed. |
+| How | Each row carries its own command or docs URL. Catalog skills: `npx skills add cedmandocdoc/awesome-skills --skill <name>`. Other items use that item’s install docs or CLI. |
+| Discover skills | Search skill roots (project, then user-level) for `*/SKILL.md`. Same roots as agent discovery, under `skills/` not `agents/`. Accept when `name` **and** `id` match. Unique `name` with no `id` still counts (legacy install). Different `id` → skip. |
+| Missing hard | Stop. Print that row’s **How** (for skills: command, GitHub URL, and `id`). Do not guess a substitute. |
+| Missing optional | Continue. Open or use the item if present. |
+| After find (skill) | Open the installed skill’s `SKILL.md`. Follow recipes by **intent name**. Never copy that skill’s file paths into this skill’s docs. |
+| Repeat context | If two skills need the same fact, state it briefly in each, or point at external docs from **References**. |
+| External skills | Third-party or user-installed skills may appear as optional rows (discover by `name` / description). No `id` check unless that skill publishes one. |
 
-A user may install one skill without the rest of the catalog. Each skill stands alone unless it declares a **named companion** (for example `delivering-goal` requiring `managing-tasks`).
+**Discover dependency skill** (copy into the requiring skill’s contract; keep the skill-root tables there so the skill works after install):
+
+1. Explicit pointers — `AGENTS.md`, the user request, `@`-mentioned skills.
+2. Project roots — glob `<root>/<skill-name>/SKILL.md` (`.agents/skills/`, `.cursor/skills/`, `.claude/skills/`, `.codex/skills/`, `.github/skills/`, and the other agent skill directories).
+3. User-level roots — same layout under `~/` (for example `~/.cursor/skills/`, `~/.agents/skills/`). Prefer a project copy over a user copy of the same `name`.
+4. Custom roots named in `AGENTS.md` or by the user.
+5. Read each candidate `SKILL.md` frontmatter. Accept `name` + `id`. Deduplicate by `id` (then `name`).
+
+Example combined skill install:
+
+```bash
+npx skills add cedmandocdoc/awesome-skills --skill delivering-goal --skill managing-tasks
+```
 
 ---
 
 ## Checklist before merge
 
-- [ ] `skills/<name>/SKILL.md` has valid frontmatter (`name`, `description`)
+- [ ] `skills/<name>/SKILL.md` has valid frontmatter (`name`, `id`, `description`)
 - [ ] `skills/<name>/agents/openai.yaml` present and aligned with `name` / `description`
 - [ ] Reference files use kebab-case filenames and verb prefixes; body uses Overview → Prerequisites → Guidelines → Setup → Examples → Related → References (omit empty sections)
-- [ ] `SKILL.md` uses Overview → Agent workflow → Reference index (→ Templates if `assets/`); skill-specific blocks are subsections only
-- [ ] No path links to other skills under `skills/` (named companion discovery by `name` is OK)
+- [ ] `SKILL.md` uses Overview → Dependencies (if any) → Setup (if any) → Agent workflow → Reference index (→ Templates if `assets/`); skill-specific blocks are subsections only
+- [ ] No relative path links to other skills under `skills/`. Dependency skills use GitHub URLs plus `name` + `id` discovery
+- [ ] Hard dependencies are under **Dependencies** (one table) in `SKILL.md`; catalog-skill rows repeat in the contract with discovery. One-time steps are under **Setup**, not Dependencies.
 - [ ] Active voice, concise tables, mode lines instead of repeated negatives

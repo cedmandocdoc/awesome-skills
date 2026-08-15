@@ -8,9 +8,9 @@ Emit task specs only after every meta question has a written answer in the phase
 
 ## Prerequisites
 
-Per [goal-contract.md](./goal-contract.md) → **Require managing-tasks**, **Resolve goals root**, **Resolve goal.md**, **Living goal.md**, **Categorize goal**, **Pin governing method**, **Bind governing skills**, **Resolve delivery method**, **Require clear goal**, **Phase files**, **Phase sizing**, **Invoke companion recipes**, **`index.md` status mirror**, **Handoff style**.
+Per [goal-contract.md](./goal-contract.md) → **Require managing-tasks**, **Resolve goals root**, **Resolve goal.md**, **Living goal.md**, **Categorize goal**, **Pin governing method**, **Bind governing skills**, **Resolve delivery method**, **Require clear goal**, **Phase files**, **Phase sizing**, **Invoke dependency recipes**, **`index.md` status mirror**, **Handoff style**.
 
-For create-multiple: companion `managing-tasks` must find `task-planner`. If missing → `Failed phase: Create the subagent first by running managing-tasks creating-task-agents.`
+Create-multiple requires `task-planner` (via `managing-tasks` finding-task-agents). If missing → `Failed phase: Create the subagent first by running managing-tasks creating-task-agents.`
 
 ## Guidelines
 
@@ -83,7 +83,7 @@ When the pin is `none`, leave **Method notes** as `none` and complete the meta q
 ### 6. Create tasks
 
 1. Derive ordered specs from the brief per **From brief to task specs** below and **Phase sizing** (≤7; spill extras as later pending rows on `goal.md`).
-2. Per **Invoke companion recipes**, run `managing-tasks` **Create multiple**:
+2. Per **Invoke dependency recipes**, run `managing-tasks` **Create multiple**:
    - Spec list = this phase’s specs
    - Carry shared Sources, governing skill names, and pinned method constraints into every planner prompt
    - `max_created` = spec count (≤7)

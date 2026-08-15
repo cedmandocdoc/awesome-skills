@@ -1,5 +1,6 @@
 ---
 name: building-design
+id: caa2ddd5-c78f-41af-8a9d-1af7973d08ac
 description: Creates design.md visual systems (DESIGN.md format with canonical tokens) and shared application-design prompt folders for Claude Design, Google Stitch, and Figma Make from PRD/FRD, user stories, and UI specs. Use when the user wants design.md, a style guide, design tokens, visual language, design prompts, Stitch prompt, Google Stitch handoff, Figma Make prompt, Claude Design prompt, phased design prompts, or UI-spec handoff workflow.
 version: 2.1.0
 ---

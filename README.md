@@ -1,6 +1,6 @@
 # awesome-skills
 
-A catalog of installable [agent skills](https://www.npmjs.com/package/skills) for coding agents such as Cursor, Claude Code, Codex, and OpenCode. Each skill lives under `skills/` and is self-contained — copy or install only what you need.
+A catalog of installable [agent skills](https://www.npmjs.com/package/skills) for coding agents such as Cursor, Claude Code, Codex, and OpenCode. Each skill lives under `skills/` and installs on its own. Skills that cannot run fully without something else declare **Dependencies** (one table of installables, each with How) and **Setup** for one-time steps.
 
 ## Install
 
@@ -32,6 +32,9 @@ Examples:
 # Install only the task-management skill
 npx skills add cedmandocdoc/awesome-skills --skill managing-tasks
 
+# Install a skill and a hard skill dependency
+npx skills add cedmandocdoc/awesome-skills --skill delivering-goal --skill managing-tasks
+
 # Install to Cursor globally, non-interactive
 npx skills add cedmandocdoc/awesome-skills -g -a cursor -y
 
@@ -46,12 +49,13 @@ Source formats also work: full GitHub URL, a path to a single skill, or a local 
 | Skill | What it does |
 | --- | --- |
 | [`managing-tasks`](skills/managing-tasks/) | Structured task folders (`plan.md`, `status.md`) for cross-session agent handoff — create, execute, triage, block; Done and Cancelled auto-archive. |
-| [`managing-monorepo`](skills/managing-monorepo/) | TypeScript workspace imports (`exports`, `workspace:*`) and canonical package scripts (`typecheck`, `build`, `lint`, `test`, `dev`). |
+| [`delivering-goal`](skills/delivering-goal/) | Plan `goal.md` then loop phases until done. Requires [`managing-tasks`](https://github.com/cedmandocdoc/awesome-skills/tree/main/skills/managing-tasks) for decide and deliver. |
+| [`managing-monorepo`](skills/managing-monorepo/) | TypeScript pnpm + Turborepo workspace: `apps/` vs `packages/`, imports (`exports`, `workspace:*`), and canonical scripts (`typecheck`, `build`, `lint`, `test`, `dev`). |
 | [`building-product-specifications`](skills/building-product-specifications/) | Create and amend product specs (PRD, FRD, TRD, user stories, UI specs with view states) with consistent layout and frontmatter — docs only, no implementation. |
 | [`building-design`](skills/building-design/) | Produce design.md visual systems and shared application-design prompts for Claude Design, Google Stitch, and Figma Make from PRDs, user stories, and UI specs. |
 | [`building-react-web-application`](skills/building-react-web-application/) | Build Vite + React SPAs with a fixed stack: Tailwind v4, TanStack Router/Query, Zustand, Axios, and shadcn-style UI in `src/ui`. |
 | [`building-react-native-application`](skills/building-react-native-application/) | Build Expo/React Native apps with NativeWind, React Navigation, TanStack Query, Zustand, Axios, and reusable primitives in `src/ui`. |
-| [`composing-react-native-application`](skills/composing-react-native-application/) | Slot-based Expo variants of one runtime package, plus shared toolchain factories (Metro, Babel, ESLint, Tailwind, `app.config`). |
+| [`composing-react-native-application`](skills/composing-react-native-application/) | Slot-based Expo variants of one runtime package, plus shared toolchain factories (Metro, Babel, ESLint, Tailwind, `app.config`). Requires [`managing-monorepo`](https://github.com/cedmandocdoc/awesome-skills/tree/main/skills/managing-monorepo). |
 | [`deploying-cloudflare-web-application`](skills/deploying-cloudflare-web-application/) | Deploy static web apps to Cloudflare via Workers Builds and GitHub integration — discovery, `wrangler.toml`, and dashboard settings. |
 | [`deploying-supabase-application`](skills/deploying-supabase-application/) | Prepare Supabase backends for production — validate migrations and Edge Functions, connect GitHub integration, document dashboard settings. |
 | [`deploying-expo-native-application`](skills/deploying-expo-native-application/) | Prepare Expo iOS/Android apps for EAS Build — discover the app package, configure `eas.json` profiles and EAS secrets, and validate release readiness. |
