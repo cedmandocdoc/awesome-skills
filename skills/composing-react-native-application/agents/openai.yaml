@@ -1,0 +1,4 @@
+interface:
+  display_name: "Composing React Native Application"
+  short_description: "Slot-based Expo variants and shared runtime toolchain config"
+  default_prompt: "Use $composing-react-native-application when adding a product variant, filling or declaring slots, or sharing Expo host config from a runtime package."

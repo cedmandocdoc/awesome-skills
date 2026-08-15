@@ -46,10 +46,12 @@ Source formats also work: full GitHub URL, a path to a single skill, or a local 
 | Skill | What it does |
 | --- | --- |
 | [`managing-tasks`](skills/managing-tasks/) | Structured task folders (`plan.md`, `status.md`) for cross-session agent handoff — create, execute, triage, block; Done and Cancelled auto-archive. |
+| [`managing-monorepo`](skills/managing-monorepo/) | TypeScript workspace imports (`exports`, `workspace:*`) and canonical package scripts (`typecheck`, `build`, `lint`, `test`, `dev`). |
 | [`building-product-specifications`](skills/building-product-specifications/) | Create and amend product specs (PRD, FRD, TRD, user stories, UI specs with view states) with consistent layout and frontmatter — docs only, no implementation. |
 | [`building-design`](skills/building-design/) | Produce design.md visual systems and shared application-design prompts for Claude Design, Google Stitch, and Figma Make from PRDs, user stories, and UI specs. |
 | [`building-react-web-application`](skills/building-react-web-application/) | Build Vite + React SPAs with a fixed stack: Tailwind v4, TanStack Router/Query, Zustand, Axios, and shadcn-style UI in `src/ui`. |
 | [`building-react-native-application`](skills/building-react-native-application/) | Build Expo/React Native apps with NativeWind, React Navigation, TanStack Query, Zustand, Axios, and reusable primitives in `src/ui`. |
+| [`composing-react-native-application`](skills/composing-react-native-application/) | Slot-based Expo variants of one runtime package, plus shared toolchain factories (Metro, Babel, ESLint, Tailwind, `app.config`). |
 | [`deploying-cloudflare-web-application`](skills/deploying-cloudflare-web-application/) | Deploy static web apps to Cloudflare via Workers Builds and GitHub integration — discovery, `wrangler.toml`, and dashboard settings. |
 | [`deploying-supabase-application`](skills/deploying-supabase-application/) | Prepare Supabase backends for production — validate migrations and Edge Functions, connect GitHub integration, document dashboard settings. |
 | [`deploying-expo-native-application`](skills/deploying-expo-native-application/) | Prepare Expo iOS/Android apps for EAS Build — discover the app package, configure `eas.json` profiles and EAS secrets, and validate release readiness. |
@@ -63,9 +65,9 @@ These external skill collections pair well with skills in this catalog. Install 
 
 | Collection | Install | Pairs with |
 | --- | --- | --- |
-| [antfu/skills](https://github.com/antfu/skills) — `pnpm` | `npx skills add antfu/skills --skill pnpm` | [`building-react-web-application`](skills/building-react-web-application/), [`building-react-native-application`](skills/building-react-native-application/) |
+| [antfu/skills](https://github.com/antfu/skills) — `pnpm` | `npx skills add antfu/skills --skill pnpm` | [`managing-monorepo`](skills/managing-monorepo/), [`building-react-web-application`](skills/building-react-web-application/), [`building-react-native-application`](skills/building-react-native-application/) |
 | [supabase/agent-skills](https://github.com/supabase/agent-skills) | `npx skills add supabase/agent-skills` | [`deploying-supabase-application`](skills/deploying-supabase-application/) |
-| [expo/skills](https://github.com/expo/skills) — `expo-cicd-workflows`, `expo-deployment`, `expo-dev-client` | `npx skills add expo/skills --skill expo-cicd-workflows --skill expo-deployment --skill expo-dev-client` | [`building-react-native-application`](skills/building-react-native-application/), [`deploying-expo-native-application`](skills/deploying-expo-native-application/) |
+| [expo/skills](https://github.com/expo/skills) — `expo-cicd-workflows`, `expo-deployment`, `expo-dev-client` | `npx skills add expo/skills --skill expo-cicd-workflows --skill expo-deployment --skill expo-dev-client` | [`building-react-native-application`](skills/building-react-native-application/), [`composing-react-native-application`](skills/composing-react-native-application/), [`deploying-expo-native-application`](skills/deploying-expo-native-application/) |
 
 Examples:
 
