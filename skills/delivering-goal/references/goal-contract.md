@@ -199,7 +199,7 @@ On plan create → `planned`. On phase ready / execute progress → `active` (or
 
 ### Require managing-tasks
 
-Hard skill dependency for **decide**, **deliver**, and the delivery **loop**. Not required for **plan-only**. [`managing-tasks`](https://github.com/cedmandocdoc/awesome-skills/tree/main/skills/managing-tasks) owns task folders (`plan.md`, `status.md`) — create, execute, triage.
+Required skill dependency for **decide**, **deliver**, and the delivery **loop**. Not required for **plan-only**. [`managing-tasks`](https://github.com/cedmandocdoc/awesome-skills/tree/main/skills/managing-tasks) owns task folders (`plan.md`, `status.md`) — create, execute, triage.
 
 | Field | Value |
 | --- | --- |

@@ -122,7 +122,7 @@ Every `SKILL.md` uses the **same major sections in the same order**. Skill-speci
 | Section | Required | Purpose |
 | --- | --- | --- |
 | **Overview** | Yes | One short paragraph: outcome, mechanism, or stack. Optional `### Tech stack` subsection when context is needed up front. |
-| **Dependencies** | If something must be **installed** first | One table of installable gates: Item \| Required \| When \| How. Hard rows block; optional rows do not. |
+| **Dependencies** | If something must be **installed** first | One table of installable gates: Item \| Required \| When \| How. |
 | **Setup** | If one-time **steps** must run first | Create agents, init a root, connect a dashboard. Not installs — those live in **Dependencies**. |
 | **Agent workflow** | Yes | Triggers, scope, routing rule, and how the agent proceeds. Always the routing hub — absorbs what would otherwise be a separate “when to use” section. |
 | **Reference index** | Yes | Full catalog of `references/` files. Single table: Doc \| When to use (add Purpose or Layer columns when helpful). |
@@ -136,12 +136,12 @@ No child headings. Mix skills, tools, MCP, or any other installable in the same 
 
 | Column | Content |
 | --- | --- |
-| Item | Name. Catalog skills: GitHub URL on the name, then `id` in backticks. |
-| Required | `hard` or `optional` |
+| Item | Name. Skill rows: GitHub URL on the name. This catalog: then `id` in backticks. Third-party skills: `name` only unless that skill publishes an `id`. |
+| Required | `required` or `optional` |
 | When | Recipes or entry points that need this row |
 | How | Install command, docs URL, or check that implies how to install |
 
-Every row has **How**. Catalog-skill rows repeat in the skill contract with the discovery procedure. A combined install command may sit under the table when a hard skill pair is the usual path.
+Every row has **How**. Skill rows repeat in the skill contract with the discovery procedure. A combined install command may sit under the table when several skills from the **same** repo are the usual path.
 
 #### Subsections under **Setup**
 
@@ -161,7 +161,7 @@ Pick the subsections the skill needs. Use **only** these names for consistency:
 
 A skill may combine subsections (e.g. **Steps** + **Decision tree** for deploy; **Entry points** + **Task types** for framework skills). A recipe-only skill may use **Recipes** alone with no **Steps**.
 
-Put the **routing rule** in **Agent workflow** intro (one or two sentences before subsections): triggers, scope, environment note, then how to proceed — e.g. “Follow this skill for task folders under `<tasks-root>/`. Match one **Recipes** row; open exactly that reference.” When **Dependencies** or **Setup** exists, resolve every **hard** row before opening a recipe.
+Put the **routing rule** in **Agent workflow** intro (one or two sentences before subsections): triggers, scope, environment note, then how to proceed — e.g. “Follow this skill for task folders under `<tasks-root>/`. Match one **Recipes** row; open exactly that reference.” When **Dependencies** or **Setup** exists, resolve every **required** row before opening a recipe.
 
 #### Subsections under **Reference index**
 
@@ -189,18 +189,19 @@ One paragraph: what this skill achieves and how.
 
 ## Dependencies
 
-Resolve every **hard** row before recipes that need it.
+Resolve every **required** row before recipes that need it.
 
 | Item | Required | When | How |
 | --- | --- | --- | --- |
-| [other-skill](https://github.com/cedmandocdoc/awesome-skills/tree/main/skills/other-skill) `uuid` | hard | All recipes | `npx skills add cedmandocdoc/awesome-skills --skill other-skill` |
-| `pnpm` | hard | All recipes | https://pnpm.io/installation |
+| [other-skill](https://github.com/cedmandocdoc/awesome-skills/tree/main/skills/other-skill) `uuid` | required | All recipes | `npx skills add cedmandocdoc/awesome-skills --skill other-skill` |
+| [pnpm](https://github.com/antfu/skills/tree/main/skills/pnpm) | required | Package and workspace recipes | `npx skills add antfu/skills --skill pnpm` |
+| `pnpm` | required | All recipes | https://pnpm.io/installation |
 
 ## Setup
 
 | Item | Required | When | How |
 | --- | --- | --- | --- |
-| Named agents | hard | Orchestration recipes | [creating-….md](references/creating-….md) |
+| Named agents | required | Orchestration recipes | [creating-….md](references/creating-….md) |
 
 ## Agent workflow
 
@@ -232,7 +233,7 @@ Follow this skill for … Works wherever the agent can read and write repository
 
 - Stay under **~500 lines**; move detail to `references/`
 - Tables route agents to the **one** reference to open for the current intent
-- Link only to files under the same skill directory, except GitHub URLs on **Dependencies** catalog-skill rows
+- Link only to files under the same skill directory, except GitHub URLs on **Dependencies** skill rows
 
 ---
 
@@ -488,20 +489,20 @@ Use `.yaml` extension (existing convention in this repo). Content is the same if
 
 A user may install one skill without the rest of the catalog. In-skill markdown links stay inside that skill’s directory.
 
-**Dependencies** are installable needs (other skills, CLIs, MCP, or any other fetchable). **Setup** is one-time steps (create agents, init a root). Formal name for an installable need: **dependency** (`hard` or `optional`).
+**Dependencies** are installable needs (other skills, CLIs, MCP, or any other fetchable), each `required` or `optional`. **Setup** is one-time steps (create agents, init a root).
 
 | Rule | Detail |
 | --- | --- |
-| Identity | Every `SKILL.md` has `name` (folder / CLI) and `id` (UUID). Dependency **skills** match **both**. `id` never changes after publish. |
-| Declare | `SKILL.md` → **Dependencies**, one table (Item \| Required \| When \| How). Catalog-skill rows include GitHub URL + `id`. Repeat those rows in the contract with discovery. |
-| GitHub URL | Full URL: `https://github.com/cedmandocdoc/awesome-skills/tree/main/skills/<name>`. Relative `skills/other-skill/` links break when only one skill is installed. |
-| How | Each row carries its own command or docs URL. Catalog skills: `npx skills add cedmandocdoc/awesome-skills --skill <name>`. Other items use that item’s install docs or CLI. |
-| Discover skills | Search skill roots (project, then user-level) for `*/SKILL.md`. Same roots as agent discovery, under `skills/` not `agents/`. Accept when `name` **and** `id` match. Unique `name` with no `id` still counts (legacy install). Different `id` → skip. |
-| Missing hard | Stop. Print that row’s **How** (for skills: command, GitHub URL, and `id`). Do not guess a substitute. |
+| Identity | Every skill in **this catalog** has `name` and `id` (UUID). Those dependency rows match **both**. `id` never changes after publish. Third-party skills match `name`; check `id` only if that skill publishes one. |
+| Declare | `SKILL.md` → **Dependencies**, one table (Item \| Required \| When \| How). Skill rows include a GitHub URL. This catalog: also `id`. Repeat those rows in the contract with discovery. |
+| GitHub URL | Full URL to the skill in its source repo: `https://github.com/<owner>/<repo>/tree/<ref>/skills/<name>`. This catalog: `https://github.com/cedmandocdoc/awesome-skills/tree/main/skills/<name>`. Relative `skills/other-skill/` links break when only one skill is installed. |
+| How | Each row carries its own command or docs URL. GitHub skills: `npx skills add <owner>/<repo> --skill <name>`. Other items use that item’s install docs or CLI. |
+| Discover skills | Search skill roots (project, then user-level) for `*/SKILL.md`. Same roots as agent discovery, under `skills/` not `agents/`. This catalog: accept when `name` **and** `id` match. Unique `name` with no `id` still counts (third-party or legacy). Different `id` → skip. |
+| Missing required | Stop. Print that row’s **How** (for skills: command, GitHub URL, and `id` when present). Do not guess a substitute. |
 | Missing optional | Continue. Open or use the item if present. |
 | After find (skill) | Open the installed skill’s `SKILL.md`. Follow recipes by **intent name**. Never copy that skill’s file paths into this skill’s docs. |
 | Repeat context | If two skills need the same fact, state it briefly in each, or point at external docs from **References**. |
-| External skills | Third-party or user-installed skills may appear as optional rows (discover by `name` / description). No `id` check unless that skill publishes one. |
+| Third-party skills | Any GitHub skill repo (`owner/repo`). Required or optional. Discover by `name`. Include `id` in the row only if that skill publishes one. |
 
 **Discover dependency skill** (copy into the requiring skill’s contract; keep the skill-root tables there so the skill works after install):
 
@@ -509,12 +510,13 @@ A user may install one skill without the rest of the catalog. In-skill markdown 
 2. Project roots — glob `<root>/<skill-name>/SKILL.md` (`.agents/skills/`, `.cursor/skills/`, `.claude/skills/`, `.codex/skills/`, `.github/skills/`, and the other agent skill directories).
 3. User-level roots — same layout under `~/` (for example `~/.cursor/skills/`, `~/.agents/skills/`). Prefer a project copy over a user copy of the same `name`.
 4. Custom roots named in `AGENTS.md` or by the user.
-5. Read each candidate `SKILL.md` frontmatter. Accept `name` + `id`. Deduplicate by `id` (then `name`).
+5. Read each candidate `SKILL.md` frontmatter. This catalog: accept `name` + `id`; deduplicate by `id` (then `name`). Third-party: accept `name` when the row has no `id`.
 
-Example combined skill install:
+Example installs (one `npx skills add` per source repo):
 
 ```bash
 npx skills add cedmandocdoc/awesome-skills --skill delivering-goal --skill managing-tasks
+npx skills add antfu/skills --skill pnpm
 ```
 
 ---
@@ -525,6 +527,6 @@ npx skills add cedmandocdoc/awesome-skills --skill delivering-goal --skill manag
 - [ ] `skills/<name>/agents/openai.yaml` present and aligned with `name` / `description`
 - [ ] Reference files use kebab-case filenames and verb prefixes; body uses Overview → Prerequisites → Guidelines → Setup → Examples → Related → References (omit empty sections)
 - [ ] `SKILL.md` uses Overview → Dependencies (if any) → Setup (if any) → Agent workflow → Reference index (→ Templates if `assets/`); skill-specific blocks are subsections only
-- [ ] No relative path links to other skills under `skills/`. Dependency skills use GitHub URLs plus `name` + `id` discovery
-- [ ] Hard dependencies are under **Dependencies** (one table) in `SKILL.md`; catalog-skill rows repeat in the contract with discovery. One-time steps are under **Setup**, not Dependencies.
+- [ ] No relative path links to other skills under `skills/`. Dependency skills use GitHub URLs; this catalog also uses `name` + `id` discovery
+- [ ] Required dependencies are under **Dependencies** (one table) in `SKILL.md`; skill rows repeat in the contract with discovery. One-time steps are under **Setup**, not Dependencies.
 - [ ] Active voice, concise tables, mode lines instead of repeated negatives

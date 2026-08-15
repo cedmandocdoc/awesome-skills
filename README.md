@@ -32,7 +32,7 @@ Examples:
 # Install only the task-management skill
 npx skills add cedmandocdoc/awesome-skills --skill managing-tasks
 
-# Install a skill and a hard skill dependency
+# Install a skill and a required skill dependency
 npx skills add cedmandocdoc/awesome-skills --skill delivering-goal --skill managing-tasks
 
 # Install to Cursor globally, non-interactive

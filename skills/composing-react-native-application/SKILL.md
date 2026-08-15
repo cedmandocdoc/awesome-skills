@@ -15,14 +15,14 @@ Two unrelated apps that share a UI kit are a library plus `managing-monorepo`, n
 
 ## Dependencies
 
-Resolve every **hard** row before composing. Skill discovery and missing-skill stop text: [composition-contract.md](./references/composition-contract.md) → **Require managing-monorepo**.
+Resolve every **required** row before composing. Skill discovery and missing-skill stop text: [composition-contract.md](./references/composition-contract.md) → **Require managing-monorepo**.
 
 | Item | Required | When | How |
 | --- | --- | --- | --- |
-| [managing-monorepo](https://github.com/cedmandocdoc/awesome-skills/tree/main/skills/managing-monorepo) `e0e993e7-a5f9-4bea-9923-166b503df045` | hard | Always | `npx skills add cedmandocdoc/awesome-skills --skill managing-monorepo` |
+| [managing-monorepo](https://github.com/cedmandocdoc/awesome-skills/tree/main/skills/managing-monorepo) `e0e993e7-a5f9-4bea-9923-166b503df045` | required | Always | `npx skills add cedmandocdoc/awesome-skills --skill managing-monorepo` |
 | [building-react-native-application](https://github.com/cedmandocdoc/awesome-skills/tree/main/skills/building-react-native-application) `ddfed93c-f419-4c5f-8832-85acc8f85f00` | optional | Screens, `src/ui`, navigation, forms | `npx skills add cedmandocdoc/awesome-skills --skill building-react-native-application` |
 
-Install hard pair: `npx skills add cedmandocdoc/awesome-skills --skill composing-react-native-application --skill managing-monorepo`
+Install both: `npx skills add cedmandocdoc/awesome-skills --skill composing-react-native-application --skill managing-monorepo`
 
 ## Agent workflow
 

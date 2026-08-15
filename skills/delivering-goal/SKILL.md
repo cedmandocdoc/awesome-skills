@@ -28,11 +28,11 @@ Out of scope: inventing a goal, researching missing goal detail, domain-specific
 
 ## Dependencies
 
-Resolve every **hard** row before recipes that need it. Skill discovery and missing-skill stop text: [goal-contract.md](references/goal-contract.md) → **Require managing-tasks**.
+Resolve every **required** row before recipes that need it. Skill discovery and missing-skill stop text: [goal-contract.md](references/goal-contract.md) → **Require managing-tasks**.
 
 | Item | Required | When | How |
 | --- | --- | --- | --- |
-| [managing-tasks](https://github.com/cedmandocdoc/awesome-skills/tree/main/skills/managing-tasks) `34d10b1d-f2fb-4121-b7bf-0c17401658a3` | hard | Decide, deliver, loop | `npx skills add cedmandocdoc/awesome-skills --skill managing-tasks` |
+| [managing-tasks](https://github.com/cedmandocdoc/awesome-skills/tree/main/skills/managing-tasks) `34d10b1d-f2fb-4121-b7bf-0c17401658a3` | required | Decide, deliver, loop | `npx skills add cedmandocdoc/awesome-skills --skill managing-tasks` |
 
 Install both: `npx skills add cedmandocdoc/awesome-skills --skill delivering-goal --skill managing-tasks`
 
@@ -40,8 +40,8 @@ Install both: `npx skills add cedmandocdoc/awesome-skills --skill delivering-goa
 
 | Item | Required | When | How |
 | --- | --- | --- | --- |
-| Delivery agents `goal-planner`, `phase-decider` | hard | Deliver, decide via subagent | [finding-delivery-agents.md](references/finding-delivery-agents.md), then [creating-delivery-agents.md](references/creating-delivery-agents.md) |
-| Task agents on `managing-tasks` | hard | Create / execute multiple | That skill’s finding- then creating-task-agents recipes |
+| Delivery agents `goal-planner`, `phase-decider` | required | Deliver, decide via subagent | [finding-delivery-agents.md](references/finding-delivery-agents.md), then [creating-delivery-agents.md](references/creating-delivery-agents.md) |
+| Task agents on `managing-tasks` | required | Create / execute multiple | That skill’s finding- then creating-task-agents recipes |
 
 ## Agent workflow
 

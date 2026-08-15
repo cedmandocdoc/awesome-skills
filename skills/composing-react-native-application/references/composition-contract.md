@@ -45,7 +45,7 @@ Hosts wrap toolchain factories. Copying those files into the host is not the pat
 
 ### Require managing-monorepo
 
-Hard skill dependency. [`managing-monorepo`](https://github.com/cedmandocdoc/awesome-skills/tree/main/skills/managing-monorepo) owns workspace layout, `exports`, and cross-package imports.
+Required skill dependency. [`managing-monorepo`](https://github.com/cedmandocdoc/awesome-skills/tree/main/skills/managing-monorepo) owns workspace layout, `exports`, and cross-package imports.
 
 | Field | Value |
 | --- | --- |
