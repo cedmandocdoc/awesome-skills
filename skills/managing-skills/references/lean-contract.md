@@ -2,7 +2,7 @@
 
 ## Overview
 
-Shared definitions for all writing-lean-skills recipes: what counts as a finding, at what scope, and which strategies produce a lean document. Recipes cite these categories and strategies by name.
+Shared definitions for all managing-skills recipes: what counts as a finding, at what scope, and which strategies produce a lean document. Recipes cite these categories and strategies by name.
 
 ## Guidelines
 
@@ -36,5 +36,29 @@ Record each finding at the narrowest level that contains it:
 | Extract shared instructions | Move instructions repeated across sections into one reference doc (or one section) and link from each place that needs them |
 | Categorize | Group rules under clear headings so each rule lives in exactly one place; route with tables instead of restating |
 | State constraints once | Put a boundary in a mode line or intro instead of repeating it per section |
-| Active voice | Imperative, present tense; state what to do directly |
-| Representational formats | Prefer bullet lists, tables, and mermaid diagrams over paragraphs; reserve prose for what a structure cannot express |
+| Active voice | Imperative, present tense; state what to do directly. Pair a positive with a negative only when the exception is easy to miss or safety-critical |
+| Representational formats | Match the content shape to a format (table below). Prose only for what a structure cannot express |
+| Progressive disclosure | `SKILL.md` routes. Detail lives in `references/` linked one level deep |
+| Style | Short sentences. Backticks for inline code, commands, and paths. Blank lines between sections |
+
+### Content shape
+
+| Content shape | Format |
+| --- | --- |
+| Ordered procedure | Numbered steps |
+| Enumerable facts, options, routing | Table |
+| Branching decision | Decision tree or mermaid diagram |
+| Unordered rules | Bullet list |
+| Anything a structure cannot express | Short prose |
+
+### Prefer
+
+| Prefer | Instead of |
+| --- | --- |
+| “Read exactly one recipe for the user’s intent.” | “Read exactly one recipe. Do not load other recipes.” |
+| “Ask the user when multiple candidates exist.” | “Do not guess when multiple candidates exist.” |
+| “Stop without implementing unless the user also asks to implement.” | “Do not write application code unless …” (when the mode line already says **Planning only**) |
+
+## Related
+
+- [skill-contract.md](./skill-contract.md) — layout, naming, independence

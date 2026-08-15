@@ -1,0 +1,4 @@
+interface:
+  display_name: "Managing Skills"
+  short_description: "Create, update, and review skills in this catalog's house style"
+  default_prompt: "Use $managing-skills when creating, updating, or reviewing a skill or SKILL.md, or when the user asks to lean, trim, restructure, or audit one."
