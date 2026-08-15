@@ -1,27 +1,39 @@
 # Writing skills for this repository
 
-This repository is a **catalog of installable agent skills** under `skills/`. Users download or copy a skill into their own agent environment (for example `~/.cursor/skills/` or `.cursor/skills/`). Skills here are **not** loaded automatically by this repo.
+This repository is a **catalog of installable agent skills** under `skills/`. Users download or copy a skill into their agent environment (for example `~/.cursor/skills/` or `.cursor/skills/`). Skills here are **not** loaded automatically by this repo.
 
-Each skill is **installable on its own**. In-skill links stay inside that skill’s directory. Installable needs go under **Dependencies** (one table); one-time steps go under **Setup** (see **Skill independence and dependencies**).
+Each skill installs on its own. In-skill links stay inside that skill’s directory. Installable needs go under **Dependencies**; one-time steps go under **Setup** — see **Skill independence and dependencies**.
 
 ---
 
-## Documentation strategy
+## Writing strategy
 
-Apply these standards when writing skills and reference docs:
+A line earns its place when removing it would change what the agent does.
 
-| Principle | Practice |
+| Strategy | Practice |
 | --- | --- |
-| **Clarity** | Main ideas obvious on first read. |
-| **Conciseness** | Brief, precise language; omit filler. |
-| **Structure** | Logical headings; scannable bullets and tables. |
-| **Consistency** | Same terms, formatting, and tone within a skill. |
+| **Extract shared** | Instructions used in more than one place live once (a contract, or one section here) and are linked. |
+| **Categorize** | Each rule lives under exactly one heading. Route with tables. |
+| **State once** | A mode line or intro carries a constraint. Later sections do not repeat it. |
+| **Active voice** | Imperative, present tense. Descriptions in third person. State what to do. Pair a positive with a negative only when the exception is easy to miss or safety-critical. |
+| **Represent** | Match the content shape to a format (table below). Prose only for what a structure cannot express. |
 
-**Style:** Active voice, present tense, third person. Short sentences. Backticks for inline code, commands, and paths. Blank lines between sections.
+| Content shape | Format |
+| --- | --- |
+| Ordered procedure | Numbered steps |
+| Enumerable facts, options, routing | Table |
+| Branching decision | Decision tree or mermaid diagram |
+| Unordered rules | Bullet list |
+| Anything a structure cannot express | Short prose |
 
-**Progressive disclosure:** Keep `SKILL.md` focused. Put step-by-step detail, contracts, and long tables in `references/`. Link from `SKILL.md` to references; keep links **one level deep** (from `SKILL.md` → reference file, not reference → reference → reference).
-
-**Phrasing:** State what to do directly. Avoid pairing a positive rule with a redundant negative (“Do not …”) unless the exception is easy to miss or safety-critical.
+| Cut | Signal |
+| --- | --- |
+| Noise | Background the agent already knows; content outside declared scope |
+| Redundancy | Same instruction under two headings; per-section repeat of a global constraint |
+| Negative redundancy | A “do not” already excluded by the positive rule |
+| Motivational filler | Importance claims with no instruction |
+| Commentary | “This section explains…”, authoring rationale |
+| Duplicate phrases | Same qualifier on every bullet |
 
 | Prefer | Instead of |
 | --- | --- |
@@ -29,7 +41,9 @@ Apply these standards when writing skills and reference docs:
 | “Ask the user when multiple candidates exist.” | “Do not guess when multiple candidates exist.” |
 | “Stop without implementing unless the user also asks to implement.” | “Do not write application code unless …” (when the mode line already says **Planning only**) |
 
-Use **mode lines** at the top of reference docs (`**Planning only.**`, `**Docs only.**`, `**Review mode.**`) instead of repeating the same constraint in every section.
+**Progressive disclosure:** `SKILL.md` routes. `references/` holds recipes, contracts, and long tables.
+
+**Style:** Short sentences. Backticks for inline code, commands, and paths. Blank lines between sections.
 
 ---
 
@@ -52,7 +66,7 @@ skills/<skill-name>/
 ### Skill folder and `name` field
 
 - **kebab-case**, lowercase letters, numbers, hyphens only
-- **Verb-led**, describes the capability: `managing-tasks`, `deploying-cloudflare-web-application`, `building-react-web-application`
+- **Verb-led**, describes the capability: `managing-tasks`, `deploying-cloudflare-web-application`
 - Max **64 characters** for `name`
 - Folder name matches `name` in frontmatter
 
@@ -60,6 +74,7 @@ skills/<skill-name>/
 
 - **kebab-case** `.md` files
 - **`<verb>-<noun>.md`** — action or concern as the prefix
+- **Title:** `# <Action>` — title case from the filename (drop `.md`, hyphens → spaces). Preserve acronyms and code terms (`API`, `UI`, `E2E`, `PRD`, `GitHub`, `className`). Example: `managing-project-structure.md` → `# Managing Project Structure`.
 
 | Prefix | Use for |
 | --- | --- |
@@ -73,8 +88,6 @@ skills/<skill-name>/
 | `troubleshooting-` | Failure diagnosis and fixes |
 | `*-contract.md` | Shared layout, fields, and conventions for that skill |
 
-Examples: `creating-task.md`, `discovering-application.md`, `task-contract.md`.
-
 ### Assets and scripts
 
 - **assets/** — templates users or agents copy (`plan.md`, `design.md`)
@@ -82,9 +95,9 @@ Examples: `creating-task.md`, `discovering-application.md`, `task-contract.md`.
 
 ---
 
-## `SKILL.md` structure
+## `SKILL.md`
 
-### YAML frontmatter (required)
+### Frontmatter
 
 ```yaml
 ---
@@ -102,35 +115,33 @@ version: 1.0.0   # optional but recommended for workflow skills
 | `description` | Non-empty; **what** + **when**; discovery-friendly keywords; third person |
 | `version` | Semver when the skill has a defined workflow contract |
 
-### Body — one structure for every skill
+### Body
 
-Every `SKILL.md` uses the **same major sections in the same order**. Skill-specific content goes in **subsections** under the major section it belongs to — not as extra top-level headings.
+Same major sections, same order. Skill-specific content goes in **subsections** under the major section it belongs to.
 
 ```markdown
 # <Human title>
 
 ## Overview
-## Dependencies       # omit section entirely if none
-## Setup              # omit section entirely if none
+## Dependencies       # omit if none
+## Setup              # omit if none
 ## Agent workflow
 ## Reference index
-## Templates          # omit section entirely if no assets/
+## Templates          # omit if no assets/
 ```
-
-#### Major sections
 
 | Section | Required | Purpose |
 | --- | --- | --- |
-| **Overview** | Yes | One short paragraph: outcome, mechanism, or stack. Optional `### Tech stack` subsection when context is needed up front. |
+| **Overview** | Yes | One short paragraph: outcome, mechanism, or stack. Optional `### Tech stack` when context is needed up front. |
 | **Dependencies** | If something must be **installed** first | One table of installable gates: Item \| Required \| When \| How. |
 | **Setup** | If one-time **steps** must run first | Create agents, init a root, connect a dashboard. Not installs — those live in **Dependencies**. |
-| **Agent workflow** | Yes | Triggers, scope, routing rule, and how the agent proceeds. Always the routing hub — absorbs what would otherwise be a separate “when to use” section. |
-| **Reference index** | Yes | Full catalog of `references/` files. Single table: Doc \| When to use (add Purpose or Layer columns when helpful). |
+| **Agent workflow** | Yes | Triggers, scope, routing rule, and how the agent proceeds. |
+| **Reference index** | Yes | Full catalog of `references/` files. Table: Doc \| When to use (add Purpose or Layer when helpful). |
 | **Templates** | If `assets/` exists | Links to copyable templates under `assets/`. |
 
-Omit **Dependencies** and **Setup** when they do not apply. Omit **Templates** when the skill has no `assets/`. Do not add **Examples** sections to `SKILL.md` — put scenarios in reference docs; put platform URLs in the reference doc **References** section or inline where a step needs them.
+Omit **Dependencies**, **Setup**, and **Templates** when they do not apply. Scenarios live in reference docs, not an **Examples** section on `SKILL.md`.
 
-#### Table under **Dependencies**
+### Dependencies
 
 No child headings. Mix skills, tools, MCP, or any other installable in the same rows.
 
@@ -141,46 +152,37 @@ No child headings. Mix skills, tools, MCP, or any other installable in the same 
 | When | Recipes or entry points that need this row |
 | How | Install command, docs URL, or check that implies how to install |
 
-Every row has **How**. Skill rows repeat in the skill contract with the discovery procedure. A combined install command may sit under the table when several skills from the **same** repo are the usual path.
+Every row has **How**. Skill-row identity, GitHub URL format, and discovery live in **Skill independence and dependencies**. A combined install command may sit under the table when several skills from the **same** repo are the usual path.
 
-#### Subsections under **Setup**
+### Setup
 
-No required child headings. Use a table: Item \| Required \| When \| How. Link How to an in-skill recipe when the step is documented there.
+No required child headings. Table: Item \| Required \| When \| How. Link How to an in-skill recipe when the step is documented there.
 
-#### Subsections under **Agent workflow**
+### Agent workflow
 
-Pick the subsections the skill needs. Use **only** these names for consistency:
+Intro (one or two sentences before subsections): triggers, scope, environment note, then how to proceed — e.g. “Follow this skill for task folders under `<tasks-root>/`. Match one **Recipes** row; open exactly that reference.” When **Dependencies** or **Setup** exists, resolve every **required** row before opening a recipe.
+
+Use **only** these subsection names:
 
 | Subsection | Use when |
 | --- | --- |
 | `### Steps` | Linear end-to-end process (deploy, bootstrap). Numbered steps in order; link to references per step. |
-| `### Recipes` | Multiple intents. Table: Intent \| Example phrasing \| Read → reference. Include the routing rule here: match one row, open that reference. |
+| `### Recipes` | Multiple intents. Table: Intent \| Example phrasing \| Read → reference. Match one row; open that reference. |
 | `### Entry points` | Several ways into a large convention set. Table: Entry \| When \| Go to. |
 | `### Task types` | Task-shaped bundles of references. Table: Task type \| Docs. |
 | `### Decision tree` | Branching ASCII tree when choices are easier to scan as a tree than as steps. |
 
-A skill may combine subsections (e.g. **Steps** + **Decision tree** for deploy; **Entry points** + **Task types** for framework skills). A recipe-only skill may use **Recipes** alone with no **Steps**.
+Combine subsections when the skill needs more than one (e.g. **Steps** + **Decision tree**; **Entry points** + **Task types**). A recipe-only skill may use **Recipes** alone.
 
-Put the **routing rule** in **Agent workflow** intro (one or two sentences before subsections): triggers, scope, environment note, then how to proceed — e.g. “Follow this skill for task folders under `<tasks-root>/`. Match one **Recipes** row; open exactly that reference.” When **Dependencies** or **Setup** exists, resolve every **required** row before opening a recipe.
-
-#### Subsections under **Reference index**
+### Reference index
 
 | Subsection | Use when |
 | --- | --- |
 | `### Contract` | Link to `*-contract.md` for shared layout, frontmatter, or on-disk markers. |
 
-Do not duplicate the recipe table here — **Recipes** routes; **Reference index** catalogs.
+**Recipes** routes; **Reference index** catalogs. The recipe table lives only under **Recipes**.
 
-#### Mapping current skills → unified structure
-
-| Skill type | Agent workflow subsections | Notes |
-| --- | --- | --- |
-| Deploy / linear workflow | Steps, Decision tree | Former “What this skill covers” merges into Reference index |
-| Recipe collection | Recipes | Contract under Reference index |
-| Framework / conventions | Entry points, Task types | Tech stack under Overview |
-| Skill with dependencies | Recipes or Entry points | **Dependencies** (and **Setup** if steps) before Agent workflow; skill discovery in contract |
-
-#### Minimal skeleton
+### Skeleton
 
 ```markdown
 # Human title
@@ -229,17 +231,16 @@ Follow this skill for … Works wherever the agent can read and write repository
 - [`assets/plan.md`](assets/plan.md)
 ```
 
-### `SKILL.md` constraints
+### Constraints
 
 - Stay under **~500 lines**; move detail to `references/`
 - Tables route agents to the **one** reference to open for the current intent
-- Link only to files under the same skill directory, except GitHub URLs on **Dependencies** skill rows
 
 ---
 
-## Reference document structure
+## Reference documents
 
-References are **recipes or deep dives** the agent reads after `SKILL.md` routes to them. Every reference uses the **same major sections in the same order**. Skill-specific content goes in **`###` subsections** under the major section it belongs to — especially under **Guidelines**.
+References are recipes or deep dives the agent reads after `SKILL.md` routes to them. Same major sections, same order. Skill-specific content goes in **`###` subsections** under the major section it belongs to — especially under **Guidelines**.
 
 ```markdown
 # <Action>
@@ -253,25 +254,21 @@ References are **recipes or deep dives** the agent reads after `SKILL.md` routes
 ## References
 ```
 
-Omit optional sections when they do not apply. Do not add other top-level sections.
-
-### Major sections
+Omit optional sections that do not apply. Other top-level sections are not used.
 
 | Section | Required | Purpose |
 | --- | --- | --- |
-| **Overview** | Yes | What this reference does, when to run it, and the mode boundary. Start with a **mode line** when the doc mutates files or is read-only (see below). One short paragraph; bullets for triggers if needed. |
+| **Overview** | Yes | What this reference does, when to run it, and the mode boundary. Start with a **mode line** when the doc mutates files or is read-only. One short paragraph; bullets for triggers if needed. |
 | **Prerequisites** | Optional | Recipe-local: contract links, upstream docs, repo paths. Skill-wide installs live on `SKILL.md` → **Dependencies**; skill-wide steps on `SKILL.md` → **Setup**. |
-| **Guidelines** | Yes | **Main content.** Procedures, rules, tables, decision trees, checklists, troubleshooting phases, and contract definitions. Use `###` subsections; numbered steps (`### 1.` … `### N.`) for lifecycle recipes. |
+| **Guidelines** | Yes | Procedures, rules, tables, decision trees, checklists, troubleshooting phases, and contract definitions. Use `###` subsections; numbered steps (`### 1.` … `### N.`) for lifecycle recipes. |
 | **Setup** | Optional | One-time bootstrap separate from the main procedure — install packages, minimum config, env vars, initialize a root folder. |
 | **Examples** | Optional | Copy-paste samples: code, config snippets, filled templates, report formats. |
 | **Related** | Optional | Links to other references or `assets/` in the **same skill** only. |
 | **References** | Optional | External platform or spec URLs (official docs, API docs, third-party specifications). |
 
-**Why this scales:** recipe docs put numbered steps in **Guidelines**; contract docs put every field and layout rule in **Guidelines**; framework docs put decision trees and placement rules in **Guidelines**; troubleshooting puts phase groups and symptom tables in **Guidelines**. **Related** and **References** stay separate so in-skill navigation and external URLs do not mix with procedural content.
+### Mode line
 
-### Mode line (in Overview)
-
-Place the mode line as the **first line** of **Overview**:
+First line of **Overview**:
 
 | Mode | Use for |
 | --- | --- |
@@ -283,7 +280,7 @@ Place the mode line as the **first line** of **Overview**:
 | `**Read-only.**` | Status, triage, or check — no file mutations |
 | `**Backlog execution mode.**` | Multi-task orchestration loop |
 
-### Common `###` subsections under Guidelines
+### Guidelines subsections
 
 Use only what the reference needs:
 
@@ -294,7 +291,9 @@ Use only what the reference needs:
 | `### Confirm to the user` | Final recipe step — paths, summary, follow-up (or use `### N.` for this) |
 | Topic headings | Contract fields, troubleshooting phases (`### Build fails`), review checklist groups |
 
-### Mapping reference kinds → sections
+Put **Confirm to the user** as the last `###` under **Guidelines** for mutating recipes.
+
+### Kind map
 
 | Kind | Filename prefix | Overview | Prerequisites | Guidelines | Setup | Examples | Related | References |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -306,52 +305,15 @@ Use only what the reference needs:
 | Troubleshooting | `troubleshooting-` | When to use | — | Phase groups + symptom tables | — | Debug commands (optional) | — | Platform docs |
 | Convention / guide | `managing-`, `creating-*` (framework) | What this guide covers | Required reading | Rules, placement, naming, trees | Install / bootstrap | Code samples | Linked refs | External docs (optional) |
 
-### Title and filename
-
-- **Filename:** kebab-case with verb prefix (`creating-task.md`, `discovering-application.md`).
-- **Title:** `# <Action>` — title case with spaces. Derive from the filename: drop `.md`, replace hyphens with spaces, capitalize each word. Preserve acronyms and code terms (`API`, `UI`, `E2E`, `PRD`, `GitHub`, `className`). Example: `managing-project-structure.md` → `# Managing Project Structure`.
-
 ### Cross-links
 
-- Recipe → contract: link from **Prerequisites** or step 1 in **Guidelines**
+- Recipe → contract: **Prerequisites** or step 1 in **Guidelines**
 - Recipe → asset: `[../assets/plan.md](../assets/plan.md)` from a Guidelines step
-- In-skill navigation: **Related** section — not mixed into **Guidelines**
-- External URLs: **References** section — not mixed into **Guidelines** (dependency-skill GitHub URLs live in `SKILL.md` **Dependencies** / the contract, not **References**)
-- Keep links **flat** — same skill only, plus GitHub URLs to dependency skills; no reference → reference → reference chains
+- In-skill navigation: **Related**
+- External URLs: **References**, or inline where a step needs them (dependency-skill GitHub URLs live in `SKILL.md` **Dependencies** / the contract)
+- Links stay **one level deep** and in-skill, plus GitHub URLs to dependency skills
 
-### Minimal skeletons
-
-**Framework guide** (matches building-react references):
-
-```markdown
-# Creating Component
-
-## Overview
-
-Start here for any component work. Read the decision tree, then open only the linked guide for your case.
-
-## Prerequisites
-
-- [managing-project-structure.md](./managing-project-structure.md) when folder placement is unclear
-
-## Guidelines
-
-### Decision tree
-…
-
-### Placement
-…
-
-### Shared rules
-…
-
-## Related
-
-- [creating-ui-component.md](./creating-ui-component.md)
-- [managing-state.md](./managing-state.md)
-```
-
-**Lifecycle recipe:**
+### Skeleton
 
 ```markdown
 # Creating Task
@@ -373,94 +335,7 @@ Per [task-contract.md](./task-contract.md) → **Resolve tasks root**.
 …
 ```
 
-**Contract:**
-
-```markdown
-# Task Contract
-
-## Overview
-
-Shared layout and field meanings for all managing-tasks workflows.
-
-## Guidelines
-
-### Author signature
-…
-
-### Output layout
-…
-
-### Resolve tasks root
-…
-```
-
-**Review:**
-
-```markdown
-# Reviewing PRD
-
-## Overview
-
-**Review mode.** Read-only unless the user asks to apply edits.
-
-## Prerequisites
-
-Authoring standards: [creating-prd.md](./creating-prd.md).
-
-## Guidelines
-
-### Workflow
-1. Read the full `prd.md`.
-2. Run the checklist below.
-3. Deliver feedback using the examples template.
-
-### Checklist — structure
-…
-
-## Examples
-
-### Report template
-…
-
-## Related
-
-- [creating-prd.md](./creating-prd.md)
-```
-
-**Configuring:**
-
-```markdown
-# Configuring GitHub Integration
-
-## Overview
-
-Dashboard settings after local validation passes.
-
-## Guidelines
-
-### Settings reference
-…
-
-## Setup
-
-### Connect repository
-…
-
-## Examples
-
-### Working directory examples
-…
-
-## References
-
-- [GitHub integration](https://supabase.com/docs/guides/deployment/branching/github-integration)
-```
-
-### Reference constraints
-
-- Prefer tables and bullets over long prose
-- Put **Confirm to the user** as the last `###` under **Guidelines** for mutating recipes
-- Mode line in **Overview** carries the boundary; avoid repeating it in every step
+Fill other kinds from the **Kind map**; keep the same section order.
 
 ---
 
@@ -529,4 +404,4 @@ npx skills add antfu/skills --skill pnpm
 - [ ] `SKILL.md` uses Overview → Dependencies (if any) → Setup (if any) → Agent workflow → Reference index (→ Templates if `assets/`); skill-specific blocks are subsections only
 - [ ] No relative path links to other skills under `skills/`. Dependency skills use GitHub URLs; this catalog also uses `name` + `id` discovery
 - [ ] Required dependencies are under **Dependencies** (one table) in `SKILL.md`; skill rows repeat in the contract with discovery. One-time steps are under **Setup**, not Dependencies.
-- [ ] Active voice, concise tables, mode lines instead of repeated negatives
+- [ ] Each instruction appears once; mode lines carry boundaries; tables route; no noise, filler, or commentary
