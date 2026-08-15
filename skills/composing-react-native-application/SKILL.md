@@ -1,15 +1,15 @@
 ---
 name: composing-react-native-application
 id: aef3864f-fbd4-415a-8540-0e7ef0ea0f9f
-description: Composes product variants from one complete Expo runtime via declared slots (identity, home, theme) and shared toolchain factories (Metro, Babel, ESLint, Tailwind, app.config). Use when adding a product variant, filling or declaring slots, or wiring a host that reuses the runtime’s config. Requires managing-monorepo for workspace packages and imports.
-version: 1.1.0
+description: Extends one Expo runtime into product variants through declared slots (identity, home, theme, extra routes). Use when adding a variant, filling a slot, or declaring a new slot. Host toolchain wrap is how a variant that prebuilds stays runnable — not a separate purpose. Requires managing-monorepo for workspace packages and imports.
+version: 1.3.1
 ---
 
 # Composing React Native Application
 
 ## Overview
 
-A complete Expo app ships as a JIT runtime package. Variants fill **declared slots**; they keep that app rather than forking it. Hosts wrap the runtime’s toolchain factories (Babel, Metro, ESLint, Tailwind, `app.config`) instead of copying config files. Dependency [`managing-monorepo`](https://github.com/cedmandocdoc/awesome-skills/tree/main/skills/managing-monorepo) owns workspace layout, `exports`, and cross-package imports — the runtime lives in `packages/`; variants import it by package name and `exports` subpaths.
+Extends one complete Expo runtime into product variants through **declared slots**. Variants fill those slots; they keep the app rather than forking it. A host that prebuilds wraps the runtime’s toolchain factories so the filled variant can run. That wrap is host duty, not a slot.
 
 Two unrelated apps that share a UI kit are a library plus `managing-monorepo`, not this skill.
 
@@ -26,7 +26,7 @@ Install both: `npx skills add cedmandocdoc/awesome-skills --skill composing-reac
 
 ## Agent workflow
 
-Follow this skill when one Expo runtime is extended into product variants, or when a host reuses the runtime’s toolchain. Match **Entry points**. Runtime-internal UI uses `building-react-native-application` when that optional skill dependency is installed.
+Follow this skill when one Expo runtime is extended into product variants through slots. Match **Entry points**. When the variant package prebuilds, [creating-variant.md](./references/creating-variant.md) points at host wrap. Runtime screens and `src/ui` use `building-react-native-application` when that optional skill is installed.
 
 ### Entry points
 
@@ -36,7 +36,6 @@ Use the first matching row; combine when the task spans types.
 | --- | --- | --- |
 | Fill slots / new variant | Identity, home tab, theme, extra routes | [creating-variant.md](./references/creating-variant.md) |
 | New slot on the runtime | Product behavior every variant should be able to pass in | [creating-slot.md](./references/creating-slot.md) |
-| Share toolchain / host config | Metro, Babel, ESLint, Tailwind, `app.config`, native deps | [managing-shared-config.md](./references/managing-shared-config.md) |
 | Lookup | Known doc name or single reference | **Reference index** |
 
 ### Task types
@@ -45,21 +44,20 @@ Match every row that applies. Open every local link in **Docs** before coding.
 
 | Task type | Docs |
 | --- | --- |
-| Identity-only product | [creating-variant.md](./references/creating-variant.md), [managing-shared-config.md](./references/managing-shared-config.md) |
+| Identity-only product | [creating-variant.md](./references/creating-variant.md) |
 | Swap `Main` for an existing screen | [creating-variant.md](./references/creating-variant.md) |
 | New home screen or shell-only feature | [creating-variant.md](./references/creating-variant.md); also `building-react-native-application` when installed |
 | Declare a new slot | [creating-slot.md](./references/creating-slot.md) |
-| Wrap Metro / Babel / ESLint / Tailwind / `app.config` | [managing-shared-config.md](./references/managing-shared-config.md) |
 
 ## Reference index
 
 ### Contract
 
-[composition-contract.md](./references/composition-contract.md) — runtime, slot, variant, host; skill dependencies; factory surface.
+[composition-contract.md](./references/composition-contract.md) — structure, slots, host toolchain, skill dependencies.
 
 | Doc | When to use |
 | --- | --- |
-| [composition-contract.md](./references/composition-contract.md) | Terms, what composing is, dependency invoke |
+| [composition-contract.md](./references/composition-contract.md) | Structure, product slots, kinds, dependency invoke |
 | [creating-variant.md](./references/creating-variant.md) | Fill declared slots |
 | [creating-slot.md](./references/creating-slot.md) | Add an extension point on the runtime |
-| [managing-shared-config.md](./references/managing-shared-config.md) | Toolchain factories, host wrap, native deps |
+| [managing-shared-config.md](./references/managing-shared-config.md) | Host wrap after filling slots (prebuild package) |

@@ -2,11 +2,11 @@
 
 ## Overview
 
-Hosts stay aligned with the runtime by wrapping toolchain **factories**. Expo apps are not libraries: a variant still needs a host that prebuilds. Shared config is how that host ships without forking files.
+**Execution mode.** Wrap runtime toolchain factories in the host that prebuilds so the filled variant can run without copying config files. Open this after filling slots, when the package is a host.
 
 ## Prerequisites
 
-[composition-contract.md](./composition-contract.md) — Host term, factory surface, **Require managing-monorepo**.
+[composition-contract.md](./composition-contract.md) — **Host toolchain**, **Require managing-monorepo**. Identity fill: [creating-variant.md](./creating-variant.md).
 
 ## Guidelines
 
@@ -20,7 +20,7 @@ Runtime exports factories. The host calls them and passes host-specific roots.
 | Metro | `metro.config.js` | `require("@scope/runtime/metro.config.js")({ projectRoot, workspacePackageSrcPaths })` |
 | ESLint | `eslint.config.js` | `require("@scope/runtime/eslint.config.js")({ tsconfigRootDir })` |
 | Tailwind | `tailwind.config.js` | `presets: [require("@scope/runtime/tailwind.preset")]`; `content` includes host and runtime `src/**/*.{ts,tsx}` |
-| Expo config | `app.config.ts` | `createRuntimeConfig({ name, slug, icon, … })` |
+| Expo config | `app.config.ts` | Identity slot — [creating-variant.md](./creating-variant.md) |
 | CSS | `src/global.css` | `@import "@scope/runtime/global.css";` |
 
 Copying those files into the host is not the pattern.
@@ -35,7 +35,7 @@ The host may `"extends"` the runtime’s compiler options. `paths` maps `@/*` to
 
 ```json
 {
-  "extends": "../../packages/runtime/tsconfig.json",
+  "extends": "@scope/runtime/tsconfig.json",
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
@@ -80,6 +80,26 @@ module.exports = require("@scope/runtime/metro.config.js")({
     path.resolve(__dirname, "../../packages/runtime/src"),
   ],
 });
+```
+
+### Tailwind
+
+```js
+const path = require("path");
+
+const runtimeSrc = path.resolve(__dirname, "../../packages/runtime/src");
+
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: ["./src/**/*.{ts,tsx}", `${runtimeSrc}/**/*.{ts,tsx}`],
+  presets: [require("@scope/runtime/tailwind.preset")],
+};
+```
+
+### CSS
+
+```css
+@import "@scope/runtime/global.css";
 ```
 
 ### Host `package.json` native deps

@@ -6,19 +6,19 @@
 
 ## Prerequisites
 
-[composition-contract.md](./composition-contract.md) — terms, product API, **Require managing-monorepo**.
+[composition-contract.md](./composition-contract.md) — **Structure**, **Product slots**, **Require managing-monorepo**.
 
 ## Guidelines
 
 ### 1. Resolve the runtime
 
-Find the JIT Expo package that exports the app factory and slot factories (`createRuntimeApp`, config factory, navigator factories). Confirm `exports` subpaths with dependency `managing-monorepo`.
+Find the JIT Expo package that exports the app factory and slot factories. Read those factory types and **Product slots**. Fill existing arguments. A new argument is [creating-slot.md](./creating-slot.md). Confirm `exports` subpaths with dependency `managing-monorepo`.
 
 ### 2. Choose package shape
 
 | Case | Layout |
 | --- | --- |
-| Identity-only product | One host package fills identity and wraps toolchain config |
+| Identity-only product | One host package fills identity |
 | New screens or extra routes | Variant fills slots; host is that package or a thin app that depends on it |
 
 ### 3. Fill required slots
@@ -26,6 +26,7 @@ Find the JIT Expo package that exports the app factory and slot factories (`crea
 **Identity** (every host) — call the config factory from `app.config.ts`:
 
 ```ts
+import "tsx";
 import { createRuntimeConfig } from "@scope/runtime/config";
 
 export default createRuntimeConfig({
@@ -36,16 +37,21 @@ export default createRuntimeConfig({
 });
 ```
 
-**Home (`Main`)** — pass screen + tab options into the tabs factory:
+**Home (`Main`)** — pass screen + tab options into the tabs factory.
+
+| Fill lives in | Screen import |
+| --- | --- |
+| JIT library (`packages/`) | `#features/<feature>` |
+| Host leaf (`apps/`) | `@/features/<feature>` |
 
 ```ts
 import { createRuntimeTabsNavigator } from "@scope/runtime";
-import { ExploreScreen } from "@/features/explore";
+import { HomeScreen } from "#features/home";
 
 export const TabsNavigator = createRuntimeTabsNavigator({
   Main: {
-    screen: ExploreScreen,
-    options: { title: "Explore" },
+    screen: HomeScreen,
+    options: { title: "Home" },
   },
 });
 ```
@@ -65,7 +71,7 @@ export default createRuntimeApp(RootStackNavigator, {
 }).App;
 ```
 
-**Extra routes** — spread additional screens into the stack factory:
+**Extra routes** — spread additional screens into the stack factory. Screen import: same table as **Home**. Host leaf:
 
 ```ts
 import { createRuntimeStackNavigator } from "@scope/runtime";
@@ -87,11 +93,73 @@ import { RootStackNavigator } from "./routes/RootStackNavigator";
 export default createRuntimeApp(RootStackNavigator).App;
 ```
 
-Wrap toolchain factories when this package prebuilds.
+If this package prebuilds, follow [managing-shared-config.md](./managing-shared-config.md).
 
 ### 6. Confirm to the user
 
 Report the variant/host package path, which slots were filled, and any new `exports` consumers. Offer to declare a new slot when the change does not fit an existing factory argument.
+
+## Examples
+
+### Same `Main` slot, two products
+
+Runtime-owned tabs stay. Each product passes a different home screen.
+
+`packages/shop` (JIT library):
+
+```ts
+import { createRuntimeTabsNavigator } from "@scope/runtime";
+import { ShopScreen } from "#features/shop";
+import { Store } from "lucide-react-native";
+
+export const TabsNavigator = createRuntimeTabsNavigator({
+  Main: {
+    screen: ShopScreen,
+    options: { title: "Shop", tabBar: { icon: Store } },
+  },
+});
+```
+
+`apps/marketplace` (host leaf):
+
+```ts
+import { createRuntimeTabsNavigator } from "@scope/runtime";
+import { ExploreScreen } from "@/features/explore";
+import { MapPin } from "lucide-react-native";
+
+export const TabsNavigator = createRuntimeTabsNavigator({
+  Main: {
+    screen: ExploreScreen,
+    options: { title: "Explore", tabBar: { icon: MapPin } },
+  },
+});
+```
+
+### Extra stack route
+
+`apps/marketplace` — required `Tabs` stays; extra keys spread:
+
+```ts
+import { createRuntimeStackNavigator } from "@scope/runtime";
+import { TabsNavigator } from "./TabsNavigator";
+import { DetailStackNavigator } from "./DetailStackNavigator";
+
+export const RootStackNavigator = createRuntimeStackNavigator({
+  Tabs: { screen: TabsNavigator },
+  DetailStack: {
+    screen: DetailStackNavigator,
+    options: { headerShown: false },
+  },
+});
+```
+
+### Thin host
+
+`apps/shop-host` fills identity and re-exports. `packages/shop` fills slots and exports `App`:
+
+```ts
+export { default } from "@scope/shop/App";
+```
 
 ## Related
 

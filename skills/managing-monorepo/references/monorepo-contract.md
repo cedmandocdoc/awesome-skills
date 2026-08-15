@@ -110,6 +110,6 @@ Consumption mode does not change folder role.
 
 - Compiler-option catalogs (tsconfig contents)
 - Expo / Metro / Vite / NativeWind
-- Slot-based Expo variants and host toolchain
+- Slot-based Expo variants
 - pnpm catalogs and CLI
 - Turbo remote cache, `--affected`, env hashing
