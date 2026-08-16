@@ -2,17 +2,17 @@
 
 ## Overview
 
-**Execution mode.** Fills declared slots on an existing Expo runtime. An identity-only host is a valid variant. A new home screen is the same mechanism with a larger slot.
+**Execution mode.** Fills declared slots on an existing Expo core. An identity-only host is a valid variant. A new home screen is the same mechanism with a larger slot.
 
 ## Prerequisites
 
-[composition-contract.md](./composition-contract.md) — **Structure**, **Product slots**, **Require managing-monorepo**.
+[composition-contract.md](./composition-contract.md) — **Naming**, **Structure**, **Product slots**, **Require managing-monorepo**.
 
 ## Guidelines
 
-### 1. Resolve the runtime
+### 1. Resolve the core
 
-Find the JIT Expo package that exports the app factory and slot factories. Read those factory types and **Product slots**. Fill existing arguments. A new argument is [creating-slot.md](./creating-slot.md). Confirm `exports` subpaths with dependency `managing-monorepo`.
+Find the JIT Expo package that exports the app factory and slot factories. Use its real `name` and path; do not invent `packages/runtime` if the user or repo already named the core. Read those factory types and **Product slots**. Fill existing arguments. A new argument is [creating-slot.md](./creating-slot.md). Confirm `exports` subpaths with dependency `managing-monorepo`.
 
 ### 2. Choose package shape
 
@@ -27,9 +27,9 @@ Find the JIT Expo package that exports the app factory and slot factories. Read 
 
 ```ts
 import "tsx";
-import { createRuntimeConfig } from "@scope/runtime/config";
+import { createConfig } from "@scope/core/config";
 
-export default createRuntimeConfig({
+export default createConfig({
   name: "Acme",
   slug: "acme",
   icon: "./assets/icon.png",
@@ -45,10 +45,10 @@ export default createRuntimeConfig({
 | Host leaf (`apps/`) | `@/features/<feature>` |
 
 ```ts
-import { createRuntimeTabsNavigator } from "@scope/runtime";
+import { createTabsNavigator } from "@scope/core";
 import { HomeScreen } from "#features/home";
 
-export const TabsNavigator = createRuntimeTabsNavigator({
+export const TabsNavigator = createTabsNavigator({
   Main: {
     screen: HomeScreen,
     options: { title: "Home" },
@@ -56,17 +56,17 @@ export const TabsNavigator = createRuntimeTabsNavigator({
 });
 ```
 
-Swap `Main` for an existing runtime or variant screen the same way. Writing a new screen: follow `building-react-native-application` when that skill is installed.
+Swap `Main` for an existing core or variant screen the same way. Writing a new screen: follow `building-react-native-application` when that skill is installed.
 
 ### 4. Fill optional slots
 
 **Theme / fonts** — overlays on the app factory:
 
 ```ts
-import { createRuntimeApp } from "@scope/runtime";
+import { createApp } from "@scope/core";
 import { RootStackNavigator } from "./routes/RootStackNavigator";
 
-export default createRuntimeApp(RootStackNavigator, {
+export default createApp(RootStackNavigator, {
   theme: { light: { primary: "#0a0" } },
 }).App;
 ```
@@ -74,11 +74,11 @@ export default createRuntimeApp(RootStackNavigator, {
 **Extra routes** — spread additional screens into the stack factory. Screen import: same table as **Home**. Host leaf:
 
 ```ts
-import { createRuntimeStackNavigator } from "@scope/runtime";
+import { createStackNavigator } from "@scope/core";
 import { TabsNavigator } from "./TabsNavigator";
 import { ExtraDetailScreen } from "@/features/extra";
 
-export const RootStackNavigator = createRuntimeStackNavigator({
+export const RootStackNavigator = createStackNavigator({
   Tabs: { screen: TabsNavigator },
   ExtraDetail: { screen: ExtraDetailScreen },
 });
@@ -87,10 +87,10 @@ export const RootStackNavigator = createRuntimeStackNavigator({
 ### 5. Wire the host App
 
 ```ts
-import { createRuntimeApp } from "@scope/runtime";
+import { createApp } from "@scope/core";
 import { RootStackNavigator } from "./routes/RootStackNavigator";
 
-export default createRuntimeApp(RootStackNavigator).App;
+export default createApp(RootStackNavigator).App;
 ```
 
 If this package prebuilds, follow [managing-shared-config.md](./managing-shared-config.md).
@@ -103,16 +103,16 @@ Report the variant/host package path, which slots were filled, and any new `expo
 
 ### Same `Main` slot, two products
 
-Runtime-owned tabs stay. Each product passes a different home screen.
+Core-owned tabs stay. Each product passes a different home screen.
 
 `packages/shop` (JIT library):
 
 ```ts
-import { createRuntimeTabsNavigator } from "@scope/runtime";
+import { createTabsNavigator } from "@scope/core";
 import { ShopScreen } from "#features/shop";
 import { Store } from "lucide-react-native";
 
-export const TabsNavigator = createRuntimeTabsNavigator({
+export const TabsNavigator = createTabsNavigator({
   Main: {
     screen: ShopScreen,
     options: { title: "Shop", tabBar: { icon: Store } },
@@ -123,11 +123,11 @@ export const TabsNavigator = createRuntimeTabsNavigator({
 `apps/marketplace` (host leaf):
 
 ```ts
-import { createRuntimeTabsNavigator } from "@scope/runtime";
+import { createTabsNavigator } from "@scope/core";
 import { ExploreScreen } from "@/features/explore";
 import { MapPin } from "lucide-react-native";
 
-export const TabsNavigator = createRuntimeTabsNavigator({
+export const TabsNavigator = createTabsNavigator({
   Main: {
     screen: ExploreScreen,
     options: { title: "Explore", tabBar: { icon: MapPin } },
@@ -140,11 +140,11 @@ export const TabsNavigator = createRuntimeTabsNavigator({
 `apps/marketplace` — required `Tabs` stays; extra keys spread:
 
 ```ts
-import { createRuntimeStackNavigator } from "@scope/runtime";
+import { createStackNavigator } from "@scope/core";
 import { TabsNavigator } from "./TabsNavigator";
 import { DetailStackNavigator } from "./DetailStackNavigator";
 
-export const RootStackNavigator = createRuntimeStackNavigator({
+export const RootStackNavigator = createStackNavigator({
   Tabs: { screen: TabsNavigator },
   DetailStack: {
     screen: DetailStackNavigator,

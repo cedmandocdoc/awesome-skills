@@ -2,59 +2,70 @@
 
 ## Overview
 
-Slot structure for composing product variants from one Expo runtime. One working app, many products; extension only through declared slots.
+Slot structure for composing product variants from one Expo core. One working app, many products; extension only through declared slots.
 
 ## Guidelines
+
+### Naming
+
+| Thing | Rule |
+| --- | --- |
+| Role | **Core** — complete Expo app; declares slots; stays runnable |
+| Package dir / npm name | Product name, default `core` / `@scope/core`. `@scope/<dir>` aligned with the folder |
+| Expo identity | Product `name` / `slug`. Never the role word |
+| Task / phase slugs | Product or work, not the role word |
+
+Runtime = Core.
 
 ### Structure
 
 | Role | Does |
 | --- | --- |
-| Runtime | Owns the working app; declares slots (typed factory arguments with defaults); stays runnable |
-| Variant | Fills slots. Does not patch runtime `src/` |
+| Core | Owns the working app; declares slots (typed factory arguments with defaults); stays runnable |
+| Variant | Fills slots. Does not patch core `src/` |
 | Host | Prebuilds and runs the filled app. Wraps toolchain factories. Not a slot |
 
 Variant and host may be the same package or split.
 
 ```text
-packages/runtime/     # complete Expo app; declares slots; fills defaults
-packages/shop/        # variant library; fills Main
-apps/shop-host/       # thin host; identity + wrap; re-exports @scope/shop App
-apps/marketplace/     # variant and host in one package
+packages/core/          # complete Expo app; declares slots; fills defaults
+packages/shop/          # variant library
+apps/shop-host/         # thin host
+apps/marketplace/       # variant + host
 ```
 
-Composing is filling slots on one runtime. It is not sharing a UI library, copying the app and editing files, or adding a screen inside the same package with no factory.
+Composing is filling slots on one core. It is not sharing a UI library, copying the app and editing files, or adding a screen inside the same package with no factory.
 
 ### Terms
 
 | Term | Meaning |
 | --- | --- |
-| Runtime | A complete working Expo app exported as a JIT package |
-| Slot | A typed extension point the runtime declares (factory argument). Variants pass values |
+| Core | A complete working Expo app exported as a JIT package |
+| Slot | A typed extension point the core declares (factory argument). Variants pass values |
 | Variant | A package that fills slots |
 | Host | The runnable Expo app that prebuilds |
 
 ### Product slots
 
-The runtime ships the working app (owned screens, providers, fonts, tab bar). Variants keep that app and fill slots:
+The core ships the working app (owned screens, providers, fonts, tab bar). Variants keep that app and fill slots:
 
 | Slot | Required | Variant provides |
 | --- | --- | --- |
-| Identity | yes for a host | `name`, `slug`, icon, splash — `createRuntimeConfig` |
+| Identity | yes for a host | `name`, `slug`, icon, splash — `createConfig` |
 | Home (`Main` tab) | yes | Screen + tab label/icon — tabs factory |
-| Theme / fonts | no | Overlays on `createRuntimeApp` |
+| Theme / fonts | no | Overlays on `createApp` |
 | Extra routes | no | Extra tabs/stacks — factory spreads extra screens |
 
 An icon-only host is a valid variant (identity slot only).
 
-New product behavior that is not a slot goes into the runtime (new slot) or into the variant (shell-only feature). Variants import the runtime via `exports`. Importing the runtime’s `src/` by path is the exception to catch.
+New product behavior that is not a slot goes into the core (new slot) or into the variant (shell-only feature). Variants import the core via `exports`. Importing the core’s `src/` by path is the exception to catch.
 
 ### Slot kinds
 
 | Presence | Rule |
 | --- | --- |
-| required | Every host fills it. The runtime app fills it too so the runtime stays runnable |
-| optional | Runtime default. Variant overrides when the product differs |
+| required | Every host fills it. The core app fills it too so the core stays runnable |
+| optional | Core default. Variant overrides when the product differs |
 
 | Shape | Rule |
 | --- | --- |
@@ -65,17 +76,17 @@ New product behavior that is not a slot goes into the runtime (new slot) or into
 
 | Leave on | Examples |
 | --- | --- |
-| Runtime | Owned tabs, stacks, providers, fonts, chrome |
+| Core | Owned tabs, stacks, providers, fonts, chrome |
 | Host wrap | Babel, Metro, ESLint, Tailwind, `global.css` |
 
 ### Product factories
 
 | Concern | Factory | Lives on |
 | --- | --- | --- |
-| App shell | `createRuntimeApp(Root, options?)` | Runtime package root export |
-| Identity | `createRuntimeConfig({ name, slug, icon, … })` | `exports` subpath e.g. `@scope/runtime/config` |
-| Home / extra tabs | `createRuntimeTabsNavigator` | Runtime package root export |
-| Extra stacks | `createRuntimeStackNavigator` | Runtime package root export |
+| App shell | `createApp(Root, options?)` | Core package root export |
+| Identity | `createConfig({ name, slug, icon, … })` | `exports` subpath e.g. `@scope/core/config` |
+| Home / extra tabs | `createTabsNavigator` | Core package root export |
+| Extra stacks | `createStackNavigator` | Core package root export |
 
 ### Host toolchain
 

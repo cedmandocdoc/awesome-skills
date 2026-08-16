@@ -1,4 +1,4 @@
 interface:
   display_name: "Composing React Native Application"
-  short_description: "Slot-based product variants of one Expo runtime"
-  default_prompt: "Use $composing-react-native-application when adding a product variant, filling a slot, or declaring a new slot on an Expo runtime."
+  short_description: "Slot-based product variants of one Expo core app"
+  default_prompt: "Use $composing-react-native-application when adding a product variant, filling a slot, or declaring a new slot on an Expo core app."

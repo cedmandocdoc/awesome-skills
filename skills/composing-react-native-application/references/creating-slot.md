@@ -2,11 +2,11 @@
 
 ## Overview
 
-**Execution mode.** Adds a typed extension point on the runtime so variants can pass a value without patching runtime internals. Same steps declare the first slot set on an app that is becoming a runtime.
+**Execution mode.** Adds a typed extension point on the core so variants can pass a value without patching core internals. Same steps declare the first slot set on an app that is becoming a core.
 
 ## Prerequisites
 
-[composition-contract.md](./composition-contract.md) — **Structure**, **Product slots**, **Slot kinds**, **Require managing-monorepo**.
+[composition-contract.md](./composition-contract.md) — **Naming**, **Structure**, **Product slots**, **Slot kinds**, **Require managing-monorepo**.
 
 ## Guidelines
 
@@ -17,7 +17,7 @@ Read factory types and **Product slots** before adding a field.
 | Kind | Action |
 | --- | --- |
 | Argument already on a factory type | Fill it — [creating-variant.md](./creating-variant.md) |
-| Several products will pass a different value | New slot on the runtime |
+| Several products will pass a different value | New slot on the core |
 | One product only | Shell-only feature in the variant |
 
 ### 2. Choose kind
@@ -35,7 +35,7 @@ type TabsConfig = {
   Main: TabConfig;
 } & Record<string, TabConfig>;
 
-export function createRuntimeTabsNavigator<const T extends TabsConfig>(config: T) {
+export function createTabsNavigator<const T extends TabsConfig>(config: T) {
   const { Main, ...extraTabs } = config;
   return createBottomTabNavigator({
     screens: {
@@ -52,9 +52,9 @@ export function createRuntimeTabsNavigator<const T extends TabsConfig>(config: T
 }
 ```
 
-### 4. Default in the runtime
+### 4. Default in the core
 
-The runtime’s own app fills every required slot so it remains a complete working Expo app. Variants override by calling the same factory.
+The core’s own app fills every required slot so it remains a complete working Expo app. Variants override by calling the same factory.
 
 ### 5. Export the factory
 
@@ -62,18 +62,18 @@ Add or keep the factory on `package.json` `exports`. Follow dependency `managing
 
 ### 6. Confirm to the user
 
-Report the factory file, the new argument, presence (required/optional), shape (closed/open), the `exports` key, and the runtime default.
+Report the factory file, the new argument, presence (required/optional), shape (closed/open), the `exports` key, and the core default.
 
 ## Examples
 
-### Runtime default for `Main`
+### Core default for `Main`
 
 ```ts
 import { MainPlaceholderScreen } from "#features/main-placeholder";
-import { createRuntimeTabsNavigator } from "./factories/createRuntimeTabsNavigator";
+import { createTabsNavigator } from "./factories/createTabsNavigator";
 import { LayoutGrid } from "lucide-react-native";
 
-export const TabsNavigator = createRuntimeTabsNavigator({
+export const TabsNavigator = createTabsNavigator({
   Main: {
     screen: MainPlaceholderScreen,
     options: { title: "Main", tabBar: { icon: LayoutGrid } },
@@ -87,7 +87,7 @@ export const TabsNavigator = createRuntimeTabsNavigator({
 {
   "exports": {
     ".": "./src/index.ts",
-    "./config": "./src/factories/createRuntimeConfig.ts",
+    "./config": "./src/factories/createConfig.ts",
     "./tsconfig.json": "./tsconfig.json",
     "./babel.config.factory.js": "./babel.config.factory.js",
     "./metro.config.js": "./metro.config.factory.js",

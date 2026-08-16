@@ -73,8 +73,7 @@ A folder with a private root `package.json`, `pnpm-workspace.yaml`, and `turbo.j
 | Role | Lives in | Others depend on it? | Examples |
 | --- | --- | --- | --- |
 | App / host | `apps/` | No | Vite SPA, Expo host, docs site |
-| Library | `packages/` | Yes | UI kit, API client, utils |
-| Imported runtime | `packages/` | Yes | Complete Expo runtime that variants import |
+| Library | `packages/` | Yes | UI kit, API client, utils, complete Expo app that variants import |
 | Config package | `packages/` | Yes | `typescript-config`, `eslint-config` |
 
 Root is the orchestrator: no app `src/`. Each package declares its own dependencies. Pin `packageManager` to the repo’s pnpm version.

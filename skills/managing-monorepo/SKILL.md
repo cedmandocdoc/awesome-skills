@@ -2,7 +2,7 @@
 name: managing-monorepo
 id: e0e993e7-a5f9-4bea-9923-166b503df045
 description: Defines the workspace contract for a TypeScript monorepo with pnpm and Turborepo — folder roles (`apps/` vs `packages/`), cross-package imports (`exports`, `workspace:*`), canonical scripts (`typecheck`, `build`, `lint`, `test`, `dev`), and root `.gitignore`. Use when adding a package, choosing apps vs packages, wiring an import, naming a script other packages must run, or initializing `.gitignore`.
-version: 1.2.0
+version: 1.2.1
 ---
 
 # Managing Monorepo
