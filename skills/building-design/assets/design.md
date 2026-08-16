@@ -125,9 +125,9 @@ components:
 
 > **Structure only** — used by [creating-design.md](../references/creating-design.md). Filled output follows the [DESIGN.md format specification](https://stitch.withgoogle.com/docs/design-md/specification.md): YAML front matter (normative tokens) + markdown body (rationale).
 >
-> Token names follow this skill’s conventions (shadcn semantic colors, `text-*` type scale, `space-*`, `radius-*`). Reference token keys in specs and prompts — not raw hex, px literals, or ad-hoc font sizes.
+> Token names follow this skill’s conventions (shadcn semantic colors, `text-*` type scale, `space-*`, `radius-*`). Reference token keys in prompts and previews — not raw hex, px literals, or ad-hoc font sizes.
 >
-> Source inputs: [brand brief / product specs / existing design system]
+> Source inputs: [brand brief / existing design system]
 
 ## Overview
 

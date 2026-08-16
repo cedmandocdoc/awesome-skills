@@ -17,8 +17,8 @@ Gather or confirm:
 | Typography | Yes | Families — or permission to use default `font-brand` / `font-body` |
 | Density and layout | Yes | Compact vs spacious, mobile-first vs desktop-first — or defaults |
 | Product name | Yes | YAML `name` and document title |
-| Component inventory | Optional | From UI specs; enriches `## Components` and YAML `components:` |
-| Motion / accessibility | Optional | From product specs when present |
+| Component inventory | Optional | When the user names components — enriches `## Components` and YAML `components:` |
+| Motion / accessibility | Optional | When the user provides them |
 
 If inputs are thin: ask briefly, proceed with convention defaults, note `[TBD]` in the delivery summary. Ask before inventing brand colors unless the user accepts defaults.
 
@@ -207,7 +207,7 @@ Adaptation rules and touch/pointer guidance go under `## Layout`.
 
 ### Components
 
-Derive from tokens when UI specs omit component-level detail:
+Derive from tokens when the user omits component-level detail:
 
 | Component key | Typical mapping |
 | --- | --- |
@@ -226,7 +226,7 @@ Reply with:
 1. **Path** — repo-relative path to `design.md`
 2. **Summary** — product name, convention used, token counts, normalized mappings
 3. **Gaps** — unmapped tokens, missing component variants, `[TBD]` values, lint result if run
-4. **Next step** — [creating-design-prompts.md](./creating-design-prompts.md), [creating-design-previews.md](./creating-design-previews.md), or feature `ui-specs.md` when product specs are in progress
+4. **Next step** — [creating-design-prompts.md](./creating-design-prompts.md) or [creating-design-previews.md](./creating-design-previews.md)
 
 ### Follow-up updates
 

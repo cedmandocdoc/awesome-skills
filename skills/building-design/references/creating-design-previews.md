@@ -2,39 +2,39 @@
 
 ## Overview
 
-**Authoring mode.** Writes static HTML screen boards from `design.md` and product specs per [handoff-contract.md](handoff-contract.md). Each file is self-contained (inline CSS, no JavaScript). Prompts are not required.
+**Authoring mode.** Writes static HTML screen boards from `design.md` and filled Inputs per [handoff-contract.md](handoff-contract.md). Each file is self-contained (inline CSS, no JavaScript). Prompts are not required.
 
 Does not scaffold an application.
 
 ## Prerequisites
 
-Per [handoff-contract.md](handoff-contract.md) → **Sources of truth**, **Gate and gather**, **Paths**. Template: [`../assets/preview-screen.html`](../assets/preview-screen.html).
+Per [handoff-contract.md](handoff-contract.md) → **Inputs**, **Fill inputs**, **Paths**. Template: [`../assets/preview-screen.html`](../assets/preview-screen.html).
 
 ## Guidelines
 
-### 1. Gate, gather, and confirm paths
+### 1. Fill inputs and confirm paths
 
-Per [handoff-contract.md](handoff-contract.md) → **Gate and gather**, **Paths**, and **Viewport matrix**.
+Per [handoff-contract.md](handoff-contract.md) → **Fill inputs**, **Paths**, and **Viewport matrix**. If Inputs were already filled this turn, skip collect/ask; confirm this recipe’s paths only.
 
 Confirm design root, `<task>` slug, and which screens are in this preview. On follow-ups ("add settings screen"), edit the existing `previews/<task>/` folder unless the user asks for a new path.
 
 ### 2. Plan screen files
 
-One HTML file per **screen** from UI specs. Combine screens into one file only when the user asks.
+One HTML file per **screen** from the screen list. Combine screens into one file only when the user asks.
 
 | From | Maps to |
 | --- | --- |
-| UI specs screen | `<screen>.html` kebab slug (`login.html`, `home.html`). Colliding names → more specific slug (`account-settings.html`) |
+| Screen list | `<screen>.html` kebab slug (`login.html`, `home.html`). Colliding names → more specific slug (`account-settings.html`) |
 | Viewport matrix | One 1:1 frame per viewport in that file |
-| Each distinct state | Extra frame row under that screen |
-| `design.md` YAML | `:root` custom properties in that file’s `<style>` |
+| Screen states | Extra frame row under that screen |
+| Visual system | `:root` custom properties in that file’s `<style>` |
 | Chrome | Drawn inside every `.frame-canvas` that uses that shell |
 
 A one-screen task is still `previews/<task>/<screen>.html`. Do not number preview files and do not write `index.html`.
 
 ### 3. Fill and write
 
-Copy [`../assets/preview-screen.html`](../assets/preview-screen.html) per screen. Fill `:root` from `design.md`; draw frames from specs.
+Copy [`../assets/preview-screen.html`](../assets/preview-screen.html) per screen. Fill `:root` from `design.md`; draw frames from filled Inputs.
 
 | Rule | Detail |
 | --- | --- |
@@ -44,7 +44,7 @@ Copy [`../assets/preview-screen.html`](../assets/preview-screen.html) per screen
 | Frames | Width/height = viewport pixels. Caption outside the canvas. `overflow: hidden` and `pointer-events: none` on `.frame-canvas` |
 | Layout | One horizontal row per state (desktop · tablet · mobile). Page scrolls sideways at 1:1. Mobile-only: one frame per state |
 | Fonts | `<link>` to a hosted family allowed when `design.md` names one |
-| Copy | Exact strings from UI specs; `[COPY TBD]` when missing |
+| Copy | Exact strings from Screen content; `[COPY TBD]` when missing |
 | Combined file | User asked to combine: stack screen groups vertically; each group keeps its viewport rows |
 
 Write HTML to disk. In chat, return paths, summary, and gaps only.
@@ -53,7 +53,7 @@ Write HTML to disk. In chat, return paths, summary, and gaps only.
 
 1. **Paths** — `design.md` and preview task folder
 2. **Summary** — platform type, task slug, screen file count
-3. **Gaps** — `[COPY TBD]` or missing spec detail
+3. **Gaps** — `[COPY TBD]` or empty Input rows
 4. **Usage** — open `<screen>.html` in a browser; scroll horizontally for viewports
 
 ### Follow-up updates
@@ -65,7 +65,7 @@ Write HTML to disk. In chat, return paths, summary, and gaps only.
 
 ## Related
 
-- [handoff-contract.md](handoff-contract.md) — static board rules, sources, paths
+- [handoff-contract.md](handoff-contract.md) — static board rules, Inputs, paths
 - [creating-design.md](creating-design.md) — prerequisite visual tokens
 - [creating-design-prompts.md](creating-design-prompts.md) — optional third-party prompts; not a gate
 
@@ -73,7 +73,7 @@ Write HTML to disk. In chat, return paths, summary, and gaps only.
 
 **Missing design.md:** Stop → offer [creating-design.md](creating-design.md) → resume after tokens exist.
 
-**One screen:** Confirm `design/previews/auth-login/` → `login.html` with idle + error rows.
+**Chat-only login:** Confirm `design/previews/auth-login/` → `login.html` with idle + error rows.
 
 **Desktop SaaS slice:** Confirm `design/previews/checkout-v2/` → `checkout.html`, `review.html`, … — one file per screen; three 1:1 frames per state row.
 

@@ -2,41 +2,38 @@
 
 ## Overview
 
-**Authoring mode.** Generates a shared static-handoff prompt folder from `design.md` and product specs per [handoff-contract.md](handoff-contract.md). The same passes run on Claude Design, Google Stitch, and Figma Make; platform differences live only in README adapters.
+**Authoring mode.** Generates a shared static-handoff prompt folder from `design.md` and filled Inputs per [handoff-contract.md](handoff-contract.md). The same passes run on Claude Design, Google Stitch, and Figma Make; platform differences live only in README adapters.
 
 Produces screen/flow passes that describe a static frame board. Chrome rules and component names sit in the README; each pass lists frames to draw. This recipe writes markdown only — it does not write HTML or into Claude Design, Stitch, or Figma.
 
 ## Prerequisites
 
-Per [handoff-contract.md](handoff-contract.md) → **Sources of truth**, **Gate and gather**, **Paths**. Templates: [`../assets/prompts-readme.md`](../assets/prompts-readme.md), [`../assets/design-pass.md`](../assets/design-pass.md).
+Per [handoff-contract.md](handoff-contract.md) → **Inputs**, **Fill inputs**, **Paths**. Templates: [`../assets/prompts-readme.md`](../assets/prompts-readme.md), [`../assets/design-pass.md`](../assets/design-pass.md).
 
 ## Guidelines
 
-### 1. Gate, gather, and confirm paths
+### 1. Fill inputs and confirm paths
 
-Per [handoff-contract.md](handoff-contract.md) → **Gate and gather**, **Paths**, and **Viewport matrix**.
+Per [handoff-contract.md](handoff-contract.md) → **Fill inputs**, **Paths**, and **Viewport matrix**. If Inputs were already filled this turn, skip collect/ask; confirm this recipe’s paths only.
 
 Confirm design root and task slug. On follow-ups ("add settings screen to prompts"), edit the existing task folder unless the user asks for a new path.
 
 ### 2. Extract and plan passes
 
-Map inputs, then plan one pass per major flow or screen group from IA / UI specs only — invent neither screens nor kit-only / empty-shell passes.
+Map filled Inputs, then plan one pass per major flow or screen group from the screen list only — invent neither screens nor kit-only / empty-shell passes.
 
 | From | Maps to |
 | --- | --- |
-| PRD/FRD feature scope & boundaries | README → Objective, Product Scope |
-| Requirements & acceptance criteria | Pass content, Done checklist |
-| In/out of scope | README + every pass Out of scope |
-| User story roles / goals / permissions | README → User Roles; pass role notes and gated UI |
-| UI flows / screens / routes | README IA; numbered passes |
-| Layout chrome | README → Chrome rules |
-| Component inventory | README → Component reference (names) |
-| Validation, errors, edge cases | Pass Screens / states — extra frames per state |
-| Copy & content | Pass Content & copy |
-| Responsive behavior | README + pass Viewport |
-| `design.md` path, Overview, Do's/Don'ts, YAML keys | README visual source; pass design-system reminder and token lines |
+| Scope | README → Objective, Product Scope; every pass Out of scope |
+| Screen list | README IA; numbered passes |
+| Screen content | Pass Screens / Content & copy; README component names |
+| Screen states | Pass extra frames per state |
+| Platform | README + pass Viewport |
+| Roles | README → User Roles; pass role notes (omit when unused) |
+| Chrome | README → Chrome rules (omit when unused) |
+| Visual system | README visual source; pass design-system reminder and token lines |
 
-Include when specs support them: role-gated UI, live/instrument screens as their own pass when they invert chrome.
+Include when Inputs support them: role-gated UI, live/instrument screens as their own pass when they invert chrome.
 
 ### 3. Fill and write
 
@@ -60,13 +57,13 @@ design/prompts/<task>/
 4. Chrome rules and component names belong in the README; passes list real screens that apply those rules
 5. Each pass lists prior pass IDs it assumes complete
 6. List every in-scope screen, sheet, state, and role variant from inputs by name across the pass set
-7. README and every pass include out-of-scope bullets from PRD/FRD exclusions
+7. README and every pass include out-of-scope bullets from Scope
 8. Viewport matrix matches platform type (three frames desktop/web; one mobile-only)
 9. Keep the three README adapter sections (Claude Design, Google Stitch, Figma Make); adjust only paths and scope wording
-10. Use hierarchical component names (`Button/Primary`), screen names, and exact copy from UI specs
+10. Use hierarchical component names (`Button/Primary`), screen names, and exact copy from Screen content
 11. `design.md` is source of truth for visuals — reference keys, not vague adjectives
 12. Every role with distinct behavior gets explicit coverage in the relevant passes
-13. Each pass is self-contained for one paste with `design.md` already applied — point tools at the pass, not the PRD
+13. Each pass is self-contained for one paste with `design.md` already applied — point tools at the pass, not upstream notes
 14. Structure output as a static frame board per [handoff-contract.md](handoff-contract.md) → **Handoff deliverable**. Figma Components/Screens showcase only when the user asks for that deliverable
 
 Write README and pass files as plain markdown on disk. In chat, return paths, summary, gaps, and usage only — nested markdown breaks inside fences.
@@ -75,7 +72,7 @@ Write README and pass files as plain markdown on disk. In chat, return paths, su
 
 1. **Paths** — `design.md` and prompt task folder
 2. **Summary** — platform type, task slug, pass count
-3. **Gaps** — `[COPY TBD]` or missing spec detail
+3. **Gaps** — `[COPY TBD]` or empty Input rows
 4. **Usage** — open `README.md` → apply `design.md` on the chosen platform → run `01` → `02` → … in order (one pass per generation turn)
 
 ### Follow-up updates
@@ -87,9 +84,9 @@ Write README and pass files as plain markdown on disk. In chat, return paths, su
 
 ## Related
 
-- [handoff-contract.md](handoff-contract.md) — static board rules, sources, paths
+- [handoff-contract.md](handoff-contract.md) — static board rules, Inputs, paths
 - [creating-design.md](creating-design.md) — prerequisite visual tokens
-- [creating-design-previews.md](creating-design-previews.md) — HTML boards from the same sources; not a gate
+- [creating-design-previews.md](creating-design-previews.md) — HTML boards from the same Inputs; not a gate
 
 ## Examples
 

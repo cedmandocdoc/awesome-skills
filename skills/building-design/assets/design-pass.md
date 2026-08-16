@@ -36,12 +36,12 @@
 
 ## In scope (this pass only)
 
-- [Screen, sheet, or flow step from UI specs]
+- [Screen, sheet, or flow step from the screen list]
 
 ## Out of scope (this pass)
 
 - [Deferred to later passes]
-- [PRD/FRD exclusions]
+- [Out of scope]
 - Do not invent features, routes, or copy beyond this pass
 
 ---
@@ -86,7 +86,7 @@ Prefer README component names. Do not create one-off duplicates of shared contro
 **Layout:** [shell + region notes]  
 **Content:**
 
-- [Headings, fields, CTAs — exact copy from UI specs]
+- [Headings, fields, CTAs — exact copy from Screen content]
 - [Data displayed]
 
 **Frames to draw:** one frame per viewport in the matrix for each state below.  

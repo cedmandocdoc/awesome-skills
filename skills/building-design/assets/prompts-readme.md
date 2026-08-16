@@ -35,11 +35,11 @@ Run in numerical order. Finish a pass before opening the next. Do not invent scr
 
 ### In scope
 
-- [Feature or flow from PRD/FRD]
+- [Feature or flow in scope]
 
 ### Out of scope — do not generate
 
-- [Explicit exclusion from PRD/FRD]
+- [Explicit exclusion]
 
 ---
 

@@ -1,4 +1,4 @@
 interface:
   display_name: "Building Design"
   short_description: "Create design.md systems, static handoff prompts, and HTML screen boards"
-  default_prompt: "Use $building-design when the user wants design.md, a style guide, design tokens, visual language, design prompts, Stitch prompt, Google Stitch handoff, Figma Make prompt, Claude Design prompt, HTML preview, static screen board, design handoff, or UI-spec handoff workflow."
+  default_prompt: "Use $building-design when the user wants design.md, a style guide, design tokens, visual language, design prompts, Stitch prompt, Google Stitch handoff, Figma Make prompt, Claude Design prompt, HTML preview, static screen board, design handoff, or has screens and states to hand off."
