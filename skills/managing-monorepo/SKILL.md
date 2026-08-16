@@ -1,8 +1,8 @@
 ---
 name: managing-monorepo
 id: e0e993e7-a5f9-4bea-9923-166b503df045
-description: Defines the workspace contract for a TypeScript monorepo with pnpm and Turborepo — folder roles (`apps/` vs `packages/`), cross-package imports (`exports`, `workspace:*`), and canonical scripts (`typecheck`, `build`, `lint`, `test`, `dev`). Use when adding a package, choosing apps vs packages, wiring an import, or naming a script other packages must run.
-version: 1.1.0
+description: Defines the workspace contract for a TypeScript monorepo with pnpm and Turborepo — folder roles (`apps/` vs `packages/`), cross-package imports (`exports`, `workspace:*`), canonical scripts (`typecheck`, `build`, `lint`, `test`, `dev`), and root `.gitignore`. Use when adding a package, choosing apps vs packages, wiring an import, naming a script other packages must run, or initializing `.gitignore`.
+version: 1.2.0
 ---
 
 # Managing Monorepo
@@ -40,7 +40,7 @@ Use the first matching row; combine when the task spans types.
 
 | Entry | When | Go to |
 | --- | --- | --- |
-| Workspace / new package | Init workspace, choose `apps/` vs `packages/`, add or move a package | [managing-workspace.md](./references/managing-workspace.md) |
+| Workspace / new package | Init workspace, choose `apps/` vs `packages/`, add or move a package, init or fix `.gitignore` | [managing-workspace.md](./references/managing-workspace.md) |
 | Cross-package import | Library or app importing another workspace package | [managing-imports.md](./references/managing-imports.md) |
 | Change `exports` / scoped name | Editing a package's public surface or `@scope/` name | [managing-imports.md](./references/managing-imports.md) |
 | In-package JIT alias | A library consumed as TypeScript source aliases its own internals | [managing-imports.md](./references/managing-imports.md) |
@@ -65,6 +65,6 @@ Match every row that applies. Open every local link in **Docs** before coding.
 | Doc | When to use |
 | --- | --- |
 | [monorepo-contract.md](./references/monorepo-contract.md) | Toolchain, roles, names, `exports`, canonical scripts, resolve root |
-| [managing-workspace.md](./references/managing-workspace.md) | Layout, globs, add package, initialize workspace |
+| [managing-workspace.md](./references/managing-workspace.md) | Layout, globs, add package, initialize workspace, root `.gitignore` |
 | [managing-imports.md](./references/managing-imports.md) | Cross-package and in-package import rules |
 | [managing-scripts.md](./references/managing-scripts.md) | Root vs package scripts; Turbo graph rules |

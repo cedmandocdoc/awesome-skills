@@ -18,6 +18,7 @@ Place packages, add a package, or initialize a pnpm + Turborepo TypeScript works
 | No workspace yet | **Setup** |
 | Add or move a package | **Add package** |
 | Where does this live? | Contract **Folder roles**, then **Tree** |
+| Root `.gitignore` missing or incomplete | **Gitignore** |
 
 ### Tree
 
@@ -30,7 +31,8 @@ Place packages, add a package, or initialize a pnpm + Turborepo TypeScript works
 ├── package.json
 ├── pnpm-workspace.yaml
 ├── pnpm-lock.yaml
-└── turbo.json
+├── turbo.json
+└── .gitignore
 ```
 
 ### Workspace membership
@@ -42,6 +44,25 @@ packages:
 ```
 
 When nesting (`packages/config/*`), add that glob.
+
+### Gitignore
+
+No file → write the template below. File exists → add missing template patterns; keep extra lines.
+
+`.env` does not match `.env.example`. Framework patterns (`.expo`, `.vite`, `.next`) belong in stack skills; merge them into this file.
+
+```gitignore
+node_modules
+.turbo
+dist
+*.tsbuildinfo
+coverage
+.env
+.env*.local
+.DS_Store
+```
+
+Report whether `.gitignore` was created or merged, and which patterns were added.
 
 ### Dependency direction
 
@@ -69,6 +90,7 @@ Report the package path, scoped name, and role.
 3. `turbo.json` with canonical tasks ([managing-scripts.md](./managing-scripts.md)).
 4. Create `apps/` and `packages/`.
 5. Pin `packageManager` to the repo’s pnpm version.
+6. Root `.gitignore` (**Gitignore**).
 
 ### Confirm to the user
 
