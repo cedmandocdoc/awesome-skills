@@ -2,7 +2,7 @@
 name: building-react-native-application
 id: ddfed93c-f419-4c5f-8832-85acc8f85f00
 description: Guides building Expo/React Native apps with TypeScript using a consistent architecture and library stack (NativeWind, React Navigation static config, TanStack Query, Zustand, Axios, React Native Reusables-style primitives in src/ui). Use when creating a new React Native app or updating architecture, UI, state, API, navigation, or styling to follow these conventions.
-version: 1.1.0
+version: 1.2.0
 ---
 
 # React Native application
@@ -56,14 +56,14 @@ Match every row that applies. Open every local link in **Docs** before coding.
 | API + data hooks | [creating-api](./references/creating-api.md), [setting-up-axios](./references/setting-up-axios.md), [managing-api-error](./references/managing-api-error.md), [managing-state](./references/managing-state.md), [managing-date](./references/managing-date.md) |
 | Date / time | [managing-date](./references/managing-date.md) |
 | Refactor / move component | [creating-component](./references/creating-component.md) |
-| Styling / theme | [managing-styling](./references/managing-styling.md), [setting-up-theming](./references/setting-up-theming.md), [setting-up-tailwind-theme](./references/setting-up-tailwind-theme.md), [setting-up-navigation-theme](./references/setting-up-navigation-theme.md), [overriding-classname](./references/overriding-classname.md) |
+| Styling / theme | [setting-up-nativewind](./references/setting-up-nativewind.md), [managing-styling](./references/managing-styling.md), [setting-up-theming](./references/setting-up-theming.md), [setting-up-tailwind-theme](./references/setting-up-tailwind-theme.md), [setting-up-navigation-theme](./references/setting-up-navigation-theme.md), [overriding-classname](./references/overriding-classname.md) |
 | Navigation components & backgrounds | [creating-navigation-component](./references/creating-navigation-component.md), [setting-up-navigation-theme](./references/setting-up-navigation-theme.md), [managing-screen-background](./references/managing-screen-background.md) |
 | Navigation hooks | [creating-route-component](./references/creating-route-component.md), [creating-navigation-component](./references/creating-navigation-component.md) |
 | Keyboard | [Keyboard controller — Components](https://kirillzyusko.github.io/react-native-keyboard-controller/docs/guides/components-overview.md) |
 | Fonts | [setting-up-theming](./references/setting-up-theming.md), [setting-up-tailwind-theme](./references/setting-up-tailwind-theme.md), [Expo — Fonts](https://docs.expo.dev/develop/user-interface/fonts/index.md) |
 | Splash screen | [Expo — SplashScreen](https://docs.expo.dev/versions/latest/sdk/splash-screen.md) |
 | Scaffold new app | [scaffolding-application](./references/scaffolding-application.md) |
-| Project bootstrap | [managing-project-structure](./references/managing-project-structure.md), [managing-environment](./references/managing-environment.md), [managing-linting](./references/managing-linting.md), [managing-package-installs](./references/managing-package-installs.md), [setting-up-registry-components](./references/setting-up-registry-components.md) |
+| Project bootstrap | [managing-project-structure](./references/managing-project-structure.md), [managing-environment](./references/managing-environment.md), [managing-linting](./references/managing-linting.md), [managing-package-installs](./references/managing-package-installs.md), [setting-up-nativewind](./references/setting-up-nativewind.md), [setting-up-registry-components](./references/setting-up-registry-components.md) |
 | Routing only | [creating-route-component](./references/creating-route-component.md), [creating-navigation-component](./references/creating-navigation-component.md) |
 
 ## Reference index
@@ -98,6 +98,7 @@ Match every row that applies. Open every local link in **Docs** before coding.
 | [overriding-classname](./references/overriding-classname.md) | | Styling | `className` override rules |
 | [scaffolding-application](./references/scaffolding-application.md) | | Setup | Expo `blank-typescript` scaffold |
 | [setting-up-axios](./references/setting-up-axios.md) | | API | Axios client setup |
+| [setting-up-nativewind](./references/setting-up-nativewind.md) | | Styling | NativeWind install; pnpm isolated JSX runtime |
 | [setting-up-navigation-theme](./references/setting-up-navigation-theme.md) | | Styling | React Navigation theme objects |
 | [setting-up-registry-components](./references/setting-up-registry-components.md) | | Setup | Registry / `src/ui/` bootstrap |
 | [setting-up-theming](./references/setting-up-theming.md) | | Styling | Design tokens and theme CSS |

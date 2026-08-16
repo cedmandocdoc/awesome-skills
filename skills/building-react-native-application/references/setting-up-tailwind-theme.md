@@ -89,7 +89,3 @@ module.exports = {
   plugins: [require("tailwindcss-animate")],
 };
 ```
-
-## References
-
-- [NativeWind — Installation](https://www.nativewind.dev/docs/getting-started/installation)

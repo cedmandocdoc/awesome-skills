@@ -4,6 +4,10 @@
 
 **Execution mode.** Create shared design tokens and light/dark CSS variables as the single source for NativeWind, React Navigation, and registry UI. Do this before Tailwind or navigation theme wiring.
 
+## Prerequisites
+
+- [setting-up-nativewind.md](./setting-up-nativewind.md)
+
 ## Guidelines
 
 ### Install component helpers
@@ -86,7 +90,3 @@ Keep `global.css` as the Metro entry file. Import `src/theme.css` first so desig
 @tailwind components;
 @tailwind utilities;
 ```
-
-## References
-
-- [NativeWind — Installation](https://www.nativewind.dev/docs/getting-started/installation)

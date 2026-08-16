@@ -6,7 +6,7 @@ Apply Tailwind utilities through `className` with NativeWind. Prefer design toke
 
 ## Prerequisites
 
-- [NativeWind — Installation](https://www.nativewind.dev/docs/getting-started/installation)
+- [setting-up-nativewind.md](./setting-up-nativewind.md)
 
 ## Guidelines
 
@@ -81,7 +81,3 @@ const pill = cva("rounded-full px-3 py-1", {
 - [overriding-classname.md](./overriding-classname.md)
 - [setting-up-theming.md](./setting-up-theming.md)
 - [setting-up-tailwind-theme.md](./setting-up-tailwind-theme.md)
-
-## References
-
-- [NativeWind — Installation](https://www.nativewind.dev/docs/getting-started/installation)
