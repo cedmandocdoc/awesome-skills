@@ -2,7 +2,7 @@
 
 > **How to use:** `design.md` must already be applied on the target platform. Paste **this pass only** into the current generation turn. See the task `README.md` for platform adapters.
 >
-> Reuse chrome and component names from the README. Do not invent screens outside **In scope**.
+> Draw a static frame board. Reuse chrome and component names from the README. Do not invent screens outside **In scope**.
 
 ---
 
@@ -19,7 +19,7 @@
 
 ## Objective
 
-[One or two sentences: what this pass alone must produce.]
+[One or two sentences: which labeled frames this pass must add to the board.]
 
 ---
 
@@ -63,7 +63,7 @@ Use exact values from `design.md`. Do not invent hex, fonts, spacing, radius, or
 
 | Shell | Action |
 | --- | --- |
-| [Auth / App / Modal from README] | Keep fixed chrome identical; change **only** the main content region |
+| [Auth / App / Modal from README] | Draw the same fixed chrome inside every frame; change **only** the main content region |
 
 ---
 
@@ -89,8 +89,9 @@ Prefer README component names. Do not create one-off duplicates of shared contro
 - [Headings, fields, CTAs — exact copy from UI specs]
 - [Data displayed]
 
-**States:** [Default, Loading, Empty, Error, Validation, Offline, …]  
-**Interactions:** [navigation and side effects from UI specs]
+**Frames to draw:** one frame per viewport in the matrix for each state below.  
+**States:** [idle, Loading, Empty, Error, Validation, Offline, …]  
+**Affordances (visual only):** [what looks tappable or highlighted — not navigation to implement]
 
 [Repeat for every screen in this pass.]
 
@@ -104,17 +105,17 @@ Prefer README component names. Do not create one-off duplicates of shared contro
 
 ---
 
-## Build steps (this pass only)
+## Frame steps (this pass only)
 
-1. **[Step]** — [concrete action]
-2. **[Step]** — [concrete action]
-3. [Continue until every in-scope screen and state has a step]
+1. **[Step]** — Draw labeled frames for [screen · state · viewports]
+2. **[Step]** — Draw labeled frames for [screen · state · viewports]
+3. [Continue until every in-scope screen and state has frames]
 
 ---
 
 ## Done checklist (this pass)
 
-- [ ] All **In scope** items built
+- [ ] All **In scope** items drawn as frames
 - [ ] Nothing from **Out of scope** generated
 - [ ] `design.md` tokens used — no invented values
 - [ ] Chrome rules followed

@@ -76,7 +76,7 @@ npx @google/design.md lint design.md
 | Light-first YAML | Dark mode in Colors prose when both modes exist |
 | Concerns | Size in `text-*`; weight/family in Overview + YAML fields; spacing in `space-*`; corners in `radius-*` |
 | Component refs | `{colors.*}`, `{typography.*}`, `{rounded.*}` — not raw hex when a color token exists |
-| Prompt handoff minimum | `button-primary`, `input-default`, `card-default` when building for design-tool prompts |
+| Prompt / preview handoff minimum | `button-primary`, `input-default`, `card-default` when building for design-tool prompts or HTML boards |
 
 ### Color token convention (shadcn)
 
@@ -226,15 +226,17 @@ Reply with:
 1. **Path** — repo-relative path to `design.md`
 2. **Summary** — product name, convention used, token counts, normalized mappings
 3. **Gaps** — unmapped tokens, missing component variants, `[TBD]` values, lint result if run
-4. **Next step** — [creating-design-prompts.md](./creating-design-prompts.md), or feature `ui-specs.md` when product specs are in progress
+4. **Next step** — [creating-design-prompts.md](./creating-design-prompts.md), [creating-design-previews.md](./creating-design-previews.md), or feature `ui-specs.md` when product specs are in progress
 
 ### Follow-up updates
 
-Amend `design.md` in place under the same output contract. Keep downstream prompt folders aligned with YAML keys.
+Amend `design.md` in place under the same output contract. Keep downstream prompt folders and preview HTML aligned with YAML keys.
 
 ## Related
 
-- [creating-design-prompts.md](./creating-design-prompts.md) — shared application-design prompts gated on this `design.md`
+- [handoff-contract.md](./handoff-contract.md) — static board rules for prompts and HTML previews
+- [creating-design-prompts.md](./creating-design-prompts.md) — third-party paste prompts gated on this `design.md`
+- [creating-design-previews.md](./creating-design-previews.md) — HTML screen boards gated on this `design.md`
 
 ## References
 

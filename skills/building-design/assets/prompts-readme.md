@@ -9,6 +9,17 @@
 
 ---
 
+## Handoff deliverable
+
+Static screen board. Not a working app.
+
+- One labeled frame per screen × viewport, plus one frame per distinct state
+- Chrome is drawn inside each frame; keep it identical per shell
+- Controls are visual only — no routing, live validation, or APIs
+- Lay frames out as a board (rows of viewports), not as a navigable product
+
+---
+
 ## Pass order
 
 | Pass | File | Purpose |
@@ -100,7 +111,7 @@ Same pass files on every platform. Only setup and turn size differ.
 2. Apply the design system from `design.md` (Design systems setup or equivalent) **before** any pass.
 3. Paste **one** numbered pass file per chat turn. Keep the design system applied.
 4. Use chat for structural changes; use inline comments for local tweaks.
-5. Do not regenerate the whole project to fix one component.
+5. Do not regenerate the whole board to fix one component.
 
 ### Google Stitch ([stitch.withgoogle.com](https://stitch.withgoogle.com))
 
@@ -114,9 +125,9 @@ Same pass files on every platform. Only setup and turn size differ.
 
 1. Attach `design.md` (and this folder’s pass file) to the Make prompt, or paste the pass contents.
 2. Optional: use Plan mode with the pass order table above, then generate.
-3. Run **one pass per generation** for multi-flow apps. Small single-flow tasks may use one pass only.
+3. Run **one pass per generation** for multi-flow boards. Small single-flow tasks may use one pass only.
 4. Create Figma variables/styles from `design.md` tokens when the pass starts a new file.
-5. Use point-and-edit or a single-change follow-up for local fixes — do not regenerate the whole app for one tweak.
+5. Use point-and-edit or a single-change follow-up for local fixes — do not regenerate the whole board for one tweak.
 
 ---
 
@@ -124,7 +135,8 @@ Same pass files on every platform. Only setup and turn size differ.
 
 - [ ] `design.md` applied on the target platform
 - [ ] Passes run in order without skipping
-- [ ] Every in-scope screen, state, and role variant covered
+- [ ] Every in-scope screen, state, and role variant covered as frames
 - [ ] Chrome consistent per shell rules
 - [ ] Out-of-scope items not generated
 - [ ] Visual values traceable to `design.md`
+- [ ] Output is a static frame board — not a working app
