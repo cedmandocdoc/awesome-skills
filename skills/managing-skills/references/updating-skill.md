@@ -12,7 +12,7 @@
 
 ### 1. Resolve target
 
-Per [skill-contract.md](./skill-contract.md) → **Resolve target skill**. Read the skill’s `SKILL.md` and every linked reference. Confirm the amend intent: structure, leanness, or both.
+Per [skill-contract.md](./skill-contract.md) → **Resolve target skill**. Read the skill’s `SKILL.md` and every linked reference. Confirm whether structure work is needed. Leanness is always in scope.
 
 ### 2. Inventory
 
@@ -24,9 +24,8 @@ List every behavioral instruction — this inventory guards against meaning loss
 | --- | --- |
 | Structure | Align files and sections with [skill-contract.md](./skill-contract.md). Add or rename references per **Naming**. Update Recipes and Reference index together. |
 | Leanness | Scan per finding category; restructure per [lean-contract.md](./lean-contract.md) → **Lean writing strategies**. |
-| Both | Structure first, then leanness. |
 
-Cuts: phrase-level deletions, section-level removals, and duplicate instructions merged into a single location.
+Cuts: phrase-level deletions, section-level removals, and duplicate instructions merged into a single location. After the amend, scan every edited file per finding category — including when the user asked only for structure.
 
 ### 4. Rewrite and verify
 

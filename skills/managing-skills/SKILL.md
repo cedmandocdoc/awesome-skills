@@ -2,7 +2,7 @@
 name: managing-skills
 id: 890f6e40-337a-47a7-a3c8-5652ff6fd936
 description: Creates, updates, and reviews agent skills that follow this catalog's house style — directory layout, SKILL.md and reference sections, naming, independence, and lean writing. Use when the user asks to write, create, add, update, lean, trim, restructure, or review a skill or SKILL.md, or when authoring skills under skills/.
-version: 2.0.0
+version: 2.1.0
 ---
 
 # Managing Skills
@@ -13,7 +13,7 @@ House style for this catalog's skills: contract layout and lean writing. Recipes
 
 ## Agent workflow
 
-Follow this skill when creating, updating, or reviewing a skill that uses this catalog's layout (`SKILL.md`, `references/`, `agents/openai.yaml`). Works wherever the agent can read and write skill directories. Match one **Recipes** row; open exactly that reference.
+Follow this skill when creating, updating, or reviewing a skill that uses this catalog's layout (`SKILL.md`, `references/`, `agents/openai.yaml`). Works wherever the agent can read and write skill directories. Match one **Recipes** row; open that reference, [skill-contract.md](references/skill-contract.md), and [lean-contract.md](references/lean-contract.md).
 
 ### Recipes
 

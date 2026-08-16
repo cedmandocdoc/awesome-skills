@@ -1,0 +1,13 @@
+---
+description: Apply lean-contract when creating or editing catalog skills under skills/
+globs: skills/**/*.md
+alwaysApply: false
+---
+
+# Lean skill documents
+
+Before writing or editing any file under `skills/`, read [skills/managing-skills/references/lean-contract.md](skills/managing-skills/references/lean-contract.md).
+
+A line earns its place when removing it would change what the agent does. Scan the edited files against every finding category. Fix findings before delivering.
+
+Keep a negative only when the exception is easy to miss or safety-critical. Delete commentary such as "This section explains…".
