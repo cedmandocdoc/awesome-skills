@@ -2,21 +2,21 @@
 
 ## Overview
 
-**Authoring mode.** Generates a shared static-handoff prompt folder from `design.md` and filled Inputs per [handoff-contract.md](handoff-contract.md). The same passes run on Claude Design, Google Stitch, and Figma Make; platform differences live only in README adapters.
+**Authoring mode.** Generates a shared static-handoff prompt folder from `design.md` and filled Inputs per [design-contract.md](design-contract.md). The same passes run on Claude Design, Google Stitch, and Figma Make; platform differences live only in README adapters.
 
 Produces screen/flow passes that describe a static frame board. Chrome rules and component names sit in the README; each pass lists frames to draw. This recipe writes markdown only — it does not write HTML or into Claude Design, Stitch, or Figma.
 
 ## Prerequisites
 
-Per [handoff-contract.md](handoff-contract.md) → **Inputs**, **Fill inputs**, **Paths**. Templates: [`../assets/prompts-readme.md`](../assets/prompts-readme.md), [`../assets/design-pass.md`](../assets/design-pass.md).
+Per [design-contract.md](design-contract.md) → **Resolve design root**, **Inputs**, **Fill inputs**, **Path resolution**. Templates: [`../assets/prompts-readme.md`](../assets/prompts-readme.md), [`../assets/design-pass.md`](../assets/design-pass.md).
 
 ## Guidelines
 
 ### 1. Fill inputs and confirm paths
 
-Per [handoff-contract.md](handoff-contract.md) → **Fill inputs**, **Paths**, and **Viewport matrix**. If Inputs were already filled this turn, skip collect/ask; confirm this recipe’s paths only.
+Per [design-contract.md](design-contract.md) → **Fill inputs**, **Path resolution**, and **Viewport matrix**. If Inputs were already filled this turn, skip collect/ask; confirm `<task>` only.
 
-Confirm design root and task slug. On follow-ups ("add settings screen to prompts"), edit the existing task folder unless the user asks for a new path.
+On follow-ups ("add settings screen to prompts"), edit the existing task folder unless the user asks for a new path.
 
 ### 2. Extract and plan passes
 
@@ -38,7 +38,7 @@ Include when Inputs support them: role-gated UI, live/instrument screens as thei
 ### 3. Fill and write
 
 ```text
-design/prompts/<task>/
+<design-root>/prompts/<task>/
 ├── README.md
 ├── 01-<flow>.md
 └── 02-<flow>.md …
@@ -64,13 +64,13 @@ design/prompts/<task>/
 11. `design.md` is source of truth for visuals — reference keys, not vague adjectives
 12. Every role with distinct behavior gets explicit coverage in the relevant passes
 13. Each pass is self-contained for one paste with `design.md` already applied — point tools at the pass, not upstream notes
-14. Structure output as a static frame board per [handoff-contract.md](handoff-contract.md) → **Handoff deliverable**. Figma Components/Screens showcase only when the user asks for that deliverable
+14. Structure output as a static frame board per [design-contract.md](design-contract.md) → **Handoff deliverable**. Figma Components/Screens showcase only when the user asks for that deliverable
 
-Write README and pass files as plain markdown on disk. In chat, return paths, summary, gaps, and usage only — nested markdown breaks inside fences.
+Write README and pass files as plain markdown on disk. Then [design-contract.md](design-contract.md) → **Hub sync**. In chat, return paths, summary, gaps, and usage only — nested markdown breaks inside fences.
 
 ### 4. Confirm to the user
 
-1. **Paths** — `design.md` and prompt task folder
+1. **Paths** — design root (via `index.md`), `design.md`, and prompt task folder
 2. **Summary** — platform type, task slug, pass count
 3. **Gaps** — `[COPY TBD]` or empty Input rows
 4. **Usage** — open `README.md` → apply `design.md` on the chosen platform → run `01` → `02` → … in order (one pass per generation turn)
@@ -81,10 +81,11 @@ Write README and pass files as plain markdown on disk. In chat, return paths, su
 2. Add/edit numbered passes; update the README pass-order table
 3. If `design.md` changed, confirm the README path and refresh do/don't reminders. If the README lacks **Handoff deliverable**, add it from [`../assets/prompts-readme.md`](../assets/prompts-readme.md)
 4. Overwrite in the same folder unless the user asks for a new path or task slug
+5. [design-contract.md](design-contract.md) → **Hub sync**
 
 ## Related
 
-- [handoff-contract.md](handoff-contract.md) — static board rules, Inputs, paths
+- [design-contract.md](design-contract.md) — design root, Inputs, paths
 - [creating-design.md](creating-design.md) — prerequisite visual tokens
 - [creating-design-previews.md](creating-design-previews.md) — HTML boards from the same Inputs; not a gate
 

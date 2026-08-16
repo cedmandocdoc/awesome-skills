@@ -2,21 +2,21 @@
 
 ## Overview
 
-**Authoring mode.** Writes static HTML screen boards from `design.md` and filled Inputs per [handoff-contract.md](handoff-contract.md). Each file is self-contained (inline CSS, no JavaScript). Prompts are not required.
+**Authoring mode.** Writes static HTML screen boards from `design.md` and filled Inputs per [design-contract.md](design-contract.md). Each file is self-contained (inline CSS, no JavaScript). Prompts are not required.
 
 Does not scaffold an application.
 
 ## Prerequisites
 
-Per [handoff-contract.md](handoff-contract.md) → **Inputs**, **Fill inputs**, **Paths**. Template: [`../assets/preview-screen.html`](../assets/preview-screen.html).
+Per [design-contract.md](design-contract.md) → **Resolve design root**, **Inputs**, **Fill inputs**, **Path resolution**. Template: [`../assets/preview-screen.html`](../assets/preview-screen.html).
 
 ## Guidelines
 
 ### 1. Fill inputs and confirm paths
 
-Per [handoff-contract.md](handoff-contract.md) → **Fill inputs**, **Paths**, and **Viewport matrix**. If Inputs were already filled this turn, skip collect/ask; confirm this recipe’s paths only.
+Per [design-contract.md](design-contract.md) → **Fill inputs**, **Path resolution**, and **Viewport matrix**. If Inputs were already filled this turn, skip collect/ask; confirm `<task>` and which screens are in this preview.
 
-Confirm design root, `<task>` slug, and which screens are in this preview. On follow-ups ("add settings screen"), edit the existing `previews/<task>/` folder unless the user asks for a new path.
+On follow-ups ("add settings screen"), edit the existing `previews/<task>/` folder unless the user asks for a new path.
 
 ### 2. Plan screen files
 
@@ -30,7 +30,7 @@ One HTML file per **screen** from the screen list. Combine screens into one file
 | Visual system | `:root` custom properties in that file’s `<style>` |
 | Chrome | Drawn inside every `.frame-canvas` that uses that shell |
 
-A one-screen task is still `previews/<task>/<screen>.html`. Do not number preview files and do not write `index.html`.
+A one-screen task is still `<design-root>/previews/<task>/<screen>.html`. Do not number preview files and do not write `index.html`.
 
 ### 3. Fill and write
 
@@ -47,11 +47,11 @@ Copy [`../assets/preview-screen.html`](../assets/preview-screen.html) per screen
 | Copy | Exact strings from Screen content; `[COPY TBD]` when missing |
 | Combined file | User asked to combine: stack screen groups vertically; each group keeps its viewport rows |
 
-Write HTML to disk. In chat, return paths, summary, and gaps only.
+Write HTML to disk. Then [design-contract.md](design-contract.md) → **Hub sync**. In chat, return paths, summary, and gaps only.
 
 ### 4. Confirm to the user
 
-1. **Paths** — `design.md` and preview task folder
+1. **Paths** — design root (via `index.md`), `design.md`, and preview task folder
 2. **Summary** — platform type, task slug, screen file count
 3. **Gaps** — `[COPY TBD]` or empty Input rows
 4. **Usage** — open `<screen>.html` in a browser; scroll horizontally for viewports
@@ -62,10 +62,11 @@ Write HTML to disk. In chat, return paths, summary, and gaps only.
 2. Add or overwrite `<screen>.html` files in that folder
 3. If `design.md` changed, refresh `:root` in every HTML in that folder
 4. Overwrite in the same folder unless the user asks for a new path or task slug
+5. [design-contract.md](design-contract.md) → **Hub sync**
 
 ## Related
 
-- [handoff-contract.md](handoff-contract.md) — static board rules, Inputs, paths
+- [design-contract.md](design-contract.md) — design root, Inputs, paths
 - [creating-design.md](creating-design.md) — prerequisite visual tokens
 - [creating-design-prompts.md](creating-design-prompts.md) — optional third-party prompts; not a gate
 

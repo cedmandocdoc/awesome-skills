@@ -8,7 +8,7 @@ Write `design.md` to disk by default. Paste the full body in chat only when the 
 
 ## Prerequisites
 
-Gather or confirm:
+Per [design-contract.md](./design-contract.md) → **Resolve design root**. Gather or confirm:
 
 | Input | Required | Notes |
 | --- | --- | --- |
@@ -24,18 +24,22 @@ If inputs are thin: ask briefly, proceed with convention defaults, note `[TBD]` 
 
 ## Guidelines
 
-### 1. Detect existing system
+### 1. Resolve design root
 
-Search user inputs, repo, and linked docs for an existing `design.md` or foreign guide.
+Per [design-contract.md](./design-contract.md) → **Resolve design root**. Initialize when no `index.md` marker exists.
+
+### 2. Detect existing system
+
+Search user inputs, repo, and linked docs for a foreign guide. Treat `<design-root>/design.md` as the owned system when it exists.
 
 | Situation | Action |
 | --- | --- |
 | Foreign / custom style guide | Parse and normalize onto canonical tokens below; record original names in the delivery summary if useful |
 | User names another framework as **target** output | Map framework roles onto the same canonical structure; keep framework names only when the user requires them as-is |
-| Existing `design.md` on disk | Amend in place; preserve section order and token naming |
+| Existing `<design-root>/design.md` | Amend in place; preserve section order and token naming |
 | No existing system | Use all defaults in the convention sections below |
 
-### 2. Parse foreign guides
+### 3. Parse foreign guides
 
 When the user supplies an existing guide (markdown, Figma tokens, CSS variables, Tailwind config, etc.):
 
@@ -47,13 +51,13 @@ When the user supplies an existing guide (markdown, Figma tokens, CSS variables,
 6. **Fill template** — every required YAML group and all eight `##` sections in [`design.md`](../assets/design.md)
 7. **Flag unmapped values** — `[TBD]` or propose tokens matching naming patterns
 
-### 3. Build `design.md`
+### 4. Build `design.md`
 
 1. Map brand inputs onto semantic roles, font families, and spacing density
 2. Build YAML front matter — concrete values under `colors`, `typography`, `rounded`, `spacing`, `components` using canonical keys
 3. Draft markdown body — all eight canonical sections; include dark mode, breakpoints, elevation, motion, and a11y where inputs support them
-4. Ask for the write path unless the user already gave one (default `design/design.md`)
-5. Write the file
+4. Write `<design-root>/design.md`
+5. Sync [design-contract.md](./design-contract.md) → **Hub sync**
 
 Optional validation:
 
@@ -61,7 +65,7 @@ Optional validation:
 npx @google/design.md lint design.md
 ```
 
-### 4. Output contract
+### 5. Output contract
 
 | Rule | Detail |
 | --- | --- |
@@ -219,22 +223,22 @@ Derive from tokens when the user omits component-level detail:
 
 Add keys from product inventory using the property whitelist. Put **Interaction & motion** under `## Components` (Interaction \| Behavior \| Duration). Put expanded accessibility guardrails in `## Do's and Don'ts`.
 
-### 5. Confirm to the user
+### 6. Confirm to the user
 
 Reply with:
 
-1. **Path** — repo-relative path to `design.md`
+1. **Paths** — design root (via `index.md`), path to `design.md`, and whether `index.md` was newly created
 2. **Summary** — product name, convention used, token counts, normalized mappings
 3. **Gaps** — unmapped tokens, missing component variants, `[TBD]` values, lint result if run
 4. **Next step** — [creating-design-prompts.md](./creating-design-prompts.md) or [creating-design-previews.md](./creating-design-previews.md)
 
 ### Follow-up updates
 
-Amend `design.md` in place under the same output contract. Keep downstream prompt folders and preview HTML aligned with YAML keys.
+Amend `<design-root>/design.md` in place under the same output contract. Keep downstream prompt folders and preview HTML aligned with YAML keys.
 
 ## Related
 
-- [handoff-contract.md](./handoff-contract.md) — static board rules for prompts and HTML previews
+- [design-contract.md](./design-contract.md) — design root, layout, static board rules
 - [creating-design-prompts.md](./creating-design-prompts.md) — third-party paste prompts gated on this `design.md`
 - [creating-design-previews.md](./creating-design-previews.md) — HTML screen boards gated on this `design.md`
 
