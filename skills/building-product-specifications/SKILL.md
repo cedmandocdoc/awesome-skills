@@ -1,15 +1,15 @@
 ---
 name: building-product-specifications
 id: c4912b84-e88f-4515-8c83-e99288abca07
-description: Creates and amends product specification markdown (PRD, FRD, TRD, user story, UI specs with view states) with consistent structure and frontmatter. Use when the user asks to draft or amend prd.md, frd.md, trd.md, user-story.md, or ui-specs.md at product or feature level — no code implementation.
-version: 2.1.0
+description: Creates and amends product specification markdown — PRD, FRD, TRD, user story, and UI specs (flow, screen structure, view states) — with consistent layout and frontmatter. Use when the user asks to draft or amend prd.md, frd.md, trd.md, user-story.md, or ui-specs.md at product or feature level — no code implementation.
+version: 2.2.0
 ---
 
 # Building Product Specifications
 
 ## Overview
 
-Writes pre-implementation product specs on disk: product vision (PRD), feature behavior (FRD), technical design (TRD), user journeys, and UI screens with view states. Recipes own doc-type rules; [spec-contract.md](references/spec-contract.md) is shared plumbing. Works wherever the agent can read and write repository files.
+Writes pre-implementation product specs on disk: product vision (PRD), feature behavior (FRD), technical design (TRD), user journeys, and UI specs (navigation flow, screen structure, view states). Recipes own doc-type rules; [spec-contract.md](references/spec-contract.md) is shared plumbing. Works wherever the agent can read and write repository files.
 
 ## Agent workflow
 
@@ -27,7 +27,7 @@ Match one **Recipes** row; open exactly that reference. Each create recipe also 
 | FRD | "Write an FRD for checkout", "Amend the checkout FRD" | [creating-frd.md](references/creating-frd.md) |
 | User story | "User stories for checkout", "Product user journeys" | [creating-user-story.md](references/creating-user-story.md) |
 | TRD | "Technical design for checkout", "System architecture TRD" | [creating-trd.md](references/creating-trd.md) |
-| UI specs | "UI specs with view states", "Screen states for checkout" | [creating-ui-specs.md](references/creating-ui-specs.md) |
+| UI specs | "UI specs for checkout", "Screen flow and structure", "View states for checkout" | [creating-ui-specs.md](references/creating-ui-specs.md) |
 
 ## Reference index
 
@@ -42,7 +42,7 @@ Match one **Recipes** row; open exactly that reference. Each create recipe also 
 | [creating-frd.md](references/creating-frd.md) | New or amend `features/<slug>/frd.md` |
 | [creating-user-story.md](references/creating-user-story.md) | New or amend product or feature `user-story.md` |
 | [creating-trd.md](references/creating-trd.md) | New or amend product or feature `trd.md` |
-| [creating-ui-specs.md](references/creating-ui-specs.md) | New or amend product or feature `ui-specs.md` (screens + view states) |
+| [creating-ui-specs.md](references/creating-ui-specs.md) | New or amend product or feature `ui-specs.md` (flow, structure, view states) |
 
 ## Templates
 

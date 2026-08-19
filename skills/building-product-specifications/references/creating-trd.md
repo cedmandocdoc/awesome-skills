@@ -2,7 +2,7 @@
 
 ## Overview
 
-**Docs only.** Creates or amends product or feature `trd.md` (architecture, stack, contracts). View states and screen presentation belong in `ui-specs.md`. Infra: [spec-contract.md](./spec-contract.md) → **Resolve docs root**, **Path resolution**, **Upstream reading**, **Create or amend**, **Hub sync**, **Diagrams**, **Platform differences**.
+**Docs only.** Creates or amends product or feature `trd.md` (architecture, stack, contracts). Screen structure, navigation, and view states belong in `ui-specs.md`. Infra: [spec-contract.md](./spec-contract.md) → **Resolve docs root**, **Path resolution**, **Upstream reading**, **Create or amend**, **Hub sync**, **Diagrams**, **Platform differences**.
 
 ## Prerequisites
 

@@ -35,13 +35,13 @@ Only this skill may establish a docs root. The root is always marked by `<docs-r
   prd.md
   trd.md                   # optional: system / platform architecture
   user-story.md            # optional: product-level journeys
-  ui-specs.md              # optional: shared / product-level view-state patterns
+  ui-specs.md              # optional: shared chrome, product navigation, cross-cutting states
   features/
     <feature-slug>/
       frd.md               # feature hub — behavior + links to siblings
       trd.md
       user-story.md
-      ui-specs.md           # screens + view states for the feature
+      ui-specs.md           # flow, screen structure, view states for the feature
 ```
 
 Templates: [`../assets/`](../assets/), including [`../assets/index.md`](../assets/index.md) for new docs roots.
@@ -195,4 +195,5 @@ Same layout per repo. Cross-repo links use full URLs or paths the user provides 
 | Doc | Format |
 | --- | --- |
 | TRD | Mermaid `flowchart`, `sequenceDiagram`, `C4Context` for architecture and flows |
-| Feature `ui-specs.md` | Mermaid `stateDiagram-v2` for multi-branch or multi-screen flows; transition tables alone when the flow is linear and short |
+| Feature `ui-specs.md` | Mermaid `flowchart` for screen navigation; `stateDiagram-v2` when in-screen transitions are multi-branch; transition tables alone when the in-screen path is linear and short |
+| Product `ui-specs.md` | Mermaid `flowchart` when documenting shared shell navigation |
