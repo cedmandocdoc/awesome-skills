@@ -7,7 +7,7 @@ Place packages, add a package, or initialize a pnpm + Turborepo TypeScript works
 ## Prerequisites
 
 - [monorepo-contract.md](./monorepo-contract.md) — toolchain, folder roles, scoped names, private root
-- [managing-scripts.md](./managing-scripts.md) when writing root `turbo.json` or canonical scripts
+- [managing-scripts.md](./managing-scripts.md) when writing root `turbo.json` or package runners
 
 ## Guidelines
 
@@ -74,7 +74,7 @@ Report whether `.gitignore` was created or merged, and which patterns were added
 2. Name the package `@scope/<dir>`.
 3. Set `"private": true`. Consumers depend with `"workspace:*"`.
 4. Public surface via `exports` — [managing-imports.md](./managing-imports.md).
-5. Canonical scripts — [managing-scripts.md](./managing-scripts.md).
+5. Package runners — [managing-scripts.md](./managing-scripts.md).
 6. Confirm `pnpm-workspace.yaml` covers the folder.
 
 ### Confirm to the user
@@ -85,9 +85,9 @@ Report the package path, scoped name, and role.
 
 ### Initialize workspace
 
-1. Private root `package.json` — scripts only `turbo run <task>` ([managing-scripts.md](./managing-scripts.md)).
+1. Private root `package.json` — `scripts` empty until packages exist; then runners ([managing-scripts.md](./managing-scripts.md)).
 2. `pnpm-workspace.yaml` with `apps/*` and `packages/*`.
-3. `turbo.json` with canonical tasks ([managing-scripts.md](./managing-scripts.md)).
+3. `turbo.json` with `tasks` as packages define them ([managing-scripts.md](./managing-scripts.md)).
 4. Create `apps/` and `packages/`.
 5. Pin `packageManager` to the repo’s pnpm version.
 6. Root `.gitignore` (**Gitignore**).

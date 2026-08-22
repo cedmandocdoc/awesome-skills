@@ -86,13 +86,18 @@ Root is the orchestrator: no app `src/`. Each package declares its own dependenc
 | Internal packages | `"private": true`, consumed with `"workspace:*"` |
 | Public surface | `package.json` `exports` subpaths, not a giant barrel |
 
-### Canonical tasks
+### Package runners
 
-Universal names every participating package defines: `typecheck`, `build`, `lint`, `test`, `dev`.
+Root `package.json` is private. Its `scripts` are `<dir>:<script>` runners.
 
-Root `package.json` is private. Its scripts only delegate: `turbo run <task>`.
+| Piece | Meaning |
+| --- | --- |
+| `<dir>` | Package folder name (last path segment: `apps/web` → `web`) |
+| `<script>` | Key in that package's `package.json` `scripts` |
+| Body | `turbo run <script> --filter=@scope/<dir>` |
+| Invoke | `pnpm <dir>:<script>` |
 
-Framework tasks (`ios`, `android`, `prebuild`, Vite `preview`) stay in stack skills.
+Each package defines only the scripts it runs.
 
 ### JIT vs compiled
 

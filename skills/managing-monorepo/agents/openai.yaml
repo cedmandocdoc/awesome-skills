@@ -1,4 +1,4 @@
 interface:
   display_name: "Managing Monorepo"
-  short_description: "TypeScript pnpm + Turborepo workspace layout, imports, canonical scripts, and root gitignore"
-  default_prompt: "Use $managing-monorepo when adding a package, choosing apps vs packages, wiring a cross-package import, naming a script other packages must run, or initializing `.gitignore`."
+  short_description: "TypeScript pnpm + Turborepo workspace layout, imports, package runners, and root gitignore"
+  default_prompt: "Use $managing-monorepo when adding a package, choosing apps vs packages, wiring a cross-package import, adding a package runner (`<dir>:<script>`), or initializing `.gitignore`."

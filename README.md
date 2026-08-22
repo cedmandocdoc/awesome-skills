@@ -50,7 +50,7 @@ Source formats also work: full GitHub URL, a path to a single skill, or a local 
 | --- | --- |
 | [`managing-tasks`](skills/managing-tasks/) | Structured task folders (`plan.md`, `status.md`) for cross-session agent handoff — create, execute, triage, block; Done and Cancelled auto-archive. |
 | [`delivering-goal`](skills/delivering-goal/) | Plan `goal.md` then loop phases until done. Requires [`managing-tasks`](https://github.com/cedmandocdoc/awesome-skills/tree/main/skills/managing-tasks) for decide and deliver. |
-| [`managing-monorepo`](skills/managing-monorepo/) | TypeScript pnpm + Turborepo workspace: `apps/` vs `packages/`, imports (`exports`, `workspace:*`), and canonical scripts (`typecheck`, `build`, `lint`, `test`, `dev`). |
+| [`managing-monorepo`](skills/managing-monorepo/) | TypeScript pnpm + Turborepo workspace: `apps/` vs `packages/`, imports (`exports`, `workspace:*`), and package runners (`<dir>:<script>`). |
 | [`building-product-specifications`](skills/building-product-specifications/) | Create and amend product specs (PRD, FRD, TRD, user stories, UI specs with view states) with consistent layout and frontmatter — docs only, no implementation. |
 | [`building-design`](skills/building-design/) | Produce design.md visual systems, static design-handoff prompts (Claude Design, Google Stitch, Figma Make), and HTML screen boards from screens, content, states, and design.md. |
 | [`building-react-web-application`](skills/building-react-web-application/) | Build Vite + React SPAs with a fixed stack: Tailwind v4, TanStack Router/Query, Zustand, Axios, and shadcn-style UI in `src/ui`. |

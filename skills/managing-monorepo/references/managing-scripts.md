@@ -2,73 +2,54 @@
 
 ## Overview
 
-Wire canonical tasks into the Turbo graph.
+Wire each package script as a root runner `<dir>:<script>`.
 
 ## Prerequisites
 
-[monorepo-contract.md](./monorepo-contract.md) — canonical task names, private root.
+[monorepo-contract.md](./monorepo-contract.md) — package runners, scoped names, private root.
 
 ## Guidelines
 
-### Graph rules
+### Sync
 
-Canonical names and root `turbo run`: [monorepo-contract.md](./monorepo-contract.md) → **Canonical tasks**.
+When adding, renaming, or removing a package script:
 
-1. Register the same names in root `turbo.json`. Use `dependsOn: ["^build"]` / `^typecheck` when the task needs workspace dependencies built or checked first.
-2. Keep task logic in the package so Turbo can parallelize and cache.
+1. Add or rename the matching root runner per **Package runners**.
+2. Register `<script>` in `turbo.json` if no task exists yet — **Graph**.
+3. Drop the root runner when the script is gone. Drop the turbo task when no package still defines it.
 
-### Root
+Skip `pre*` / `post*` lifecycle hooks. Group root runners by `<dir>`. Replace workspace-wide root aliases (`"build": "turbo run build"`) with per-package runners.
 
-```json
-{
-  "private": true,
-  "scripts": {
-    "build": "turbo run build",
-    "typecheck": "turbo run typecheck",
-    "lint": "turbo run lint",
-    "test": "turbo run test",
-    "dev": "turbo run dev"
-  }
-}
-```
+### Graph
 
-### Package
+Keep task logic in the package.
 
-```json
-{
-  "scripts": {
-    "typecheck": "tsc --noEmit",
-    "build": "tsc",
-    "lint": "eslint .",
-    "test": "vitest run",
-    "dev": "vite"
-  }
-}
-```
+| Kind | `turbo.json` |
+| --- | --- |
+| Process that stays running | `cache: false`, `persistent: true` |
+| Build artifact | `dependsOn: ["^build"]`, `outputs` matching the package |
+| Needs the same task on workspace dependencies first | `dependsOn: ["^<script>"]` |
+| Isolated one-shot | `{}` |
 
-A package that has no build artifact still defines `typecheck` (and `lint` / `test` when it participates). Omit `build` only when nothing in the graph depends on compiled output from that package.
+To run one script name across every package that defines it, `turbo run <script>`.
 
-### `turbo.json`
+### Confirm to the user
+
+Report runners added, renamed, or removed.
+
+## Examples
+
+| Path | Package `scripts` | Root runners |
+| --- | --- | --- |
+| `apps/web` | `dev`, `build`, `lint`, `typecheck` | `web:dev`, `web:build`, `web:lint`, `web:typecheck` |
+| `apps/mobile` | `ios`, `android`, `build` | `mobile:ios`, `mobile:android`, `mobile:build` |
+| `packages/db` | `start`, `reset` | `db:start`, `db:reset` |
 
 ```json
 {
-  "tasks": {
-    "build": {
-      "dependsOn": ["^build"],
-      "outputs": ["dist/**"]
-    },
-    "typecheck": {
-      "dependsOn": ["^typecheck"]
-    },
-    "lint": {},
-    "test": {
-      "dependsOn": ["build"]
-    },
-    "dev": {
-      "cache": false,
-      "persistent": true
-    }
-  }
+  "web:dev": "turbo run dev --filter=@scope/web",
+  "mobile:ios": "turbo run ios --filter=@scope/mobile",
+  "db:start": "turbo run start --filter=@scope/db"
 }
 ```
 
