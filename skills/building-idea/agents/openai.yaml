@@ -1,0 +1,6 @@
+interface:
+  display_name: "Building Idea"
+  short_description: "Build out an app or feature idea through a steered conversation that asks, suggests, or looks up one decision per turn"
+  default_prompt: "Use $building-idea to shape an application or feature idea from problem to MVP scope, flows, data, and stack."
+policy:
+  allow_implicit_invocation: false
