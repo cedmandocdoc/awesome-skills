@@ -49,6 +49,7 @@ Source formats also work: full GitHub URL, a path to a single skill, or a local 
 | Skill | What it does |
 | --- | --- |
 | [`managing-tasks`](skills/managing-tasks/) | Structured task folders (`plan.md`, `status.md`) for cross-session agent handoff — create, execute, triage, block; Done and Cancelled auto-archive. |
+| [`managing-context-sessions`](skills/managing-context-sessions/) | Carry focused context for one piece of work across agent sessions — create, continue, update, and close a session file of decisions and section-level pointers. Invoke explicitly. |
 | [`delivering-goal`](skills/delivering-goal/) | Plan `goal.md` then loop phases until done. Requires [`managing-tasks`](https://github.com/cedmandocdoc/awesome-skills/tree/main/skills/managing-tasks) for decide and deliver. |
 | [`managing-monorepo`](skills/managing-monorepo/) | TypeScript pnpm + Turborepo workspace: `apps/` vs `packages/`, imports (`exports`, `workspace:*`), and package runners (`<dir>:<script>`). |
 | [`building-product-specifications`](skills/building-product-specifications/) | Create and amend product specs (PRD, FRD, TRD, user stories, UI specs with view states) with consistent layout and frontmatter — docs only, no implementation. |
