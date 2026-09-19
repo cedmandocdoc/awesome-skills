@@ -2,7 +2,7 @@
 
 ## Overview
 
-Shared plumbing for all `managing-context-sessions` recipes: sessions root discovery, layout, session frontmatter, finding a session, entry format, pointer rules, supersede handling, lifecycle, and the `index.md` mirror.
+Shared plumbing for all `managing-context-sessions` recipes: sessions root discovery, layout, session frontmatter, finding a session, session body, item and pointer rules, reading a session, lifecycle, and the `index.md` mirror.
 
 ## Guidelines
 
@@ -54,8 +54,6 @@ Search the repository for `index.md` whose frontmatter has `doc_type: context-se
 | `status` | `open` or `closed` |
 | `follows` | `<NN>-<slug>` of a closed session this one continues, or `none` |
 
-Body starts with `# Session — <name>` and one line of intent: what the work is and why.
-
 ### Find a session
 
 1. `@`-mentioned path or `session_id` → that file.
@@ -67,32 +65,40 @@ Body starts with `# Session — <name>` and one line of intent: what the work is
 | Several | Ask which, listing id and intent |
 | None | Say so; offer to create a session |
 
-### Entry format
+### Session body
 
-Append-only. Never edit an earlier entry; later entries correct earlier ones through **Supersedes**.
+The body declares the work's current state, not its history. Every process edits the same sections.
 
 ```md
-## <n>. <Process> — <YYYY-MM-DD> · <short-sha | uncommitted>
-Builds on: <entry numbers | none>
-Supersedes: <n> — <exact part replaced>
-Decisions:
-- <decision or rejected option>
-Sources:
-- <pointer> — <what is there>
-Open:
+# Session — <name>
+
+<intent: what the work is, why, and what done looks like>
+
+## Agreed
+- <statement> → <pointer>
+
+## Ruled out
+- <option> — <reason>
+
+## Open
 - <unresolved question>
 ```
 
-| Field | Rule |
+| Section | Holds |
 | --- | --- |
-| `<n>` | Previous entry number + 1 |
-| `<Process>` | Free text naming what was done (`Ideation`, `Product specs`, `Design`, `Bug fix`) |
-| Commit | Short `HEAD` hash when this entry's changes are committed; `uncommitted` otherwise. Updating never commits. |
-| **Builds on** | Entries this process read as input |
-| **Supersedes** | Omit when nothing is replaced. One line per replaced part |
-| **Decisions** | Only what no source file records: chat-only decisions, rejected options, answers to earlier **Open** items (`answers open question in <n>`). Omit when empty |
-| **Sources** | Only files this process created or changed. Omit when empty |
-| **Open** | Questions left unresolved. Omit when empty |
+| Intent line | One line; states done clearly enough to know when to close |
+| **Agreed** | What currently holds: decisions the user agreed to, facts the work established, work built |
+| **Ruled out** | Options the user rejected, with the reason |
+| **Open** | Questions not yet settled, including options still under discussion |
+
+Omit a section while it has no items. Record only what falls within the intent line.
+
+### Item rules
+
+- One statement per item.
+- **With a pointer**, the statement summarizes; detail stays in the source.
+- **Without a pointer**, the session is the content's only home: the item carries it in full, as sub-bullets or a table under the item.
+- `(recheck: <what changed>)` after a pointer marks a source built on an item that has since changed.
 
 ### Pointer rules
 
@@ -100,26 +106,22 @@ Open:
 | --- | --- |
 | Markdown | `path#heading-slug` |
 | Code | `path` plus symbol (`SavedCardList`, `savePaymentMethod`) |
-| Whole file | `path` — only for files created by this process |
-| Line range | `path:L<start>-L<end>` — only when the entry has a commit hash |
-
-Each pointer carries at most one line on what is there. Point instead of copying content; the note tells a reader whether to open it (`table row only`, `FR-13 only`).
+| Whole file | `path` — only for files the work created |
+| Outside the repository | URL or ID (Figma frame, ticket, PR, store listing) |
 
 ### Reading a session
 
 1. Read the session file.
-2. Drop superseded parts: for each **Supersedes**, the named part of the earlier entry no longer holds.
-3. **Recheck:** an entry that builds on a superseded part and precedes the superseding entry may reflect the old version. List those entries' sources whose content depends on the replaced part.
-4. **Unrecorded work:** when the last entry has a commit hash, `git log --name-only <sha>..HEAD` shows changes made since without an entry.
+2. **Recheck:** list every pointer marked `(recheck: …)`.
 
 ### Lifecycle
 
 | Status | Meaning |
 | --- | --- |
-| `open` | Work in progress; continuing appends entries, including when going back to an earlier process |
-| `closed` | Work done; never reopened |
+| `open` | Work in progress; every process edits the state in place |
+| `closed` | Work done; never reopened or edited |
 
-A request to change work from a closed session creates a new session with `follows` set to the closed one. The new session starts from the closed session's current **Sources** (after **Reading a session**) as a map to canonical files; it copies no entries.
+A request to change work from a closed session creates a new session with `follows` set to the closed one. The new session starts with a copy of the closed session's **Agreed**, **Ruled out**, and **Open** items.
 
 ### `index.md` mirror
 

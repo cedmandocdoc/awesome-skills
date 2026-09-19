@@ -14,9 +14,9 @@ Per [session-contract.md](./session-contract.md) → **Find a session**, **Lifec
 
 Per [session-contract.md](./session-contract.md) → **Find a session**; skip when the calling recipe already resolved it. Already `closed` → report and stop.
 
-### 2. Append pending work
+### 2. Record pending work
 
-When work in this chat has no entry yet, append it per [updating-session.md](./updating-session.md) first.
+When this chat settled work the session does not yet reflect, update it per [updating-session.md](./updating-session.md) first.
 
 ### 3. Close
 
@@ -26,5 +26,5 @@ Set frontmatter `status: closed` and the `index.md` row **Status** to `closed`.
 
 Reply with:
 
-- Session path and last entry heading
+- Session path
 - Remaining **Open** items

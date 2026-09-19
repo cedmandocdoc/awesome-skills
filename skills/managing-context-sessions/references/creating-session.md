@@ -2,11 +2,11 @@
 
 ## Overview
 
-**Authoring mode.** Creates a context session file for one piece of work, adds its `index.md` row, and writes the first entry when the chat already did work for it.
+**Authoring mode.** Creates a context session file for one piece of work, adds its `index.md` row, and records the state the chat already settled.
 
 ## Prerequisites
 
-Per [session-contract.md](./session-contract.md) → **Resolve sessions root**, **Session frontmatter**, **`index.md` mirror**.
+Per [session-contract.md](./session-contract.md) → **Resolve sessions root**, **Session frontmatter**, **Session body**, **`index.md` mirror**.
 
 ## Guidelines
 
@@ -23,16 +23,16 @@ Per [session-contract.md](./session-contract.md) → **Resolve sessions root**. 
 
 ### 3. Write the session file
 
-Copy [`../assets/session.md`](../assets/session.md) to `<sessions-root>/<NN>-<slug>.md`. Fill frontmatter and the intent line. Set `follows` when created from a closed session ([continuing-session.md](./continuing-session.md) step 1); otherwise `none`.
+Copy [`../assets/session.md`](../assets/session.md) to `<sessions-root>/<NN>-<slug>.md`. Fill frontmatter and the intent line; ask the user what done looks like when the chat does not say. Set `follows` when created from a closed session ([continuing-session.md](./continuing-session.md) step 1) and copy its state per [session-contract.md](./session-contract.md) → **Lifecycle**; otherwise `none`.
 
-### 4. Write the first entry
+### 4. Record the settled state
 
-When this chat already did work for the piece (ideation, a spec draft, an idea file), write entry 1 per [updating-session.md](./updating-session.md) steps 2–3. Otherwise remove the entry skeleton; the next process writes entry 1.
+When this chat already did work for the piece (ideation, a spec draft, a design), fill the sections per [updating-session.md](./updating-session.md) steps 2–3. Otherwise remove the placeholder sections; the next process fills them.
 
 ### 5. Confirm to the user
 
 Add the `index.md` row. Reply with:
 
 - Session path, `session_id`, and whether the root was newly created
-- Entry 1 heading, or that the session has no entries yet
+- Item count per section, or that the state is empty
 - Suggested follow-up: _"Continue `sessions/03-saved-cards.md`: build the PRD"_
