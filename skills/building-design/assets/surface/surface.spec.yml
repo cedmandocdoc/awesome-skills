@@ -1,0 +1,31 @@
+surface: pages/[name]            # components/[name] for a component
+kind: page                        # page | component
+intent: [what this surface must achieve]
+uses: [button]                    # components shown here
+viewports: [desktop, tablet, mobile]
+
+variants:                         # component only; omit on pages
+  - id: [variant]
+    description: [when it is used and how it differs]
+
+states:
+  - id: default
+    description: [the view on first load]
+  - id: [state]
+    trigger: [what causes it]
+    description: [what the view shows]
+    shows: [component]#[variant-or-state]
+
+motion:
+  - id: [section]-reveal
+    target: [section]-reveal      # data-motion value
+    description: [title, lede, CTA reveal in order (--i 0, 1, 2)]
+    trigger: in-view              # load | in-view | scroll | hover | focus | action | state
+    when: [20% visible]
+    uses: [reveal-rise]           # primitives from design.md → Motion
+    reduced: [instant]
+
+content:
+  - slot: [section]-title         # data-slot value
+    role: material                # sample | canonical | material
+    source: [PRD section, fact source]

@@ -1,0 +1,4 @@
+/* One class per typography token in design.md YAML, same values.
+   The design.md css-vars export leaves typography out, so it lives here. */
+.text-heading-xl { font: 700 30px/1.2 var(--font-body, system-ui), sans-serif; letter-spacing: 0; }
+.text-body-base  { font: 400 16px/1.5 var(--font-body, system-ui), sans-serif; letter-spacing: 0; }

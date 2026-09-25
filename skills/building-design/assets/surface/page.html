@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>[Page] — [Product]</title>
+<!-- fonts named in design.md -->
+<link rel="stylesheet" href="../system/tokens.css">
+<link rel="stylesheet" href="../system/type.css">
+<link rel="stylesheet" href="../system/motion.css">
+<!-- one link per component in the spec's `uses` -->
+<link rel="stylesheet" href="../components/[component].css">
+<link rel="stylesheet" href="[page].css">
+<script src="../system/preview.js"></script>
+<script src="../system/motion.js" defer></script>
+<script src="../components/[component].js" defer></script>
+<script src="[page].js" defer></script>
+</head>
+<body>
+<main>
+  <section data-section="[section]" data-motion="[section]-reveal">
+    <h1 data-slot="[section]-title" data-reveal>[Material copy]</h1>
+    <p data-slot="[section]-lede" data-reveal style="--i:1">[Copy]</p>
+    <a class="button button-primary" data-component="button" data-slot="[section]-cta" href="#">[CTA]</a>
+  </section>
+</main>
+</body>
+</html>

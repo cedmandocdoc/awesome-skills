@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>[Component] — [Product]</title>
+<!-- fonts named in design.md -->
+<link rel="stylesheet" href="../system/tokens.css">
+<link rel="stylesheet" href="../system/type.css">
+<link rel="stylesheet" href="../system/motion.css">
+<link rel="stylesheet" href="[component].css">
+<style>
+/* Gallery layout only — not part of the component. */
+body { margin: 0; padding: 32px; display: grid; gap: 32px; background: var(--color-background); color: var(--color-foreground); }
+.gallery-row { display: grid; gap: 10px; }
+.gallery-label { font: 500 11px/1 ui-monospace, monospace; letter-spacing: .08em; text-transform: uppercase; opacity: .6; }
+</style>
+<script src="../system/preview.js"></script>
+<script src="../system/motion.js" defer></script>
+<script src="[component].js" defer></script>
+</head>
+<body>
+<!-- one row per variant, every variant live at once -->
+<div class="gallery-row">
+  <span class="gallery-label">[variant]</span>
+  <div data-component="[component]" data-motion="[component]-[motion]" class="[component] [component]-[variant]">[Sample content]</div>
+</div>
+<script>
+// Component states live here, not in [component].js — pages load that file too.
+Preview.state("[state]", () => { /* call [component].js functions */ });
+</script>
+</body>
+</html>
