@@ -62,10 +62,10 @@ Resolve a goal by user cue (`01-mvp`, `mvp`) under the root; one goal → use it
 
 | Rule | Detail |
 | --- | --- |
-| Phase status | `pending` → `ready` (phase dir + tasks written) → `done`; or `blocked` |
+| Phase status | `pending` → `ready` (phase dir + tasks written) → `done`; `ready` → `blocked` → `ready` once the user resolves the blocker |
 | Allowed edits | Insert, rewrite, reorder, split, or drop `pending` rows |
-| Protected rows | `ready` / `done` / `blocked` rows change only when the user asks to replan |
-| Changelog | Every row edit bumps `map_revision` and adds a changelog line |
+| Protected rows | `ready` / `done` / `blocked` rows change only by the status moves above, or when the user asks to replan |
+| Changelog | Every edit to `pending` rows bumps `map_revision` and adds a changelog line; status moves do not |
 
 Task status lives only in each task file’s frontmatter: `pending` → `in-progress` → `done`; or `blocked` with `blocked_reason`.
 
@@ -103,7 +103,7 @@ Each task is one commit-sized ticket: actionable alone, without inventing the go
 
 ### Phase sizing
 
-A phase groups work that shares code context, so one survey serves every task. Used when seeding the index and when choosing each phase.
+A phase groups work that shares code context, so one survey serves every task.
 
 | Rule | Test |
 | --- | --- |
@@ -111,7 +111,7 @@ A phase groups work that shares code context, so one survey serves every task. U
 | One area | Tasks touch overlapping files or packages; tasks sharing no files belong in separate phases |
 | One method | The same governing skills and method apply; a different governing skill starts a new phase |
 | Leaves things working | After the phase, the project builds and its checks pass — nothing half-wired |
-| Fits one context | At most **7** tasks, each about one commit; the files they touch can be read in one pass |
+| Fits one context | At most **7** tasks; the files they touch can be read in one pass |
 | Ends at unknowns | When later work depends on what this phase reveals, end the phase there and let **Findings** shape the next |
 
 ### Commits

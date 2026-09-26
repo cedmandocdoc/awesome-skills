@@ -22,7 +22,7 @@ Short pass: greenfield vs existing workspace, conventions, prior goals. Record *
 
 ### 3. Bind skills and pin method
 
-Per **Governing skills and method**. Honor **Skills to prefer** from the user.
+Per **Governing skills and method**.
 
 ### 4. Seed the phase index
 

@@ -7,7 +7,7 @@ description: >-
   phase.md plus ≤7 task files (sources, skills, steps, verification), implement
   each task with a commit. Use when planning, delivering, or continuing a goal
   or goal.md. Halts when a task is blocked.
-version: 2.0.0
+version: 2.0.1
 ---
 
 # Delivering Goal
@@ -27,11 +27,11 @@ Out of scope: inventing a goal, researching missing goal detail.
 
 | Item | Required | When | How |
 | --- | --- | --- | --- |
-| Delivery agent `phase-deliverer` | required when the harness supports subagents | Deliver loop | [creating-delivery-agents.md](references/creating-delivery-agents.md) |
+| Delivery agent `phase-deliverer` | required | Deliver loop, when the harness supports subagents | [creating-delivery-agents.md](references/creating-delivery-agents.md) |
 
 ## Agent workflow
 
-Follow this skill for goal folders under `<goals-root>/<NN>-<slug>/`. Match one **Recipes** row; open exactly that reference.
+Follow this skill for goal folders under `<goals-root>/<NN>-<slug>/`. Resolve every **required** **Setup** row before opening a recipe. Match one **Recipes** row; open exactly that reference.
 
 ### Recipes
 

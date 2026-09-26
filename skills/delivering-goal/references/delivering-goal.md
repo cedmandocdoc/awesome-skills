@@ -2,7 +2,7 @@
 
 ## Overview
 
-**Backlog execution mode.** Main-session loop for one goal: ensure `goal.md`, then deliver one phase per `phase-deliverer` run until the goal is complete or blocked. The main session holds only `goal.md` and one-line handoffs.
+**Backlog execution mode.** Main-session loop for one goal: ensure `goal.md`, then deliver one phase per `phase-deliverer` run until the goal is complete or blocked.
 
 ## Prerequisites
 
@@ -33,7 +33,7 @@ No subagent support → follow [delivering-phase.md](./delivering-phase.md) inli
 
 Run one phase at a time. Trust handoffs; read artifacts only when a reply breaks the pattern.
 
-### 3. Report
+### 3. Confirm to the user
 
 ```text
 Delivery run complete.

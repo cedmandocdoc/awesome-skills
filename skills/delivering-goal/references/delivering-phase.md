@@ -16,7 +16,7 @@ Read `goal.md`, then take the first matching branch:
 
 | Row state | Action |
 | --- | --- |
-| A row is `blocked` | Prompt says the blocker is resolved → clear the blocked task’s `blocked_reason`, set the row `ready`, go to §5. Otherwise return `Blocked phase: <phase-dir> — <reason>` |
+| A row is `blocked` | The user or parent prompt says the blocker is resolved → clear the blocked task’s `blocked_reason`, set the row `ready`, go to §5. Otherwise return `Blocked phase: <phase-dir> — <task-id>: <reason>` |
 | A row is `ready` | Go to §5 for that phase |
 | Otherwise | Go to §2 |
 
@@ -27,7 +27,7 @@ Read `goal.md`, then take the first matching branch:
 3. No pending rows → run `goal.md` → **Verification**. All pass → commit **Goal complete**, return `Goal complete: <goal.md>`. A check fails that the latest `done` row was added to fix → return `Blocked delivery: goal check still failing — <check>`. Other fails → add a pending row titled `Fix: <check>` and use it.
 4. Pinned method requires unblock work first → insert that phase ahead of the candidate and use it.
 5. Candidate breaks **Phase sizing** → split it into pending rows and use the first.
-6. Candidate needs invented detail → return `Blocked delivery: unclear goal — <gaps>`.
+6. Candidate needs invented detail → return per **Require clear goal**.
 
 ### 3. Brief
 
@@ -43,7 +43,7 @@ Read `goal.md`, then take the first matching branch:
 
 ### 5. Implement each task
 
-For each task file in order whose status is not `done`:
+For each task file in order whose status is not `done`. None left → set the `goal.md` row `done`, commit **Task done**, go to §6.
 
 1. **Start** — set `status: in-progress`. Load its **Skills to load** `SKILL.md` files and **References** (`basename` → first `<skill-dir>/references/<basename>.md` among loaded skills; `skill/basename` → that skill only). Open the Sources its steps need; specs in `docs/` win over assumptions.
 2. **Steps** — each unchecked step in order: implement within Requirements and Constraints, run the checks it names, check it off. Keep diffs scoped to the task.
@@ -53,7 +53,7 @@ For each task file in order whose status is not `done`:
 
 **Blocked:** when a blocker stops a step or verify, set the task `status: blocked` and `blocked_reason`, set the `goal.md` row `blocked`, and return `Blocked phase: <phase-dir> — <task-id>: <reason>`.
 
-### 6. Confirm
+### 6. Confirm to the user
 
 Reply with one line:
 
