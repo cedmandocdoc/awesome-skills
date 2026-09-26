@@ -4,61 +4,36 @@ generated_by: delivering-goal
 author: c3f5a7b9-4d2e-6f8a-0b1c-5e7d9f2a4c6b
 goal_id: "{{NN-slug}}"
 phase_id: "{{NN-slug}}"
-status: ready
-map_revision_at_create: 1
 ---
 
 # Phase {{NN}} — {{TITLE}}
 
 ## Outcome
 
-{{META_Q1}}
+{{WHAT_IS_TRUE_WHEN_DONE}}
 
 ## Sources
 
-- {{PATHS_AND_URLS}}
-
-## Skills
-
-- {{GOVERNING_SKILL_NAMES_OR_none}}
-
-## Deliverable kinds
-
-{{META_Q2}}
+- {{PATHS_AND_URLS_OR_none}}
 
 ## Governing method
 
-{{PIN_COPY — skill + method basename from goal.md, or none}}
+{{SKILL + METHOD_BASENAME_OR_none}}
 
 ## Method notes
 
-{{BOUND_METHOD_ANSWERS_OR_none}}
-
-## Order
-
-{{META_Q3}}
-
-## Done
-
-{{META_Q4}}
+{{ANSWERS_TO_METHOD_QUESTIONS_OR_none}}
 
 ## Current state
 
-{{META_Q5}}
+{{PATHS_TO_REUSE_OR_GREENFIELD}}
 
-## Task specs
+## Done
 
-1. {{SPEC_1}}
-2. {{SPEC_2}}
+- {{CHECK_1}} → {{NN-task-slug}}
+- {{CHECK_2}} → {{NN-task-slug}}
 
-## Task ids
+## Tasks
 
-- {{task-NNN-slug or none}}
-
-## Verification
-
-- [ ] {{FROM_DONE_CRITERIA}}
-
-## Blocked reason
-
-{{None or reason when status is blocked}}
+1. `{{NN-task-slug}}` — {{ONE_LINE}}
+2. `{{NN-task-slug}}` — {{ONE_LINE}}

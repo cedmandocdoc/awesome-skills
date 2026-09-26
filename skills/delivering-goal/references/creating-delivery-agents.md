@@ -2,49 +2,27 @@
 
 ## Overview
 
-**Docs only.** Creates or refreshes `delivering-goal` delivery-agent files when the user explicitly asks to run `delivering-goal creating-delivery-agents`.
+**Docs only.** Creates or refreshes `phase-deliverer` when the user asks to run `delivering-goal creating-delivery-agents`.
 
 ## Prerequisites
 
-Per [goal-contract.md](./goal-contract.md) → **Subagent signature**, **Delivery agent roots**, **Discovering project skills**.
+Per [goal-contract.md](./goal-contract.md) → **Subagent signature**, **Delivery agents**.
 
 ## Guidelines
 
-### Managed delivery agents
+### 1. Pick the target root
 
-| Agent id | `readonly` | Canonical template |
-| --- | --- | --- |
-| `goal-planner` | `false` | [`../assets/agents/goal-planner.md`](./../assets/agents/goal-planner.md) |
-| `phase-decider` | `false` | [`../assets/agents/phase-decider.md`](./../assets/agents/phase-decider.md) |
+Use the first existing project root from **Delivery agents**. None → create `.agents/agents/`.
 
-### 1. Detect IDE and target root
+### 2. Write the agent
 
-Resolve the target root per **Delivery agent roots**. If no known root exists, create `.agents/agents/` and write portable agents there.
+Template: [`../assets/agents/phase-deliverer.md`](../assets/agents/phase-deliverer.md).
 
-### 2. Create or refresh each agent
-
-For each managed delivery-agent id:
-
-1. Resolve destination path from the IDE filename pattern.
-2. Read canonical body from the matching template.
-3. Write frontmatter required by the IDE (`name`, `description`, model fields when needed), then append:
-   - `author: d4a6b8c0-5e3f-7a9b-1c2d-6f8e0a3b5c7d`
-   - `generated_by: delivering-goal`
-4. Preserve user-customized non-contract fields only when they do not conflict with required fields.
-5. If an existing managed file body diverges from template and the file is not user-customized, refresh from template.
+1. Destination from the IDE filename pattern.
+2. Write the IDE’s required frontmatter (`name`, `description`, model fields) plus `author` (**Subagent signature**) and `generated_by: delivering-goal`, then the template body.
+3. Keep user-customized fields that do not conflict; refresh an unmodified managed body that diverges from the template.
+4. Report retired agents found (`goal-planner`, `phase-decider`, `task-planner`, `task-triager`, `task-implementer`) so the user can delete them.
 
 ### 3. Confirm to the user
 
-Reply with:
-
-- Target agent root used
-- Created / refreshed / skipped files (with reason)
-
-End with:
-
-`Delivery agents are ready. Also ensure managing-tasks task agents exist (managing-tasks creating-task-agents). Re-run the original delivering-goal command.`
-
-## Related
-
-- [finding-delivery-agents.md](./finding-delivery-agents.md)
-- [delivering-goal.md](./delivering-goal.md)
+Reply with the target root and created / refreshed / skipped files (with reason). End with: `Delivery agent is ready. Re-run the original delivering-goal command.`

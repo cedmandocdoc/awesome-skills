@@ -23,7 +23,7 @@ skills/<skill-name>/
 **Skill folder and `name` field**
 
 - **kebab-case**, lowercase letters, numbers, hyphens only
-- **Verb-led**, describes the capability: `managing-tasks`, `deploying-cloudflare-web-application`
+- **Verb-led**, describes the capability: `managing-monorepo`, `deploying-cloudflare-web-application`
 - Max **64 characters** for `name`
 - Folder name matches `name` in frontmatter
 
@@ -339,7 +339,7 @@ Copy into the requiring skill’s contract; keep the skill-root tables there so 
 Example installs (one `npx skills add` per source repo):
 
 ```bash
-npx skills add cedmandocdoc/awesome-skills --skill delivering-goal --skill managing-tasks
+npx skills add cedmandocdoc/awesome-skills --skill composing-react-native-application --skill managing-monorepo
 npx skills add antfu/skills --skill pnpm
 ```
 

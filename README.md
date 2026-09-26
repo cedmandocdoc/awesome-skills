@@ -29,17 +29,17 @@ npx skills add cedmandocdoc/awesome-skills --list
 Examples:
 
 ```bash
-# Install only the task-management skill
-npx skills add cedmandocdoc/awesome-skills --skill managing-tasks
+# Install only the goal-delivery skill
+npx skills add cedmandocdoc/awesome-skills --skill delivering-goal
 
 # Install a skill and a required skill dependency
-npx skills add cedmandocdoc/awesome-skills --skill delivering-goal --skill managing-tasks
+npx skills add cedmandocdoc/awesome-skills --skill composing-react-native-application --skill managing-monorepo
 
 # Install to Cursor globally, non-interactive
 npx skills add cedmandocdoc/awesome-skills -g -a cursor -y
 
 # Try a skill without installing (pipes a prompt to your agent)
-npx skills use cedmandocdoc/awesome-skills@managing-tasks --agent cursor
+npx skills use cedmandocdoc/awesome-skills@delivering-goal --agent cursor
 ```
 
 Source formats also work: full GitHub URL, a path to a single skill, or a local clone (`npx skills add ./awesome-skills`). See the [skills package README](https://www.npmjs.com/package/skills) for the full CLI reference.
@@ -48,9 +48,8 @@ Source formats also work: full GitHub URL, a path to a single skill, or a local 
 
 | Skill | What it does |
 | --- | --- |
-| [`managing-tasks`](skills/managing-tasks/) | Structured task folders (`plan.md`, `status.md`) for cross-session agent handoff — create, execute, triage, block; Done and Cancelled auto-archive. |
 | [`managing-context-sessions`](skills/managing-context-sessions/) | Carry focused context for one piece of work across agent sessions — create, continue, update, and close a session file that declares what is agreed, ruled out, and open, with pointers to where each part lives. Invoke explicitly. |
-| [`delivering-goal`](skills/delivering-goal/) | Plan `goal.md` then loop phases until done. Requires [`managing-tasks`](https://github.com/cedmandocdoc/awesome-skills/tree/main/skills/managing-tasks) for decide and deliver. |
+| [`delivering-goal`](skills/delivering-goal/) | Plan `goal.md`, then deliver it phase by phase — one subagent plans each phase into task files, implements them, and commits each. |
 | [`managing-monorepo`](skills/managing-monorepo/) | TypeScript pnpm + Turborepo workspace: `apps/` vs `packages/`, imports (`exports`, `workspace:*`), and package runners (`<dir>:<script>`). |
 | [`building-idea`](skills/building-idea/) | Build out an app or feature idea through a steered conversation — asks, suggests, or looks up one decision per turn from problem to MVP scope, flows, data, and stack. Invoke explicitly. |
 | [`building-product-specifications`](skills/building-product-specifications/) | Create and amend product specs (PRD, FRD, TRD, user stories, UI specs with view states) with consistent layout and frontmatter — docs only, no implementation. |
