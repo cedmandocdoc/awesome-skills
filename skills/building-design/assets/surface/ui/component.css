@@ -1,0 +1,12 @@
+/* [name] — values via tokens only. Hover, focus, and pressed stay live here; they are never presets. */
+.[name] {
+  background: var(--color-primary);
+  color: var(--color-primary-foreground);
+  border-radius: var(--rounded-radius-md);
+  padding: var(--spacing-space-3) var(--spacing-space-4);
+}
+.[name]-[variant-b] { background: var(--color-secondary); color: var(--color-secondary-foreground); }
+.[name]:hover { opacity: .9; }
+
+/* only when the user decided motion for [state]: @motion use [primitive] */
+.[name][data-[state]] { opacity: .6; }

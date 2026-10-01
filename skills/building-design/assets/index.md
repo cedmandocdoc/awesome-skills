@@ -7,16 +7,23 @@ intention: [web app | mobile app | marketing site | …]
 
 # Design — [intention]
 
-Design root managed by the `building-design` skill. Open [preview.html](preview.html) to review.
+Design root managed by the `building-design` skill. Review with `npm install` once, then `npm run dev`.
 
 ## Documents
 
 | Document | Path |
 | --- | --- |
 | Design system | [design.md](design.md) |
-| Viewer | [preview.html](preview.html) |
+| Features | [features/](features/) |
+| UI blocks | [ui/](ui/) |
 
-## Surfaces
+## Viewer keys
 
-| Surface | Kind | Spec |
-| --- | --- | --- |
+| Key | Does |
+| --- | --- |
+| `\` | Hide or show all controls |
+| `←` `→` | Previous or next step or preset (Play) |
+| `B` / `P` | Board or Play |
+| `1`–`4` | Full, Desktop, Tablet, Mobile |
+| `R` | Replay the current step |
+| `T` | Flip light or dark chrome |

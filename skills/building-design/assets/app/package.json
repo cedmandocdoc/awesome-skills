@@ -1,0 +1,23 @@
+{
+  "name": "design-preview",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --open",
+    "check": "tsc --noEmit",
+    "tokens": "design.md export design.md --format css-vars > system/tokens.css",
+    "lint:design": "design.md lint design.md"
+  },
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@google/design.md": "^0.4.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "^6.0.0",
+    "typescript": "^5.9.0",
+    "vite": "^8.0.0"
+  }
+}

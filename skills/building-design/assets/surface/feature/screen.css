@@ -1,0 +1,9 @@
+/* [screen] — layout and screen-only rules; UI blocks keep their own CSS. */
+.[screen] {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: var(--spacing-gutter);
+}
+.[screen] section { display: grid; gap: var(--spacing-space-4); max-width: 420px; }
+.[screen] [role="alert"] { color: var(--color-destructive); }

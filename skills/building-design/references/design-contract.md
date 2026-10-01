@@ -22,20 +22,21 @@ Every `<design-root>/index.md` carries this value in frontmatter `author`.
 <design-root>/                   # default: design/
   index.md                       # root marker — created first
   design.md                      # DESIGN.md: tokens, rules, motion, voice, implementation, decisions
-  preview.html                   # viewer: surface list, viewport and state switcher
+  index.html  package.json  vite.config.ts  tsconfig.json  .gitignore   # viewer app — copied, never edited
+  viewer/                        # viewer app — copied, never edited
   system/
+    define.ts                    # spec API — copied, never edited
     tokens.css                   # generated from design.md YAML — never hand-edited
-    type.css                     # one class per typography token (not in the export)
-    motion.css  motion.js        # motion tokens + named primitives
-    preview.js                   # state registry used by every surface
-    surfaces.js                  # surface list read by preview.html
-  components/
-    <name>.html .css .js .spec.yml
-  pages/
-    <name>.html .css .js .spec.yml
+    type.css                     # fonts + one class per typography token (not in the export)
+    motion.css  motion.ts        # motion tokens + named primitives
+  ui/<name>/
+    <Name>.tsx  <name>.css  <name>.design.ts
+  features/<feature>/
+    <feature>.design.ts          # flows
+    <Screen>.tsx  <screen>.css  <screen>.design.ts
 ```
 
-Surface files, spec schema, and markers: [preview-contract.md](./preview-contract.md). `design.md` structure, token defaults, and YAML rules: [`../assets/design.md`](../assets/design.md).
+Never read `node_modules/`. Surface files, spec schema, and markers: [preview-contract.md](./preview-contract.md). `design.md` structure, token defaults, and YAML rules: [`../assets/design.md`](../assets/design.md).
 
 ### Design roots
 
@@ -54,14 +55,15 @@ A design root is the folder holding a valid `index.md`. Roots never nest.
    - One match → use it.
    - Several → use the one whose `intention` matches the request; ask when unclear (list each `index.md` path).
    - None → **Initialize design root**.
-3. Read and write only under the resolved root.
+3. A root without `viewer/` was built by an earlier major version: refactor it to **Output layout** and [preview-contract.md](./preview-contract.md) first, keeping `design.md`, copy, and decided motion.
+4. Read and write only under the resolved root.
 
 ### Initialize design root
 
 1. Target = user-named folder, else `design/`.
-2. Target missing or empty → create it. Target not empty → ask whether to initialize there (write `index.md` only, keep existing files) or pick another path.
+2. Target missing or empty → create it. Target not empty → ask whether to initialize there (keep existing files) or pick another path. A target that already holds `package.json`, `index.html`, or `viewer/` always needs another path.
 3. Write `index.md` from [`../assets/index.md`](../assets/index.md): `author` = **Author signature**, `intention` = one short phrase.
-4. Copy [`../assets/preview.html`](../assets/preview.html) to the root and [`../assets/system/`](../assets/system/) to `system/`.
+4. Copy everything in [`../assets/app/`](../assets/app/), dotfiles included, into the root (`cp -R <skill>/assets/app/. <design-root>/`), then run `npm install` there.
 
 Only this skill creates or replaces `index.md`.
 
@@ -69,9 +71,9 @@ Only this skill creates or replaces `index.md`.
 
 | Need | Required | Enough when |
 | --- | --- | --- |
-| Surfaces | yes | Named pages/screens and the components they need (from ui-specs, PRD, or the user) |
-| States | yes | End views per surface: empty, error, validation, modal or sheet open, … |
-| Flows | if surfaces link | Which action leads where |
+| Surfaces | yes | Features, their screens, and the UI blocks they need (from ui-specs, PRD, or the user) |
+| States | yes | End views per screen: empty, error, validation, modal or sheet open, … |
+| Flows | yes | Paths through screens and states per feature: happy, error, conditional |
 | Section intent | yes | What each section or screen must achieve, e.g. "Hero: what we do, for whom, one way in" |
 | Facts | yes | Claims copy may make: names, numbers, clients, features, dates |
 | Voice | yes | Audience, tone, rules, banned words — or `## Voice` already in `design.md` |
@@ -124,10 +126,11 @@ When the user supplies a style guide (markdown, Figma tokens, CSS variables, Tai
 
 | Change | Sync |
 | --- | --- |
-| `design.md` YAML colors, spacing, or radii | `npx @google/design.md export <design-root>/design.md --format css-vars > <design-root>/system/tokens.css` |
+| `design.md` YAML colors, spacing, or radii | `npm run tokens` in the root (writes `system/tokens.css`) |
 | `design.md` YAML typography | Matching class in `system/type.css` |
 | `design.md` → Motion | `--motion-*` values and `@motion` primitives in `system/motion.*` |
-| Surface added, renamed, or removed | `system/surfaces.js` entry, `index.md` → Surfaces, `design.md` → Components (components only) |
+| UI block added, renamed, or removed | `design.md` → Components |
+| Screen state added, renamed, or removed | Every flow that reaches it |
 
 Surfaces use the exported names: `--color-*`, `--rounded-*`, `--spacing-*`.
 
@@ -135,15 +138,18 @@ Surfaces use the exported names: `--color-*`, `--rounded-*`, `--spacing-*`.
 
 Before confirming a build or amend, verify for every surface touched:
 
-- [ ] Every `data-motion`, `data-slot`, `data-component`, and `Preview.state` has its spec entry, and every spec entry has its marker.
+- [ ] `npm run check` passes.
+- [ ] Every `data-motion`, `data-slot`, and `data-component` has its spec entry, and every spec entry has its marker.
 - [ ] Every motion entry uses primitives listed in `design.md` → Motion and a trigger from [preview-contract.md](./preview-contract.md) → **Triggers**.
-- [ ] Every `shows: component#id` names a variant or state that component defines.
+- [ ] Every `shows: ui#Preset` names a preset that UI block defines.
+- [ ] Every screen state appears in at least one flow.
+- [ ] No file the viewer owns was edited (see [preview-contract.md](./preview-contract.md) → **Viewer**).
 - [ ] No raw value in surface CSS where a token exists.
 - [ ] No `[...]` placeholder left; every `[FACT?]` and `[TBD]` is listed in the reply.
 
-Optional: `npx @google/design.md lint <design-root>/design.md` — report errors; warnings are informational.
+Optional: `npm run lint:design` — report errors; warnings are informational.
 
 ## Related
 
-- [preview-contract.md](./preview-contract.md) — surfaces, spec files, markers, viewer
+- [preview-contract.md](./preview-contract.md) — surfaces, design files, flows, markers, viewer
 - [`../assets/design.md`](../assets/design.md) — `design.md` template with defaults

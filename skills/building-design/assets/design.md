@@ -183,11 +183,11 @@ components:
 
 ## Components
 
-[Index of component previews. YAML `components:` holds normative property tokens; variants are separate keys (`button-primary-hover`). States and motion live in each component's `.spec.yml`.]
+[Index of UI blocks. YAML `components:` holds normative property tokens; variants are separate keys (`button-primary-hover`). Props, presets, and motion live in each block's `.design.ts`.]
 
-| Component | Preview | Variants | YAML keys |
+| UI block | Source | Presets | YAML keys |
 | --- | --- | --- | --- |
-| [button] | [components/button.html](components/button.html) | [primary, secondary, ghost] | [`button-primary`, `button-primary-hover`] |
+| [button] | [ui/button/](ui/button/) | [Primary, Secondary, Loading] | [`button-primary`, `button-primary-hover`] |
 
 ## Do's and Don'ts
 
@@ -213,11 +213,11 @@ Names are `motion-*`; `system/motion.css` declares each as `--motion-*` with the
 
 ### Primitives
 
-One row per named effect, implemented once in `system/` and marked there with `@motion <name>`. A one-off effect is still a named primitive.
+One row per effect the user decided — nothing moves by default. Each is implemented once in `system/motion.css` or `system/motion.ts` and marked there with `@motion <name>`. A one-off effect is still a named primitive.
 
 | Primitive | Effect | Timing | Source |
 | --- | --- | --- | --- |
-| [`reveal-rise`] | [fade in + rise 5px] | [`motion-dur` `motion-ease-out`] | [system/motion.css] |
+| [`fade-in`] | [opacity 0 → 1] | [`motion-dur` `motion-ease-out`] | [system/motion.css] |
 
 ### Triggers and reduced motion
 
@@ -238,10 +238,10 @@ One row per named effect, implemented once in `system/` and marked there with `@
 
 ## Implementation
 
-- Surfaces under `components/` and `pages/` are source code to port, not pictures to interpret.
-- Allowed to change: component boundaries, framework idioms, data binding, routing, `sample` content.
+- Surfaces under `ui/` and `features/` are source code to port, not pictures to interpret.
+- Allowed to change: component boundaries, framework and idioms, data binding, routing, `sample` content.
 - Keep: CSS values and effective cascade, motion tokens, primitives and triggers, `canonical` and `material` copy.
-- Every `data-motion`, `data-slot`, and spec state maps to a place in the implementation.
+- Every `data-motion`, `data-slot`, state, and preset maps to a place in the implementation; every flow is a path the implementation supports.
 - [Design-specific rules]
 
 ## Decisions

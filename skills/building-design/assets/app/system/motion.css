@@ -1,0 +1,8 @@
+/* Motion tokens — same names and values as design.md → Motion → Tokens. */
+:root {
+  --motion-dur: 240ms;
+  --motion-ease-out: cubic-bezier(.2, .7, .2, 1);
+}
+
+/* Each primitive in design.md → Motion is implemented once here, marked with @motion <name>,
+   with its prefers-reduced-motion behavior. No primitive exists until the user decides it. */
