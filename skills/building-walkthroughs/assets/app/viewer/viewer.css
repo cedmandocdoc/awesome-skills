@@ -1,0 +1,127 @@
+:root {
+  color-scheme: light;
+  --wv-canvas: #f4f4f5;
+  --wv-dot: rgb(0 0 0 / .07);
+  --wv-glass: rgb(252 252 253 / .82);
+  --wv-line: rgb(0 0 0 / .08);
+  --wv-ink: #18181b;
+  --wv-ink-2: #6e6e76;
+  --wv-hover: rgb(0 0 0 / .05);
+  --wv-station: #ffffff;
+  --wv-warn: #a15c07;
+  --wv-shadow: 0 1px 1px rgb(0 0 0 / .04), 0 6px 16px rgb(0 0 0 / .08), 0 24px 48px rgb(0 0 0 / .08);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --wv-canvas: #121214; --wv-dot: rgb(255 255 255 / .06); --wv-glass: rgb(30 30 34 / .82); --wv-line: rgb(255 255 255 / .09);
+    --wv-ink: #ececee; --wv-ink-2: #9b9ba3; --wv-hover: rgb(255 255 255 / .06); --wv-station: #121214; --wv-warn: #e5a54b;
+    --wv-shadow: 0 1px 1px rgb(0 0 0 / .3), 0 8px 24px rgb(0 0 0 / .35), 0 24px 56px rgb(0 0 0 / .4);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --wv-canvas: #121214; --wv-dot: rgb(255 255 255 / .06); --wv-glass: rgb(30 30 34 / .82); --wv-line: rgb(255 255 255 / .09);
+  --wv-ink: #ececee; --wv-ink-2: #9b9ba3; --wv-hover: rgb(255 255 255 / .06); --wv-station: #121214; --wv-warn: #e5a54b;
+  --wv-shadow: 0 1px 1px rgb(0 0 0 / .3), 0 8px 24px rgb(0 0 0 / .35), 0 24px 56px rgb(0 0 0 / .4);
+}
+
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; margin: 0; overflow: hidden; }
+body { background: var(--wv-canvas); color: var(--wv-ink); font: 13px/1.45 system-ui, -apple-system, sans-serif; }
+button, input { font: inherit; color: inherit; }
+button { cursor: pointer; border: 0; background: none; padding: 0; }
+:focus-visible { outline: 2px solid color-mix(in oklab, var(--wv-ink) 55%, transparent); outline-offset: 1px; }
+code { font: 12px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--wv-hover); padding: 1px 5px; border-radius: 5px; }
+.wv-muted { color: var(--wv-ink-2); fill: var(--wv-ink-2); }
+
+.wv { position: fixed; inset: 0; }
+.wv-glass {
+  background: var(--wv-glass);
+  -webkit-backdrop-filter: blur(22px) saturate(1.6);
+  backdrop-filter: blur(22px) saturate(1.6);
+  border: 1px solid var(--wv-line);
+  box-shadow: var(--wv-shadow);
+}
+
+/* Map */
+.wv-map { position: absolute; inset: 0; width: 100%; height: 100%; cursor: grab; touch-action: none; user-select: none;
+  background-image: radial-gradient(var(--wv-dot) 1px, transparent 1.2px); background-size: 18px 18px; }
+.wv-map:active { cursor: grabbing; }
+.wv-map text { fill: var(--wv-ink); font-size: 12.5px; font-weight: 500; }
+.wv-map .dim { opacity: .16; }
+.wv-map g, .wv-map path { transition: opacity .2s ease; }
+.wv-track { fill: none; stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; cursor: pointer; }
+.wv-spur { fill: none; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+.wv-route { fill: none; stroke-width: 12; stroke-linecap: round; stroke-linejoin: round; opacity: .35; pointer-events: none; }
+.wv-station { cursor: pointer; }
+.wv-station circle:first-child { fill: var(--wv-station); stroke-width: 4; transition: r .15s ease; }
+.wv-station.branch circle:first-child { stroke-width: 3; }
+.wv-station:hover circle:first-child, .wv-station.sel circle:first-child { r: 12; }
+.wv-station.branch:hover circle:first-child, .wv-station.branch.sel circle:first-child { r: 8; }
+.wv-station.sel text { font-weight: 700; }
+.wv-station.branch text { fill: var(--wv-ink-2); font-size: 12px; }
+.wv-endcap { stroke-width: 3; stroke-linecap: round; }
+.wv-baseline { cursor: pointer; }
+.wv-baseline rect { fill: var(--wv-ink); }
+.wv-baseline text { font-weight: 600; }
+.wv-map .wv-line-name { font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; cursor: pointer; }
+
+/* Bar, chips, results */
+.wv-bar { position: fixed; top: 12px; left: 12px; right: 12px; z-index: 10; display: flex; gap: 6px; align-items: center; padding: 6px; border-radius: 12px; max-width: 760px; }
+.wv-bar button { padding: 6px 10px; border-radius: 8px; white-space: nowrap; }
+.wv-bar button:hover { background: var(--wv-hover); }
+.wv-bar .wv-app { font-weight: 700; }
+.wv-bar input { flex: 1; min-width: 0; padding: 6px 10px; border-radius: 8px; border: 1px solid var(--wv-line); background: transparent; }
+.wv-warn { color: var(--wv-warn); font-weight: 600; }
+.wv-chips { position: fixed; top: 64px; left: 12px; right: 12px; z-index: 10; display: flex; flex-wrap: wrap; gap: 4px 6px; align-items: center; padding: 6px; border-radius: 12px; max-width: 760px; width: max-content; }
+.wv-chips button { padding: 3px 9px; border-radius: 999px; border: 1px solid var(--wv-line); display: inline-flex; align-items: center; gap: 6px; }
+.wv-chips button:hover { background: var(--wv-hover); }
+.wv-chips button.on { background: var(--wv-ink); color: var(--wv-canvas); border-color: transparent; }
+.wv-chips i, .wv-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex: none; }
+.wv-facet { display: inline-flex; gap: 4px; align-items: center; padding-left: 6px; border-left: 1px solid var(--wv-line); }
+.wv-facet b { color: var(--wv-ink-2); font-weight: 500; margin-right: 2px; }
+.wv-results, .wv-issues { position: fixed; top: 112px; left: 12px; z-index: 10; margin: 0; padding: 6px; list-style: none; border-radius: 12px; max-height: 50vh; overflow: auto; width: min(360px, calc(100vw - 24px)); }
+.wv-results button { width: 100%; text-align: left; padding: 6px 8px; border-radius: 8px; }
+.wv-results button:hover { background: var(--wv-hover); }
+.wv-issues { width: min(560px, calc(100vw - 24px)); }
+.wv-issues li { padding: 6px 8px; border-bottom: 1px solid var(--wv-line); }
+.wv-issues li:last-child { border: 0; }
+
+/* Panel */
+.wv-panel { position: fixed; top: 12px; right: 12px; bottom: 12px; width: 456px; z-index: 20; border-radius: 14px; display: flex; flex-direction: column; overflow: hidden; }
+.wv-panel-head { display: flex; align-items: center; gap: 10px; padding: 14px 14px 10px 18px; border-bottom: 1px solid var(--wv-line); }
+.wv-panel-head h1 { flex: 1; margin: 0; font-size: 17px; line-height: 1.25; }
+.wv-panel-head button { width: 28px; height: 28px; border-radius: 8px; color: var(--wv-ink-2); }
+.wv-panel-head button:hover { background: var(--wv-hover); }
+.wv-panel-body { overflow: auto; padding: 4px 18px 24px; }
+.wv-panel-body section { margin: 14px 0; }
+.wv-panel h2 { font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--wv-ink-2); margin: 0 0 6px; }
+.wv-panel ul, .wv-panel ol { margin: 0; padding-left: 20px; }
+.wv-panel li { margin: 3px 0; }
+.wv-panel section button { text-decoration: underline; text-decoration-color: var(--wv-line); text-underline-offset: 3px; }
+.wv-meta { color: var(--wv-ink-2); display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.wv-tag { font-size: 11px; padding: 1px 7px; border-radius: 999px; border: 1px solid var(--wv-line); color: var(--wv-ink-2); margin-left: 6px; }
+.wv-meta .wv-tag { margin: 0; }
+.wv-route li code { margin-left: 8px; }
+.wv-route li.here button { font-weight: 700; text-decoration: none; }
+.wv-jump { margin: 8px 0 0; color: var(--wv-ink-2); }
+
+.wv-md { border-top: 1px solid var(--wv-line); margin-top: 16px; padding-top: 4px; font-size: 13.5px; line-height: 1.55; }
+.wv-md h1 { font-size: 17px; }
+.wv-md h2 { font-size: 15px; text-transform: none; letter-spacing: 0; color: var(--wv-ink); margin: 22px 0 8px; }
+.wv-md h3 { font-size: 13.5px; margin: 16px 0 6px; }
+.wv-md table { border-collapse: collapse; width: 100%; font-size: 12.5px; display: block; overflow-x: auto; }
+.wv-md th, .wv-md td { border: 1px solid var(--wv-line); padding: 5px 8px; text-align: left; vertical-align: top; }
+.wv-md pre { overflow: auto; padding: 10px; border-radius: 8px; background: var(--wv-hover); }
+.wv-md pre code { background: none; padding: 0; }
+.wv-md a { color: inherit; }
+.wv-md blockquote { margin: 8px 0; padding: 2px 12px; border-left: 3px solid var(--wv-line); color: var(--wv-ink-2); }
+.wv-diagram { margin: 10px 0; overflow-x: auto; }
+.wv-diagram svg { max-width: 100%; height: auto; }
+.wv-diagram-error { outline: 1px solid var(--wv-warn); }
+
+@media (max-width: 760px) {
+  .wv-panel { left: 8px; right: 8px; top: 8px; bottom: 8px; width: auto; }
+  .wv-chips { width: auto; overflow-x: auto; flex-wrap: nowrap; }
+}
