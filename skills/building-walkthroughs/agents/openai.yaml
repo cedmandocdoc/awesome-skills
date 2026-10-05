@@ -1,4 +1,4 @@
 interface:
   display_name: "Building Walkthroughs"
-  short_description: "Write hands-on walkthroughs of an app's user journeys, shown on a metro-map board, and keep them true as the app changes"
+  short_description: "Write hands-on walkthroughs covering every screen of an app, grouped by area and chained into journeys on a full-screen map, and keep them true as the app changes"
   default_prompt: "Use $building-walkthroughs only when the user names this skill or references a walkthrough file under a marked walkthroughs root."

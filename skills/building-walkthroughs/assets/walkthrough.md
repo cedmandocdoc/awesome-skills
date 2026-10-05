@@ -2,18 +2,18 @@
 doc_type: walkthrough
 id: "[slug — same as the filename]"
 title: "[Outcome in the user's words, e.g. Send an invoice]"
-kind: "[core | branch]"
-line: "[line id — core only]"
+area: "[area id]"
+variation_of: "[task walkthrough id — variations only]"
+actors: ["[actor id]"]
+surfaces: ["[declared surface id, e.g. /invoices/:id]"]
 starts_from: "[baseline:<id> | walkthrough id]"
 ends_with:
   - "[Fact true when this walkthrough finishes]"
-actors: ["[Person]", "[App]"]
-minutes: [5–15]
-facets:
-  "[key]": "[value]"
 checkpoint: "[command that reaches this walkthrough's end state — optional]"
 covers:
-  - "[path/glob or spec#section this journey depends on]"
+  - "[path/glob or spec#section this task depends on]"
+lens:
+  "[lens id]": "[value id]"
 ---
 
 # [Title]
@@ -22,15 +22,15 @@ By the end, [what the user has done and seen].
 
 ## Before you start
 
-- [Start from: the baseline command, or "finish [Walkthrough](walkthrough-id.md)"]
-- [Who is logged in, on which surface]
-- About [N] minutes
+- [What must already be true, in plain words, and the walkthrough that makes it true: "Needs [fact]: finish [Walkthrough](walkthrough-id.md) first." — or "Starts from [baseline title]." No commands.]
+- [Who is signed in, on which surface]
+- [Files to keep at hand — omit when none]
 
-## Journey
+## Flow
 
 ```mermaid
 sequenceDiagram
-  actor P as [Person]
+  actor P as [Actor]
   participant A as [App]
   P->>A: [Action]
   A-->>P: [Visible result]
@@ -38,11 +38,18 @@ sequenceDiagram
 
 ## Steps
 
-### [Actor]
+### [Actor title]
 
 1. [One action] — click **[Exact label]**.
    - You should see: [something observable].
    - Why: [one or two sentences; link the spec section when there is one].
+2. Type `[input]` in **[Field label]**, then click **[Exact label]**.
+   - You should see: [something observable].
+
+### [Other actor title]
+
+3. [The next action continues the count].
+   - You should see: [something observable].
 
 ## Cases
 
@@ -53,7 +60,3 @@ sequenceDiagram
 ## Try it yourself
 
 - [An open-ended variation to explore]
-
-## Something looks wrong?
-
-Report it as `[Title] › step [N] › what you saw`.

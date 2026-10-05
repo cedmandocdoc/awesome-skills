@@ -1,7 +1,7 @@
-// `check`: validate the walkthrough graph. `index`: regenerate the map and list blocks in index.md.
+// `check`: validate the walkthroughs. `index`: regenerate the journeys, walkthroughs, and coverage blocks in index.md.
 import { readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { BASELINE, branchesOf, buildModel, stationsOf, type Model } from "../viewer/model";
+import { BASELINE, actorTitle, areaOrder, buildModel, coverage, type Model } from "../viewer/model";
 
 const root = join(import.meta.dirname, "..");
 const files = Object.fromEntries(
@@ -9,56 +9,65 @@ const files = Object.fromEntries(
 );
 const model = buildModel(files);
 
-const nodeId = (id: string) => (id.startsWith(BASELINE) ? "b_" : "w_") + id.replace(BASELINE, "").replace(/[^A-Za-z0-9]/g, "_");
-const label = (s: string) => s.replace(/"/g, "'");
+const cell = (s: string) => s.replace(/\|/g, "\\|").replace(/\r?\n/g, " ");
+const link = (m: Model, id: string) => `[${cell(m.walkthroughs.get(id)?.title ?? id)}](${id}.md)`;
+const actors = (m: Model, ids: string[]) => ids.map((a) => cell(actorTitle(m, a))).join(", ");
 
-function map(m: Model): string {
-  const out = ["```mermaid", "flowchart LR"];
-  for (const b of m.baselines) out.push(`  ${nodeId(BASELINE + b.id)}(["${label(b.title)}"])`);
-  for (const l of m.lines) {
-    const cls = `line_${l.id.replace(/[^A-Za-z0-9]/g, "_")}`;
-    out.push(`  classDef ${cls} stroke:${l.color},stroke-width:3px`);
-    for (const w of stationsOf(m, l.id)) {
-      out.push(`  ${nodeId(w.id)}["${label(w.title)}"]:::${cls}`);
-      out.push(`  ${nodeId(w.startsFrom)} --> ${nodeId(w.id)}`);
-      for (const b of branchesOf(m, w.id)) {
-        out.push(`  ${nodeId(b.id)}("${label(b.title)}"):::${cls}`);
-        out.push(`  ${nodeId(w.id)} -.-> ${nodeId(b.id)}`);
-      }
-    }
-  }
-  out.push("```");
-  return out.join("\n");
+function journeys(m: Model): string {
+  return m.journeys.map((j, i) => {
+    const path = j.walkthroughs.map((id, n) => `${n + 1}. ${link(m, id)}`).join(" → ");
+    return `**${cell(j.title)}**${i === 0 ? " (start here)" : ""} — ${actors(m, j.actors)}: ${cell(j.goal)}<br>${path}`;
+  }).join("\n\n");
 }
 
-function table(m: Model): string {
-  const rows: string[] = [];
-  const from = (s: string) => (s.startsWith(BASELINE) ? `Baseline: ${m.baselines.find((b) => BASELINE + b.id === s)?.title ?? s}` : `[${m.walkthroughs.get(s)?.title ?? s}](${s}.md)`);
-  const row = (id: string, line: string, kind: string) => {
-    const w = m.walkthroughs.get(id)!;
-    rows.push(`| [${w.title}](${w.id}.md) | ${line} | ${kind} | ${from(w.startsFrom)} | ${w.minutes ?? ""} |`);
-  };
-  for (const l of m.lines) for (const w of stationsOf(m, l.id)) row(w.id, l.title, "core");
-  for (const l of m.lines) for (const w of stationsOf(m, l.id)) for (const b of branchesOf(m, w.id)) row(b.id, l.title, "branch");
-  return ["| Walkthrough | Line | Kind | Starts from | Minutes |", "| --- | --- | --- | --- | --- |", ...rows].join("\n");
+function list(m: Model): string {
+  const from = (s: string) =>
+    s.startsWith(BASELINE) ? `Baseline: ${cell(m.baselines.find((b) => BASELINE + b.id === s)?.title ?? s)}` : link(m, s);
+  const inJourneys = (id: string) => m.journeys.filter((j) => j.walkthroughs.includes(id)).map((j) => cell(j.title)).join(", ");
+  const rows = m.areas.flatMap((a) =>
+    areaOrder(m, a.id).map((w) =>
+      `| ${link(m, w.id)} | ${cell(a.title)} | ${w.variationOf ? `variation of ${link(m, w.variationOf)}` : "task"} | ${actors(m, w.actors)} | ${from(w.startsFrom)} | ${w.steps.length} | ${inJourneys(w.id)} |`),
+  );
+  return ["| Walkthrough | Area | Kind | Actors | Starts from | Steps | Journeys |", "| --- | --- | --- | --- | --- | --- | --- |", ...rows].join("\n");
+}
+
+function coverageTable(m: Model): string {
+  const by = coverage(m);
+  const covered = m.surfaces.filter((s) => by.get(s.id)?.length).length;
+  const area = (id: string) => cell(m.areas.find((a) => a.id === id)?.title ?? id);
+  const rows = m.areas.flatMap((a) => m.surfaces.filter((s) => s.area === a.id)).concat(m.surfaces.filter((s) => !m.areas.some((a) => a.id === s.area)))
+    .map((s) => `| \`${cell(s.id)}\` ${cell(s.title)} | ${area(s.area)} | ${(by.get(s.id) ?? []).map((id) => link(m, id)).join(", ") || (s.gap ? `Gap — ${cell(s.gap)}` : "**Not covered**")} |`);
+  return [`**Covered ${covered} of ${m.surfaces.length} surfaces.**`, "", "| Surface | Area | Covered by |", "| --- | --- | --- |", ...rows].join("\n");
 }
 
 function replace(src: string, name: string, content: string): string {
   const start = `<!-- walkthroughs:${name}:start -->`, end = `<!-- walkthroughs:${name}:end -->`;
   const re = new RegExp(`${start}[\\s\\S]*?${end}`);
   if (!re.test(src)) throw new Error(`index.md is missing the ${start} … ${end} block`);
-  return src.replace(re, `${start}\n${content}\n${end}`);
+  return src.replace(re, () => `${start}\n${content}\n${end}`);
 }
 
 const command = process.argv[2];
 if (command === "check") {
   for (const issue of model.issues) console.error(`✗ ${issue}`);
-  if (model.issues.length) process.exit(1);
-  console.log(`✓ ${model.walkthroughs.size} walkthroughs on ${model.lines.length} lines`);
+  if (model.issues.length) {
+    console.error(`\n${model.issues.length} issue${model.issues.length > 1 ? "s" : ""} — fix them and run npm run check again.`);
+    process.exit(1);
+  }
+  const all = [...model.walkthroughs.values()];
+  const variations = all.filter((w) => w.variationOf).length;
+  const gaps = model.surfaces.filter((s) => s.gap).length;
+  const lenses = model.lenses.map((l) => l.title).join(", ") || "none (no top bar)";
+  console.log(`✓ ${all.length} walkthroughs (${variations} variations) across ${model.areas.length} areas, ${model.journeys.length} journeys, ${model.actors.length} actors`);
+  console.log(`✓ coverage ${model.surfaces.length - gaps}/${model.surfaces.length} surfaces, ${gaps} gap${gaps === 1 ? "" : "s"}; lenses: ${lenses}`);
 } else if (command === "index") {
   const path = join(root, "index.md");
-  writeFileSync(path, replace(replace(readFileSync(path, "utf8"), "map", map(model)), "list", table(model)));
-  console.log("✓ index.md map and list regenerated");
+  let src = readFileSync(path, "utf8");
+  src = replace(src, "journeys", journeys(model));
+  src = replace(src, "list", list(model));
+  src = replace(src, "coverage", coverageTable(model));
+  writeFileSync(path, src);
+  console.log("✓ index.md journeys, walkthroughs, and coverage regenerated");
   for (const issue of model.issues) console.error(`✗ ${issue}`);
 } else {
   console.error("usage: walkthroughs.ts check | index");
