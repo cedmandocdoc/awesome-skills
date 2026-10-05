@@ -2,7 +2,7 @@
 
 ## Overview
 
-Shared layout, naming, and independence rules for skills that follow this catalog's house style. Recipes cite these sections by name. Leanness: [lean-contract.md](./lean-contract.md).
+Shared layout, naming, and independence rules for skills that follow this catalog's house style. Recipes cite these sections by name. Invocation: [invocation-contract.md](./invocation-contract.md). Leanness: [lean-contract.md](./lean-contract.md).
 
 ## Guidelines
 
@@ -55,9 +55,9 @@ skills/<skill-name>/
 ```yaml
 ---
 name: skill-name
-id: 00000000-0000-4000-8000-000000000000   # UUID v4; stable identity
-description: What the skill does and when to use it — third person, includes trigger terms.
-version: 1.0.0   # optional but recommended for workflow skills
+id: 00000000-0000-4000-8000-000000000000
+description: What the skill does and when to use it.
+version: 1.0.0
 ---
 ```
 
@@ -65,7 +65,8 @@ version: 1.0.0   # optional but recommended for workflow skills
 | --- | --- |
 | `name` | Same as folder name; kebab-case. CLI install identifier (`--skill <name>`). |
 | `id` | UUID v4 that identifies **this catalog’s** skill. Generate once (`uuidgen` or `python3 -c "import uuid; print(uuid.uuid4())"`). Never reuse; never change after publish. Distinct from author / subagent signatures. |
-| `description` | Non-empty; **what** + **when**; discovery-friendly keywords; third person |
+| `description` | Non-empty; **what** + **when**; third person; **when** per [invocation-contract.md](./invocation-contract.md) → **Loads** |
+| `disable-model-invocation` | Only for the hard block in [invocation-contract.md](./invocation-contract.md) → **Explicit trigger** |
 | `version` | Semver when the skill has a defined workflow contract |
 
 ### SKILL.md body
@@ -86,13 +87,13 @@ Same major sections, same order. Skill-specific content goes in **subsections** 
 | Section | Required | Purpose |
 | --- | --- | --- |
 | **Overview** | Yes | One short paragraph: outcome, mechanism, or stack. Optional `### Tech stack` when context is needed up front. |
-| **Dependencies** | If something must be **installed** first | One table of installable gates: Item \| Required \| When \| How. |
-| **Setup** | If one-time **steps** must run first | Create agents, init a root, connect a dashboard. Not installs — those live in **Dependencies**. |
+| **Dependencies** | If something must be **installed** first | **Dependencies table** |
+| **Setup** | If one-time **steps** must run first (create agents, init a root, connect a dashboard) | **Setup table** |
 | **Agent workflow** | Yes | Triggers, scope, routing rule, and how the agent proceeds. |
 | **Reference index** | Yes | Full catalog of `references/` files. Table: Doc \| When to use (add Purpose or Layer when helpful). |
 | **Templates** | If `assets/` exists | Links to copyable templates under `assets/`. |
 
-Omit **Dependencies**, **Setup**, and **Templates** when they do not apply. Scenarios live in reference docs, not an **Examples** section on `SKILL.md`.
+Scenarios live in reference docs, not an **Examples** section on `SKILL.md`.
 
 ### Dependencies table
 
@@ -103,17 +104,17 @@ No child headings. Mix skills, tools, MCP, or any other installable in the same 
 | Item | Name. Skill rows: GitHub URL on the name. This catalog: then `id` in backticks. Third-party skills: `name` only unless that skill publishes an `id`. |
 | Required | `required` or `optional` |
 | When | Recipes or entry points that need this row |
-| How | Install command, docs URL, or check that implies how to install |
+| How | Install command, docs URL, or check that implies how to install. GitHub skills: `npx skills add <owner>/<repo> --skill <name>` |
 
 Every row has **How**. Skill-row identity, GitHub URL format, and discovery live in **Skill independence**. A combined install command may sit under the table when several skills from the **same** repo are the usual path.
 
 ### Setup table
 
-No required child headings. Table: Item \| Required \| When \| How. Link How to an in-skill recipe when the step is documented there.
+No required child headings. Table: Item \| Required \| When \| How. Link How to an in-skill recipe when the step is documented there. The **Standing rule** row: [invocation-contract.md](./invocation-contract.md) → **Standing rule**.
 
 ### Agent workflow
 
-Intro (one or two sentences before subsections): triggers, scope, environment note, then how to proceed — e.g. “Follow this skill for task folders under `<tasks-root>/`. Match one **Recipes** row; open exactly that reference.” When **Dependencies** or **Setup** exists, resolve every **required** row before opening a recipe.
+Intro (one or two sentences before subsections): triggers per [invocation-contract.md](./invocation-contract.md), scope, environment note, then how to proceed — e.g. “Follow this skill for task folders under `<tasks-root>/`. Match one **Recipes** row; open exactly that reference.” When **Dependencies** or **Setup** exists, resolve every **required** row before opening a recipe.
 
 Use **only** these subsection names:
 
@@ -186,12 +187,11 @@ Follow this skill for … Works wherever the agent can read and write repository
 
 ### SKILL.md constraints
 
-- Stay under **~500 lines**; move detail to `references/`
-- Tables route agents to the **one** reference to open for the current intent
+Stay under **~500 lines**; move detail to `references/`.
 
 ### Reference documents
 
-References are recipes or deep dives the agent reads after `SKILL.md` routes to them. Same major sections, same order. Skill-specific content goes in **`###` subsections** under the major section it belongs to — especially under **Guidelines**.
+References are recipes or deep dives the agent reads after `SKILL.md` routes to them. Same rule as **SKILL.md body**, with skill-specific `###` subsections mostly under **Guidelines**.
 
 ```markdown
 # <Action>
@@ -239,10 +239,8 @@ Use only what the reference needs:
 | --- | --- |
 | `### 1.` … `### N.` | Lifecycle recipes — resolve → gather → act → sync → confirm |
 | `### Decision tree` | Routing table before a deep dive |
-| `### Confirm to the user` | Final recipe step — paths, summary, follow-up (or use `### N.` for this) |
+| `### Confirm to the user` | Last `###` of every mutating recipe — paths, summary, follow-up (or the final `### N.`) |
 | Topic headings | Contract fields, troubleshooting phases (`### Build fails`), review checklist groups |
-
-Put **Confirm to the user** as the last `###` under **Guidelines** for mutating recipes.
 
 ### Kind map
 
@@ -261,8 +259,7 @@ Put **Confirm to the user** as the last `###` under **Guidelines** for mutating 
 - Recipe → contract: **Prerequisites** or step 1 in **Guidelines**
 - Recipe → asset: `[../assets/plan.md](../assets/plan.md)` from a Guidelines step
 - In-skill navigation: **Related**
-- External URLs: **References**, or inline where a step needs them (dependency-skill GitHub URLs live in `SKILL.md` **Dependencies** / the contract)
-- Links stay **one level deep** and in-skill, plus GitHub URLs to dependency skills
+- External URLs: **References**, or inline where a step needs them
 
 ### Reference skeleton
 
@@ -303,38 +300,33 @@ interface:
 | --- | --- |
 | `display_name` | Title case; readable in a picker |
 | `short_description` | Matches the spirit of `description` in `SKILL.md`; shorter |
-| `default_prompt` | Uses `$<name>` from frontmatter; lists when to invoke |
+| `default_prompt` | Uses `$<name>` from frontmatter; states the same trigger as `description` |
+| `policy.allow_implicit_invocation` | `false` only for the hard block in [invocation-contract.md](./invocation-contract.md) → **Explicit trigger** |
 
-Use `.yaml` extension (existing convention in this repo). Content is the same if your tooling expects `.yml`.
+Use the `.yaml` extension.
 
 ### Skill independence
 
-A user may install one skill without the rest of the catalog. In-skill markdown links stay inside that skill’s directory.
-
-**Dependencies** are installable needs (other skills, CLIs, MCP, or any other fetchable), each `required` or `optional`. **Setup** is one-time steps (create agents, init a root).
+A user may install one skill without the rest of the catalog. In-skill markdown links stay inside that skill’s directory, one level deep.
 
 | Rule | Detail |
 | --- | --- |
 | Identity | Every skill in **this catalog** has `name` and `id` (UUID). Those dependency rows match **both**. `id` never changes after publish. Third-party skills match `name`; check `id` only if that skill publishes one. |
-| Declare | `SKILL.md` → **Dependencies**, one table (Item \| Required \| When \| How). Skill rows include a GitHub URL. This catalog: also `id`. Repeat those rows in the contract with discovery. |
 | GitHub URL | Full URL to the skill in its source repo: `https://github.com/<owner>/<repo>/tree/<ref>/skills/<name>`. This catalog: `https://github.com/cedmandocdoc/awesome-skills/tree/main/skills/<name>`. Relative `skills/other-skill/` links break when only one skill is installed. |
-| How | Each row carries its own command or docs URL. GitHub skills: `npx skills add <owner>/<repo> --skill <name>`. Other items use that item’s install docs or CLI. |
-| Discover skills | Search skill roots (project, then user-level) for `*/SKILL.md`. Same roots as agent discovery, under `skills/` not `agents/`. This catalog: accept when `name` **and** `id` match. Unique `name` with no `id` still counts (third-party or legacy). Different `id` → skip. |
 | Missing required | Stop. Print that row’s **How** (for skills: command, GitHub URL, and `id` when present). Do not guess a substitute. |
 | Missing optional | Continue. Open or use the item if present. |
 | After find (skill) | Open the installed skill’s `SKILL.md`. Follow recipes by **intent name**. Never copy that skill’s file paths into this skill’s docs. |
 | Repeat context | If two skills need the same fact, state it briefly in each, or point at external docs from **References**. |
-| Third-party skills | Any GitHub skill repo (`owner/repo`). Required or optional. Discover by `name`. Include `id` in the row only if that skill publishes one. |
 
 ### Discover dependency skill
 
-Copy into the requiring skill’s contract; keep the skill-root tables there so the skill works after install.
+Copy into the requiring skill’s contract with its skill dependency rows; keep the skill-root tables there so the skill works after install.
 
 1. Explicit pointers — `AGENTS.md`, the user request, `@`-mentioned skills.
 2. Project roots — glob `<root>/<skill-name>/SKILL.md` (`.agents/skills/`, `.cursor/skills/`, `.claude/skills/`, `.codex/skills/`, `.github/skills/`, and the other agent skill directories).
 3. User-level roots — same layout under `~/` (for example `~/.cursor/skills/`, `~/.agents/skills/`). Prefer a project copy over a user copy of the same `name`.
 4. Custom roots named in `AGENTS.md` or by the user.
-5. Read each candidate `SKILL.md` frontmatter. This catalog: accept `name` + `id`; deduplicate by `id` (then `name`). Third-party: accept `name` when the row has no `id`.
+5. Read each candidate `SKILL.md` frontmatter. This catalog: accept `name` + `id`; a different `id` → skip; deduplicate by `id` (then `name`). A row without `id` (third-party or legacy): accept a unique `name`.
 
 Example installs (one `npx skills add` per source repo):
 
@@ -357,8 +349,10 @@ npx skills add antfu/skills --skill pnpm
 - [ ] `SKILL.md` uses Overview → Dependencies (if any) → Setup (if any) → Agent workflow → Reference index (→ Templates if `assets/`); skill-specific blocks are subsections only
 - [ ] No relative path links to other skills under `skills/`. Dependency skills use GitHub URLs; this catalog also uses `name` + `id` discovery
 - [ ] Required dependencies are under **Dependencies** (one table) in `SKILL.md`; skill rows repeat in the contract with discovery. One-time steps are under **Setup**, not Dependencies.
+- [ ] [invocation-contract.md](./invocation-contract.md) → **Checklist** passes
 - [ ] Each instruction appears once; mode lines carry boundaries; tables route; no noise, filler, or commentary
 
 ## Related
 
+- [invocation-contract.md](./invocation-contract.md) — loads, standing rule
 - [lean-contract.md](./lean-contract.md) — leanness test, finding categories, writing strategies

@@ -1,8 +1,8 @@
 ---
 name: building-react-web-application
 id: 83101311-e63c-4973-811e-5a84cc1a9e19
-description: Guides building Vite + React SPA apps with TypeScript using a consistent architecture and library stack (Tailwind CSS v4, class-variance-authority, TanStack Router file-based routes, TanStack Query, Zustand, Axios, shadcn-style primitives in src/ui). Use when creating a new React web project or updating architecture, UI, state, API, routing, or styling to follow these conventions.
-version: 1.0.0
+description: Guides building Vite + React SPA apps with TypeScript using a consistent architecture and library stack (Tailwind CSS v4, class-variance-authority, TanStack Router file-based routes, TanStack Query, Zustand, Axios, shadcn-style primitives in src/ui). Use when creating a Vite + React SPA, or changing code in an app whose `package.json` has `vite` and `@tanstack/react-router`, to follow these conventions.
+version: 1.1.0
 ---
 
 # React web application
@@ -25,9 +25,15 @@ Opinionated ecosystem for building Vite-based React SPAs with a consistent archi
 | Dates               | date-fns (`src/libs/date-utils/`)                                              |
 | Presentational UI   | shadcn/ui-style primitives in `src/ui/`                                        |
 
+## Setup
+
+| Item | Required | When | How |
+| --- | --- | --- | --- |
+| Standing rule | required | Scaffold new app | Add `` - `<target_path>` follows building-react-web-application; load it before changing code there. `` to root `AGENTS.md` (create when missing) and to root `CLAUDE.md` when it exists without importing `AGENTS.md`; skip a file that has it |
+
 ## Agent workflow
 
-Follow this skill for Vite + React SPA work. Match **Entry points** and **Task types**; open every linked reference from matched rows and from the component decision tree before coding.
+Follow this skill for Vite + React SPA work. Resolve every **required** **Setup** row, then match **Entry points** and **Task types**; open every linked reference from matched rows and from the component decision tree before coding.
 
 ### Entry points
 

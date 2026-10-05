@@ -39,8 +39,8 @@ When a browser tool or the running app is reachable, follow each walkthrough fro
 
 ### 7. Sync
 
-Per contract → **Keep-true rule**: add the line to the agent instructions file. Run `npm run index`, then `npm run check`, then contract → **Checklist**.
+Run `npm run index`, then `npm run check`, then contract → **Checklist**.
 
 ### 8. Confirm to the user
 
-Reply with the root path, how to view (`npm run dev` in the root), lines and walkthroughs written (core first), skipped journeys and what each needs, the instructions file changed, and whether the dry run ran.
+Reply with the root path, how to view (`npm run dev` in the root), lines and walkthroughs written (core first), skipped journeys and what each needs, the instruction files changed, and whether the dry run ran.

@@ -5,9 +5,9 @@ description: >-
   Builds out an application or feature idea with the user through a steered
   conversation — each turn asks one question, suggests a default, or looks the
   answer up, walking an idea tree from problem to MVP scope, flows, data, and
-  stack until every branch is decided or parked. Invoke explicitly by name to
-  start an ideation session.
-version: 1.0.0
+  stack until every branch is decided or parked. Use only when the user names
+  this skill (`/building-idea` or `$building-idea`).
+version: 1.0.1
 disable-model-invocation: true
 ---
 
@@ -19,7 +19,7 @@ Turns a rough idea into a buildable shape in conversation. The agent is a co-bui
 
 ## Agent workflow
 
-Runs only when the user invokes this skill by name. Once invoked, it steers the rest of the chat. Works with or without a repository.
+Runs only when the user invokes `/building-idea` or `$building-idea`. Once invoked, it steers the rest of the chat. Works with or without a repository.
 
 ### Steps
 

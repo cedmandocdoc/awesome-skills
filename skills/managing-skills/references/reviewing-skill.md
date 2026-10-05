@@ -2,13 +2,13 @@
 
 ## Overview
 
-**Review mode.** Read-only audit of a skill against the catalog contract and the leanness test. Delivers a findings report; applies edits only when the user asks, then follows [updating-skill.md](./updating-skill.md).
+**Review mode.** Read-only audit of a skill against the three contracts. Delivers a findings report; applies edits only when the user asks, then follows [updating-skill.md](./updating-skill.md).
 
-Scope to leanness when the user asks only to trim or audit verbosity. Scope to structure when they ask only about layout, sections, or the contract. Default: both.
+Scope to leanness when the user asks only to trim or audit verbosity. Scope to structure when they ask only about layout, sections, invocation, or the contract. Default: both.
 
 ## Prerequisites
 
-[skill-contract.md](./skill-contract.md). [lean-contract.md](./lean-contract.md).
+[skill-contract.md](./skill-contract.md). [invocation-contract.md](./invocation-contract.md). [lean-contract.md](./lean-contract.md).
 
 ## Guidelines
 
@@ -29,13 +29,7 @@ When leanness is in scope, pass through the document once per finding category. 
 - Quoted excerpt
 - Suggested lean rewrite, or "delete" when nothing replaces it
 
-Then check the strategy table:
-
-- [ ] Repeated instructions extracted to one place and linked
-- [ ] Each rule lives under exactly one heading
-- [ ] Global constraints stated once (mode line or intro)
-- [ ] Active voice throughout
-- [ ] Lists, tables, or diagrams used where prose describes enumerable or branching content
+Then check each row of [lean-contract.md](./lean-contract.md) → **Lean writing strategies**.
 
 ### 4. Deliver the report
 

@@ -1,8 +1,8 @@
 ---
 name: building-react-native-application
 id: ddfed93c-f419-4c5f-8832-85acc8f85f00
-description: Guides building Expo/React Native apps with TypeScript using a consistent architecture and library stack (NativeWind, React Navigation static config, TanStack Query, Zustand, Axios, React Native Reusables-style primitives in src/ui). Use when creating a new React Native app or updating architecture, UI, state, API, navigation, or styling to follow these conventions.
-version: 1.2.0
+description: Guides building Expo/React Native apps with TypeScript using a consistent architecture and library stack (NativeWind, React Navigation static config, TanStack Query, Zustand, Axios, React Native Reusables-style primitives in src/ui). Use when creating an Expo app, or changing code in an app whose `package.json` has `expo`, `@react-navigation/native`, and `nativewind`, to follow these conventions.
+version: 1.3.0
 ---
 
 # React Native application
@@ -25,9 +25,15 @@ Opinionated ecosystem for building Expo/React Native apps with a consistent arch
 | Dates | date-fns (`src/libs/date-utils/`) |
 | Presentational UI | React Native Reusables-style primitives in `src/ui/` |
 
+## Setup
+
+| Item | Required | When | How |
+| --- | --- | --- | --- |
+| Standing rule | required | Scaffold new app | Add `` - `<target_path>` follows building-react-native-application; load it before changing code there. `` to root `AGENTS.md` (create when missing) and to root `CLAUDE.md` when it exists without importing `AGENTS.md`; skip a file that has it |
+
 ## Agent workflow
 
-Follow this skill for Expo/React Native work. Match **Entry points** and every applicable **Task types** row; open every linked local reference before coding. For component work, open [creating-component](./references/creating-component.md) and follow its decision tree. Platform docs live in each reference’s **References** section.
+Follow this skill for Expo/React Native work. Resolve every **required** **Setup** row, then match **Entry points** and every applicable **Task types** row; open every linked local reference before coding. For component work, open [creating-component](./references/creating-component.md) and follow its decision tree. Platform docs live in each reference’s **References** section.
 
 ### Entry points
 

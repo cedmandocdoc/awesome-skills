@@ -1,4 +1,4 @@
 interface:
   display_name: "React Native Application"
   short_description: "Build Expo/React Native apps with NativeWind, React Navigation, and shared UI"
-  default_prompt: "Use $building-react-native-application when creating a new React Native app or updating architecture, UI, state, API, navigation, or styling to follow these conventions."
+  default_prompt: "Use $building-react-native-application when creating an Expo app, or changing code in an app built on expo, @react-navigation/native, and nativewind."

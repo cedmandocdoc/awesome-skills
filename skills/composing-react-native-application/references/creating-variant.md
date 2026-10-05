@@ -97,7 +97,7 @@ If this package prebuilds, follow [managing-shared-config.md](./managing-shared-
 
 ### 6. Confirm to the user
 
-Report the variant/host package path, which slots were filled, and any new `exports` consumers. Offer to declare a new slot when the change does not fit an existing factory argument.
+Report the variant/host package path, which slots were filled, any new `exports` consumers, and the instruction files changed. Offer to declare a new slot when the change does not fit an existing factory argument.
 
 ## Examples
 

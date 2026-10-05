@@ -33,7 +33,7 @@ Never read `node_modules/`.
 
 1. Search the repository for `index.md` files whose frontmatter has `doc_type: walkthroughs-index`, `generated_by: building-walkthroughs`, and `author` = **Author signature**.
 2. One match → use it. Several → ask, listing each path. None → **Initialize walkthroughs root** on Create; stop and report on other recipes.
-3. Read and write only under the resolved root, except the agent instructions file in **Keep-true rule**.
+3. Read and write only under the resolved root, except the instruction files in `SKILL.md` → **Setup**.
 
 ### Initialize walkthroughs root
 
@@ -128,14 +128,6 @@ Free keys the viewer turns into filter chips. Suggest `area`, `role`, or `surfac
 ### Checkpoints
 
 A checkpoint is a project command (seed, snapshot, script) that reaches a walkthrough's end state without replaying the chain. Add one only when the command exists and produces every `ends_with` fact; read the command's source to confirm. A checkpoint that no longer produces them is removed or fixed in the same work.
-
-### Keep-true rule
-
-Create adds this line to the project's agent instructions file (`AGENTS.md`, else `CLAUDE.md` or the agent's equivalent; create `AGENTS.md` when none exists):
-
-```markdown
-- When a change alters a user journey, run the building-walkthroughs Update recipe in the same work.
-```
 
 ### Sync
 

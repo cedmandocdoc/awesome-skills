@@ -1,8 +1,8 @@
 ---
 name: deploying-expo-native-application
 id: ba26301f-928c-4984-9b30-7009e3dc5db5
-description: Prepare an Expo native app (iOS/Android) for EAS Build and store release — discover the app package, validate app.json and eas.json profiles, configure EAS environments and secrets, and verify release readiness. Use when setting up mobile deployment, configuring eas.json build/submit profiles, linking an Expo project, or preparing the first EAS build.
-version: 1.0.0
+description: Prepare an Expo native app (iOS/Android) for EAS Build and store release — discover the app package, validate app.json and eas.json profiles, configure EAS environments and secrets, and verify release readiness. Use when setting up EAS deployment for an Expo app, configuring eas.json build/submit profiles, linking an Expo project, or preparing the first EAS build.
+version: 1.0.1
 ---
 
 # Deploying an Expo native application
@@ -13,7 +13,7 @@ Prepare an Expo app for native (iOS/Android) release: project linkage, `eas.json
 
 ## Agent workflow
 
-Run these steps in order before recommending a first `preview` or `production` build. Works wherever the agent can read and write repository files.
+Follow this skill when preparing an Expo app for EAS Build and store release. Run these steps in order before recommending a first `preview` or `production` build. Works wherever the agent can read and write repository files.
 
 ### Steps
 

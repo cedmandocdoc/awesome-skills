@@ -94,7 +94,7 @@ Report the package path, scoped name, and role.
 
 ### Confirm to the user
 
-Report the workspace root and the files created.
+Report the workspace root, the files created, and the instruction files changed.
 
 ## References
 

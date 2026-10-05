@@ -42,7 +42,7 @@ node <path-to-skill>/scripts/install-packages.cjs --root <resolved-app-path>
 
 ### 6. Confirm to the user
 
-Report `target_path`, template `blank-typescript`, and that template deps are installed.
+Report `target_path`, template `blank-typescript`, that template deps are installed, and the instruction files changed.
 
 ## Related
 

@@ -1,8 +1,8 @@
 ---
 name: composing-react-native-application
 id: aef3864f-fbd4-415a-8540-0e7ef0ea0f9f
-description: Extends one Expo core app into product variants through declared slots (identity, home, theme, extra routes). Use when adding a variant, filling a slot, or declaring a new slot. Host toolchain wrap is how a variant that prebuilds stays runnable — not a separate purpose. Requires managing-monorepo for workspace packages and imports.
-version: 1.4.0
+description: Extends one Expo core app into product variants through declared slots (identity, home, theme, extra routes). Use when adding a variant to, filling a slot of, or declaring a new slot on an Expo core app that exports app and slot factories. Host toolchain wrap is how a variant that prebuilds stays runnable — not a separate purpose. Requires managing-monorepo for workspace packages and imports.
+version: 1.5.0
 ---
 
 # Composing React Native Application
@@ -24,9 +24,15 @@ Resolve every **required** row before composing. Skill discovery and missing-ski
 
 Install both: `npx skills add cedmandocdoc/awesome-skills --skill composing-react-native-application --skill managing-monorepo`
 
+## Setup
+
+| Item | Required | When | How |
+| --- | --- | --- | --- |
+| Standing rule | required | Fill slots / new variant | Add `` - Variants of `<core>` follow composing-react-native-application; load it before adding a variant or slot. `` to root `AGENTS.md` (create when missing) and to root `CLAUDE.md` when it exists without importing `AGENTS.md`; skip a file that has it |
+
 ## Agent workflow
 
-Follow this skill when one Expo core app is extended into product variants through slots. Match **Entry points**. When the variant package prebuilds, [creating-variant.md](./references/creating-variant.md) points at host wrap. Core screens and `src/ui` use `building-react-native-application` when that optional skill is installed.
+Follow this skill when one Expo core app is extended into product variants through slots. Resolve every **required** **Dependencies** and **Setup** row, then match **Entry points**. When the variant package prebuilds, [creating-variant.md](./references/creating-variant.md) points at host wrap. Core screens and `src/ui` use `building-react-native-application` when that optional skill is installed.
 
 ### Entry points
 

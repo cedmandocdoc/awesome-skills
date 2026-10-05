@@ -2,17 +2,17 @@
 
 ## Overview
 
-**Authoring mode.** Amends an existing skill to match the catalog contract, lean it, or both. Every behavioral instruction in the original survives unless the user asks to drop it.
+**Authoring mode.** Amends an existing skill to match the contracts, lean it, or both. Leanness is always in scope. Every behavioral instruction in the original survives unless the user asks to drop it.
 
 ## Prerequisites
 
-[skill-contract.md](./skill-contract.md). [lean-contract.md](./lean-contract.md). When a recent review exists, start from its findings instead of re-scanning.
+[skill-contract.md](./skill-contract.md). [invocation-contract.md](./invocation-contract.md). [lean-contract.md](./lean-contract.md). When a recent review exists, start from its findings instead of re-scanning.
 
 ## Guidelines
 
 ### 1. Resolve target
 
-Per [skill-contract.md](./skill-contract.md) → **Resolve target skill**. Read the skill’s `SKILL.md` and every linked reference. Confirm whether structure work is needed. Leanness is always in scope.
+Per [skill-contract.md](./skill-contract.md) → **Resolve target skill**. Read the skill’s `SKILL.md` and every linked reference. Confirm whether structure work is needed.
 
 ### 2. Inventory
 
@@ -22,14 +22,12 @@ List every behavioral instruction — this inventory guards against meaning loss
 
 | Intent | Do |
 | --- | --- |
-| Structure | Align files and sections with [skill-contract.md](./skill-contract.md). Add or rename references per **Naming**. Update Recipes and Reference index together. |
+| Structure | Align files and sections with [skill-contract.md](./skill-contract.md) and [invocation-contract.md](./invocation-contract.md). Add or rename references per **Naming**. Update Recipes and Reference index together. |
 | Leanness | Scan per finding category; restructure per [lean-contract.md](./lean-contract.md) → **Lean writing strategies**. |
-
-Cuts: phrase-level deletions, section-level removals, and duplicate instructions merged into a single location. After the amend, scan every edited file per finding category — including when the user asked only for structure.
 
 ### 4. Rewrite and verify
 
-Write the result. Check it against the inventory: every kept instruction present exactly once. Re-run [skill-contract.md](./skill-contract.md) → **Checklist** and the category scan; a finished amend yields no findings.
+Write the result. Check it against the inventory: every kept instruction present exactly once. Re-run [skill-contract.md](./skill-contract.md) → **Checklist** and the category scan on every edited file; a finished amend yields no findings.
 
 ### 5. Confirm to the user
 
