@@ -1,4 +1,4 @@
 interface:
   display_name: "Building Product Specifications"
   short_description: "Create PRD, FRD, TRD, user story, and UI specs with flow, structure, and view states"
-  default_prompt: "Use $building-product-specifications when the user asks to draft or amend prd.md, frd.md, trd.md, user-story.md, or ui-specs.md at product or feature level — including UI flow, screen structure, view states, and transitions."
+  default_prompt: "Use $building-product-specifications only when the user names this skill or references a spec file (prd.md, frd.md, trd.md, user-story.md, ui-specs.md) under a marked docs root."

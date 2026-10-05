@@ -5,9 +5,11 @@ description: >-
   Delivers a clear goal until done. Plans a living goal.md under goals/, then
   loops one phase-deliverer subagent per phase: fold prior findings, write
   phase.md plus ≤7 task files (sources, skills, steps, verification), implement
-  each task with a commit. Use when planning, delivering, or continuing a goal
-  or goal.md. Halts when a task is blocked.
-version: 2.0.1
+  each task with a commit. Halts when a task is blocked. Use only when the user
+  names this skill (`/delivering-goal`, `$delivering-goal`, or
+  "delivering-goal"), or references a file under a marked goals root
+  (`@goals/01-mvp/goal.md`, a phase or task file).
+version: 2.1.0
 ---
 
 # Delivering Goal
@@ -31,14 +33,14 @@ Out of scope: inventing a goal, researching missing goal detail.
 
 ## Agent workflow
 
-Follow this skill for goal folders under `<goals-root>/<NN>-<slug>/`. Resolve every **required** **Setup** row before opening a recipe. Match one **Recipes** row; open exactly that reference.
+Follow this skill when the user names it, or references a file under a marked goals root, for goal folders under `<goals-root>/<NN>-<slug>/`. Resolve every **required** **Setup** row before opening a recipe. Match one **Recipes** row; open exactly that reference.
 
 ### Recipes
 
 | Intent | Example phrasing | Read |
 | --- | --- | --- |
 | Plan goal only | "Plan this goal", "Create goal.md for …" | [planning-goal.md](references/planning-goal.md) |
-| Deliver or continue | "Deliver this goal", "Ship until done", "Continue the goal" | [delivering-goal.md](references/delivering-goal.md) |
+| Deliver or continue | "Deliver this goal", "Ship until done", "Continue @goals/01-mvp/goal.md" | [delivering-goal.md](references/delivering-goal.md) |
 | Deliver one phase | "Deliver the next phase only" | [delivering-phase.md](references/delivering-phase.md) |
 | Create delivery agent | "creating-delivery-agents", refresh the agent | [creating-delivery-agents.md](references/creating-delivery-agents.md) |
 

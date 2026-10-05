@@ -1,6 +1,4 @@
 interface:
   display_name: "Managing Context Sessions"
-  short_description: "Create, continue, update, and close context sessions that carry focused context across agent sessions"
-  default_prompt: "Use $managing-context-sessions to create, continue, update, or close a context session under sessions/."
-policy:
-  allow_implicit_invocation: false
+  short_description: "Create, continue, update, and close context sessions that carry focused context across chats"
+  default_prompt: "Use $managing-context-sessions only when the user names this skill or references a session file under sessions/ with a task."

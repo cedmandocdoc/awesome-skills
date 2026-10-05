@@ -38,7 +38,7 @@ Start from the **Reading** pointers; open other files only when the task require
 
 ### 5. Update the session
 
-Per [updating-session.md](./updating-session.md). Skip the update when the request only asked a question and changed no files and settled no decisions. Then close per [closing-session.md](./closing-session.md) when the user asked to close.
+Per [updating-session.md](./updating-session.md), before replying; the governing skill's confirmation does not end this recipe. Skip the update when the request only asked a question and changed no files and settled no decisions. Then close per [closing-session.md](./closing-session.md) when the user asked to close; otherwise, when the work meets the intent line's done, ask whether to close.
 
 ### 6. Next task in the same chat
 

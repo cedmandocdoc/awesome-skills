@@ -1,4 +1,4 @@
 interface:
   display_name: "Building Design"
   short_description: "Build and amend runnable designs — DESIGN.md plus React previews of UI blocks and feature flows with presets, states, motion specs, and copy"
-  default_prompt: "Use $building-design when the user wants a design, design system, design.md, style guide, design tokens, visual language, motion or animation spec, UI, screen, or flow preview, or design changes before implementation."
+  default_prompt: "Use $building-design only when the user names this skill or references a file under a marked design root (design.md, a .design.ts file)."

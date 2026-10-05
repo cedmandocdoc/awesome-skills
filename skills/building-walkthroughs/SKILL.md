@@ -1,8 +1,8 @@
 ---
 name: building-walkthroughs
 id: 62987084-2733-4959-9c53-0e9ae812a34e
-description: Builds and maintains hands-on walkthroughs of an app — one Markdown guide per user journey with exact on-screen steps, expected results, and a journey diagram — plus a metro-map board viewer, so the user can learn and verify the app by using it. Works from the code alone; specs, designs, seeds, and tests sharpen it. Use when the user wants walkthroughs, a guided tour, a manual test guide, user journeys to try by hand, to be walked through a feature live, or walkthroughs updated after a change.
-version: 1.0.0
+description: Builds and maintains hands-on walkthroughs of an app — one Markdown guide per user journey with exact on-screen steps, expected results, and a journey diagram — plus a metro-map board viewer, so the user can learn and verify the app by using it. Works from the code alone; specs, designs, seeds, and tests sharpen it. Use only when the user names this skill (`/building-walkthroughs`, `$building-walkthroughs`, or "building-walkthroughs"), or references a file under a marked walkthroughs root (`@walkthroughs/send-invoice.md`).
+version: 1.1.0
 ---
 
 # Building Walkthroughs
@@ -19,7 +19,7 @@ Turns any app into a set of walkthroughs: one Markdown guide per user journey, e
 
 ## Agent workflow
 
-Follow this skill for walkthroughs under a root marked by an `index.md` with this skill's author signature. Works wherever the agent can read the app's code and write repository files. Read [walkthrough-contract.md](references/walkthrough-contract.md) first, then match one **Recipes** row and open exactly that reference.
+Follow this skill when the user names it, or references a file under a walkthroughs root marked by an `index.md` with this skill's author signature. Works wherever the agent can read the app's code and write repository files. Read [walkthrough-contract.md](references/walkthrough-contract.md) first, then match one **Recipes** row and open exactly that reference.
 
 ### Recipes
 

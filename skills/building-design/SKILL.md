@@ -1,8 +1,8 @@
 ---
 name: building-design
 id: caa2ddd5-c78f-41af-8a9d-1af7973d08ac
-description: Builds and amends runnable designs — a DESIGN.md (tokens, motion, voice, implementation rules, decisions) plus React previews of every UI block and feature screen, with presets, states, flows, spec files, and final copy, reviewed in a board-and-play viewer — so an implementer ports the design instead of interpreting it. Use when the user wants a design, design system, design.md, style guide, design tokens, visual language, motion or animation spec, UI preview, component preview, screen or flow preview, or design changes before implementation.
-version: 4.0.0
+description: Builds and amends runnable designs — a DESIGN.md (tokens, motion, voice, implementation rules, decisions) plus React previews of every UI block and feature screen, with presets, states, flows, spec files, and final copy, reviewed in a board-and-play viewer — so an implementer ports the design instead of interpreting it. Use only when the user names this skill (`/building-design`, `$building-design`, or "building-design"), or references a file under a marked design root (`@design/design.md`, a `.design.ts` file).
+version: 4.1.0
 ---
 
 # Building Design
@@ -19,7 +19,7 @@ Produces one self-contained design folder per intention (a web app, a mobile app
 
 ## Agent workflow
 
-**Authoring mode.** Follow this skill to build a design or amend one marked by an `index.md` with this skill's author signature. Works wherever the agent can read and write repository files and run npm. Read [design-contract.md](references/design-contract.md) and [preview-contract.md](references/preview-contract.md) first, then run the steps. An amend runs the same steps limited to what the change reaches.
+**Authoring mode.** Follow this skill when the user names it, or references a file under a design root marked by an `index.md` with this skill's author signature, to build or amend a design. Works wherever the agent can read and write repository files and run npm. Read [design-contract.md](references/design-contract.md) and [preview-contract.md](references/preview-contract.md) first, then run the steps. An amend runs the same steps limited to what the change reaches.
 
 ### Steps
 

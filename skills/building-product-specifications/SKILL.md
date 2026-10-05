@@ -1,8 +1,8 @@
 ---
 name: building-product-specifications
 id: c4912b84-e88f-4515-8c83-e99288abca07
-description: Creates and amends product specification markdown — PRD, FRD, TRD, user story, and UI specs (flow, screen structure, view states) — with consistent layout and frontmatter. Use when the user asks to draft or amend prd.md, frd.md, trd.md, user-story.md, or ui-specs.md at product or feature level — no code implementation.
-version: 2.2.0
+description: Creates and amends product specification markdown — PRD, FRD, TRD, user story, and UI specs (flow, screen structure, view states) — with consistent layout and frontmatter. Use only when the user names this skill (`/building-product-specifications`, `$building-product-specifications`, or "building-product-specifications"), or references a spec file under a marked docs root (`@docs/prd.md`, `@docs/features/checkout/frd.md`) — no code implementation.
+version: 2.3.0
 ---
 
 # Building Product Specifications
@@ -13,7 +13,7 @@ Writes pre-implementation product specs on disk: product vision (PRD), feature b
 
 ## Agent workflow
 
-Follow this skill when creating or amending product specification markdown. Stop without application code unless the user explicitly asks in the same message.
+Follow this skill when the user names it, or references a spec file under a marked docs root, to create or amend product specification markdown. Stop without application code unless the user explicitly asks in the same message.
 
 **Docs root:** Locate via `<docs-root>/index.md` with the static **Author signature** UUID. If none exists, ask the user for an empty folder path, then initialize. See [spec-contract.md](references/spec-contract.md) → **Resolve docs root**.
 
