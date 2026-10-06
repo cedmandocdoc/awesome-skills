@@ -31,6 +31,36 @@ export function Frame() {
     return () => window.removeEventListener("message", on);
   }, []);
 
+  // The live stage stays interactive: it hands the viewer zoom gestures, shortcuts, and space-to-pan the screen leaves unused.
+  useEffect(() => {
+    if (window.parent === window || !q.has("stage")) return;
+    const post = (m: object) => window.parent.postMessage(m, "*");
+    const editable = (t: EventTarget | null) => (t as HTMLElement | null)?.closest?.("input, select, textarea, [contenteditable='true']");
+    const wheel = (e: WheelEvent) => {
+      if (!e.ctrlKey && !e.metaKey) return;
+      e.preventDefault();
+      post({ type: "zoom", x: e.clientX, y: e.clientY, deltaY: e.deltaY });
+    };
+    const key = (e: KeyboardEvent) => {
+      if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.altKey || editable(e.target)) return;
+      if (e.key === " ") {
+        if (e.type === "keydown" && !(e.target as HTMLElement).closest("button, a, summary, [role='button']")) e.preventDefault();
+        post({ type: "space", down: e.type === "keydown" });
+      } else if (e.type === "keydown" && /^(\\|[bprtf123]|ArrowLeft|ArrowRight)$/i.test(e.key)) post({ type: "key", key: e.key });
+    };
+    const blur = () => post({ type: "space", down: false });
+    window.addEventListener("wheel", wheel, { passive: false });
+    window.addEventListener("keydown", key);
+    window.addEventListener("keyup", key);
+    window.addEventListener("blur", blur);
+    return () => {
+      window.removeEventListener("wheel", wheel);
+      window.removeEventListener("keydown", key);
+      window.removeEventListener("keyup", key);
+      window.removeEventListener("blur", blur);
+    };
+  }, []);
+
   // Board frames size themselves to a UI block's content.
   useEffect(() => {
     const el = fit.current;

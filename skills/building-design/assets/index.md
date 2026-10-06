@@ -24,6 +24,8 @@ Design root managed by the `building-design` skill. Review with `npm install` on
 | `\` | Hide or show all controls |
 | `←` `→` | Previous or next step or preset (Play) |
 | `B` / `P` | Board or Play |
-| `1`–`4` | Full, Desktop, Tablet, Mobile |
+| `1`–`3` | Desktop, Tablet, Mobile |
+| `F` | Fit the canvas |
 | `R` | Replay the current step |
+| Space + drag | Pan over the live frame (Play) |
 | `T` | Flip light or dark chrome |

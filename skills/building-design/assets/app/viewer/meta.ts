@@ -58,8 +58,6 @@ export interface Target {
   key: number;
 }
 
-export type Vp = "full" | Viewport;
-
 export const SIZES: Record<Viewport, [number, number]> = { desktop: [1440, 900], tablet: [768, 1024], mobile: [390, 844] };
 
 export const controlDefault = (c: Control) => (Array.isArray(c) ? c[0] : c);

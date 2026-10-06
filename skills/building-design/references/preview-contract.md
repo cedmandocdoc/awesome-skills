@@ -117,12 +117,15 @@ Write markers literally in the JSX so they can be found without running code. El
 
 Copied from [`../assets/app/`](../assets/app/) and never edited: `viewer/`, `system/define.ts`, `index.html`, `package.json`, `vite.config.ts`, `tsconfig.json`. `npm run dev` in the design root opens it. It discovers every `*.design.ts` on its own — there is no surface list to keep in sync.
 
-| View | Feature (one flow) | UI block |
-| --- | --- | --- |
-| Board | The flow's steps left to right on a pan-and-zoom canvas | Every preset side by side |
-| Play | One step at full viewport; stepping keeps the instance so state motion plays; content stays live and never navigates | One live instance, centered; props and presets in the inspector |
+| Region | Shows |
+| --- | --- |
+| Canvas | Board: a flow's steps left to right, or a UI block's presets side by side; a frame opens Play at it. Play: one live frame; stepping keeps the instance so state motion plays; content stays live and never navigates. Both pan and zoom: drag or scroll off the frame, space + drag over it, ⌘/Ctrl + scroll or pinch to zoom |
+| Navigator (left) | Search; **Features** \| **UI** tabs, each one level of collapsible groups: a feature with its flows, a UI block with its presets |
+| Sidebar (right) | Flow: the feature's intent and steps, the current one with view, trigger, shown preset, and motion; a step opens Play at it. UI block: intent, presets, and in Play its props. Play adds previous, next, and replay on top |
+| Top bar | Desktop, Tablet, Mobile: the frame sizes the surface declares in `viewports`; hidden for a UI block without them |
+| Dock (bottom) | Board \| Play, zoom, fit, theme |
 
-The selection lives in the URL hash, so a link reopens the same view.
+The selection, Board or Play, and viewport live in the URL hash, so a link reopens the same view. Keys: `index.md` → **Viewer keys**.
 
 ## Related
 

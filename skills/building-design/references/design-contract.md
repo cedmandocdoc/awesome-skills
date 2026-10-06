@@ -56,7 +56,8 @@ A design root is the folder holding a valid `index.md`. Roots never nest.
    - Several → use the one whose `intention` matches the request; ask when unclear (list each `index.md` path).
    - None → **Initialize design root**.
 3. A root without `viewer/` was built by an earlier major version: refactor it to **Output layout** and [preview-contract.md](./preview-contract.md) first, keeping `design.md`, copy, and decided motion.
-4. Read and write only under the resolved root.
+4. Viewer files (see [preview-contract.md](./preview-contract.md) → **Viewer**) that differ from [`../assets/app/`](../assets/app/): copy them over again and replace `index.md` → **Viewer keys** from [`../assets/index.md`](../assets/index.md).
+5. Read and write only under the resolved root.
 
 ### Initialize design root
 

@@ -1,14 +1,15 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import "./viewer.css";
-import { Board, Stage, type BoardItem, type View } from "./canvas";
-import { Dock, Icon, Navigator, PropsInspector, Seg, Select, StepsInspector, ViewportPill } from "./chrome";
-import type { FeatureMeta, FlowMeta, Registry, Target, UIMeta, Vp } from "./meta";
+import { BoardFrames, Canvas, Stage, useWindowSize, type BoardItem, type CanvasApi, type Insets, type View } from "./canvas";
+import { Dock, FlowInspector, Icon, Navigator, Seg, UIInspector, ViewportBar } from "./chrome";
+import { SIZES, type FeatureMeta, type FlowMeta, type Registry, type Target, type UIMeta } from "./meta";
 import type { Viewport } from "../system/define";
 
 type Mode = "board" | "play";
 type Sel = { kind: "flow"; feature: string; flow: string; step: number } | { kind: "ui"; ui: string; preset: string };
 
 const ALL: Viewport[] = ["desktop", "tablet", "mobile"];
+const NAV_W = 272, INSPECTOR_W = 300;
 const hash = Object.fromEntries(new URLSearchParams(location.hash.slice(1)));
 const initialSel = (): Sel | null =>
   hash.u ? { kind: "ui", ui: hash.u, preset: hash.preset ?? "" }
@@ -25,27 +26,35 @@ export function App() {
   const [reg, setReg] = useState<Registry | null>(null);
   const [sel, setSel] = useState<Sel | null>(initialSel);
   const [mode, setMode] = useState<Mode>(hash.mode === "play" ? "play" : "board");
-  const [vp, setVp] = useState<Vp>((hash.vp as Vp) || "full");
+  const [vp, setVp] = useState<Viewport>(ALL.includes(hash.vp as Viewport) ? (hash.vp as Viewport) : "desktop");
   const [overrides, setOverrides] = useState<Record<string, unknown>>({});
   const [key, setKey] = useState(0);
   const [chrome, setChrome] = useState(true);
-  const [inspector, setInspector] = useState(false);
+  const [navCollapsed, setNavCollapsed] = useState(false);
+  const [insCollapsed, setInsCollapsed] = useState(false);
+  const [panning, setPanning] = useState(false);
   const [view, setView] = useState<View>({ x: 0, y: 0, z: 1 });
   const [fitNonce, setFitNonce] = useState(0);
+  const api = useRef<CanvasApi | null>(null);
+  const win = useWindowSize();
 
   const feature = sel?.kind === "flow" ? reg?.features.find((f) => f.id === sel.feature) : undefined;
   const flow = sel?.kind === "flow" ? feature?.flows.find((f) => f.id === sel.flow) : undefined;
   const ui = sel?.kind === "ui" ? reg?.ui.find((u) => u.id === sel.ui) : undefined;
   const step = sel?.kind === "flow" && flow ? Math.min(sel.step, flow.steps.length - 1) : 0;
-  const preset = sel?.kind === "ui" && ui ? (sel.preset in ui.presets ? sel.preset : Object.keys(ui.presets)[0]) : "";
+  const presets = ui ? Object.keys(ui.presets) : [];
+  const preset = sel?.kind === "ui" && ui ? (sel.preset in ui.presets ? sel.preset : presets[0]) : "";
   const current = flow?.steps[step];
 
   const openFlow = useCallback((f: FeatureMeta, x: FlowMeta) => {
-    setSel({ kind: "flow", feature: f.id, flow: x.id, step: 0 }); setKey((k) => k + 1); setFitNonce((n) => n + 1);
+    setSel({ kind: "flow", feature: f.id, flow: x.id, step: 0 }); setKey((k) => k + 1);
   }, []);
   const openUI = useCallback((u: UIMeta) => {
-    setSel({ kind: "ui", ui: u.id, preset: Object.keys(u.presets)[0] }); setOverrides({}); setKey((k) => k + 1); setFitNonce((n) => n + 1);
+    setSel({ kind: "ui", ui: u.id, preset: Object.keys(u.presets)[0] }); setOverrides({}); setKey((k) => k + 1);
   }, []);
+  const openPreset = (u: UIMeta, p: string) => {
+    setSel({ kind: "ui", ui: u.id, preset: p }); setOverrides({}); setKey((k) => k + 1); setMode("play");
+  };
 
   // Fall back to the first flow, then the first UI block, when the hash names nothing that exists.
   useEffect(() => {
@@ -55,23 +64,18 @@ export function App() {
     else if (reg.ui[0]) openUI(reg.ui[0]);
   }, [reg, flow, ui, openFlow, openUI]);
 
-  const viewports: Viewport[] = (current && reg?.screens[current.screen]?.viewports) || ui?.viewports || ALL;
-  const boardVp: Viewport = vp !== "full" && viewports.includes(vp) ? vp : viewports[0];
-  const playVp: Vp = vp === "full" || viewports.includes(vp) ? vp : "full";
+  const viewports: Viewport[] | undefined = (current && reg?.screens[current.screen]?.viewports) || ui?.viewports;
+  const activeVp = viewports ? (viewports.includes(vp) ? vp : viewports[0]) : null;
+  const size = activeVp ? SIZES[activeVp] : null;
 
-  // Stepping keeps the instance so state motion plays; jumping (fresh) remounts it.
+  // Stepping keeps the instance so state motion plays; opening (fresh) remounts it.
   const go = (i: number, fresh = false) => {
-    if (sel?.kind !== "flow" || !flow) return;
-    setSel({ ...sel, step: Math.max(0, Math.min(flow.steps.length - 1, i)) });
+    if (sel?.kind === "flow" && flow) setSel({ ...sel, step: Math.max(0, Math.min(flow.steps.length - 1, i)) });
+    else if (sel?.kind === "ui" && ui) { setSel({ ...sel, preset: presets[Math.max(0, Math.min(presets.length - 1, i))] }); setOverrides({}); }
     if (fresh) setKey((k) => k + 1);
   };
-  const pickPreset = (p: string) => { if (sel?.kind === "ui") { setSel({ ...sel, preset: p }); setOverrides({}); } };
-  const presets = ui ? Object.keys(ui.presets) : [];
-  const open = (i: number) => {
-    if (flow) go(i, true);
-    else if (ui) { pickPreset(presets[i]); setKey((k) => k + 1); }
-    setMode("play");
-  };
+  const open = (i: number) => { go(i, true); setMode("play"); };
+  const replay = () => setKey((k) => k + 1);
 
   const target: Target | null =
     current ? { id: current.screen, state: current.state, key }
@@ -85,76 +89,93 @@ export function App() {
     history.replaceState(null, "", `#${p}`);
   }, [mode, vp, sel, step, preset]);
 
-  useEffect(() => { setFitNonce((n) => n + 1); }, [boardVp]);
+  // Refit when what the canvas holds changes; stepping within a flow keeps the user's zoom.
+  const shown = flow ? `${feature!.id}/${flow.id}` : ui?.id;
+  useEffect(() => { setFitNonce((n) => n + 1); }, [shown, mode, activeVp]);
 
+  // Shortcuts, from the viewer or forwarded by the live frame.
+  const onKey = (k: string): boolean => {
+    k = k.toLowerCase();
+    if (k === "\\") setChrome((c) => !c);
+    else if (k === "b") setMode("board");
+    else if (k === "p") setMode("play");
+    else if (k === "t") flipTheme();
+    else if (k === "r") replay();
+    else if (k === "f") api.current?.fit();
+    else if ("123".includes(k) && k.length === 1) {
+      const v = ALL[Number(k) - 1];
+      if (viewports?.includes(v)) setVp(v);
+    } else if ((k === "arrowleft" || k === "arrowright") && mode === "play") {
+      go((flow ? step : presets.indexOf(preset)) + (k === "arrowleft" ? -1 : 1));
+    } else return false;
+    return true;
+  };
+  const keyRef = useRef(onKey);
+  keyRef.current = onKey;
   useEffect(() => {
-    const on = (e: KeyboardEvent) => {
-      if (e.metaKey || e.ctrlKey || e.altKey || (e.target as HTMLElement).closest("input, select, textarea")) return;
-      const k = e.key.toLowerCase();
-      if (k === "\\") setChrome((c) => !c);
-      else if (k === "b") setMode("board");
-      else if (k === "p") setMode("play");
-      else if (k === "t") flipTheme();
-      else if (k === "r") setKey((n) => n + 1);
-      else if ("1234".includes(k) && k.length === 1) {
-        const v = (["full", ...ALL] as Vp[])[Number(k) - 1];
-        if (v === "full" || viewports.includes(v)) setVp(v);
-      } else if ((k === "arrowleft" || k === "arrowright") && mode === "play") {
-        const d = k === "arrowleft" ? -1 : 1;
-        if (flow) go(step + d);
-        else if (ui) pickPreset(presets[(presets.indexOf(preset) + d + presets.length) % presets.length]);
-      } else return;
-      e.preventDefault();
+    const down = (e: KeyboardEvent) => {
+      const t = e.target as HTMLElement;
+      if (e.metaKey || e.ctrlKey || e.altKey || t.closest("input, select, textarea")) return;
+      if (e.key === " ") { if (!t.closest("button")) { setPanning(true); e.preventDefault(); } }
+      else if (keyRef.current(e.key)) e.preventDefault();
     };
-    window.addEventListener("keydown", on);
-    return () => window.removeEventListener("keydown", on);
-  });
+    const up = (e: KeyboardEvent) => { if (e.key === " ") setPanning(false); };
+    const blur = () => setPanning(false);
+    window.addEventListener("keydown", down);
+    window.addEventListener("keyup", up);
+    window.addEventListener("blur", blur);
+    return () => { window.removeEventListener("keydown", down); window.removeEventListener("keyup", up); window.removeEventListener("blur", blur); };
+  }, []);
+
+  const insets: Insets = useMemo(() => ({
+    left: chrome && !navCollapsed ? 16 + NAV_W + 16 : 16,
+    right: chrome && (flow || ui) && !insCollapsed ? 16 + INSPECTOR_W + 16 : 16,
+    top: chrome ? 64 : 16,
+    bottom: chrome ? 76 : 16,
+  }), [chrome, navCollapsed, insCollapsed, !!(flow || ui)]);
+  const center = { left: (insets.left + win.w - insets.right) / 2 };
 
   const items: BoardItem[] = flow
     ? flow.steps.map((s, i) => ({ key: `${i}`, label: `${i + 1} · ${reg?.screens[s.screen]?.title ?? s.screen} · ${s.state}`, query: `id=${encodeURIComponent(s.screen)}&state=${encodeURIComponent(s.state)}` }))
     : presets.map((p) => ({ key: p, label: p, query: `id=${encodeURIComponent(ui!.id)}&preset=${encodeURIComponent(p)}` }));
+  const label = flow && current ? items[step].label : ui ? `${ui.title} · ${preset}` : "";
+  const refit = () => api.current?.refit();
   const empty = reg && !reg.features.length && !reg.ui.length;
 
   return (
     <div className={`dv${chrome ? "" : " dv-hidden"}`}>
-      <Stage visible={mode === "play" || !reg} vp={playVp} target={target} chrome={chrome} onRegistry={setReg} />
-      {reg && mode === "board" && (flow || ui) && (
-        <Board key={flow ? `${feature!.id}/${flow.id}` : ui!.id} items={items} vp={flow || ui?.viewports ? boardVp : null} flow={!!flow}
-          view={view} setView={setView} fitNonce={fitNonce} onOpen={open} />
-      )}
+      <Canvas view={view} setView={setView} insets={insets} fitNonce={fitNonce} wrap={mode === "board" && !flow} panning={panning} apiRef={api}>
+        {mode === "board" && (flow || ui) && (
+          <BoardFrames key={shown} items={items} size={size} flow={!!flow} current={flow ? step : presets.indexOf(preset)} onOpen={open} onSized={refit} />
+        )}
+        <Stage hidden={mode !== "play" || !target} size={size} label={label} target={target} onRegistry={setReg} onSized={refit}
+          onZoom={(x, y, f) => api.current?.zoomAt(x, y, f)} onKey={(k) => keyRef.current(k)} onSpace={setPanning} />
+      </Canvas>
       {empty && <p className="dv-empty-stage">No surfaces yet. Add <code>*.design.ts</code> files under <code>features/</code> or <code>ui/</code>.</p>}
       {reg && (
         <div className="dv-chrome">
-          <Navigator reg={reg} feature={feature} flow={flow} ui={ui} openFlow={openFlow} openUI={openUI} />
-          {!(mode === "board" && ui && !ui.viewports) && <ViewportPill value={mode === "board" ? boardVp : playVp} options={["full", ...viewports]} board={mode === "board"} onChange={setVp} />}
+          <Navigator reg={reg} feature={feature} flow={flow} ui={ui} preset={preset} collapsed={navCollapsed} setCollapsed={setNavCollapsed}
+            openFlow={openFlow} openUI={openUI} openPreset={openPreset} />
+          {viewports && activeVp && <ViewportBar value={activeVp} options={viewports} onChange={setVp} style={center} />}
+          {feature && flow && (
+            <FlowInspector reg={reg} feature={feature} flow={flow} step={step} play={mode === "play"} go={go} open={open} replay={replay}
+              collapsed={insCollapsed} setCollapsed={setInsCollapsed} />
+          )}
+          {ui && (
+            <UIInspector ui={ui} preset={preset} overrides={overrides} play={mode === "play"} go={go} open={open} setOverrides={setOverrides} replay={replay}
+              collapsed={insCollapsed} setCollapsed={setInsCollapsed} />
+          )}
           {(flow || ui) && (
-            <Dock>
+            <Dock style={center}>
               <Seg label="View" value={mode} onChange={setMode} options={[["board", "Board"], ["play", "Play"]]} />
               <span className="dv-sep" />
-              {mode === "board" ? <>
-                <button type="button" className="dv-icon" aria-label="Zoom out" onClick={() => setView({ ...view, z: Math.max(0.05, view.z / 1.25) })}><Icon name="minus" /></button>
-                <span className="dv-zoom">{Math.round(view.z * 100)}%</span>
-                <button type="button" className="dv-icon" aria-label="Zoom in" onClick={() => setView({ ...view, z: Math.min(2, view.z * 1.25) })}><Icon name="plus" /></button>
-                <button type="button" className="dv-icon" aria-label="Fit" onClick={() => setFitNonce((n) => n + 1)}><Icon name="fit" /></button>
-              </> : flow ? <>
-                <button type="button" className="dv-icon" aria-label="Previous step" disabled={step === 0} onClick={() => go(step - 1)}><Icon name="prev" /></button>
-                <Select label="Step" value={String(step)} onChange={(v) => go(Number(v), true)}
-                  options={flow.steps.map((s, i) => [String(i), `${i + 1} · ${reg.screens[s.screen]?.title ?? s.screen} · ${s.state}`])} />
-                <button type="button" className="dv-icon" aria-label="Next step" disabled={step === flow.steps.length - 1} onClick={() => go(step + 1)}><Icon name="next" /></button>
-                <button type="button" className="dv-icon" aria-label="Replay" onClick={() => setKey((k) => k + 1)}><Icon name="replay" /></button>
-                <span className="dv-sep" />
-                <button type="button" className="dv-btn" aria-pressed={inspector} onClick={() => setInspector(!inspector)}><Icon name="info" />Steps</button>
-              </> : <>
-                <Select label="Preset" value={preset} onChange={pickPreset} options={presets.map((p) => [p, p])} />
-                <button type="button" className="dv-icon" aria-label="Replay" onClick={() => setKey((k) => k + 1)}><Icon name="replay" /></button>
-                <span className="dv-sep" />
-                <button type="button" className="dv-btn" aria-pressed={inspector} onClick={() => setInspector(!inspector)}><Icon name="props" />Props</button>
-              </>}
+              <button type="button" className="dv-icon" aria-label="Zoom out" onClick={() => api.current?.zoom(1 / 1.25)}><Icon name="minus" /></button>
+              <span className="dv-zoom" aria-label="Zoom level">{Math.round(view.z * 100)}%</span>
+              <button type="button" className="dv-icon" aria-label="Zoom in" onClick={() => api.current?.zoom(1.25)}><Icon name="plus" /></button>
+              <button type="button" className="dv-icon" aria-label="Fit (F)" title="Fit (F)" onClick={() => api.current?.fit()}><Icon name="fit" /></button>
+              <span className="dv-sep" />
+              <button type="button" className="dv-icon" aria-label="Flip theme (T)" title="Theme (T)" onClick={flipTheme}><Icon name="theme" /></button>
             </Dock>
-          )}
-          {mode === "play" && inspector && flow && <StepsInspector reg={reg} flow={flow} step={step} jump={(i) => go(i, true)} onClose={() => setInspector(false)} />}
-          {mode === "play" && inspector && ui && (
-            <PropsInspector ui={ui} preset={preset} overrides={overrides} setPreset={pickPreset} setOverrides={setOverrides} onClose={() => setInspector(false)} />
           )}
         </div>
       )}
