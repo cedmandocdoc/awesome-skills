@@ -63,6 +63,7 @@ button:disabled { cursor: default; opacity: .35; }
 .dv-canvas.is-dragging { cursor: grabbing; }
 .dv-canvas-content { position: absolute; left: 0; top: 0; display: flex; align-items: center; gap: 28px; transform-origin: 0 0; width: max-content; }
 .dv-canvas-content.is-wrap { flex-wrap: wrap; align-items: flex-start; max-width: 1640px; gap: 48px; }
+.dv-canvas-content.is-gliding { transition: transform .3s cubic-bezier(.2, .7, .2, 1); }
 .dv-shield { position: absolute; inset: 0; }
 .dv-empty-stage { position: fixed; inset: 0; display: grid; place-content: center; margin: 0; color: var(--dv-ink-2); pointer-events: none; }
 .dv-item { margin: 0; }
@@ -73,7 +74,7 @@ button:disabled { cursor: default; opacity: .35; }
 .dv-board-item .dv-frame:hover { box-shadow: 0 0 0 calc(2px / var(--z)) color-mix(in oklab, var(--dv-ink) 40%, transparent), var(--dv-frame-shadow); }
 .dv-board-item[aria-current="true"] .dv-frame { box-shadow: 0 0 0 calc(2px / var(--z)) var(--dv-ink), var(--dv-frame-shadow); }
 .dv-board-item[aria-current="true"] figcaption { color: var(--dv-ink); }
-.dv-board-hit { position: absolute; inset: 0; border: 0; background: transparent; cursor: zoom-in; }
+.dv-board-hit { position: absolute; inset: 0; border: 0; background: transparent; cursor: pointer; }
 .dv-board-arrow { align-self: center; font-size: calc(24px / var(--z)); color: var(--dv-ink-2); }
 
 /* Sidebars */
@@ -152,5 +153,5 @@ button:disabled { cursor: default; opacity: .35; }
 .dv-steps dd { margin: 0; }
 
 @media (prefers-reduced-motion: reduce) {
-  .dv-chrome > *, .dv-frame, .dv-chev { transition: none; }
+  .dv-chrome > *, .dv-frame, .dv-chev, .dv-canvas-content.is-gliding { transition: none; }
 }

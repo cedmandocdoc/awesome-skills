@@ -119,9 +119,9 @@ Copied from [`../assets/app/`](../assets/app/) and never edited: `viewer/`, `sys
 
 | Region | Shows |
 | --- | --- |
-| Canvas | Board: a flow's steps left to right, or a UI block's presets side by side; a frame opens Play at it. Play: one live frame; stepping keeps the instance so state motion plays; content stays live and never navigates. Both pan and zoom: drag or scroll off the frame, space + drag over it, ⌘/Ctrl + scroll or pinch to zoom |
-| Navigator (left) | Search; **Features** \| **UI** tabs, each one level of collapsible groups: a feature with its flows, a UI block with its presets |
-| Sidebar (right) | Flow: the feature's intent and steps, the current one with view, trigger, shown preset, and motion; a step opens Play at it. UI block: intent, presets, and in Play its props. Play adds previous, next, and replay on top |
+| Canvas | Board and Play show the same selection: Board lays out a flow's steps left to right, or a UI block's presets side by side, and glides to the selected frame; Play shows the selected one as a live frame; stepping keeps the instance so state motion plays; content stays live and never navigates. Both pan and zoom: drag or scroll off the frame, space + drag over it, ⌘/Ctrl + scroll or pinch to zoom |
+| Navigator (left) | Search; **Features** \| **UI** tabs, each one level of collapsible groups: a feature with its flows, a UI block with its presets. A group header only folds; a flow or preset opens |
+| Sidebar (right) | Previous, position, and next on top. Flow: the feature's intent and steps, the selected one with view, trigger, shown preset, and motion. UI block: intent, presets, and in Play its props. Clicking a frame, step, or preset selects it |
 | Top bar | Desktop, Tablet, Mobile: the frame sizes the surface declares in `viewports`; hidden for a UI block without them |
 | Dock (bottom) | Board \| Play, zoom, fit, theme |
 

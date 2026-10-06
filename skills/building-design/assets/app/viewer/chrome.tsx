@@ -4,7 +4,7 @@ import type { Control, Viewport } from "../system/define";
 
 const PATHS = {
   prev: "M10 3 5 8l5 5", next: "m6 3 5 5-5 5", chevron: "m4 6 4 4 4-4",
-  replay: "M3 8a5 5 0 1 0 1.5-3.5M3 2.5V5h2.5", theme: "M8 2a6 6 0 1 0 0 12A6 6 0 0 0 8 2v12",
+  theme: "M8 2a6 6 0 1 0 0 12A6 6 0 0 0 8 2v12",
   minus: "M3.5 8h9", plus: "M8 3.5v9M3.5 8h9", fit: "M3 6V3h3m4 0h3v3m0 4v3h-3m-4 0H3v-3",
 };
 export const Icon = ({ name }: { name: keyof typeof PATHS }) => (
@@ -54,7 +54,7 @@ function Panel({ side, label, title, collapsed, setCollapsed, children }: {
   );
 }
 
-// One collapsible group: the header opens the group's first view, or folds it when it is already current.
+// One collapsible group: the header only folds it; its rows navigate.
 function NavGroup({ title, count, open, active, onHead, children }: {
   title: string; count: number; open: boolean; active: boolean; onHead: () => void; children: ReactNode;
 }) {
@@ -71,22 +71,23 @@ function NavGroup({ title, count, open, active, onHead, children }: {
 
 type Tab = "features" | "ui";
 
-export function Navigator({ reg, feature, flow, ui, preset, collapsed, setCollapsed, openFlow, openUI, openPreset }: {
+export function Navigator({ reg, feature, flow, ui, preset, collapsed, setCollapsed, openFlow, openPreset }: {
   reg: Registry; feature?: FeatureMeta; flow?: FlowMeta; ui?: UIMeta; preset: string; collapsed: boolean; setCollapsed: (c: boolean) => void;
-  openFlow: (f: FeatureMeta, flow: FlowMeta) => void; openUI: (u: UIMeta) => void; openPreset: (u: UIMeta, p: string) => void;
+  openFlow: (f: FeatureMeta, flow: FlowMeta) => void; openPreset: (u: UIMeta, p: string) => void;
 }) {
   const [tab, setTab] = useState<Tab>(ui ? "ui" : "features");
-  const [expanded, setExpanded] = useState<string | null>(null);
+  const [expanded, setExpanded] = useState<Record<Tab, string | null>>({ features: null, ui: null });
   const [query, setQuery] = useState("");
-  useEffect(() => { if (feature) { setTab("features"); setExpanded(`f:${feature.id}`); } }, [feature?.id]);
-  useEffect(() => { if (ui) { setTab("ui"); setExpanded(`u:${ui.id}`); } }, [ui?.id]);
+  useEffect(() => { if (feature) { setTab("features"); setExpanded((e) => ({ ...e, features: feature.id })); } }, [feature?.id]);
+  useEffect(() => { if (ui) { setTab("ui"); setExpanded((e) => ({ ...e, ui: ui.id })); } }, [ui?.id]);
 
   const q = query.trim().toLowerCase();
   const match = (s: string) => s.toLowerCase().includes(q);
-  const group = (k: string, current: boolean, open: () => void) => ({
-    open: !!q || expanded === k,
+  // One open group per tab.
+  const group = (id: string, current: boolean) => ({
+    open: !!q || expanded[tab] === id,
     active: current,
-    onHead: () => { if (!current) { open(); setExpanded(k); } else setExpanded(expanded === k ? null : k); },
+    onHead: () => setExpanded({ ...expanded, [tab]: expanded[tab] === id ? null : id }),
   });
 
   const features = reg.features
@@ -103,7 +104,7 @@ export function Navigator({ reg, feature, flow, ui, preset, collapsed, setCollap
       <div className="dv-panel-body">
         {tab === "features" ? <>
           {features.map(({ f, flows }) => (
-            <NavGroup key={f.id} title={f.title} count={f.flows.length} {...group(`f:${f.id}`, f.id === feature?.id, () => f.flows[0] && openFlow(f, f.flows[0]))}>
+            <NavGroup key={f.id} title={f.title} count={f.flows.length} {...group(f.id, f.id === feature?.id)}>
               {flows.map((x) => (
                 <button key={x.id} type="button" className="dv-row" aria-current={f.id === feature?.id && x.id === flow?.id} onClick={() => openFlow(f, x)}>
                   <span>{x.title}</span><small>{x.steps.length}</small>
@@ -115,7 +116,7 @@ export function Navigator({ reg, feature, flow, ui, preset, collapsed, setCollap
           {!features.length && <p className="dv-empty">{q ? "No match." : "No features yet."}</p>}
         </> : <>
           {blocks.map((u) => (
-            <NavGroup key={u.id} title={u.title} count={Object.keys(u.presets).length} {...group(`u:${u.id}`, u.id === ui?.id, () => openUI(u))}>
+            <NavGroup key={u.id} title={u.title} count={Object.keys(u.presets).length} {...group(u.id, u.id === ui?.id)}>
               {Object.keys(u.presets).map((p) => (
                 <button key={p} type="button" className="dv-row" aria-current={u.id === ui?.id && p === preset} onClick={() => openPreset(u, p)}>
                   <span>{p}</span>
@@ -130,25 +131,24 @@ export function Navigator({ reg, feature, flow, ui, preset, collapsed, setCollap
   );
 }
 
-// Prev, position, next, replay — at the top of the right sidebar in Play.
-function Player({ noun, index, count, go, replay }: { noun: string; index: number; count: number; go: (i: number) => void; replay: () => void }) {
+// Previous, position, next — at the top of the right sidebar.
+function Player({ noun, index, count, go }: { noun: string; index: number; count: number; go: (i: number) => void }) {
   return (
     <div className="dv-player">
       <button type="button" className="dv-icon" aria-label={`Previous ${noun}`} disabled={index === 0} onClick={() => go(index - 1)}><Icon name="prev" /></button>
       <span>{noun === "step" ? "Step" : "Preset"} {index + 1} of {count}</span>
       <button type="button" className="dv-icon" aria-label={`Next ${noun}`} disabled={index === count - 1} onClick={() => go(index + 1)}><Icon name="next" /></button>
-      <button type="button" className="dv-icon" aria-label="Replay (R)" title="Replay (R)" onClick={replay}><Icon name="replay" /></button>
     </div>
   );
 }
 
-export function FlowInspector({ reg, feature, flow, step, play, go, open, replay, collapsed, setCollapsed }: {
-  reg: Registry; feature: FeatureMeta; flow: FlowMeta; step: number; play: boolean;
-  go: (i: number) => void; open: (i: number) => void; replay: () => void; collapsed: boolean; setCollapsed: (c: boolean) => void;
+export function FlowInspector({ reg, feature, flow, step, go, jump, collapsed, setCollapsed }: {
+  reg: Registry; feature: FeatureMeta; flow: FlowMeta; step: number;
+  go: (i: number) => void; jump: (i: number) => void; collapsed: boolean; setCollapsed: (c: boolean) => void;
 }) {
   return (
     <Panel side="right" label="Steps" title={`${feature.title} · ${flow.title}`} collapsed={collapsed} setCollapsed={setCollapsed}>
-      {play && <Player noun="step" index={step} count={flow.steps.length} go={go} replay={replay} />}
+      <Player noun="step" index={step} count={flow.steps.length} go={go} />
       <div className="dv-panel-body">
         <p className="dv-note">{feature.intent}</p>
         <ol className="dv-steps">
@@ -158,7 +158,7 @@ export function FlowInspector({ reg, feature, flow, step, play, go, open, replay
             const motion = screen?.motion.filter((m) => m.trigger !== "state" || m.when === s.state) ?? [];
             return (
               <li key={i} aria-current={i === step}>
-                <button type="button" onClick={() => open(i)}>
+                <button type="button" onClick={() => jump(i)}>
                   <b>{i + 1}</b><span>{screen?.title ?? s.screen} · {s.state}</span>
                 </button>
                 {i === step && state && (
@@ -193,9 +193,9 @@ function ControlInput({ name, control, value, onChange }: { name: string; contro
   return <input className="dv-input" type="text" aria-label={name} value={String(value ?? "")} onChange={(e) => onChange(e.target.value)} />;
 }
 
-export function UIInspector({ ui, preset, overrides, play, go, open, setOverrides, replay, collapsed, setCollapsed }: {
+export function UIInspector({ ui, preset, overrides, play, go, jump, setOverrides, collapsed, setCollapsed }: {
   ui: UIMeta; preset: string; overrides: Record<string, unknown>; play: boolean;
-  go: (i: number) => void; open: (i: number) => void; setOverrides: (o: Record<string, unknown>) => void; replay: () => void;
+  go: (i: number) => void; jump: (i: number) => void; setOverrides: (o: Record<string, unknown>) => void;
   collapsed: boolean; setCollapsed: (c: boolean) => void;
 }) {
   const presets = Object.keys(ui.presets);
@@ -203,13 +203,13 @@ export function UIInspector({ ui, preset, overrides, play, go, open, setOverride
   const modified = Object.keys(overrides).some((k) => overrides[k] !== base(k));
   return (
     <Panel side="right" label="Props" title={ui.title} collapsed={collapsed} setCollapsed={setCollapsed}>
-      {play && <Player noun="preset" index={presets.indexOf(preset)} count={presets.length} go={go} replay={replay} />}
+      <Player noun="preset" index={presets.indexOf(preset)} count={presets.length} go={go} />
       <div className="dv-panel-body">
         <p className="dv-note">{ui.intent}</p>
         <h3>Presets</h3>
         <div className="dv-chips">
           {presets.map((p, i) => (
-            <button key={p} type="button" aria-pressed={p === preset && !modified} onClick={() => open(i)}>{p}</button>
+            <button key={p} type="button" aria-pressed={p === preset && !modified} onClick={() => jump(i)}>{p}</button>
           ))}
         </div>
         {play && <>

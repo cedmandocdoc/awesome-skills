@@ -22,7 +22,7 @@ Design root managed by the `building-design` skill. Review with `npm install` on
 | Key | Does |
 | --- | --- |
 | `\` | Hide or show all controls |
-| `←` `→` | Previous or next step or preset (Play) |
+| `←` `→` | Previous or next step or preset |
 | `B` / `P` | Board or Play |
 | `1`–`3` | Desktop, Tablet, Mobile |
 | `F` | Fit the canvas |

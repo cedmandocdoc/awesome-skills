@@ -3,7 +3,10 @@ import { type Registry, type Target } from "./meta";
 
 export interface View { x: number; y: number; z: number }
 export interface Insets { left: number; right: number; top: number; bottom: number }
-export interface CanvasApi { fit: () => void; refit: () => void; zoom: (factor: number) => void; zoomAt: (x: number, y: number, factor: number) => void }
+export interface CanvasApi {
+  fit: (glide?: boolean) => void; refit: () => void; focusItem: (i: number) => void;
+  zoom: (factor: number) => void; zoomAt: (x: number, y: number, factor: number) => void;
+}
 
 const clampZ = (z: number) => Math.min(2, Math.max(0.05, z));
 
@@ -30,14 +33,33 @@ export function Canvas({ view, setView, insets, fitNonce, wrap, panning, apiRef,
   const auto = useRef(true);
   const moved = useRef(false);
   const move = (v: View) => { auto.current = false; setView(v); };
+  // Programmatic moves (fit, focus) glide; wheel and drag follow the pointer directly.
+  const glide = (v: View) => {
+    const c = content.current!;
+    c.classList.add("is-gliding");
+    window.setTimeout(() => c.classList.remove("is-gliding"), 320);
+    setView(v);
+  };
 
-  const fit = () => {
-    const r = root.current, c = content.current;
-    if (!r || !c || !c.offsetWidth) return;
-    auto.current = true;
+  // Frame a box given in content coordinates into the area the chrome leaves free.
+  const frame = (bx: number, by: number, bw: number, bh: number, animate: boolean) => {
+    const r = root.current!;
     const w = r.clientWidth - insets.left - insets.right, h = r.clientHeight - insets.top - insets.bottom;
-    const z = Math.min(1, (w - 48) / c.offsetWidth, (h - 48) / c.offsetHeight);
-    setView({ z, x: insets.left + (w - c.offsetWidth * z) / 2, y: insets.top + (h - c.offsetHeight * z) / 2 });
+    const z = Math.min(1, (w - 48) / bw, (h - 48) / bh);
+    const v = { z, x: insets.left + (w - bw * z) / 2 - bx * z, y: insets.top + (h - bh * z) / 2 - by * z };
+    if (animate) glide(v); else setView(v);
+  };
+  const fit = (animate = false) => {
+    const c = content.current;
+    if (!root.current || !c || !c.offsetWidth) return;
+    auto.current = true;
+    frame(0, 0, c.offsetWidth, c.offsetHeight, animate);
+  };
+  const focusItem = (i: number) => {
+    const el = content.current?.querySelectorAll<HTMLElement>(".dv-board-item")[i];
+    if (!el) return;
+    auto.current = false;
+    frame(el.offsetLeft, el.offsetTop, el.offsetWidth, el.offsetHeight, true);
   };
   const zoomAt = (px: number, py: number, factor: number) => {
     const v = viewRef.current, z = clampZ(v.z * factor);
@@ -46,11 +68,12 @@ export function Canvas({ view, setView, insets, fitNonce, wrap, panning, apiRef,
   apiRef.current = {
     fit,
     refit: () => { if (auto.current) fit(); },
+    focusItem,
     zoom: (f) => zoomAt((insets.left + window.innerWidth - insets.right) / 2, (insets.top + window.innerHeight - insets.bottom) / 2, f),
     zoomAt,
   };
 
-  useLayoutEffect(fit, [fitNonce]);
+  useLayoutEffect(() => fit(), [fitNonce]);
   useEffect(() => { if (auto.current) fit(); }, [insets.left, insets.right, insets.top, insets.bottom]);
 
   useEffect(() => {
@@ -99,9 +122,9 @@ export function Canvas({ view, setView, insets, fitNonce, wrap, panning, apiRef,
 
 export interface BoardItem { key: string; label: string; query: string }
 
-// Board: every step or preset in order; a frame opens Play at it.
-export function BoardFrames({ items, size, flow, current, onOpen, onSized }: {
-  items: BoardItem[]; size: [number, number] | null; flow: boolean; current: number; onOpen: (i: number) => void; onSized: () => void;
+// Board: every step or preset in order; clicking a frame selects it.
+export function BoardFrames({ items, size, flow, current, onSelect, onSized }: {
+  items: BoardItem[]; size: [number, number] | null; flow: boolean; current: number; onSelect: (i: number) => void; onSized: () => void;
 }) {
   const frames = useRef<(HTMLIFrameElement | null)[]>([]);
   const [heights, setHeights] = useState<Record<string, number>>({});
@@ -125,7 +148,7 @@ export function BoardFrames({ items, size, flow, current, onOpen, onSized }: {
           <figcaption>{it.label}</figcaption>
           <div className="dv-frame" style={{ width: size ? size[0] : 480, height: size ? size[1] : heights[it.key] ?? 200 }}>
             <iframe ref={(f) => { frames.current[i] = f; }} src={`/?frame&${it.query}`} title={it.label} loading="lazy" tabIndex={-1} />
-            <button type="button" className="dv-board-hit" aria-label={`Play ${it.label}`} onClick={() => onOpen(i)} />
+            <button type="button" className="dv-board-hit" aria-label={`Select ${it.label}`} onClick={() => onSelect(i)} />
           </div>
         </figure>
       </Fragment>

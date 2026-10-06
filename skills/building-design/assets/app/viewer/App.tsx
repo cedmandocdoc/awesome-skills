@@ -35,6 +35,7 @@ export function App() {
   const [panning, setPanning] = useState(false);
   const [view, setView] = useState<View>({ x: 0, y: 0, z: 1 });
   const [fitNonce, setFitNonce] = useState(0);
+  const [focus, setFocus] = useState<{ i: number } | null>(null);
   const api = useRef<CanvasApi | null>(null);
   const win = useWindowSize();
 
@@ -53,7 +54,8 @@ export function App() {
     setSel({ kind: "ui", ui: u.id, preset: Object.keys(u.presets)[0] }); setOverrides({}); setKey((k) => k + 1);
   }, []);
   const openPreset = (u: UIMeta, p: string) => {
-    setSel({ kind: "ui", ui: u.id, preset: p }); setOverrides({}); setKey((k) => k + 1); setMode("play");
+    setSel({ kind: "ui", ui: u.id, preset: p }); setOverrides({}); setKey((k) => k + 1);
+    if (u.id === ui?.id) setFocus({ i: Object.keys(u.presets).indexOf(p) });
   };
 
   // Fall back to the first flow, then the first UI block, when the hash names nothing that exists.
@@ -68,13 +70,18 @@ export function App() {
   const activeVp = viewports ? (viewports.includes(vp) ? vp : viewports[0]) : null;
   const size = activeVp ? SIZES[activeVp] : null;
 
-  // Stepping keeps the instance so state motion plays; opening (fresh) remounts it.
+  // Select a step or preset in either view. Play: stepping keeps the instance so state motion plays; a jump (fresh) remounts it.
+  // Board: the canvas glides to the selected frame.
   const go = (i: number, fresh = false) => {
-    if (sel?.kind === "flow" && flow) setSel({ ...sel, step: Math.max(0, Math.min(flow.steps.length - 1, i)) });
-    else if (sel?.kind === "ui" && ui) { setSel({ ...sel, preset: presets[Math.max(0, Math.min(presets.length - 1, i))] }); setOverrides({}); }
+    const n = flow ? flow.steps.length : presets.length;
+    if (!n) return;
+    i = Math.max(0, Math.min(n - 1, i));
+    if (sel?.kind === "flow") setSel({ ...sel, step: i });
+    else if (sel?.kind === "ui") { setSel({ ...sel, preset: presets[i] }); setOverrides({}); }
     if (fresh) setKey((k) => k + 1);
+    if (mode === "board") setFocus({ i });
   };
-  const open = (i: number) => { go(i, true); setMode("play"); };
+  const jump = (i: number) => go(i, true);
   const replay = () => setKey((k) => k + 1);
 
   const target: Target | null =
@@ -92,6 +99,7 @@ export function App() {
   // Refit when what the canvas holds changes; stepping within a flow keeps the user's zoom.
   const shown = flow ? `${feature!.id}/${flow.id}` : ui?.id;
   useEffect(() => { setFitNonce((n) => n + 1); }, [shown, mode, activeVp]);
+  useEffect(() => { if (focus) api.current?.focusItem(focus.i); }, [focus]);
 
   // Shortcuts, from the viewer or forwarded by the live frame.
   const onKey = (k: string): boolean => {
@@ -101,11 +109,11 @@ export function App() {
     else if (k === "p") setMode("play");
     else if (k === "t") flipTheme();
     else if (k === "r") replay();
-    else if (k === "f") api.current?.fit();
+    else if (k === "f") api.current?.fit(true);
     else if ("123".includes(k) && k.length === 1) {
       const v = ALL[Number(k) - 1];
       if (viewports?.includes(v)) setVp(v);
-    } else if ((k === "arrowleft" || k === "arrowright") && mode === "play") {
+    } else if (k === "arrowleft" || k === "arrowright") {
       go((flow ? step : presets.indexOf(preset)) + (k === "arrowleft" ? -1 : 1));
     } else return false;
     return true;
@@ -146,7 +154,7 @@ export function App() {
     <div className={`dv${chrome ? "" : " dv-hidden"}`}>
       <Canvas view={view} setView={setView} insets={insets} fitNonce={fitNonce} wrap={mode === "board" && !flow} panning={panning} apiRef={api}>
         {mode === "board" && (flow || ui) && (
-          <BoardFrames key={shown} items={items} size={size} flow={!!flow} current={flow ? step : presets.indexOf(preset)} onOpen={open} onSized={refit} />
+          <BoardFrames key={shown} items={items} size={size} flow={!!flow} current={flow ? step : presets.indexOf(preset)} onSelect={jump} onSized={refit} />
         )}
         <Stage hidden={mode !== "play" || !target} size={size} label={label} target={target} onRegistry={setReg} onSized={refit}
           onZoom={(x, y, f) => api.current?.zoomAt(x, y, f)} onKey={(k) => keyRef.current(k)} onSpace={setPanning} />
@@ -155,14 +163,14 @@ export function App() {
       {reg && (
         <div className="dv-chrome">
           <Navigator reg={reg} feature={feature} flow={flow} ui={ui} preset={preset} collapsed={navCollapsed} setCollapsed={setNavCollapsed}
-            openFlow={openFlow} openUI={openUI} openPreset={openPreset} />
+            openFlow={openFlow} openPreset={openPreset} />
           {viewports && activeVp && <ViewportBar value={activeVp} options={viewports} onChange={setVp} style={center} />}
           {feature && flow && (
-            <FlowInspector reg={reg} feature={feature} flow={flow} step={step} play={mode === "play"} go={go} open={open} replay={replay}
+            <FlowInspector reg={reg} feature={feature} flow={flow} step={step} go={go} jump={jump}
               collapsed={insCollapsed} setCollapsed={setInsCollapsed} />
           )}
           {ui && (
-            <UIInspector ui={ui} preset={preset} overrides={overrides} play={mode === "play"} go={go} open={open} setOverrides={setOverrides} replay={replay}
+            <UIInspector ui={ui} preset={preset} overrides={overrides} play={mode === "play"} go={go} jump={jump} setOverrides={setOverrides}
               collapsed={insCollapsed} setCollapsed={setInsCollapsed} />
           )}
           {(flow || ui) && (
@@ -172,7 +180,7 @@ export function App() {
               <button type="button" className="dv-icon" aria-label="Zoom out" onClick={() => api.current?.zoom(1 / 1.25)}><Icon name="minus" /></button>
               <span className="dv-zoom" aria-label="Zoom level">{Math.round(view.z * 100)}%</span>
               <button type="button" className="dv-icon" aria-label="Zoom in" onClick={() => api.current?.zoom(1.25)}><Icon name="plus" /></button>
-              <button type="button" className="dv-icon" aria-label="Fit (F)" title="Fit (F)" onClick={() => api.current?.fit()}><Icon name="fit" /></button>
+              <button type="button" className="dv-icon" aria-label="Fit (F)" title="Fit (F)" onClick={() => api.current?.fit(true)}><Icon name="fit" /></button>
               <span className="dv-sep" />
               <button type="button" className="dv-icon" aria-label="Flip theme (T)" title="Theme (T)" onClick={flipTheme}><Icon name="theme" /></button>
             </Dock>
