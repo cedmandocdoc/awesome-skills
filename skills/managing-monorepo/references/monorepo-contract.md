@@ -94,7 +94,7 @@ Root `package.json` is private. Its `scripts` are `<dir>:<script>` runners.
 | --- | --- |
 | `<dir>` | Package folder name (last path segment: `apps/web` → `web`) |
 | `<script>` | Key in that package's `package.json` `scripts` |
-| Body | `turbo run <script> --filter=@scope/<dir>` |
+| Body | Turbo task: `turbo run <script> --filter=@scope/<dir>`. Any other script: `pnpm --filter @scope/<dir> <script>`. Which is which: [managing-scripts.md](./managing-scripts.md) → **Graph** |
 | Invoke | `pnpm <dir>:<script>` |
 
 Each package defines only the scripts it runs.

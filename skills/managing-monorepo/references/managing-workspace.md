@@ -87,7 +87,7 @@ Report the package path, scoped name, and role.
 
 1. Private root `package.json` — `scripts` empty until packages exist; then runners ([managing-scripts.md](./managing-scripts.md)).
 2. `pnpm-workspace.yaml` with `apps/*` and `packages/*`.
-3. `turbo.json` with `tasks` as packages define them ([managing-scripts.md](./managing-scripts.md)).
+3. `turbo.json` with a task per Turbo task the packages define ([managing-scripts.md](./managing-scripts.md) → **Graph**).
 4. Create `apps/` and `packages/`.
 5. Pin `packageManager` to the repo’s pnpm version.
 6. Root `.gitignore` (**Gitignore**).
