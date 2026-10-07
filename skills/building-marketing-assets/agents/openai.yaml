@@ -1,0 +1,4 @@
+interface:
+  display_name: "Building Marketing Assets"
+  short_description: "Direct and render marketing images and videos with HyperFrames, proposing options at every step"
+  default_prompt: "Use $building-marketing-assets only when the user names this skill or references a file under a marked marketing assets root."
