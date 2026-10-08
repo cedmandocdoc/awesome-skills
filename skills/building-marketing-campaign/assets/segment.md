@@ -1,6 +1,6 @@
 ---
 doc_type: marketing-segment
-generated_by: running-marketing
+generated_by: building-marketing-campaign
 author: 1d31be96-13a6-46cf-b133-cdacf54973cc
 slug: "{{slug}}"
 ---

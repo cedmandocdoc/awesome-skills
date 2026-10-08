@@ -1,4 +1,0 @@
-interface:
-  display_name: "Running Marketing"
-  short_description: "Run a digital product's marketing as campaigns, one reviewed phase at a time, measured through UTM links"
-  default_prompt: "Use $running-marketing only when the user names this skill or references a file under a marked marketing root."

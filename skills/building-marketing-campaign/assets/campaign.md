@@ -1,6 +1,6 @@
 ---
 doc_type: marketing-campaign
-generated_by: running-marketing
+generated_by: building-marketing-campaign
 author: 1d31be96-13a6-46cf-b133-cdacf54973cc
 id: "{{NN-slug}}"
 name: "{{NAME}}"
@@ -13,7 +13,7 @@ start: {{YYYY-MM-DD | none}}
 end: {{YYYY-MM-DD | none}}
 end_condition: {{CONDITION | none}}
 follows: {{NN-slug | none}}
-assets: []
+videos: []
 ---
 
 # Campaign — {{NAME}}
@@ -40,9 +40,18 @@ Alternatives: {{ONE LINE EACH}}
 | Asset | Kind | Channel and format | Link |
 | --- | --- | --- | --- |
 
+### Material
+
 ### Measurement
 
 ## Assets
+
+### Videos
+
+| Code | Kind | Channel and format | Project | Render |
+| --- | --- | --- | --- | --- |
+
+### Video requests
 
 ## Execution
 

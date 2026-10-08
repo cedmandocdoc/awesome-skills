@@ -1,23 +1,25 @@
 ---
-name: running-marketing
+name: building-marketing-campaign
 id: 8571c2a6-35c2-4404-a68a-ced598ad0224
 description: >-
-  Runs digital marketing for any digital product (app, SaaS, website, digital
-  service) as campaigns under marketing/: analyzes the product into positioning,
-  then moves each campaign one phase per request — ideation, targeting,
-  roll-out, assets, approved sends, measurement through UTM links on a
+  Builds digital marketing campaigns for any digital product (app, SaaS,
+  website, digital service) under marketing/: analyzes the product into
+  positioning, then moves each campaign one phase per request — ideation,
+  targeting, roll-out, assets (text drafts, videos handed to HyperFrames),
+  approved outbox batches the user sends, measurement through UTM links on a
   Cloudflare Worker and D1, and a conclusion that feeds the next idea. Use only
-  when the user names this skill (`/running-marketing`, `$running-marketing`, or
-  "running-marketing"), or references a file under a marked marketing root
+  when the user names this skill (`/building-marketing-campaign`,
+  `$building-marketing-campaign`, or "building-marketing-campaign"), or
+  references a file under a marked marketing root
   (`@marketing/campaigns/03-clinics-mm/campaign.md`).
-version: 1.0.0
+version: 2.0.0
 ---
 
-# Running Marketing
+# Building Marketing Campaign
 
 ## Overview
 
-One marketing root per product holds `positioning.md`, segments, and one folder per campaign. Every campaign follows seven phases — Ideation → Target → Roll-out → Assets → Execution → Measurement → Conclusion — and stops after each for review; its living `campaign.md` carries the state across chats. Nothing is sent without the user's approval of its batch. Every link goes through the skill's own Cloudflare Worker, which counts clicks, first landings, and the one conversion event the campaign names, so the report is the same query for every product.
+One marketing root per product holds `positioning.md`, segments, and one folder per campaign. Every campaign follows seven phases — Ideation → Target → Roll-out → Assets → Execution → Measurement → Conclusion — and stops after each for review; its living `campaign.md` carries the state across chats. The skill writes all text and hands each video to HyperFrames with a facts-only request; it sends and posts nothing — the user sends each approved item by hand. Every link goes through the skill's own Cloudflare Worker, which counts clicks, first landings, and the one conversion event the campaign names, so the report is the same query for every product.
 
 ## Dependencies
 
@@ -27,9 +29,7 @@ Resolve every **required** row before recipes that need it.
 | --- | --- | --- | --- |
 | Node.js 20+ and Wrangler | required | Measurement, links, reports | https://nodejs.org; Wrangler runs through `npx wrangler` |
 | Cloudflare account | required | Measurement, links, reports | https://dash.cloudflare.com/sign-up, then `npx wrangler login` |
-| [building-marketing-assets](https://github.com/cedmandocdoc/awesome-skills/tree/main/skills/building-marketing-assets) `74d80a4e-2346-43f7-b06a-43febe401281` | optional | Assets: images and video | `npx skills add cedmandocdoc/awesome-skills --skill building-marketing-assets` |
-| Resend account with a warmed sending subdomain | optional | Execution: email | https://resend.com/docs; store `RESEND_API_KEY` in `.env` |
-| Buffer MCP server | optional | Execution: posting to the project's own accounts | `claude mcp add --transport http buffer https://mcp.buffer.com/mcp`, then OAuth through `/mcp` |
+| [hyperframes](https://github.com/heygen-com/hyperframes/tree/main/skills/hyperframes) | optional | Assets: video | `npx hyperframes skills update` (core skills only; it installs each workflow the first time it routes to one) |
 | Google Places API key | optional | Target: local businesses | https://developers.google.com/maps/documentation/places/web-service/get-api-key; store `GOOGLE_PLACES_API_KEY` in `.env` |
 
 ## Setup
@@ -48,8 +48,9 @@ Follow this skill when the user names it, or references a file under a marketing
 | --- | --- | --- |
 | Start a campaign | "Start a campaign for this app", "start a campaign from 02" | [analyzing-product.md](references/analyzing-product.md) |
 | Review positioning | "Revisit positioning" | [analyzing-product.md](references/analyzing-product.md) step 2 |
-| Continue a campaign | "Continue campaign 01", "next phase" | The recipe for its `state` per [marketing-contract.md](references/marketing-contract.md) → **States** |
-| Approve, send, record, end, drop | "Approve batch", "o014 replied", "end campaign 01" | [executing-campaign.md](references/executing-campaign.md) |
+| Continue a campaign | "Continue campaign 01", "next phase", a HyperFrames return line | The recipe for its `state` per [marketing-contract.md](references/marketing-contract.md) → **States** |
+| Change a campaign | "Change the message", "new CTA", "make v1 shorter", "move it to LinkedIn" | [updating-campaign.md](references/updating-campaign.md) |
+| Approve, record, end, drop | "Approve batch", "sent o014", "o014 replied", "end campaign 01" | [executing-campaign.md](references/executing-campaign.md) |
 | Measure | "How is campaign 01 doing?" | [measuring-campaign.md](references/measuring-campaign.md) |
 | Conclude | "Conclude campaign 01" | [concluding-campaign.md](references/concluding-campaign.md) |
 | Set up measurement | "Set up measurement", "add the conversion event" | [configuring-measurement.md](references/configuring-measurement.md) |
@@ -58,7 +59,7 @@ Follow this skill when the user names it, or references a file under a marketing
 
 ### Contract
 
-[marketing-contract.md](references/marketing-contract.md) — signature, layout, root, `campaign.md`, states and routing, outbox items, sending caps, links and UTMs, assets skill discovery.
+[marketing-contract.md](references/marketing-contract.md) — signature, layout, root, `campaign.md`, states and routing, outbox items, sending caps, links and UTMs, videos and the HyperFrames handoff, free media.
 
 | Doc | When to use |
 | --- | --- |
@@ -66,11 +67,12 @@ Follow this skill when the user names it, or references a file under a marketing
 | [marketing-types.md](references/marketing-types.md) | Type table, choosing types, writing rules per asset |
 | [analyzing-product.md](references/analyzing-product.md) | Phase 1: positioning and the campaign idea |
 | [targeting-audience.md](references/targeting-audience.md) | Phase 2: segment and audience |
-| [planning-rollout.md](references/planning-rollout.md) | Phase 3: schedule, assets, links, measurement check |
-| [creating-assets.md](references/creating-assets.md) | Phase 4: outbox drafts, visual assets, links |
-| [executing-campaign.md](references/executing-campaign.md) | Phase 5: batches, sends, replies, end, drop |
+| [planning-rollout.md](references/planning-rollout.md) | Phase 3: schedule, assets, material, measurement check |
+| [creating-assets.md](references/creating-assets.md) | Phase 4: text drafts, video requests, rendered videos, links |
+| [executing-campaign.md](references/executing-campaign.md) | Phase 5: batches, approvals, sends and replies the user reports, end, drop |
 | [measuring-campaign.md](references/measuring-campaign.md) | Phase 6: report |
 | [concluding-campaign.md](references/concluding-campaign.md) | Phase 7: results, verdict, next idea |
+| [updating-campaign.md](references/updating-campaign.md) | A change to an earlier phase or a video: what reruns, what goes stale |
 | [configuring-measurement.md](references/configuring-measurement.md) | Worker, D1, app snippet, adding links |
 
 ## Templates
@@ -79,6 +81,7 @@ Follow this skill when the user names it, or references a file under a marketing
 - [`assets/positioning.md`](assets/positioning.md)
 - [`assets/segment.md`](assets/segment.md)
 - [`assets/campaign.md`](assets/campaign.md)
+- [`assets/video-request.md`](assets/video-request.md) — the message handed to `/hyperframes`
 - [`assets/outbox-item.md`](assets/outbox-item.md)
 - [`assets/results.md`](assets/results.md)
 - [`assets/measurement/`](assets/measurement/) — Worker (`src/index.js`), `wrangler.toml`, `schema.sql`, `report.sql`, app `snippet.js`

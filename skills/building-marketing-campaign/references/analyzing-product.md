@@ -40,7 +40,7 @@ Propose 2–3 ideas that answer all six; recommend one. Offer broad, aim narrow:
 
 ### 4. Write the campaign
 
-Create `campaigns/NN-slug/` and `campaign.md` from [`../assets/campaign.md`](../assets/campaign.md). Fill frontmatter (`segment`, `types`, `conversion`, `goal`, `follows`) and **Idea**: the six answers for the recommended idea, then the alternatives in one line each. When the app does not record the chosen event yet, note it under **Idea** for [configuring-measurement.md](./configuring-measurement.md).
+Create `campaigns/NN-slug/` and `campaign.md` from [`../assets/campaign.md`](../assets/campaign.md). Fill frontmatter (`segment`, `types`, `conversion`, `goal`, `follows`) and **Idea**: the six answers for the recommended idea, then the alternatives in one line each. The message is locked from here: every asset in the campaign tests it, and only [updating-campaign.md](./updating-campaign.md) changes it. When the app does not record the chosen event yet, note it under **Idea** for [configuring-measurement.md](./configuring-measurement.md).
 
 ### 5. Confirm to the user
 

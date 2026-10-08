@@ -1,0 +1,4 @@
+interface:
+  display_name: "Building Marketing Campaign"
+  short_description: "Build a digital product's marketing campaigns, one reviewed phase at a time, with HyperFrames videos and UTM measurement"
+  default_prompt: "Use $building-marketing-campaign only when the user names this skill or references a file under a marked marketing root."
