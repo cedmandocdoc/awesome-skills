@@ -2,7 +2,7 @@
 
 ## Overview
 
-**Authoring mode.** Phase 4, Assets: writes every text draft and its links, requests each planned video from HyperFrames, and turns each rendered video into links and a post outbox item. Sets state `assets`; repeat runs advance the videos until all are done.
+**Authoring mode.** Phase 4, Assets: writes every text draft with its link, requests each planned video from HyperFrames, and turns each rendered video into post outbox items, one per platform. Sets state `assets`; repeat runs advance the videos until all are done.
 
 ## Prerequisites
 
@@ -15,7 +15,7 @@ Per [marketing-contract.md](./marketing-contract.md) → **Outbox items**, **Sen
 | Campaign | Run |
 | --- | --- |
 | `state: rollout` | Steps 2–4, 6, then 7 for the first video |
-| `state: assets`, a section or item marked stale | Rerun the step that owns it, then 6 |
+| A section or item marked stale | Rerun the step that owns it, then 6 |
 | `state: assets`, a video not done | Per video, by its state on disk per [marketing-contract.md](./marketing-contract.md) → **Videos**: requested or in progress → 7; approved → 5, then 6 |
 
 ### 2. Write text drafts
@@ -24,7 +24,7 @@ Per outbox set in **Roll-out** → **Assets**, one outbox item per person and to
 
 ### 3. Create text links
 
-One link per outbox item that carries a link. Write the rows to `links.md` and put the full URL in the item's body and `link`.
+Per outbox item that carries a link, its full UTM URL per [marketing-contract.md](./marketing-contract.md) → **Links and UTMs** in the item's body and `link`.
 
 ### 4. Write the video requests
 
@@ -35,13 +35,12 @@ Per planned video: assign the next code, add it to `videos`, add its **Assets** 
 ### 5. Collect a rendered video
 
 1. Link the project folder and `renders/video.mp4` in its **Assets** → **Videos** row.
-2. Add its links per platform to `links.md`.
-3. Write its post outbox item: a caption per **Post caption**, `link`, `video`, `media` = the render path, `scheduled` from **Roll-out** → **Schedule**.
-4. For the campaign's first rendered video, recommend accepting HyperFrames' offer to save it as a recipe, so later videos keep the look and still get their own pitch round.
+2. Per platform, write its post outbox item: a caption per **Post caption**, `link` with `utm_content=vN` and that platform's `utm_source`, `video`, `media` = the render path, `scheduled` from **Roll-out** → **Schedule**.
+3. For the campaign's first rendered video, recommend accepting HyperFrames' offer to save it as a recipe, so later videos keep the look and still get their own pitch round.
 
 ### 6. Confirm to the user
 
-Write **Assets**: outbox counts per set, link count, and per video its code and state on disk. `state: assets`; update the `index.md` row. Reply with:
+Write **Assets**: outbox counts per set and per video its code and state on disk. `state: assets`; update the `index.md` row. Reply with:
 
 - 2 sample outbox items in full, and the path to the rest
 - Each video's code and state; the next one handed off

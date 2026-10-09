@@ -2,17 +2,17 @@
 
 ## Overview
 
-**Planning only.** Phase 2, Target: writes the segment file and the audience — named prospects for direct types, a described audience for broadcast types. Stops at state `targeting`.
+**Planning only.** Phase 2, Target: writes the segment and the audience — named prospects for direct types, a described audience for broadcast types. Stops at state `targeting`.
 
 ## Prerequisites
 
-Per [marketing-contract.md](./marketing-contract.md) → **campaign.md**, **States**. Types: [marketing-types.md](./marketing-types.md).
+Per [marketing-contract.md](./marketing-contract.md) → **Positioning**, **campaign.md**, **States**. Types: [marketing-types.md](./marketing-types.md).
 
 ## Guidelines
 
 ### 1. Write the segment
 
-`segments/<slug>.md` from [`../assets/segment.md`](../assets/segment.md) when missing: who exactly (role, organization type and size, location), trigger, where they gather, pain quotes with sources, disqualifiers. Reuse an existing file; add what this campaign learned.
+The campaign's `### <slug>` under `positioning.md` → **Segments**, from [`../assets/positioning.md`](../assets/positioning.md) when missing: who exactly (role, organization type and size, location), main problem, trigger, where they gather, disqualifiers, pain quotes with sources. An existing segment gets only what this research added; a different **Who exactly** is a new slug.
 
 ### 2. Choose the market scope
 
@@ -31,7 +31,7 @@ Per type in `types`:
 | `referral` | Existing users who showed they like the product, from the user or the app's data |
 | `content`, `community`, `paid` | Described audience under **Target**: platforms, accounts and hashtags they follow, groups by name and URL, paid targeting criteria |
 
-`prospects.csv` columns: `id` (`p001`), `name`, `role`, `org`, `location`, `channel`, `contact`, `source_url`, `why`, `status`.
+`prospects.csv` columns: `id` (`p001`), `name`, `role`, `org`, `location`, `channel`, `contact`, `source_url`, `why`. Touches and replies live in the outbox items that name the prospect.
 
 - `why` is one specific, verifiable fact that makes the first line personal (a recent post, an opening, a review of their business).
 - `contact` is an address or handle the person or business published; never a guessed address.
@@ -39,4 +39,4 @@ Per type in `types`:
 
 ### 4. Confirm to the user
 
-Write **Target**: the segment link, scope, audience size, sources used. `state: targeting`; update the `index.md` row. Reply with the segment summary, the audience count with 3 sample rows, gaps, and next: _"continue campaign NN"_ runs Roll-out.
+Write **Target**: a link to `positioning.md#<slug>`, the segment's **Who exactly**, **Where they gather**, and **Disqualifiers** as this campaign used them, scope, audience size, sources used. `state: targeting`; update the `index.md` row. Reply with the segment summary, the audience count with 3 sample rows, gaps, and next: _"continue campaign NN"_ runs Roll-out.

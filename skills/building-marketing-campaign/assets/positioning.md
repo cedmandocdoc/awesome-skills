@@ -12,15 +12,19 @@ reviewed: {{YYYY-MM-DD}}
 
 {{ONE SENTENCE: WHAT IT DOES AND THE OUTCOME}}
 
-## Candidate segments
+## Segments
 
-| Segment | Who exactly | Main problem |
-| --- | --- | --- |
-| {{slug}} | {{ROLE, ORG TYPE, SIZE, LOCATION}} | {{PROBLEM}} |
+### {{slug}}
 
-## Problems in their words
-
-- "{{QUOTE}}" — {{SOURCE URL}}
+- Who exactly: {{ROLE, ORG TYPE, SIZE, LOCATION}}
+- Main problem: {{PROBLEM}}
+- Trigger: {{WHAT MAKES THE PAIN URGENT}}
+- Where they gather: {{PLATFORMS, GROUPS, EVENTS, WITH URLS}}
+- Disqualifiers: {{WHO LOOKS LIKE THEM BUT ISN'T}}
+- Pain in their words:
+  - "{{QUOTE}}" — {{SOURCE URL}}
+- Learned:
+  - {{CAMPAIGN ID}}: {{WHAT WORKED OR DIDN'T WITH THEM}}
 
 ## Proof
 

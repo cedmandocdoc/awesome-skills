@@ -2,7 +2,7 @@
 
 ## Overview
 
-Shared rules for every `building-marketing-campaign` recipe: the marketing root and its files, campaign ids and states, how requests route, outbox items and the approval gate, sending caps, the UTM and link standard, measurement, videos and the HyperFrames handoff, free media, and discovery of HyperFrames.
+Shared rules for every `building-marketing-campaign` recipe: the marketing root and its files, positioning and segments, campaign ids and states, how requests route, outbox items and the approval gate, sending caps, the UTM and link standard, measurement, videos and the HyperFrames handoff, free media, and discovery of HyperFrames.
 
 ## Guidelines
 
@@ -14,26 +14,24 @@ Static UUID identifying files created by this skill:
 1d31be96-13a6-46cf-b133-cdacf54973cc
 ```
 
-Every `<marketing-root>/index.md`, `positioning.md`, segment file, `campaign.md`, and outbox item carries this value in frontmatter `author`.
+Every `<marketing-root>/index.md`, `positioning.md`, `campaign.md`, and outbox item carries this value in frontmatter `author`.
 
 ### Output layout
 
 ```text
 <marketing-root>/                  # default: marketing/
   index.md                         # root marker + one row per campaign
-  positioning.md                   # once per product; reviewed quarterly
-  segments/<slug>.md               # one per segment, reused across campaigns
+  positioning.md                   # once per product: product facts + segments; reviewed quarterly
   measurement/                     # Worker + D1 project from ../assets/measurement/
   campaigns/NN-slug/
     campaign.md                    # living file: state + one section per phase
     prospects.csv                  # named audience (direct types)
-    links.md                       # one full UTM URL per link
     outbox/NNN-<channel>-<who>.md  # one message or post
     results.md                     # written at Conclusion
 videos/<project>/                  # HyperFrames projects, at the repo root; never edited by this skill
 ```
 
-Templates: [`../assets/index.md`](../assets/index.md), [`../assets/positioning.md`](../assets/positioning.md), [`../assets/segment.md`](../assets/segment.md), [`../assets/campaign.md`](../assets/campaign.md), [`../assets/video-request.md`](../assets/video-request.md), [`../assets/outbox-item.md`](../assets/outbox-item.md), [`../assets/results.md`](../assets/results.md).
+Templates: [`../assets/index.md`](../assets/index.md), [`../assets/positioning.md`](../assets/positioning.md), [`../assets/campaign.md`](../assets/campaign.md), [`../assets/video-request.md`](../assets/video-request.md), [`../assets/outbox-item.md`](../assets/outbox-item.md), [`../assets/results.md`](../assets/results.md).
 
 Campaign id `NN-slug`: `NN` = highest existing + 1, two digits; slug names segment and market (`03-clinics-mm`).
 
@@ -48,6 +46,8 @@ Search the repository for `index.md` with frontmatter `doc_type: marketing-index
 | None, on start campaign or set up measurement | **Initialize marketing root** |
 | None, other intents | Stop and report that no marketing root exists |
 
+A root made before 4.0.0: move each `segments/<slug>.md` into `positioning.md` → **Segments** as `### <slug>`, fold **Candidate segments** and **Problems in their words** into those sections, then delete `segments/`. Delete each campaign's `links.md`; its links already live in the outbox items.
+
 Resolve a campaign by `@`-path, id (`03-clinics-mm`), number (`campaign 3`), or name words against `index.md` rows; several matches → ask.
 
 ### Initialize marketing root
@@ -56,6 +56,17 @@ Resolve a campaign by `@`-path, id (`03-clinics-mm`), number (`campaign 3`), or 
 2. Target missing or empty → use it. Otherwise ask for another path.
 3. Write `index.md` from [`../assets/index.md`](../assets/index.md).
 
+### Positioning
+
+`positioning.md` holds two kinds of section:
+
+| Kind | Sections | Changes when |
+| --- | --- | --- |
+| Product facts | **What it does**, **Offer**, **Conversion events** | The product changes, per [updating-positioning.md](./updating-positioning.md) |
+| Market | **Segments**, **Proof**, **Alternatives and differentiator**, **Goals and constraints** | Ideation, Target, Conclusion, and the quarterly review |
+
+A segment is one group of people who share one problem and can be reached the same way; one campaign aims at one. Each is a `### <slug>` under **Segments**, reused across campaigns. A segment only grows: new pain quotes, places they gather, disqualifiers, and **Learned** lines. A different **Who exactly** is a new slug, so a `segment` field keeps meaning what it meant.
+
 ### campaign.md
 
 | Field | Value |
@@ -63,7 +74,7 @@ Resolve a campaign by `@`-path, id (`03-clinics-mm`), number (`campaign 3`), or 
 | `doc_type` / `generated_by` / `author` | `marketing-campaign` / `building-marketing-campaign` / **Author signature** |
 | `id`, `name` | `NN-slug`, human name |
 | `state` | Per **States** |
-| `segment` | Segment slug |
+| `segment` | Segment slug, a `### <slug>` in `positioning.md` |
 | `types` | Rows of [marketing-types.md](./marketing-types.md) (`outbound`, `content`, …) |
 | `conversion` | The one named event this campaign counts (`signup`) |
 | `goal` | The count that makes it worth repeating (`10 signups`) |
@@ -89,7 +100,7 @@ A phase sets `state` to its own name when its output is ready and stops for revi
 | `concluded` | [concluding-campaign.md](./concluding-campaign.md) | — |
 | `dropped` | "Drop campaign", only before `live` | — |
 
-`concluded` and `dropped` campaigns are never edited; a new campaign names them in `follows`. Measurement is a check-in, not a state. Stale marks per [updating-campaign.md](./updating-campaign.md): on "continue", the next phase redoes only its stale parts.
+`concluded` and `dropped` campaigns are never edited; a new campaign names them in `follows`. Measurement is a check-in, not a state. With stale marks per [updating-campaign.md](./updating-campaign.md), "continue" goes to the first phase with a mark instead of the **States** row, and redoes only its stale parts.
 
 ### Outbox items
 
@@ -125,7 +136,7 @@ Every link to the product is a plain URL with four UTMs; no redirect or short li
 | `utm_source` | Platform (`email`, `facebook`, `tiktok`) |
 | `utm_content` | Video code (`v2`) for a video post; outbox item code (`o014`) for every other item |
 
-Medium and source are separate: one platform carries several types (a Facebook page post is `content`, a group post `community`, a DM `outbound`), and one type uses several platforms. `links.md` holds one row per link: `utm_content`, medium, source, destination, full URL; a video posted on several platforms has one row per platform. App installs link to a web page that runs the snippet; a store listing can't be counted.
+Medium and source are separate: one platform carries several types (a Facebook page post is `content`, a group post `community`, a DM `outbound`), and one type uses several platforms. Each link lives only in the `link` field and body of its outbox item; a video posted on several platforms has one post item per platform. A link outside a message or post (a profile bio, a partner's page) gets its own outbox item, channel `bio` or `partner`. App installs link to a web page that runs the snippet; a store listing can't be counted.
 
 ### Measurement
 
@@ -168,7 +179,7 @@ Video state is read from disk, never stored in `campaign.md`. Find the project b
 | `BRIEF.md` or `STORYBOARD.md`, no `renders/video.mp4` | In progress | Invoke `/hyperframes` naming the project; it resumes from its files |
 | `renders/video.mp4` | Approved (HyperFrames renders only after approval) | [creating-assets.md](./creating-assets.md) step 5 |
 
-A video is done when its render is linked, its links are in `links.md`, and its post outbox item exists.
+A video is done when its render is linked and its post outbox items exist, one per platform.
 
 ### Free media
 

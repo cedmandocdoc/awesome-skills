@@ -26,7 +26,7 @@ Name the likely cause by walking the six questions from the bottom, per [marketi
 
 ### 3. Propose the next idea
 
-Read **Execution** → **Check-ins** for what was tried. What to keep, what to change, and one next idea framed as the six questions. Positioning changes (a new segment, a new pain quote) go into `positioning.md` and the segment file.
+Read **Execution** → **Check-ins** for what was tried. What to keep, what to change, and one next idea framed as the six questions. Add a **Learned** line to the campaign's segment in `positioning.md`; a new segment or pain quote goes there too.
 
 ### 4. Confirm to the user
 
