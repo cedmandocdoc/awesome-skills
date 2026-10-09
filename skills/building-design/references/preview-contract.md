@@ -22,8 +22,9 @@ A screen never restates a UI block's presets or motion. It renders the block wit
 | --- | --- |
 | The user lands on a different screen | A new screen |
 | The same screen changed: error, loading, empty, filled, modal or sheet open | A state of that screen |
+| The user scrolled or read on | Neither: the same state |
 
-The size of the difference never decides it. Hover, focus, and pressed stay live in CSS and are never states or presets.
+The size of the difference never decides it. Hover, focus, and pressed stay live in CSS and are never states or presets. Motion that plays in view or on scroll belongs to the state it plays in.
 
 ### Files per surface
 
@@ -43,10 +44,18 @@ Folder, CSS, and spec names are kebab-case; component files are PascalCase. CSS 
 - Motion for a state or prop change plays when props change on the mounted instance: drive it with CSS transitions or animations keyed on attributes the props set (`data-loading`, `data-error`), not by remounting.
 - A surface has only the motion the user decided — no default entrance or transition. Entrance motion (`load`, `in-view`) plays on mount; the viewer remounts on replay and on jumps.
 - `sample` data for a screen comes in through props (`base` or the state), not hardcoded where the state changes it.
+- A state that happens below the first viewport sets `at` to the `data-slot` or `data-motion` where it happens; its frame opens scrolled there.
 
 ### Flows
 
-A flow is an ordered list of steps; a step is one screen in one state. Happy path, error paths, and conditional paths (a step that only appears after a choice) are each their own flow. Every feature declares at least one flow, and every screen state appears in at least one flow — the viewer lists states no flow reaches.
+A flow is an ordered list of steps; a step is one screen in one state, reached by a trigger: a user action, a system response, or time. Scrolling and reading are never steps. Happy path, error paths, and conditional paths (a step that only appears after a choice) are each their own flow. Every feature declares at least one flow, and every screen state appears in at least one flow — the viewer lists states no flow reaches.
+
+| Screen | Lives in |
+| --- | --- |
+| Has states beyond `default` | The feature that owns them; its flows reach each state |
+| Only `default` (a page that is read, not used) | One shared feature (`features/pages/` on a site) with a one-step flow per screen, named after it |
+
+Link clicks from one screen's `default` to another's (a reading path through a site) are navigation, not a flow: they live in the product specs.
 
 ### Design file
 
@@ -125,7 +134,7 @@ Copied from [`../assets/app/`](../assets/app/) and never edited: `viewer/`, `sys
 | Top bar | Desktop, Tablet, Mobile: the frame sizes the surface declares in `viewports`; hidden for a UI block without them |
 | Dock (bottom) | Board \| Play, zoom, fit, theme |
 
-The selection, Board or Play, and viewport live in the URL hash, so a link reopens the same view. Keys: `index.md` → **Viewer keys**.
+Board is the default view. Board or Play and the viewport carry across selections. The selection, Board or Play, and viewport live in the URL hash, so a link reopens the same view. Keys: `index.md` → **Viewer keys**.
 
 ## Related
 

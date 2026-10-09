@@ -26,7 +26,7 @@ const titleOf = (id: string) => {
 };
 const firstPreset = (d: UIDesign) => Object.keys(d.presets)[0];
 
-export function resolve(t: Target): { Component: ComponentType<any>; props: Record<string, unknown> } | null {
+export function resolve(t: Target): { Component: ComponentType<any>; props: Record<string, unknown>; at?: string } | null {
   const u = ui.get(t.id);
   if (u) {
     const defaults = Object.fromEntries(Object.entries(u.props).map(([k, c]) => [k, controlDefault(c as never)]));
@@ -36,7 +36,7 @@ export function resolve(t: Target): { Component: ComponentType<any>; props: Reco
   const s = screens.get(t.id);
   if (s) {
     const state = (s.states as Record<string, ScreenDesign["states"]["default"]>)[t.state ?? "default"] ?? s.states.default;
-    return { Component: s.component, props: { ...s.base, ...state.props } };
+    return { Component: s.component, props: { ...s.base, ...state.props }, at: state.at };
   }
   return null;
 }

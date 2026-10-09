@@ -71,6 +71,20 @@ export function Frame() {
   }, [target?.id]);
 
   const r = target && resolve(target);
+
+  // A state below the first viewport opens scrolled to where it happens; stepping in Play glides there.
+  const mounted = useRef("");
+  useEffect(() => {
+    const at = r?.at;
+    const instance = target ? `${target.id}:${target.key}` : "";
+    const fresh = mounted.current !== instance;
+    mounted.current = instance;
+    if (!at) return;
+    const id = requestAnimationFrame(() =>
+      document.querySelector(`[data-slot="${at}"], [data-motion="${at}"]`)?.scrollIntoView({ block: "start", behavior: fresh ? "instant" : "smooth" }));
+    return () => cancelAnimationFrame(id);
+  }, [target, r?.at]);
+
   if (!target || !r) return <p className="dv-frame-empty">Nothing to render{target ? ` for ${target.id}` : ""}.</p>;
   const node = <Boundary key={`${target.id}:${target.key}`}><r.Component {...r.props} /></Boundary>;
   return target.id.startsWith("ui/")

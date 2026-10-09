@@ -43,6 +43,7 @@ export interface State<P> {
   description: string;
   trigger?: string;
   shows?: string; // ui#preset
+  at?: string; // data-slot or data-motion the frame opens scrolled to, for a state below the first viewport
 }
 
 export interface ScreenDesign<P = any, S extends string = string> {

@@ -2,7 +2,7 @@
 name: building-design
 id: caa2ddd5-c78f-41af-8a9d-1af7973d08ac
 description: Builds and amends runnable designs — a DESIGN.md (tokens, motion, voice, implementation rules, decisions) plus React previews of every UI block and feature screen, with presets, states, flows, spec files, and final copy, reviewed in a board-and-play viewer — so an implementer ports the design instead of interpreting it. Use only when the user names this skill (`/building-design`, `$building-design`, or "building-design"), or references a file under a marked design root (`@design/design.md`, a `.design.ts` file).
-version: 4.2.1
+version: 4.3.0
 ---
 
 # Building Design
