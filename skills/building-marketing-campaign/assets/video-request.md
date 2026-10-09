@@ -6,7 +6,7 @@ Make a {{KIND}} video for campaign {{NN-slug}}, video {{vN}}. Suggested project 
 - Proof: {{PROOF}}
 - Product: {{LIVE URL}}
 - Channel and format: {{PLATFORM}}, {{SIZE}}, {{LENGTH}}
-- CTA (last card): {{CTA}} → {{SHORT LINK}}
+- CTA (last card): {{CTA}} → {{UTM URL}}
 - My material: {{URL TO CAPTURE; REPO PATHS TO LOGO, BRAND FILE, SCREENSHOTS, RECORDINGS; DESIGN FOLDERS}}; {{SCREENS BEHIND LOGIN OR APP-ONLY}} — I'll provide a recording.
 - Music: I'll choose the music. After the concept is picked and before the storyboard, suggest moods and tracks and wait for my file; cut the video to its beat. The track will be from Pixabay or my own.
 - Free media only: no media from HeyGen's services (music, voiceover, images, icons, avatars); voiceover from local Kokoro or none; sound effects from the bundled set; music from my track.

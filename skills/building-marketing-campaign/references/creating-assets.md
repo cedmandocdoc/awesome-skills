@@ -6,7 +6,7 @@
 
 ## Prerequisites
 
-Per [marketing-contract.md](./marketing-contract.md) → **Outbox items**, **Sending caps**, **Links and UTMs**, **Videos**, **Free media**, **Discover dependency skill**. Writing rules: [marketing-types.md](./marketing-types.md) → **Writing rules per asset**. Links into D1: [configuring-measurement.md](./configuring-measurement.md) → **Add links**.
+Per [marketing-contract.md](./marketing-contract.md) → **Outbox items**, **Sending caps**, **Links and UTMs**, **Videos**, **Free media**, **Discover dependency skill**. Writing rules: [marketing-types.md](./marketing-types.md) → **Writing rules per asset**.
 
 ## Guidelines
 
@@ -24,18 +24,18 @@ Per outbox set in **Roll-out** → **Assets**, one outbox item per person and to
 
 ### 3. Create text links
 
-One link per outbox item that carries a link. Write the rows to `links.md`, insert them per [configuring-measurement.md](./configuring-measurement.md) → **Add links**, and put the short URL in the item's body and `link`.
+One link per outbox item that carries a link. Write the rows to `links.md` and put the full URL in the item's body and `link`.
 
 ### 4. Write the video requests
 
 HyperFrames found per **Discover dependency skill**; missing → print the install and offer text posts in place of the videos.
 
-Per planned video: assign the next code, add it to `videos`, add its **Assets** → **Videos** row (Project and Render empty), and save a request from [`../assets/video-request.md`](../assets/video-request.md) under **Assets** → **Video requests** → `### vN`. Fill it from **Idea**, **Roll-out** → **Assets**, and **Roll-out** → **Material**; its short link is `go.<domain>/<NN>vN`. When an earlier video of this campaign or its `follows` was saved as a HyperFrames recipe, name that recipe in the request.
+Per planned video: assign the next code, add it to `videos`, add its **Assets** → **Videos** row (Project and Render empty), and save a request from [`../assets/video-request.md`](../assets/video-request.md) under **Assets** → **Video requests** → `### vN`. Fill it from **Idea**, **Roll-out** → **Assets**, and **Roll-out** → **Material**; its link is the video's UTM URL with `utm_content=vN`. When an earlier video of this campaign or its `follows` was saved as a HyperFrames recipe, name that recipe in the request.
 
 ### 5. Collect a rendered video
 
 1. Link the project folder and `renders/video.mp4` in its **Assets** → **Videos** row.
-2. Add its links per platform to `links.md` and D1.
+2. Add its links per platform to `links.md`.
 3. Write its post outbox item: a caption per **Post caption**, `link`, `video`, `media` = the render path, `scheduled` from **Roll-out** → **Schedule**.
 4. For the campaign's first rendered video, recommend accepting HyperFrames' offer to save it as a recipe, so later videos keep the look and still get their own pitch round.
 

@@ -11,8 +11,8 @@ verdict: {{worked | partly | did not work}}
 
 Goal: {{COUNT EVENT}} — got {{COUNT}}.
 
-| utm_content | Medium | Source | Clicks | Visits | Conversions | Rate | Sent | Replied |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| utm_content | Medium | Source | Landings | Conversions | Rate | Sent | Replied |
+| --- | --- | --- | --- | --- | --- | --- | --- |
 
 ## Why
 

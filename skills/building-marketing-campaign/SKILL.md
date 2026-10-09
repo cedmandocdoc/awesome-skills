@@ -12,14 +12,14 @@ description: >-
   `$building-marketing-campaign`, or "building-marketing-campaign"), or
   references a file under a marked marketing root
   (`@marketing/campaigns/03-clinics-mm/campaign.md`).
-version: 2.0.0
+version: 3.0.0
 ---
 
 # Building Marketing Campaign
 
 ## Overview
 
-One marketing root per product holds `positioning.md`, segments, and one folder per campaign. Every campaign follows seven phases — Ideation → Target → Roll-out → Assets → Execution → Measurement → Conclusion — and stops after each for review; its living `campaign.md` carries the state across chats. The skill writes all text and hands each video to HyperFrames with a facts-only request; it sends and posts nothing — the user sends each approved item by hand. Every link goes through the skill's own Cloudflare Worker, which counts clicks, first landings, and the one conversion event the campaign names, so the report is the same query for every product.
+One marketing root per product holds `positioning.md`, segments, and one folder per campaign. Every campaign follows seven phases — Ideation → Target → Roll-out → Assets → Execution → Measurement → Conclusion — and stops after each for review; its living `campaign.md` carries the state across chats. The skill writes all text and hands each video to HyperFrames with a facts-only request; it sends and posts nothing — the user sends each approved item by hand. Every link carries four UTMs; a snippet in the app sends landings and the one conversion event the campaign names to the skill's own Cloudflare Worker and D1, so the report is the same query for every product.
 
 ## Dependencies
 
@@ -27,8 +27,8 @@ Resolve every **required** row before recipes that need it.
 
 | Item | Required | When | How |
 | --- | --- | --- | --- |
-| Node.js 20+ and Wrangler | required | Measurement, links, reports | https://nodejs.org; Wrangler runs through `npx wrangler` |
-| Cloudflare account | required | Measurement, links, reports | https://dash.cloudflare.com/sign-up, then `npx wrangler login` |
+| Node.js 20+ and Wrangler | required | Measurement setup, check-ins | https://nodejs.org; Wrangler runs through `npx wrangler` |
+| Cloudflare account | required | Measurement setup, check-ins | https://dash.cloudflare.com/sign-up, then `npx wrangler login` |
 | [hyperframes](https://github.com/heygen-com/hyperframes/tree/main/skills/hyperframes) | optional | Assets: video | `npx hyperframes skills update` (core skills only; it installs each workflow the first time it routes to one) |
 | Google Places API key | optional | Target: local businesses | https://developers.google.com/maps/documentation/places/web-service/get-api-key; store `GOOGLE_PLACES_API_KEY` in `.env` |
 
@@ -51,7 +51,7 @@ Follow this skill when the user names it, or references a file under a marketing
 | Continue a campaign | "Continue campaign 01", "next phase", a HyperFrames return line | The recipe for its `state` per [marketing-contract.md](references/marketing-contract.md) → **States** |
 | Change a campaign | "Change the message", "new CTA", "make v1 shorter", "move it to LinkedIn" | [updating-campaign.md](references/updating-campaign.md) |
 | Approve, record, end, drop | "Approve batch", "sent o014", "o014 replied", "end campaign 01" | [executing-campaign.md](references/executing-campaign.md) |
-| Measure | "How is campaign 01 doing?" | [measuring-campaign.md](references/measuring-campaign.md) |
+| Check in | "How is campaign 01 doing?", "check in on campaign 01" | [measuring-campaign.md](references/measuring-campaign.md) |
 | Conclude | "Conclude campaign 01" | [concluding-campaign.md](references/concluding-campaign.md) |
 | Set up measurement | "Set up measurement", "add the conversion event" | [configuring-measurement.md](references/configuring-measurement.md) |
 
@@ -59,7 +59,7 @@ Follow this skill when the user names it, or references a file under a marketing
 
 ### Contract
 
-[marketing-contract.md](references/marketing-contract.md) — signature, layout, root, `campaign.md`, states and routing, outbox items, sending caps, links and UTMs, videos and the HyperFrames handoff, free media.
+[marketing-contract.md](references/marketing-contract.md) — signature, layout, root, `campaign.md`, states and routing, outbox items, sending caps, links and UTMs, measurement, videos and the HyperFrames handoff, free media.
 
 | Doc | When to use |
 | --- | --- |
@@ -70,10 +70,10 @@ Follow this skill when the user names it, or references a file under a marketing
 | [planning-rollout.md](references/planning-rollout.md) | Phase 3: schedule, assets, material, measurement check |
 | [creating-assets.md](references/creating-assets.md) | Phase 4: text drafts, video requests, rendered videos, links |
 | [executing-campaign.md](references/executing-campaign.md) | Phase 5: batches, approvals, sends and replies the user reports, end, drop |
-| [measuring-campaign.md](references/measuring-campaign.md) | Phase 6: report |
+| [measuring-campaign.md](references/measuring-campaign.md) | Phase 6: check-in — outbox catch-up, report, one recommendation |
 | [concluding-campaign.md](references/concluding-campaign.md) | Phase 7: results, verdict, next idea |
 | [updating-campaign.md](references/updating-campaign.md) | A change to an earlier phase or a video: what reruns, what goes stale |
-| [configuring-measurement.md](references/configuring-measurement.md) | Worker, D1, app snippet, adding links |
+| [configuring-measurement.md](references/configuring-measurement.md) | Worker, D1, app snippet, conversion calls |
 
 ## Templates
 

@@ -51,7 +51,7 @@ Only when a video is planned. Under **Roll-out** → **Material**, list what eve
 
 ### 4. Check measurement
 
-Under **Roll-out** → **Measurement**: Worker deployed (`<marketing-root>/measurement/` exists and answers), and the app records `conversion('<event>')` for this campaign's event. Missing → list [configuring-measurement.md](./configuring-measurement.md) as a step before Execution.
+Under **Roll-out** → **Measurement**: Worker deployed (`<marketing-root>/measurement/` exists and answers), the app runs `mkCapture()`, and it records `conversion('<event>')` for this campaign's event. Missing → list [configuring-measurement.md](./configuring-measurement.md) as a step before Execution.
 
 ### 5. Confirm to the user
 

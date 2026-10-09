@@ -39,7 +39,7 @@ Set the named items to `approved`. Hand each to the user ready to send: email fr
 
 ### 5. End
 
-At `end`, at `end_condition`, or on request: `state: ended`, `end` = today; remaining drafts and approved items → `skipped`. Links and D1 keep recording.
+At `end`, at `end_condition`, or on request: `state: ended`, `end` = today; remaining drafts and approved items → `skipped`. D1 keeps recording.
 
 ### 6. Drop
 

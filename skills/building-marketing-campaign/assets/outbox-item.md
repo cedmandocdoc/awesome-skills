@@ -9,7 +9,7 @@ prospect: {{pNNN | none}}
 touch: {{1 | 2 | 3}}
 send_if: {{always | no reply}}
 scheduled: {{YYYY-MM-DD HH:MM | none}}
-link: "{{SHORT URL | none}}"
+link: "{{UTM URL | none}}"
 video: {{vN | none}}
 media: "{{videos/<project>/renders/video.mp4 | none}}"
 status: draft

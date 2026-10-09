@@ -55,4 +55,6 @@ Alternatives: {{ONE LINE EACH}}
 
 ## Execution
 
+### Check-ins
+
 ## Conclusion
