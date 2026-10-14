@@ -6,35 +6,14 @@ Shared layout and field meanings for all `managing-monorepo` workflows. Requires
 
 ## Guidelines
 
-### Require pnpm and turborepo
+### Dependency skills
 
-Required skill dependencies. Discover by `name` (these skills publish no `id`).
+Found per **Discovering project skills**; open each one's `SKILL.md` and follow it by intent for its **Owns** column.
 
-| `name` | Owns | Source | Install |
-| --- | --- | --- | --- |
-| `pnpm` | Catalogs, CLI, workspace protocol | https://github.com/antfu/skills/tree/main/skills/pnpm | `npx skills add antfu/skills --skill pnpm` |
-| `turborepo` | Remote cache, `--filter` / `--affected`, env hashing, CI | https://github.com/antfu/skills/tree/main/skills/turborepo | `npx skills add antfu/skills --skill turborepo` |
-
-1. Discover and accept per **Discovering project skills** (`name` from the table).
-2. If a required row is missing → stop. Print that row’s Install and Source:
-
-```text
-Install pnpm before managing-monorepo (catalogs, CLI, and workspace protocol require it).
-
-npx skills add antfu/skills --skill pnpm
-
-Source: https://github.com/antfu/skills/tree/main/skills/pnpm
-```
-
-```text
-Install turborepo before managing-monorepo (remote cache, --filter / --affected, env hashing, and CI require it).
-
-npx skills add antfu/skills --skill turborepo
-
-Source: https://github.com/antfu/skills/tree/main/skills/turborepo
-```
-
-3. Open that skill’s `SKILL.md`. Follow it by intent for the **Owns** column.
+| `name` | Owns |
+| --- | --- |
+| `pnpm` | Catalogs, CLI, workspace protocol |
+| `turborepo` | Remote cache, `--filter` / `--affected`, env hashing, CI |
 
 ### Discovering project skills
 
@@ -62,7 +41,7 @@ Each skill is `<skill-name>/SKILL.md`.
 
 **Deduplicate** — one copy per skill `name`; prefer project roots over user-level.
 
-**Accept a dependency skill** when frontmatter `name` matches the row.
+**Accept a dependency skill** when frontmatter `name` matches the row; these skills publish no `id`.
 
 ### Resolve workspace root
 

@@ -15,7 +15,6 @@ Place packages, add a package, or initialize a pnpm + Turborepo TypeScript works
 
 | Situation | Go to |
 | --- | --- |
-| No workspace yet | **Setup** |
 | Add or move a package | **Add package** |
 | Where does this live? | Contract **Folder roles**, then **Tree** |
 | Root `.gitignore` missing or incomplete | **Gitignore** |
