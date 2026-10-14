@@ -12,8 +12,12 @@ scheduled: {{YYYY-MM-DD HH:MM | none}}
 link: "{{UTM URL | none}}"
 video: {{vN | none}}
 media: "{{videos/<project>/renders/video.mp4 | none}}"
+media_url: none
+send: manual
 status: draft
 sent_at: none
+external_id: none
+error: none
 ---
 
 Subject: {{SUBJECT}}

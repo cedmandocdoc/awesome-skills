@@ -12,7 +12,7 @@ Per [marketing-contract.md](./marketing-contract.md) → **campaign.md**, **Stat
 
 ### 1. Plan the schedule
 
-Per type: channels, batch sizes within **Sending caps**, posting cadence, and touch spacing (outbound: day 0, 3, 7). Set `end` or `end_condition`.
+Per type: channels and each one's send method from the root's `send_posts` and `send_email` (`buffer`, `smtp`, `manual`), batch sizes within **Sending caps**, posting cadence, and touch spacing (outbound: day 0, 3, 7). Set `end` or `end_condition`.
 
 ### 2. List the assets
 
@@ -49,10 +49,10 @@ Only when a video is planned. Under **Roll-out** → **Material**, list what eve
 - Design folders or HTML the user names. Static HTML works as a screenshot or as live markup; React screens work as a screenshot or recording, or as live markup after exporting the rendered DOM to static `.html`. A feature not shipped yet may be shown from its design and is rechecked against the shipped feature before posting.
 - Key screens capture can't reach (behind login, mobile app only). Ask once, in one message, for a screen recording of each flow; every video in the campaign reuses them.
 
-### 4. Check measurement
+### 4. Check measurement and sending
 
-Under **Roll-out** → **Measurement**: Worker deployed (`<marketing-root>/measurement/` exists and answers), the app runs `mkCapture()`, and it records `conversion('<event>')` for this campaign's event. Missing → list the pending measurement rows of `SKILL.md` → **Setup** as a step before Execution.
+Under **Roll-out** → **Measurement**: Worker deployed (`<marketing-root>/measurement/` exists and answers), the app runs `mkCapture()`, and it records `conversion('<event>')` for this campaign's event. Missing → list the pending measurement rows of `SKILL.md` → **Setup** as a step before Execution. Likewise list the pending sending rows for each channel this campaign sends through `buffer` or `smtp`.
 
 ### 5. Confirm to the user
 
-Write **Roll-out**: schedule, assets, material, measurement. `state: rollout`; update the `index.md` row. Reply with the schedule as dated lines, the asset list, the recordings asked for, any measurement work, and next: _"continue campaign NN"_ creates the assets.
+Write **Roll-out**: schedule, assets, material, measurement. `state: rollout`; update the `index.md` row. Reply with the schedule as dated lines with each channel's send method, the asset list, the recordings asked for, any measurement work, and next: _"continue campaign NN"_ creates the assets.

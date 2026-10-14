@@ -12,7 +12,7 @@ Per [marketing-contract.md](./marketing-contract.md) → **Outbox items**, **Mea
 
 ### 1. Catch up the outbox
 
-List `approved` items not yet `sent` and ask in one message which went out and on what date, and which got replies or opt-outs. Record the answers per [executing-campaign.md](./executing-campaign.md) → step 4.
+When `<marketing-root>/sender/` exists, run `send.js sync` per [configuring-sending.md](./configuring-sending.md) → step 3 and record its results and replies. Then list `manual` items `approved` but not yet `sent` and ask in one message which went out and on what date, and which got replies or opt-outs. Record the answers per [executing-campaign.md](./executing-campaign.md) → step 4.
 
 ### 2. Ask for signals off the links
 

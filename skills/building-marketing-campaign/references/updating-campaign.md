@@ -32,7 +32,7 @@ Per [marketing-contract.md](./marketing-contract.md) → **States**, **Outbox it
 | Channel | Roll-out | That channel's posts | New request and project (a new aspect ratio needs one); the recipe keeps the look |
 | Schedule only | Roll-out | Nothing | — |
 
-Rerun the owning phase's recipe in place, keeping earlier work as defaults where it still fits; before `live` it sets `state` to that phase, after `live` `state` stays. Mark each later section the change reaches with a first line `> Stale since <date>: <change>`, and outbox items `status: stale`. On "continue", the first phase with a stale mark redoes only its stale parts, clears its marks, sets `state` to that phase before `live`, and stops for review; phases without a mark are passed over.
+Rerun the owning phase's recipe in place, keeping earlier work as defaults where it still fits; before `live` it sets `state` to that phase, after `live` `state` stays. Mark each later section the change reaches with a first line `> Stale since <date>: <change>`, and outbox items `status: stale`; a `queued` item is unqueued first (`send.js unqueue` per [configuring-sending.md](./configuring-sending.md) → step 3). On "continue", the first phase with a stale mark redoes only its stale parts, clears its marks, sets `state` to that phase before `live`, and stops for review; phases without a mark are passed over.
 
 ### 3. Change the videos
 

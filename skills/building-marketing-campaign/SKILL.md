@@ -6,13 +6,14 @@ description: >-
   website, digital service) under marketing/: analyzes the product into
   positioning, then moves each campaign one phase per request — ideation,
   targeting, roll-out, assets (text drafts, videos handed to HyperFrames),
-  approved outbox batches the user sends, measurement through UTM links on a
+  approved outbox batches sent through Buffer and SMTP when the user opts in and
+  by the user otherwise, measurement through UTM links on a
   Cloudflare Worker and D1, and a conclusion that feeds the next idea. Use only
   when the user names this skill (`/building-marketing-campaign`,
   `$building-marketing-campaign`, or "building-marketing-campaign"), or
   references a file under a marked marketing root
   (`@marketing/campaigns/03-clinics-mm/campaign.md`).
-version: 4.1.1
+version: 5.0.0
 ---
 
 # Building Marketing Campaign
@@ -21,7 +22,7 @@ version: 4.1.1
 
 | Item | Kind | Required | When | Done when | How |
 | --- | --- | --- | --- | --- | --- |
-| Node.js 20+ | user | required | Execution, Check in, Conclude | `node --version` reports 20 or later | https://nodejs.org; Wrangler runs through `npx wrangler` |
+| Node.js 22+ | user | required | Execution, Check in, Conclude | `node --version` reports 22 or later | https://nodejs.org; Wrangler runs through `npx wrangler` |
 | Cloudflare account | user | required | Execution, Check in, Conclude | `npx wrangler whoami` shows an account | https://dash.cloudflare.com/sign-up, then `npx wrangler login` |
 | [hyperframes](https://github.com/heygen-com/hyperframes/tree/main/skills/hyperframes) | user | optional | Assets: video | Found per [marketing-contract.md](references/marketing-contract.md) → **Discover dependency skill** | `npx hyperframes skills update` (core skills only; it installs each workflow the first time it routes to one) |
 | Google Places API key | user | optional | Target: local businesses | `.env` has `GOOGLE_PLACES_API_KEY` | https://developers.google.com/maps/documentation/places/web-service/get-api-key; store it in `.env` |
@@ -32,6 +33,14 @@ version: 4.1.1
 | Measurement Worker and D1 | static | required | Execution | `wrangler.toml` has a real `database_id` and the Worker URL answers | [configuring-measurement.md](references/configuring-measurement.md) → steps 1–2 |
 | App snippet | auto | required | Execution | The app calls `mkCapture()` on every page load | [configuring-measurement.md](references/configuring-measurement.md) → step 3 |
 | Conversion event | auto | required | Execution | The app calls `conversion('<event>')` after the success response for the campaign's `conversion` | [configuring-measurement.md](references/configuring-measurement.md) → steps 4–6 |
+| Send methods | ask | required | Execution | `index.md` frontmatter has `send_posts` and `send_email` | [configuring-sending.md](references/configuring-sending.md) → step 1; recorded in `index.md` frontmatter |
+| `.env` ignored | auto | required | Execution, when `send_posts` lists a channel or `send_email` is `smtp` | Root `.gitignore` lists `.env` | Add `.env` to root `.gitignore` |
+| Sender script | static | required | Execution, when `send_posts` lists a channel or `send_email` is `smtp` | `<marketing-root>/sender/node_modules/` exists | [configuring-sending.md](references/configuring-sending.md) → step 3 |
+| Buffer API key | user | required | Execution, when `send_posts` lists a channel | `send.js verify` prints `ok buffer` | [configuring-sending.md](references/configuring-sending.md) → step 4.1 |
+| Buffer channel map | auto | required | Execution, when `send_posts` lists a channel | `index.md` frontmatter `buffer_channels` has every `send_posts` channel | [configuring-sending.md](references/configuring-sending.md) → step 4.2 |
+| Media bucket | auto | required | Execution, when `send_posts` lists a channel | `index.md` frontmatter has `media_url` | [configuring-sending.md](references/configuring-sending.md) → step 4.3 |
+| Mailbox | user | required | Execution, when `send_email` is `smtp` | `send.js verify` prints `ok smtp` and `ok imap` | [configuring-sending.md](references/configuring-sending.md) → steps 5.1–5.2 |
+| Mailbox risks | ask | required | Execution, when `send_email` is `smtp` | `index.md` frontmatter has `email_risks_accepted` | [configuring-sending.md](references/configuring-sending.md) → step 5.3; recorded in `index.md` frontmatter |
 
 ## Workflow
 
@@ -39,14 +48,14 @@ version: 4.1.1
 2. **Contract** — read [marketing-contract.md](references/marketing-contract.md).
 3. **Recipe** — match one **Recipes** row; open every doc in its Read column.
 
-- Sends and posts nothing.
+- Sends and posts only `approved` items whose `send` is `buffer` or `smtp`, through `<marketing-root>/sender/`; the user sends every other item.
 - One request runs one phase.
 
 ## Recipes
 
 | Intent | Example phrasing | Read |
 | --- | --- | --- |
-| Set up | "Set up measurement", "Add the conversion event", "Is building-marketing-campaign ready?" | **Setup** — run Workflow step 1 for every row, then report each row's state |
+| Set up | "Set up measurement", "Add the conversion event", "Connect Buffer", "Set up email sending", "Is building-marketing-campaign ready?" | **Setup** — run Workflow step 1 for every row, then report each row's state |
 | Start a campaign | "Start a campaign for this app", "start a campaign from 02" | [analyzing-product.md](references/analyzing-product.md) |
 | Review positioning | "Revisit positioning" | [analyzing-product.md](references/analyzing-product.md) step 2 |
 | Refresh positioning | The standing rule after a product change, "refresh positioning" | [updating-positioning.md](references/updating-positioning.md) |

@@ -2,7 +2,7 @@
 
 ## Overview
 
-Shared rules for every `building-marketing-campaign` recipe: the marketing root and its files, positioning and segments, campaign ids and states, how requests route, outbox items and the approval gate, sending caps, the UTM and link standard, measurement, videos and the HyperFrames handoff, free media, and discovery of HyperFrames.
+Shared rules for every `building-marketing-campaign` recipe: the marketing root and its files, positioning and segments, campaign ids and states, how requests route, outbox items, the approval gate, and send methods, sending caps, the UTM and link standard, measurement, videos and the HyperFrames handoff, free media, and discovery of HyperFrames.
 
 ## Guidelines
 
@@ -23,6 +23,7 @@ Every `<marketing-root>/index.md`, `positioning.md`, `campaign.md`, and outbox i
   index.md                         # root marker + one row per campaign
   positioning.md                   # once per product: product facts + segments; reviewed quarterly
   measurement/                     # Worker + D1 project from ../assets/measurement/
+  sender/                          # Buffer and SMTP sender from ../assets/sender/, when a send method is opted in
   campaigns/NN-slug/
     campaign.md                    # living file: state + one section per phase
     prospects.csv                  # named audience (direct types)
@@ -98,14 +99,23 @@ A phase sets `state` to its own name when its output is ready and stops for revi
 
 ### Outbox items
 
-One file per message or post: `outbox/NNN-<channel>-<who>.md` from [`../assets/outbox-item.md`](../assets/outbox-item.md). Item code `oNNN`. The user sends each `approved` item by hand and reports it.
+One file per message or post: `outbox/NNN-<channel>-<who>.md` from [`../assets/outbox-item.md`](../assets/outbox-item.md). Item code `oNNN`.
+
+An item's `send` is set at approval from the root's send methods ([configuring-sending.md](./configuring-sending.md) → step 1):
+
+| `send` | Item | Goes out |
+| --- | --- | --- |
+| `buffer` | A post on a channel in `send_posts` | `send.js push` schedules it in Buffer; Buffer publishes it |
+| `smtp` | An email, when `send_email` is `smtp` | `send.js push` sends it from the user's mailbox |
+| `manual` | Everything else: bios, DMs, group posts, ads, channels not opted in | The user, from step-by-step instructions, then reports it |
 
 | Status | Meaning |
 | --- | --- |
 | `draft` | Written, waiting for approval |
 | `stale` | A change reached it; redrafted before approval |
-| `approved` | The user approved its batch |
-| `sent` | The user sent or posted it; `sent_at` set |
+| `approved` | The user approved its batch; a failed push leaves it here with `error` |
+| `queued` | Scheduled in Buffer, not yet published; `external_id` = Buffer post id |
+| `sent` | Sent or posted; `sent_at` set. Email `external_id` = Message-ID |
 | `replied` | The person replied; no further touches |
 | `skipped` | Removed by the user |
 
@@ -113,11 +123,12 @@ Only `approved` items go out.
 
 ### Sending caps
 
-- Cold email goes from a warmed subdomain (`mail.<domain>`), never the main domain.
+- Cold email goes from any SMTP mailbox once the user accepts its risks ([configuring-sending.md](./configuring-sending.md) → step 5); a dedicated, warmed mailbox on `mail.<domain>` is best. Never a transactional service (ZeptoMail, Postmark), whose terms forbid it.
 - ≤ 30 cold emails a day per sending domain.
 - Every cold email ends with an opt-out line; an opt-out → `replied` with note `opted out`.
 - ≤ 3 touches per prospect; touches stop at the first reply.
 - Messages to strangers (LinkedIn, Messenger, Instagram DMs) and group posts are never automated; platform automation gets accounts restricted.
+- `send.js push` enforces the daily cap, the touch limit, and the stop at a reply for `smtp` items; approval checks the opt-out line.
 
 ### Links and UTMs
 
@@ -147,7 +158,7 @@ The Worker writes one D1 table, `events`, with two kinds of row:
 - **Never tracked**: page loads without UTMs, element clicks, scrolling, time on page, sessions, funnels, retention, revenue, devices, identity, dashboards. A need for any of these goes to PostHog instead of the Worker (https://posthog.com/docs/data-warehouse/run-sql-mcp).
 - **Fake rows**: `POST /e` is public, since every visitor's browser calls it. Only the user's Cloudflare account can read D1 or change the Worker, but anyone can post fake landings or conversions; the origin check stops other sites, not scripts. Ad blockers can also drop calls, which only undercounts. Conclusion checks conversions against the app's own count of the event; abuse → a Cloudflare rate-limiting rule.
 - **Where people stop**: no landings → channel or message; landings without conversions → the landing or the offer; replies without conversions → proof or trigger.
-- **Wrangler config**: every `wrangler` command for measurement passes `-c <marketing-root>/measurement/wrangler.toml`. Without it, an app built for Cloudflare (Astro, SvelteKit, Vite) redirects Wrangler through its `.wrangler/deploy/config.json`, and `deploy` ships the app's Worker instead.
+- **Wrangler config**: every `wrangler` command, measurement and media bucket alike, passes `-c <marketing-root>/measurement/wrangler.toml`. Without it, an app built for Cloudflare (Astro, SvelteKit, Vite) redirects Wrangler through its `.wrangler/deploy/config.json`, and `deploy` ships the app's Worker instead.
 - **Our report decides**: GA or other analytics on the product see the same UTMs but count differently (last non-direct click, sessions, modeled data); say so when the user compares.
 
 ### Videos

@@ -8,11 +8,11 @@ The marketing types a campaign can use, as one table that Target, Roll-out, Asse
 
 ### Types
 
-Every type ends in drafts the user approves and sends by hand.
+Every type ends in drafts the user approves; each goes out per its `send` ([marketing-contract.md](./marketing-contract.md) → **Outbox items**).
 
 | Type (`utm_medium`) | Audience source | Assets | Channel | Speed | Use when |
 | --- | --- | --- | --- | --- | --- |
-| `outbound` | Named prospects researched into `prospects.csv` | Personal email or DM; free audit or demo offer | Email from `mail.<domain>`; DMs | Days | No users yet; B2B or local businesses |
+| `outbound` | Named prospects researched into `prospects.csv` | Personal email or DM; free audit or demo offer | Email from a dedicated mailbox; DMs | Days | No users yet; B2B or local businesses |
 | `referral` | Existing happy users | Personal ask with the referrer's own link | Email or DM from the founder | Days–weeks | Some users like the product |
 | `content` | Followers and the platform's algorithm on the project's own accounts | Video post, text post | TikTok, Instagram, LinkedIn, Facebook, X, YouTube | Weeks–months | The message is proven; the long game |
 | `community` | Groups where the segment already asks for help (subreddits, Facebook groups, Discord, Slack) | A helpful answer or post that solves the problem first | The group | Days | The segment gathers in one place |
