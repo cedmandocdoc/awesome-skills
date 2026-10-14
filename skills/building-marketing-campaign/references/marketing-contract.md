@@ -153,6 +153,7 @@ The Worker writes one D1 table, `events`, with two kinds of row:
 - **Never tracked**: page loads without UTMs, element clicks, scrolling, time on page, sessions, funnels, retention, revenue, devices, identity, dashboards. A need for any of these goes to PostHog instead of the Worker (https://posthog.com/docs/data-warehouse/run-sql-mcp).
 - **Fake rows**: `POST /e` is public, since every visitor's browser calls it. Only the user's Cloudflare account can read D1 or change the Worker, but anyone can post fake landings or conversions; the origin check stops other sites, not scripts. Ad blockers can also drop calls, which only undercounts. Conclusion checks conversions against the app's own count of the event; abuse → a Cloudflare rate-limiting rule.
 - **Where people stop**: no landings → channel or message; landings without conversions → the landing or the offer; replies without conversions → proof or trigger.
+- **Wrangler config**: every `wrangler` command for measurement passes `-c <marketing-root>/measurement/wrangler.toml`. Without it, an app built for Cloudflare (Astro, SvelteKit, Vite) redirects Wrangler through its `.wrangler/deploy/config.json`, and `deploy` ships the app's Worker instead.
 - **Our report decides**: GA or other analytics on the product see the same UTMs but count differently (last non-direct click, sessions, modeled data); say so when the user compares.
 
 ### Videos

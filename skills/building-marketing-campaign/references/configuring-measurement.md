@@ -16,11 +16,14 @@ Copy [`../assets/measurement/`](../assets/measurement/) to `<marketing-root>/mea
 
 ### 2. Create the database and deploy
 
+From the repository root; every command names the config per [marketing-contract.md](./marketing-contract.md) → **Measurement**:
+
 ```bash
-cd <marketing-root>/measurement
-npx wrangler d1 create marketing        # paste database_id into wrangler.toml
-npx wrangler d1 execute marketing --remote --file schema.sql
-npx wrangler deploy
+C=<marketing-root>/measurement/wrangler.toml
+npx wrangler d1 create marketing -c $C        # paste database_id into wrangler.toml
+npx wrangler d1 execute marketing --remote --file <marketing-root>/measurement/schema.sql -c $C
+npx wrangler deploy --dry-run -c $C            # must name marketing-measurement; any other Worker → stop
+npx wrangler deploy -c $C
 ```
 
 ### 3. Add the snippet to the app
@@ -40,8 +43,8 @@ Per named event, call `conversion('<event>')` after the app gets the success res
 Open the app with `?utm_campaign=00-test&utm_medium=test&utm_source=test&utm_content=t1`, trigger the event, then:
 
 ```bash
-npx wrangler d1 execute marketing --remote --command "SELECT event, COUNT(*) FROM events WHERE campaign = '00-test' GROUP BY event"
-npx wrangler d1 execute marketing --remote --command "DELETE FROM events WHERE campaign = '00-test'"
+npx wrangler d1 execute marketing --remote -c <marketing-root>/measurement/wrangler.toml --command "SELECT event, COUNT(*) FROM events WHERE campaign = '00-test' GROUP BY event"
+npx wrangler d1 execute marketing --remote -c <marketing-root>/measurement/wrangler.toml --command "DELETE FROM events WHERE campaign = '00-test'"
 ```
 
 ### 6. Confirm to the user

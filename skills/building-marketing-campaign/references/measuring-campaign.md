@@ -21,9 +21,8 @@ Ask once about replies, comments, calls, or mentions that never reached the app.
 ### 3. Run the report
 
 ```bash
-cd <marketing-root>/measurement
-sed -e 's/{{CAMPAIGN}}/<id>/g' -e 's/{{EVENT}}/<conversion>/g' -e 's/{{UNTIL}}/<now ISO>/g' report.sql > /tmp/report.sql
-npx wrangler d1 execute marketing --remote --file /tmp/report.sql
+sed -e 's/{{CAMPAIGN}}/<id>/g' -e 's/{{EVENT}}/<conversion>/g' -e 's/{{UNTIL}}/<now ISO>/g' <marketing-root>/measurement/report.sql > /tmp/report.sql
+npx wrangler d1 execute marketing --remote --file /tmp/report.sql -c <marketing-root>/measurement/wrangler.toml
 ```
 
 Count the outbox per `utm_content` of direct items: sent, replied, opted out.
