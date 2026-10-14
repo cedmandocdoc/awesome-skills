@@ -2,7 +2,7 @@
 
 ## Overview
 
-**Authoring mode.** Structures an app into areas, actors, tasks, variations, and journeys from its code, writes a walkthrough for every task so every screen is covered or listed as a gap, and sets up the index and viewer. Run on a project with no walkthroughs root, or to add walkthroughs to an existing one.
+**Authoring mode.** Structures an app into areas, actors, tasks, variations, and journeys from its code, writes a walkthrough for every task so every screen is covered or listed as a gap, and writes the index. Run on a project with no walkthroughs root, or to add walkthroughs to an existing one.
 
 ## Prerequisites
 

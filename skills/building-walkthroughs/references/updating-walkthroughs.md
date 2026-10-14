@@ -12,7 +12,7 @@
 
 ### 1. Resolve root
 
-Per contract → **Resolve walkthroughs root**. Read `index.md` and every walkthrough's frontmatter. When the root's viewer files differ from [`../assets/app/`](../assets/app/), copy it over the root (`cp -R <skill>/assets/app/. <walkthroughs-root>/`) and run `npm install` there. Run `npm run check`; its findings join step 2.
+Per contract → **Resolve walkthroughs root**. Read `index.md` and every walkthrough's frontmatter. Run `npm run check`; its findings join step 2.
 
 ### 2. Map the change
 

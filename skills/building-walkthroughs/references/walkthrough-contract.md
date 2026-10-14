@@ -33,7 +33,7 @@ Never read `node_modules/` or `dist/`.
 ### Resolve walkthroughs root
 
 1. Search the repository for `index.md` files whose frontmatter has `doc_type: walkthroughs-index`, `generated_by: building-walkthroughs`, and `author` = **Author signature**.
-2. One match → use it. Several → ask, listing each path. None → **Setup** → **Initialize walkthroughs root** on Create; stop and report on other recipes.
+2. One match → use it. Several → ask, listing each path. None → `SKILL.md` → **Setup** creates one on Create; stop and report on other recipes.
 3. A root whose `index.md` has `lines` was built by 1.x: on Create or Update, rewrite it to this contract with Create from step 2 and replace the 1.x standing rule line; on Guide, offer that and stop.
 4. Read and write only under the resolved root, except the instruction files in `SKILL.md` → **Setup**.
 
@@ -275,14 +275,6 @@ Before confirming Create or Update:
 - [ ] Every `checkpoint` produces its `ends_with` facts.
 - [ ] No real credentials in `index.md`.
 - [ ] No file the viewer owns was edited.
-
-## Setup
-
-### Initialize walkthroughs root
-
-1. Target = user-named folder, else `walkthroughs/`. Target not empty → ask for another path.
-2. Copy everything in [`../assets/app/`](../assets/app/), dotfiles included (`cp -R <skill>/assets/app/. <walkthroughs-root>/`), then run `npm install` there.
-3. Write `index.md` from [`../assets/index.md`](../assets/index.md).
 
 ## Related
 
