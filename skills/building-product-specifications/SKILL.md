@@ -2,7 +2,7 @@
 name: building-product-specifications
 id: c4912b84-e88f-4515-8c83-e99288abca07
 description: Creates and amends product specification markdown — PRD, FRD, TRD, user story, and UI specs (flow, screen structure, view states) — with consistent layout and frontmatter. Use only when the user names this skill (`/building-product-specifications`, `$building-product-specifications`, or "building-product-specifications"), or references a spec file under a marked docs root (`@docs/prd.md`, `@docs/features/checkout/frd.md`) — no code implementation.
-version: 2.4.0
+version: 2.5.0
 ---
 
 # Building Product Specifications
@@ -11,8 +11,8 @@ version: 2.4.0
 
 | Item | Kind | Required | When | Done when | How |
 | --- | --- | --- | --- | --- | --- |
-| Root path | ask | required | All | [spec-contract.md](references/spec-contract.md) → **Resolve docs root** finds a root | Ask for the folder, relative to the repository root, with no default (`docs/`, `product-docs/`); missing or empty → use it, else ask for another path; recorded as the root's location |
-| Root marker | static | required | All | `<docs-root>/index.md` matches [spec-contract.md](references/spec-contract.md) → **Finding docs root** | Write `index.md` from [`assets/index.md`](assets/index.md) |
+| Root path | ask | required | All | [spec-contract.md](references/spec-contract.md) → **Resolve docs root** finds a root | Ask for the folder (default `docs/`); missing or empty → use it, else ask for another path; recorded as the root's location |
+| Root marker | static | required | All | `<docs-root>/index.md` carries [spec-contract.md](references/spec-contract.md) → **Author signature** | Write `index.md` from [`assets/index.md`](assets/index.md) |
 
 ## Workflow
 
