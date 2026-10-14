@@ -2,7 +2,7 @@
 name: managing-skills
 id: 890f6e40-337a-47a7-a3c8-5652ff6fd936
 description: Creates, updates, and reviews agent skills that follow this catalog's house style — directory layout, SKILL.md and reference sections, naming, independence, invocation, setup, and lean writing. Use when the user asks to write, create, add, update, lean, trim, restructure, or review a skill or SKILL.md, or when authoring skills under skills/.
-version: 4.0.2
+version: 4.1.0
 ---
 
 # Managing Skills

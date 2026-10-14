@@ -105,8 +105,8 @@ version: 1.0.0
 | Item | Kind | Required | When | Done when | How |
 | --- | --- | --- | --- | --- | --- |
 | Node.js 20+ | user | required | All | `node --version` succeeds | https://nodejs.org |
-| Root path | ask | required | Create | A root marker exists | Ask for the folder (default `<root>/`); recorded as the root's location |
-| Root marker | static | required | Create | `<root>/index.md` carries the author signature | [<name>-contract.md](references/<name>-contract.md) → **Initialize root** |
+| Root path | ask | required | Create | [<name>-contract.md](references/<name>-contract.md) → **Resolve <thing> root** finds a root | Ask for the folder (default `<thing>/`); missing or empty → use it, else ask for another path; recorded as the root's location |
+| Root marker | static | required | Create | `<root>/index.md` carries [<name>-contract.md](references/<name>-contract.md) → **Author signature** | Write `index.md` from [`assets/index.md`](assets/index.md) |
 
 ## Workflow
 
