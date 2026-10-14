@@ -27,6 +27,12 @@
 - Render per-step fields with `stepper.flow.switch(...)` and compose via `form.AppField` + pre-bound `field.*` components.
 - Use `stepper.flow.is("done")` for completion state.
 
+## Setup
+
+```bash
+node ../scripts/install-packages.cjs @stepperize/react @tanstack/react-form zod
+```
+
 ## Examples
 
 ### Multi-step form
@@ -126,12 +132,6 @@ export function CheckoutStepForm() {
     </form.AppForm>
   );
 }
-```
-
-## Setup
-
-```bash
-node ../scripts/install-packages.cjs @stepperize/react @tanstack/react-form zod
 ```
 
 ## Related

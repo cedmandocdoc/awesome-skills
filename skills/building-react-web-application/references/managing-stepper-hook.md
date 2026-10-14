@@ -37,6 +37,12 @@
 - `stepper.flow.is(id)` for simple conditionals.
 - `stepper.navigation.next()`, `prev()`, `goTo(id)`, `reset()` for transitions.
 
+## Setup
+
+```bash
+node ../scripts/install-packages.cjs @stepperize/react
+```
+
 ## Examples
 
 ### Feature hook
@@ -111,12 +117,6 @@ export function BookingMiniStepper() {
     </section>
   );
 }
-```
-
-## Setup
-
-```bash
-node ../scripts/install-packages.cjs @stepperize/react
 ```
 
 ## Related
