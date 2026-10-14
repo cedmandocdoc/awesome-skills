@@ -42,13 +42,12 @@ Never read `node_modules/`. Surface files, spec schema, and markers: [preview-co
 
 A design root is the folder holding a valid `index.md`. Roots never nest.
 
-| Situation | Root |
+| Situation | Default |
 | --- | --- |
-| First design in the repo | `design/`, or the user-named path |
+| First design in the repo | `design/` |
 | Several intentions started together (e.g. web + mobile) | `design/<intention>/` each, or one root holding all surfaces when the user asks |
-| A root already exists and a new intention arrives | New folder named for the intention; ask for the path when `design/` itself is the existing root |
+| A root already exists and a new intention arrives | A folder named for the intention; none when `design/` itself is the existing root |
 
-- Target missing or empty → create it. Not empty → ask whether to initialize there (keep existing files) or pick another path. A target that already holds `package.json`, `index.html`, or `viewer/` always needs another path.
 - Only this skill creates or replaces `index.md`.
 
 ### Resolve design root
