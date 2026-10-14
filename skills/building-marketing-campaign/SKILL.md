@@ -12,7 +12,7 @@ description: >-
   `$building-marketing-campaign`, or "building-marketing-campaign"), or
   references a file under a marked marketing root
   (`@marketing/campaigns/03-clinics-mm/campaign.md`).
-version: 4.1.0
+version: 4.1.1
 ---
 
 # Building Marketing Campaign
@@ -25,7 +25,7 @@ version: 4.1.0
 | Cloudflare account | user | required | Execution, Check in, Conclude | `npx wrangler whoami` shows an account | https://dash.cloudflare.com/sign-up, then `npx wrangler login` |
 | [hyperframes](https://github.com/heygen-com/hyperframes/tree/main/skills/hyperframes) | user | optional | Assets: video | Found per [marketing-contract.md](references/marketing-contract.md) → **Discover dependency skill** | `npx hyperframes skills update` (core skills only; it installs each workflow the first time it routes to one) |
 | Google Places API key | user | optional | Target: local businesses | `.env` has `GOOGLE_PLACES_API_KEY` | https://developers.google.com/maps/documentation/places/web-service/get-api-key; store it in `.env` |
-| Root path | ask | required | Start a campaign | [marketing-contract.md](references/marketing-contract.md) → **Resolve marketing root** finds a root | Ask for the folder (default `marketing/`); missing or empty → use it, else another path; recorded as the root's location |
+| Root path | ask | required | Start a campaign | [marketing-contract.md](references/marketing-contract.md) → **Resolve marketing root** finds a root | Ask for the folder (default `marketing/`); missing or empty → use it, else ask for another path; recorded as the root's location |
 | Root marker | static | required | Start a campaign | `<marketing-root>/index.md` carries [marketing-contract.md](references/marketing-contract.md) → **Author signature** | Write `index.md` from [`assets/index.md`](assets/index.md) |
 | Standing rule | auto | required | Start a campaign | Root `AGENTS.md` has the line | Add `- When a change alters the product's features, pricing or plans, or the code that confirms a conversion event, run the building-marketing-campaign Refresh positioning recipe in the same work.` to root `AGENTS.md` (create when missing) and to root `CLAUDE.md` when it exists without importing `AGENTS.md`; skip a file that has it |
 | App origins and domain | ask | required | Execution | `<marketing-root>/measurement/wrangler.toml` → `ALLOWED_ORIGINS` lists the app's origins | Ask for the app's origins and whether its domain's DNS is on Cloudflare; recorded in that `wrangler.toml` → `ALLOWED_ORIGINS` and `routes` |
