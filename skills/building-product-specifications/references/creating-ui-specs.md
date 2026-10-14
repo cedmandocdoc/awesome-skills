@@ -2,11 +2,11 @@
 
 ## Overview
 
-**Docs only.** Creates or amends product or feature `ui-specs.md` — navigation flow, screen structure, view states, and transitions. User stories own journey outcomes; UI specs own presentation. TRD owns technical architecture. Infra: [spec-contract.md](./spec-contract.md) → **Resolve docs root**, **Path resolution**, **Upstream reading**, **Create or amend**, **Hub sync**, **Diagrams**, **Platform differences**.
+**Docs only.** Creates or amends product or feature `ui-specs.md` — navigation flow, screen structure, view states, and transitions. User stories own journey outcomes; UI specs own presentation. TRD owns technical architecture.
 
 ## Prerequisites
 
-Per [spec-contract.md](./spec-contract.md) → **Resolve docs root**.
+Per [spec-contract.md](./spec-contract.md) → **Resolve docs root**, **Path resolution**, **Upstream reading**, **Create or amend**, **Hub sync**, **Diagrams**, **Platform differences**.
 
 ## Guidelines
 

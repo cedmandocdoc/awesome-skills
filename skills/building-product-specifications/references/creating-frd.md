@@ -2,17 +2,17 @@
 
 ## Overview
 
-**Docs only.** Creates or amends `<docs-root>/features/<slug>/frd.md`. Infra: [spec-contract.md](./spec-contract.md) → **Resolve docs root**, **Feature slug**, **Create or amend**, **Hub sync**, **Tier**, **Platform differences**.
+**Docs only.** Creates or amends `<docs-root>/features/<slug>/frd.md`.
 
 ## Prerequisites
 
-Per [spec-contract.md](./spec-contract.md) → **Resolve docs root**.
+Per [spec-contract.md](./spec-contract.md) → **Resolve docs root**, **Feature slug**, **Create or amend**, **Hub sync**, **Tier**, **Platform differences**.
 
 ## Guidelines
 
 ### 1. Resolve docs root and slug
 
-Per [spec-contract.md](./spec-contract.md) → **Resolve docs root** and **Feature slug**. Initialize when needed.
+Per [spec-contract.md](./spec-contract.md) → **Resolve docs root** and **Feature slug**.
 
 ### 2. Gather context
 

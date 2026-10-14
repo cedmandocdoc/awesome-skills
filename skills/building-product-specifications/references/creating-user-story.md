@@ -2,11 +2,11 @@
 
 ## Overview
 
-**Docs only.** Creates or amends product or feature `user-story.md`. Navigation, screen structure, view states, and transitions belong in `ui-specs.md` — stories name outcomes; UI specs define presentation. Infra: [spec-contract.md](./spec-contract.md) → **Resolve docs root**, **Path resolution**, **Upstream reading**, **Create or amend**, **Hub sync**, **Platform differences**.
+**Docs only.** Creates or amends product or feature `user-story.md`. Navigation, screen structure, view states, and transitions belong in `ui-specs.md` — stories name outcomes; UI specs define presentation.
 
 ## Prerequisites
 
-Per [spec-contract.md](./spec-contract.md) → **Resolve docs root**.
+Per [spec-contract.md](./spec-contract.md) → **Resolve docs root**, **Path resolution**, **Upstream reading**, **Create or amend**, **Hub sync**, **Platform differences**.
 
 ## Guidelines
 

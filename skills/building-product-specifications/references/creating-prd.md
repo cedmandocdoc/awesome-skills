@@ -2,17 +2,17 @@
 
 ## Overview
 
-**Docs only.** Creates or amends `<docs-root>/prd.md`. Infra: [spec-contract.md](./spec-contract.md) → **Resolve docs root**, **Initialize docs root**, **Create or amend**, **Tier**, **No auto-spawn**.
+**Docs only.** Creates or amends `<docs-root>/prd.md`.
 
 ## Prerequisites
 
-Per [spec-contract.md](./spec-contract.md) → **Resolve docs root**.
+Per [spec-contract.md](./spec-contract.md) → **Resolve docs root**, **Create or amend**, **Tier**, **No auto-spawn**.
 
 ## Guidelines
 
 ### 1. Resolve docs root
 
-Per [spec-contract.md](./spec-contract.md) → **Resolve docs root**. Initialize when no `index.md` marker exists.
+Per [spec-contract.md](./spec-contract.md) → **Resolve docs root**.
 
 ### 2. Gather context
 

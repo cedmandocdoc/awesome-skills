@@ -27,11 +27,11 @@ Every `<docs-root>/index.md` must include this value in frontmatter `author`. Se
 
 ### Output layout
 
-Only this skill may establish a docs root. The root is always marked by `<docs-root>/index.md`.
+Only this skill creates or replaces `<docs-root>/index.md`, the docs root marker.
 
 ```text
 <docs-root>/
-  index.md                 # docs root marker — required; created first
+  index.md                 # docs root marker
   prd.md
   trd.md                   # optional: system / platform architecture
   user-story.md            # optional: product-level journeys
@@ -44,7 +44,7 @@ Only this skill may establish a docs root. The root is always marked by `<docs-r
       ui-specs.md           # flow, screen structure, view states for the feature
 ```
 
-Templates: [`../assets/`](../assets/), including [`../assets/index.md`](../assets/index.md) for new docs roots.
+Templates: [`../assets/`](../assets/).
 
 ### Resolve docs root
 
@@ -52,7 +52,7 @@ Templates: [`../assets/`](../assets/), including [`../assets/index.md`](../asset
 2. **Decide location:**
    - **One match** → use that folder.
    - **Multiple matches** → ask which root (list full paths to each `index.md`).
-   - **No match** → ask where to create the specs folder (no default path), then **Initialize docs root**.
+   - **No match** → `SKILL.md` → **Setup** creates one.
 3. Write specs only under the resolved root.
 
 ### Finding docs root
@@ -66,20 +66,6 @@ Search the repository for `index.md` files whose YAML frontmatter contains **all
 | `generated_by` | `building-product-specifications` **or** legacy `managing-product-specifications` |
 
 The docs root is the parent directory of each matching `index.md` (e.g. `docs/index.md` → `docs/`). After resolving, list and read spec files only under that directory.
-
-### Initialize docs root
-
-When **no** valid `index.md` exists:
-
-1. **Ask** for the target folder path (relative to repository root, e.g. `docs/`, `product-docs/`).
-2. **Verify empty:**
-   - Path does not exist → OK; create the directory.
-   - Path exists with no files and no subdirectories → OK.
-   - Path exists and is not empty → stop; ask for another path.
-3. Write `<docs-root>/index.md` from [`../assets/index.md`](../assets/index.md) with the **Author signature** in `author`.
-4. Proceed with the requested spec file(s) under that root.
-
-Only this skill may create or replace `index.md`.
 
 ### Feature slug
 
