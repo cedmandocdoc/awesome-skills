@@ -7,33 +7,26 @@ description: >-
   answer up, walking an idea tree from problem to MVP scope, flows, data, and
   stack until every branch is decided or parked. Use only when the user names
   this skill (`/building-idea` or `$building-idea`).
-version: 1.0.1
+version: 1.1.0
 disable-model-invocation: true
 ---
 
 # Building Idea
 
-## Overview
+## Setup
 
-Turns a rough idea into a buildable shape in conversation. The agent is a co-builder, not an interviewer: it asks only what the user alone can decide, suggests what has a sensible default, and looks up what the codebase or chat already answers. Branches and summary format: [idea-contract.md](references/idea-contract.md).
+None.
 
-## Agent workflow
+## Workflow
 
-Runs only when the user invokes `/building-idea` or `$building-idea`. Once invoked, it steers the rest of the chat. Works with or without a repository.
+1. **Setup** — for each **Setup** row whose When covers the request, in order: Done when holds → skip; `user` → stop and print its How when required, continue without it when optional; `ask` → fill what the request answers, ask the rest together in one message, record each answer; `auto` and `static` → run.
+2. **Contract** — read [idea-contract.md](references/idea-contract.md).
+3. **Recipe** — match one **Recipes** row; open every doc in its Read column.
 
-### Steps
+- Once invoked, it steers the rest of the chat.
 
-1. **Open** — restate the idea, map what is already known → [executing-ideation.md](references/executing-ideation.md) → **1. Open the idea**
-2. **Loop** — one branch per turn: ask, suggest, or look up → [executing-ideation.md](references/executing-ideation.md) → **2. Run the turn loop**
-3. **Wrap up** — decision summary in chat → [executing-ideation.md](references/executing-ideation.md) → **3. Wrap up**
+## Recipes
 
-## Reference index
-
-### Contract
-
-[idea-contract.md](references/idea-contract.md) — idea tree branches, branch states, summary format.
-
-| Doc | When to use |
-| --- | --- |
-| [idea-contract.md](references/idea-contract.md) | Branch order, dependencies, resolved criteria, summary format |
-| [executing-ideation.md](references/executing-ideation.md) | Open, turn loop, move choice, steering, wrap up |
+| Intent | Example phrasing | Read |
+| --- | --- | --- |
+| Build an idea | "/building-idea a habit tracker for remote teams", "/building-idea" | [executing-ideation.md](references/executing-ideation.md) |
