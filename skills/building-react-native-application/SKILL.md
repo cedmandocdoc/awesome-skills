@@ -2,110 +2,48 @@
 name: building-react-native-application
 id: ddfed93c-f419-4c5f-8832-85acc8f85f00
 description: Guides building Expo/React Native apps with TypeScript using a consistent architecture and library stack (NativeWind, React Navigation static config, TanStack Query, Zustand, Axios, React Native Reusables-style primitives in src/ui). Use when creating an Expo app, or changing code in an app whose `package.json` has `expo`, `@react-navigation/native`, and `nativewind`, to follow these conventions.
-version: 1.3.0
+version: 1.4.0
 ---
 
 # React Native application
 
-## Overview
-
-Opinionated ecosystem for building Expo/React Native apps with a consistent architecture, library stack, and UI system (`src/ui`).
-
-### Tech stack
-
-| Layer | Choice |
-| --- | --- |
-| Runtime | Expo |
-| Language | TypeScript |
-| Styling | NativeWind, Tailwind CSS, class-variance-authority |
-| Routing | React Navigation (static config, `src/routes`) |
-| Server state | TanStack Query |
-| Client global state | Zustand |
-| HTTP | Axios |
-| Dates | date-fns (`src/libs/date-utils/`) |
-| Presentational UI | React Native Reusables-style primitives in `src/ui/` |
-
 ## Setup
 
-| Item | Required | When | How |
-| --- | --- | --- | --- |
-| Standing rule | required | Scaffold new app | Add `` - `<target_path>` follows building-react-native-application; load it before changing code there. `` to root `AGENTS.md` (create when missing) and to root `CLAUDE.md` when it exists without importing `AGENTS.md`; skip a file that has it |
+| Item | Kind | Required | When | Done when | How |
+| --- | --- | --- | --- | --- | --- |
+| Node.js 20.19+ | user | required | All | `node --version` reports 20.19 or later | https://nodejs.org |
+| Standing rule | auto | required | Scaffold new app | Root `AGENTS.md` has the line | Add `` - `<target_path>` follows building-react-native-application; load it before changing code there. `` to root `AGENTS.md` (create when missing) and to root `CLAUDE.md` when it exists without importing `AGENTS.md`; skip a file that has it |
 
-## Agent workflow
+## Workflow
 
-Follow this skill for Expo/React Native work. Resolve every **required** **Setup** row, then match **Entry points** and every applicable **Task types** row; open every linked local reference before coding. For component work, open [creating-component](./references/creating-component.md) and follow its decision tree. Platform docs live in each reference’s **References** section.
+1. **Setup** — for each **Setup** row whose When covers the request, in order: Done when holds → skip; `user` → stop and print its How when required, continue without it when optional; `ask` → fill what the request answers, ask the rest together in one message, record each answer; `auto` and `static` → run.
+2. **Contract** — read [native-app-contract.md](references/native-app-contract.md).
+3. **Recipe** — match one **Recipes** row; open every doc in its Read column.
 
-### Entry points
+- A request that spans rows (a new screen with a form) matches each of them.
 
-Use the first matching row; combine when the task spans types.
+## Recipes
 
-| Entry | When | Go to |
+| Intent | Example phrasing | Read |
 | --- | --- | --- |
-| Component | Building, moving, or recategorizing any component | [creating-component](./references/creating-component.md) |
-| Structure | Folder roles, dependency flow, or where a module belongs | [managing-project-structure](./references/managing-project-structure.md) |
-| Task bundle | API, forms, styling, bootstrap, navigation, keyboard, fonts, splash | **Task types** table |
-| Lookup | Known doc name or single reference | **Reference index** |
-
-### Task types
-
-Match every row that applies. Open every local link in **Docs** before coding.
-
-| Task type | Docs |
-| --- | --- |
-| New screen / feature | [managing-project-structure](./references/managing-project-structure.md), [creating-feature](./references/creating-feature.md), [creating-route-component](./references/creating-route-component.md), [creating-screen-component](./references/creating-screen-component.md), [creating-component](./references/creating-component.md) |
-| UI primitive (`src/ui/`) | [creating-component](./references/creating-component.md), [creating-ui-component](./references/creating-ui-component.md), [discovering-registry-components](./references/discovering-registry-components.md), [managing-wrapper-components](./references/managing-wrapper-components.md), [add-registry-component.cjs](./scripts/add-registry-component.cjs) |
-| Feature component | [creating-component](./references/creating-component.md), [creating-feature-component](./references/creating-feature-component.md), [managing-wrapper-components](./references/managing-wrapper-components.md) |
-| Bottom sheet | [creating-component](./references/creating-component.md), [creating-bottom-sheet-component](./references/creating-bottom-sheet-component.md), [managing-wrapper-components](./references/managing-wrapper-components.md) |
-| Async / list UI | [creating-component](./references/creating-component.md), [creating-async-component](./references/creating-async-component.md), [creating-api](./references/creating-api.md), [managing-state](./references/managing-state.md) |
-| Form (single step) | [creating-form-component](./references/creating-form-component.md), [managing-form-error](./references/managing-form-error.md), [managing-state](./references/managing-state.md), [managing-date](./references/managing-date.md) |
-| Multi-step form | [managing-stepper-hook](./references/managing-stepper-hook.md), [managing-stepper-form](./references/managing-stepper-form.md), [creating-form-component](./references/creating-form-component.md), [managing-form-error](./references/managing-form-error.md) |
-| API + data hooks | [creating-api](./references/creating-api.md), [setting-up-axios](./references/setting-up-axios.md), [managing-api-error](./references/managing-api-error.md), [managing-state](./references/managing-state.md), [managing-date](./references/managing-date.md) |
-| Date / time | [managing-date](./references/managing-date.md) |
-| Refactor / move component | [creating-component](./references/creating-component.md) |
-| Styling / theme | [setting-up-nativewind](./references/setting-up-nativewind.md), [managing-styling](./references/managing-styling.md), [setting-up-theming](./references/setting-up-theming.md), [setting-up-tailwind-theme](./references/setting-up-tailwind-theme.md), [setting-up-navigation-theme](./references/setting-up-navigation-theme.md), [overriding-classname](./references/overriding-classname.md) |
-| Navigation components & backgrounds | [creating-navigation-component](./references/creating-navigation-component.md), [setting-up-navigation-theme](./references/setting-up-navigation-theme.md), [managing-screen-background](./references/managing-screen-background.md) |
-| Navigation hooks | [creating-route-component](./references/creating-route-component.md), [creating-navigation-component](./references/creating-navigation-component.md) |
-| Keyboard | [Keyboard controller — Components](https://kirillzyusko.github.io/react-native-keyboard-controller/docs/guides/components-overview.md) |
-| Fonts | [setting-up-theming](./references/setting-up-theming.md), [setting-up-tailwind-theme](./references/setting-up-tailwind-theme.md), [Expo — Fonts](https://docs.expo.dev/develop/user-interface/fonts/index.md) |
-| Splash screen | [Expo — SplashScreen](https://docs.expo.dev/versions/latest/sdk/splash-screen.md) |
-| Scaffold new app | [scaffolding-application](./references/scaffolding-application.md) |
-| Project bootstrap | [managing-project-structure](./references/managing-project-structure.md), [managing-environment](./references/managing-environment.md), [managing-linting](./references/managing-linting.md), [managing-package-installs](./references/managing-package-installs.md), [setting-up-nativewind](./references/setting-up-nativewind.md), [setting-up-registry-components](./references/setting-up-registry-components.md) |
-| Routing only | [creating-route-component](./references/creating-route-component.md), [creating-navigation-component](./references/creating-navigation-component.md) |
-
-## Reference index
-
-| Reference | Entry | Layer | Purpose |
-| --- | --- | --- | --- |
-| [creating-api](./references/creating-api.md) | | API | HTTP modules under `src/api/` |
-| [creating-async-component](./references/creating-async-component.md) | | Component | Loading, error, and list UI wrappers |
-| [creating-bottom-sheet-component](./references/creating-bottom-sheet-component.md) | | Component | Bottom sheet UI in `src/ui/BottomSheet/` |
-| [creating-component](./references/creating-component.md) | Component | Component | Decision tree for any component work |
-| [creating-feature](./references/creating-feature.md) | | Feature | Feature module folders and barrels |
-| [creating-feature-component](./references/creating-feature-component.md) | | Component | Domain UI blocks in features |
-| [creating-form-component](./references/creating-form-component.md) | | Form | Form fields and form shells |
-| [creating-navigation-component](./references/creating-navigation-component.md) | | Route | Reusable headers, tab bars, drawer content |
-| [creating-route-component](./references/creating-route-component.md) | | Route | `[Name][NavigatorType]` modules in `src/routes/` |
-| [creating-screen-component](./references/creating-screen-component.md) | | Feature | Route-facing `*Screen` in features |
-| [creating-ui-component](./references/creating-ui-component.md) | | Component | Shared primitives in `src/ui/` |
-| [discovering-registry-components](./references/discovering-registry-components.md) | | Component | Registry lookup by intent and labels |
-| [managing-api-error](./references/managing-api-error.md) | | API | API error handling patterns |
-| [managing-date](./references/managing-date.md) | | Date | date-fns and `src/libs/date-utils/` |
-| [managing-environment](./references/managing-environment.md) | | Setup | Feature `env.ts` and env vars |
-| [managing-form-error](./references/managing-form-error.md) | | Form | Form validation and error display |
-| [managing-linting](./references/managing-linting.md) | | Setup | ESLint and Prettier setup |
-| [managing-package-installs](./references/managing-package-installs.md) | | Setup | Package manager detection and install scripts |
-| [managing-project-structure](./references/managing-project-structure.md) | Structure | Architecture | Folder layout and dependency flow |
-| [managing-screen-background](./references/managing-screen-background.md) | | Route | Screen background vs navigation theme |
-| [managing-state](./references/managing-state.md) | | State | TanStack Query hooks and Zustand stores |
-| [managing-stepper-form](./references/managing-stepper-form.md) | | Form | Multi-step form UI |
-| [managing-stepper-hook](./references/managing-stepper-hook.md) | | Form | Multi-step form state hook |
-| [managing-styling](./references/managing-styling.md) | | Styling | Styling conventions and tokens |
-| [managing-wrapper-components](./references/managing-wrapper-components.md) | | Component | Wrapper and composition patterns |
-| [overriding-classname](./references/overriding-classname.md) | | Styling | `className` override rules |
-| [scaffolding-application](./references/scaffolding-application.md) | | Setup | Expo `blank-typescript` scaffold |
-| [setting-up-axios](./references/setting-up-axios.md) | | API | Axios client setup |
-| [setting-up-nativewind](./references/setting-up-nativewind.md) | | Styling | NativeWind install; pnpm isolated JSX runtime |
-| [setting-up-navigation-theme](./references/setting-up-navigation-theme.md) | | Styling | React Navigation theme objects |
-| [setting-up-registry-components](./references/setting-up-registry-components.md) | | Setup | Registry / `src/ui/` bootstrap |
-| [setting-up-theming](./references/setting-up-theming.md) | | Styling | Design tokens and theme CSS |
-| [setting-up-tailwind-theme](./references/setting-up-tailwind-theme.md) | | Styling | Tailwind / NativeWind theme config |
+| Set up | "Set up building-react-native-application", "Is building-react-native-application ready?" | **Setup** — run Workflow step 1 for every row, then report each row's state |
+| Scaffold new app | "Create an Expo app in apps/mobile", "Scaffold here" | [scaffolding-application.md](references/scaffolding-application.md) |
+| Project bootstrap | "Add linting and env handling to the app", "Set up NativeWind and src/ui" | [managing-project-structure.md](references/managing-project-structure.md), [managing-environment.md](references/managing-environment.md), [managing-linting.md](references/managing-linting.md), [managing-package-installs.md](references/managing-package-installs.md), [setting-up-nativewind.md](references/setting-up-nativewind.md), [setting-up-registry-components.md](references/setting-up-registry-components.md) |
+| Structure | "Where does this module belong?", "Can a feature import another feature?" | [managing-project-structure.md](references/managing-project-structure.md) |
+| Component | "Build a component", "Move this component to the right layer" | [creating-component.md](references/creating-component.md) |
+| New screen / feature | "Add a settings screen", "New orders feature" | [managing-project-structure.md](references/managing-project-structure.md), [creating-feature.md](references/creating-feature.md), [creating-route-component.md](references/creating-route-component.md), [creating-screen-component.md](references/creating-screen-component.md), [creating-component.md](references/creating-component.md) |
+| UI primitive | "Add a Dialog to src/ui", "Pull the Reusables button" | [creating-component.md](references/creating-component.md), [creating-ui-component.md](references/creating-ui-component.md), [discovering-registry-components.md](references/discovering-registry-components.md), [managing-wrapper-components.md](references/managing-wrapper-components.md), [add-registry-component.cjs](scripts/add-registry-component.cjs) |
+| Feature component | "Build the CartItemRow" | [creating-component.md](references/creating-component.md), [creating-feature-component.md](references/creating-feature-component.md), [managing-wrapper-components.md](references/managing-wrapper-components.md) |
+| Bottom sheet | "Show filters in a bottom sheet" | [creating-component.md](references/creating-component.md), [creating-bottom-sheet-component.md](references/creating-bottom-sheet-component.md), [managing-wrapper-components.md](references/managing-wrapper-components.md) |
+| Async / list UI | "Show the orders list with loading and error states" | [creating-component.md](references/creating-component.md), [creating-async-component.md](references/creating-async-component.md), [creating-api.md](references/creating-api.md), [managing-state.md](references/managing-state.md) |
+| Form | "Add a profile form" | [creating-form-component.md](references/creating-form-component.md), [managing-form-error.md](references/managing-form-error.md), [managing-state.md](references/managing-state.md), [managing-date.md](references/managing-date.md) |
+| Multi-step form | "Make checkout a three-step form" | [managing-stepper-hook.md](references/managing-stepper-hook.md), [managing-stepper-form.md](references/managing-stepper-form.md), [creating-form-component.md](references/creating-form-component.md), [managing-form-error.md](references/managing-form-error.md) |
+| API + data hooks | "Fetch orders from the API", "Add a mutation for checkout" | [creating-api.md](references/creating-api.md), [setting-up-axios.md](references/setting-up-axios.md), [managing-api-error.md](references/managing-api-error.md), [managing-state.md](references/managing-state.md), [managing-date.md](references/managing-date.md) |
+| Date / time | "Format the order date", "Handle time zones" | [managing-date.md](references/managing-date.md) |
+| Styling / theme | "Change the brand colors", "Override a className" | [setting-up-nativewind.md](references/setting-up-nativewind.md), [managing-styling.md](references/managing-styling.md), [setting-up-theming.md](references/setting-up-theming.md), [setting-up-tailwind-theme.md](references/setting-up-tailwind-theme.md), [setting-up-navigation-theme.md](references/setting-up-navigation-theme.md), [overriding-classname.md](references/overriding-classname.md) |
+| Navigation components and backgrounds | "Custom tab bar", "The screen background shows white behind the header" | [creating-navigation-component.md](references/creating-navigation-component.md), [setting-up-navigation-theme.md](references/setting-up-navigation-theme.md), [managing-screen-background.md](references/managing-screen-background.md) |
+| Navigation hooks | "Navigate to settings from the card" | [creating-route-component.md](references/creating-route-component.md), [creating-navigation-component.md](references/creating-navigation-component.md) |
+| Keyboard | "The keyboard covers the input" | [Keyboard controller — Components](https://kirillzyusko.github.io/react-native-keyboard-controller/docs/guides/components-overview.md) |
+| Fonts | "Use Inter as the body font" | [setting-up-theming.md](references/setting-up-theming.md), [setting-up-tailwind-theme.md](references/setting-up-tailwind-theme.md), [Expo — Fonts](https://docs.expo.dev/develop/user-interface/fonts/index.md) |
+| Splash screen | "Keep the splash until fonts load" | [Expo — SplashScreen](https://docs.expo.dev/versions/latest/sdk/splash-screen.md) |
+| Routing only | "Add a settings stack", "Register a new tab" | [creating-route-component.md](references/creating-route-component.md), [creating-navigation-component.md](references/creating-navigation-component.md) |
