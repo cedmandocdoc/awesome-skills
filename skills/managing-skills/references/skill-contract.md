@@ -86,7 +86,7 @@ Invocation lives in frontmatter and `agents/openai.yaml` ([invocation-contract.m
 - One row per intent or task type. Read lists every doc the row needs, in reading order.
 - The **Set up** row comes first when **Setup** has rows, verbatim per [setup-contract.md](./setup-contract.md) → **Set up recipe**.
 - A skill with one procedure has one intent row; its steps live in a reference, never in `SKILL.md`.
-- Every reference is reachable from a Read cell, Workflow step 2, or a link in another reference. Templates are linked from the reference that copies them.
+- Every reference is reachable from a Setup How, a Read cell, Workflow step 2, or a link in another reference. Templates are linked from the reference that copies them.
 
 ### SKILL.md skeleton
 
@@ -267,7 +267,7 @@ A user may install one skill without the rest of the catalog. In-skill markdown 
 - [ ] Reference files use kebab-case filenames and verb prefixes; body uses Overview → Prerequisites → Guidelines → Setup → Examples → Related → References (omit empty sections)
 - [ ] `SKILL.md` has exactly **Setup** → **Workflow** → **Recipes** under the title; no other sections or subsections
 - [ ] **Workflow** steps 1 and 3 are verbatim; step 2 links every contract; boundaries hold for every recipe
-- [ ] Every reference is reachable from **Recipes**, Workflow step 2, or another reference
+- [ ] Every reference is reachable from **Setup**, **Recipes**, Workflow step 2, or another reference
 - [ ] No relative path links to other skills under `skills/`. Dependency skills use GitHub URLs; this catalog also uses `name` + `id` discovery
 - [ ] Skill dependency rows repeat in the contract with discovery
 - [ ] [invocation-contract.md](./invocation-contract.md) → **Checklist** and [setup-contract.md](./setup-contract.md) → **Checklist** pass

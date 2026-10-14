@@ -43,7 +43,7 @@ Write each `ask` answer where later runs read it: the root marker's frontmatter 
 
 ### Set up recipe
 
-A skill with Setup rows routes setup through the first **Recipes** row, verbatim:
+A skill with Setup rows routes setup through the first **Recipes** row. The Read cell is verbatim; Example phrasing may add the skill's own setup requests ("Set up measurement"):
 
 ```markdown
 | Set up | "Set up <thing>", "Is <name> ready?" | **Setup** — run Workflow step 1 for every row, then report each row's state |
