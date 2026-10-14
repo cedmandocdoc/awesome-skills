@@ -2,72 +2,33 @@
 name: deploying-supabase-application
 id: 489208cd-16f5-4e4f-92c3-35813f082ce3
 description: Prepare a Supabase app for production deploy and connect it to a remote project via Supabase GitHub integration — discover the working directory, validate migrations and functions locally, and document dashboard settings (production branch, deploy to production). Use when deploying Supabase, connecting a repository to Supabase GitHub integration, setting up backend auto-deploy on merge, or validating migrations and Edge Functions before production release.
-version: 1.0.1
+version: 1.1.0
 ---
 
 # Deploying a Supabase application
 
-## Overview
+## Setup
 
-Deploy backend changes with **Supabase GitHub integration**: connect Git in the dashboard, then merge to the production branch to apply migrations and deploy declared Edge Functions. No `supabase link` or manual `db push` for the default workflow.
+| Item | Kind | Required | When | Done when | How |
+| --- | --- | --- | --- | --- | --- |
+| Supabase CLI | user | required | Deploy | `supabase --version` succeeds | https://supabase.com/docs/guides/local-development/cli/getting-started |
+| Docker | user | required | Deploy | `docker info` succeeds | https://docs.docker.com/get-docker/, then start Docker |
+| Deno | user | optional | Deploy, when the app has Edge Functions | `deno --version` succeeds | https://docs.deno.com/runtime/getting_started/installation/ |
+| Git repository on GitHub | user | required | Deploy | `git remote get-url origin` points to GitHub | Create the GitHub repository and push the project |
+| Remote Supabase project | user | required | Deploy | The user confirms the project to deploy to | Create one at https://supabase.com/dashboard/new |
 
-| Deployed on merge to production branch | Not deployed automatically |
-| --- | --- |
-| New files in `migrations/` | Seed files (`seed.sql`, etc.) |
-| Edge Functions declared in `config.toml` | Undeclared functions |
-| Storage buckets declared in `config.toml` | Edge Function secrets; Auth, SMTP, Site URL, API settings in `config.toml` |
+## Workflow
 
-Configure secrets and auth in the Supabase dashboard after deploy.
+1. **Setup** — for each **Setup** row whose When covers the request, in order: Done when holds → skip; `user` → stop and print its How when required, continue without it when optional; `ask` → fill what the request answers, ask the rest together in one message, record each answer; `auto` and `static` → run.
+2. **Recipe** — match one **Recipes** row; open every doc in its Read column.
 
-## Agent workflow
+- Edits repository files only; the user changes Supabase dashboard and GitHub settings.
+- Runs no `supabase link`, `supabase db push`, or `supabase functions deploy`; merges to the production branch deploy.
 
-Follow this skill when deploying a Supabase app or connecting it to Supabase GitHub integration. Run these steps in order. Works wherever the agent can read and write repository files.
+## Recipes
 
-### Steps
-
-1. **Discovery** — Locate the Supabase root (`config.toml` + `migrations/`), dashboard working directory, production branch, declared Edge Functions, and storage buckets. Ask the user when multiple candidates exist. Default production branch to `main` only when repo convention is obvious. Follow [discovering-supabase-root.md](references/discovering-supabase-root.md).
-
-2. **Validate locally** — From the Supabase root, before first connect:
-
-   ```bash
-   supabase db start
-   supabase db reset --local   # or: supabase migration up --local
-   supabase db lint
-   ```
-
-   If Edge Functions exist, run project-specific checks (e.g. `deno check`, `deno test` under `functions/`). Fix errors before connecting GitHub or merging to the production branch.
-
-3. **Document dashboard settings** — User connects Git in **Project Settings → Integrations → GitHub**. Provide a filled-in table from [configuring-github-integration.md](references/configuring-github-integration.md):
-
-   | Setting | Value |
-   | --- | --- |
-   | Git repository | User selects repo |
-   | Working directory | Discovered Supabase root path |
-   | Production branch | User's branch |
-   | Deploy to production | **Enabled** |
-
-4. **Post-connect verification** — After the user enables integration and merges to the production branch:
-
-   - Confirm deploy succeeded in the Supabase dashboard
-   - Run project-specific smoke checks for schema or function behavior changes
-
-   First merge to the production branch populates a new remote project. Troubleshooting: [troubleshooting-deployment.md](references/troubleshooting-deployment.md).
-
-### Decision tree
-
-```
-Deploy Supabase backend?
-├─ Locate config.toml + migrations/ → working directory for dashboard
-├─ Migrations apply + db lint pass locally?
-│  └─ No → fix before connect or merge
-├─ User connects GitHub integration + enables Deploy to production
-└─ Merge to production branch → verify in dashboard
-```
-
-## Reference index
-
-| Doc | When to use |
-| --- | --- |
-| [discovering-supabase-root.md](references/discovering-supabase-root.md) | Supabase root, working directory, local validation |
-| [configuring-github-integration.md](references/configuring-github-integration.md) | Dashboard GitHub integration settings |
-| [troubleshooting-deployment.md](references/troubleshooting-deployment.md) | Local validation, deploy, and integration failures |
+| Intent | Example phrasing | Read |
+| --- | --- | --- |
+| Set up | "Set up Supabase deployment", "Is deploying-supabase-application ready?" | **Setup** — run Workflow step 1 for every row, then report each row's state |
+| Deploy | "Deploy Supabase to production", "Connect the repo to Supabase GitHub integration", "Validate migrations before release" | [deploying-application.md](references/deploying-application.md) |
+| Troubleshoot | "The Supabase deploy failed on merge", "Functions did not update" | [troubleshooting-deployment.md](references/troubleshooting-deployment.md) |

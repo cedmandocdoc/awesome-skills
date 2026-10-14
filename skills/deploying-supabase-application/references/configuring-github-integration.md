@@ -45,8 +45,6 @@ Working directory and production branch from [discovering-supabase-root.md](./di
 2. Confirm deploy succeeded in the Supabase dashboard or GitHub checks.
 3. Run smoke tests if schema or function behavior changed.
 
-Day-to-day releases do not require `supabase db push` or `supabase functions deploy` from a developer machine.
-
 ## Related
 
 - [discovering-supabase-root.md](./discovering-supabase-root.md)

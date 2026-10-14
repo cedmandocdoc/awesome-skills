@@ -50,8 +50,6 @@ If multiple `config.toml` candidates exist, ask the user which app deploys to th
 3. **`[functions.<name>]`** — every function in `functions/` that should deploy is declared
 4. **`[storage.buckets.<name>]`** — buckets that should deploy are declared (if used)
 
-Undeclared functions and buckets are not deployed by GitHub integration.
-
 ### Local validation
 
 ```bash
@@ -82,13 +80,15 @@ Adapt to project scripts (e.g. `functions:check`, `functions:test`).
 - [ ] Secrets and auth config noted for manual dashboard setup (if needed)
 ```
 
-### What stays manual
+### What deploys on merge
 
-- Edge Function secrets (`supabase secrets set` or Project Settings → Edge Functions)
-- Auth SMTP, Site URL, redirect allow-list
-- Seed data and one-off data jobs
+| Deployed on merge to the production branch | Stays manual |
+| --- | --- |
+| New files in `migrations/` | Seed data and one-off data jobs |
+| Edge Functions declared in `config.toml` | Undeclared functions; Edge Function secrets (`supabase secrets set` or Project Settings → Edge Functions) |
+| Storage buckets declared in `config.toml` | Undeclared buckets; Auth SMTP, Site URL, redirect allow-list, and API settings in `config.toml` |
 
-Document these when the app depends on them; they are not blockers for connecting GitHub integration.
+The user sets the manual items in the Supabase dashboard after deploy; document those the app depends on. They do not block connecting GitHub integration.
 
 ## Related
 
