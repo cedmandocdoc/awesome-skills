@@ -45,7 +45,7 @@
 
 - Cloudflare dashboard → Worker → Deployments → view build log
 - Retry build after fixing config (retry uses settings at retry time)
-- Local smoke: run build command, then `npx wrangler deploy` (requires `wrangler login`)
+- Local smoke: run build command, then `npx wrangler deploy`
 
 ## Related
 
