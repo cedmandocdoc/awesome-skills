@@ -2,61 +2,33 @@
 name: deploying-expo-native-application
 id: ba26301f-928c-4984-9b30-7009e3dc5db5
 description: Prepare an Expo native app (iOS/Android) for EAS Build and store release — discover the app package, validate app.json and eas.json profiles, configure EAS environments and secrets, and verify release readiness. Use when setting up EAS deployment for an Expo app, configuring eas.json build/submit profiles, linking an Expo project, or preparing the first EAS build.
-version: 1.0.1
+version: 1.1.0
 ---
 
 # Deploying an Expo native application
 
-## Overview
+## Setup
 
-Prepare an Expo app for native (iOS/Android) release: project linkage, `eas.json` profiles, EAS environment variables, and a release-readiness checklist. Stops at deployable configuration. Hand off build and submit to the external **`expo-deployment`** skill (`npx skills add expo/skills --skill expo-deployment`).
+| Item | Kind | Required | When | Done when | How |
+| --- | --- | --- | --- | --- | --- |
+| Node.js | user | required | All | `node --version` succeeds | https://nodejs.org |
+| EAS CLI | user | required | All | `eas --version` succeeds | `npm install -g eas-cli` |
+| Expo account | user | required | All | `eas whoami` shows an account with access to the project's organization | Sign up at https://expo.dev/signup, then `eas login` |
+| Apple Developer Program | user | optional | iOS store builds | The user confirms an active membership | https://developer.apple.com/programs/enroll/ |
+| Google Play Console | user | optional | Android store builds | The user confirms a developer account | https://play.google.com/console/signup |
 
-## Agent workflow
+## Workflow
 
-Follow this skill when preparing an Expo app for EAS Build and store release. Run these steps in order before recommending a first `preview` or `production` build. Works wherever the agent can read and write repository files.
+1. **Setup** — for each **Setup** row whose When covers the request, in order: Done when holds → skip; `user` → stop and print its How when required, continue without it when optional; `ask` → fill what the request answers, ask the rest together in one message, record each answer; `auto` and `static` → run.
+2. **Recipe** — match one **Recipes** row; open every doc in its Read column.
 
-### Steps
+- Stops at deployable configuration; build and submit belong to the **`expo-deployment`** skill (`npx skills add expo/skills --skill expo-deployment`).
 
-1. **Discovery** — Resolve the app package, monorepo working directory, bundle IDs, EAS project link, build profiles, runtime env vars, and store-account readiness. Ask the user when multiple Expo apps exist. Follow [discovering-application.md](references/discovering-application.md).
+## Recipes
 
-2. **Validate configuration** — From the app package:
-
-   ```bash
-   npx expo config --type public
-   eas project:info
-   ```
-
-   Confirm `eas.json` build and submit profiles. Fix errors before the first cloud build. See [configuring-eas.md](references/configuring-eas.md).
-
-3. **Configure EAS environments and secrets** — Map each `build.<profile>.environment` in `eas.json` to Expo dashboard variables. Store submit credentials in EAS (`eas credentials`). Document the variable matrix. Details: [configuring-eas.md](references/configuring-eas.md).
-
-4. **Add or update repository files** — Verify or create:
-
-   | File | Purpose |
-   | --- | --- |
-   | `app.json` / `app.config.*` | Bundle ID, version, icons, plugins, `extra.eas.projectId` |
-   | `eas.json` | Build and submit profiles |
-   | `package.json` scripts | Optional `eas:build:*` / `eas:submit:*` wrappers |
-
-5. **Release readiness** — Walk [reviewing-release-readiness.md](references/reviewing-release-readiness.md). Resolve in-scope blockers. When green, hand off to **`expo-deployment`**.
-
-### Decision tree
-
-```
-Prepare Expo native app for release?
-├─ Locate app package (app.json + eas.json)
-├─ extra.eas.projectId present?
-│  └─ No → eas init from app package
-├─ eas.json profiles: development / preview / production?
-├─ EAS environment variables set per profile?
-├─ expo config matches intended bundle ID / version?
-└─ Checklist passed → expo-deployment for build and submit
-```
-
-## Reference index
-
-| Doc | When to use |
-| --- | --- |
-| [discovering-application.md](references/discovering-application.md) | Find the Expo app package, validate `app.json`, confirm EAS project linkage |
-| [configuring-eas.md](references/configuring-eas.md) | `eas.json` profiles, EAS environments, secrets, version management |
-| [reviewing-release-readiness.md](references/reviewing-release-readiness.md) | Pre-build checklist before first `preview` or `production` build |
+| Intent | Example phrasing | Read |
+| --- | --- | --- |
+| Set up | "Set up EAS deployment", "Is deploying-expo-native-application ready?" | **Setup** — run Workflow step 1 for every row, then report each row's state |
+| Prepare release | "Prepare the app for the first EAS build", "Link the Expo project" | [preparing-release.md](references/preparing-release.md) |
+| Configure EAS | "Configure eas.json profiles", "Set the EAS environment variables" | [discovering-application.md](references/discovering-application.md), [configuring-eas.md](references/configuring-eas.md) |
+| Review readiness | "Is the app ready for a production build?" | [reviewing-release-readiness.md](references/reviewing-release-readiness.md) |

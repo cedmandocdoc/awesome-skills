@@ -28,9 +28,6 @@
 ### Credentials and accounts (handoff → expo-deployment)
 
 ```
-- [ ] Expo account with access to the project organization
-- [ ] EAS CLI installed; eas login completed
-- [ ] Apple Developer Program membership (for iOS store builds)
 - [ ] App Store Connect app record created (bundle ID matches app.json)
 - [ ] Google Play Console app created (package name matches app.json)
 - [ ] eas credentials configured for iOS distribution and Android keystore

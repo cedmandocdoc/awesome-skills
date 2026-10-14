@@ -16,7 +16,6 @@
 | Expo project linked? | `extra.eas.projectId` in app config | Run `eas init` from the app package if missing |
 | Build profiles needed | `eas.json` `build` section | Default: `development`, `preview`, `production` |
 | Runtime env vars | `EXPO_PUBLIC_*` usage in source; project docs | List required vars per EAS environment |
-| Store accounts ready? | User confirms Apple Developer + Play Console | Note as blocker for `production` profile |
 
 ### Required layout
 
@@ -74,7 +73,6 @@ In app config, confirm:
 If `projectId` is missing, from the app package:
 
 ```bash
-eas login
 eas init
 ```
 
@@ -127,7 +125,6 @@ Confirm the app boots with the intended env vars on simulators/emulators.
 - [ ] extra.eas.projectId present (or eas init planned)
 - [ ] eas.json present or planned with build profiles
 - [ ] Required EXPO_PUBLIC_* (or project-specific) vars listed per EAS environment
-- [ ] User confirmed Apple Developer and Play Console access for store builds
 ```
 
 ## Related
