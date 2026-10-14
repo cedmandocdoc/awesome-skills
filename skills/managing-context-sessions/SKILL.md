@@ -12,7 +12,7 @@ description: >-
   "managing-context-sessions"), or references a session file under the
   sessions root with a task ("continue @sessions/03-saved-cards.md by building
   the PRD").
-version: 2.2.0
+version: 2.2.1
 ---
 
 # Managing Context Sessions
@@ -21,7 +21,7 @@ version: 2.2.0
 
 | Item | Kind | Required | When | Done when | How |
 | --- | --- | --- | --- | --- | --- |
-| Root path | ask | required | Create | [session-contract.md](references/session-contract.md) → **Resolve sessions root** finds a root | Ask for the folder (default `sessions/` at the repository root); missing or empty → use it, else ask for another path; recorded as the root's location |
+| Root path | ask | required | Create | [session-contract.md](references/session-contract.md) → **Resolve sessions root** finds a root | Ask for the folder (default `sessions/`); missing or empty → use it, else ask for another path; recorded as the root's location |
 | Root marker | static | required | Create | `<sessions-root>/index.md` carries [session-contract.md](references/session-contract.md) → **Author signature** | Write `index.md` from [`assets/index.md`](assets/index.md) |
 
 ## Workflow
