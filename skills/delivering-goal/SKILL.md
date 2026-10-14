@@ -9,7 +9,7 @@ description: >-
   names this skill (`/delivering-goal`, `$delivering-goal`, or
   "delivering-goal"), or references a file under a marked goals root
   (`@goals/01-mvp/goal.md`, a phase or task file).
-version: 2.2.0
+version: 2.2.1
 ---
 
 # Delivering Goal
@@ -19,7 +19,7 @@ version: 2.2.0
 | Item | Kind | Required | When | Done when | How |
 | --- | --- | --- | --- | --- | --- |
 | Git repository | user | required | All | `git rev-parse --is-inside-work-tree` succeeds | `git init` in the project, or open the project's repository |
-| Root path | ask | required | Plan goal, Deliver or continue | [goal-contract.md](references/goal-contract.md) → **Resolve goals root** finds a root | Ask for the folder (default `goals/`); missing or empty → use it, else another path; recorded as the root's location |
+| Root path | ask | required | Plan goal, Deliver or continue | [goal-contract.md](references/goal-contract.md) → **Resolve goals root** finds a root | Ask for the folder (default `goals/`); missing or empty → use it, else ask for another path; recorded as the root's location |
 | Root marker | static | required | Plan goal, Deliver or continue | `<goals-root>/index.md` carries [goal-contract.md](references/goal-contract.md) → **Author signature** | Write `index.md` from [`assets/index.md`](assets/index.md) |
 | Delivery agent `phase-deliverer` | auto | required | Deliver or continue, when the harness supports subagents | [goal-contract.md](references/goal-contract.md) → **Delivery agents** → **Find** accepts it and its body matches [`assets/agents/phase-deliverer.md`](assets/agents/phase-deliverer.md) | [creating-delivery-agents.md](references/creating-delivery-agents.md) |
 
