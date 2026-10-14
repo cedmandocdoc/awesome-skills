@@ -7,3 +7,5 @@ Each skill installs on its own. In-skill links stay inside that skill’s direct
 When creating, updating, or reviewing a skill under `skills/`, follow [managing-skills](skills/managing-skills/SKILL.md). Match one **Recipes** row; open that recipe, [skill-contract.md](skills/managing-skills/references/skill-contract.md), [invocation-contract.md](skills/managing-skills/references/invocation-contract.md), [setup-contract.md](skills/managing-skills/references/setup-contract.md), and [lean-contract.md](skills/managing-skills/references/lean-contract.md).
 
 A line earns its place when removing it would change what the agent does. Scan every edited skill file against the finding categories before delivering.
+
+Run `python3 scripts/lint-skills.py <skill-name>` on every edited skill and fix its errors before delivering.

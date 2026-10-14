@@ -1,0 +1,5 @@
+#!/bin/sh
+# Lint skills touched by the staged changes.
+skills=$(git diff --cached --name-only --diff-filter=ACMR -- skills/ | cut -d/ -f2 | sort -u)
+[ -z "$skills" ] && exit 0
+exec python3 scripts/lint-skills.py $skills
