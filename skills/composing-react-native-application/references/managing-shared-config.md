@@ -6,7 +6,7 @@
 
 ## Prerequisites
 
-[composition-contract.md](./composition-contract.md) — **Naming**, **Host toolchain**, **Require managing-monorepo**. Identity fill: [creating-variant.md](./creating-variant.md).
+[composition-contract.md](./composition-contract.md) — **Naming**, **Host toolchain**, **Dependency skills**. Identity fill: [creating-variant.md](./creating-variant.md).
 
 ## Guidelines
 

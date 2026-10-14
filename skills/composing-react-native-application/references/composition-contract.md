@@ -97,43 +97,14 @@ Hosts wrap these factories. Procedure: [managing-shared-config.md](./managing-sh
 | Babel, Metro, ESLint, Tailwind preset | `exports` subpaths |
 | `global.css` | `exports` subpath |
 
-### Require managing-monorepo
+### Dependency skills
 
-Required skill dependency. [`managing-monorepo`](https://github.com/cedmandocdoc/awesome-skills/tree/main/skills/managing-monorepo) owns workspace layout, `exports`, and cross-package imports.
+Found per **Discovering project skills**; open each one's `SKILL.md` and follow its recipes by intent for its **Owns** column.
 
-| Field | Value |
-| --- | --- |
-| `name` | `managing-monorepo` |
-| `id` | `e0e993e7-a5f9-4bea-9923-166b503df045` |
-| Source | https://github.com/cedmandocdoc/awesome-skills/tree/main/skills/managing-monorepo |
-| Install | `npx skills add cedmandocdoc/awesome-skills --skill managing-monorepo` |
-| With this skill | `npx skills add cedmandocdoc/awesome-skills --skill composing-react-native-application --skill managing-monorepo` |
-
-1. Discover skills per **Discovering project skills**.
-2. Accept a candidate `SKILL.md` when `name` is `managing-monorepo` **and** `id` is `e0e993e7-a5f9-4bea-9923-166b503df045`. Unique `name` match with no `id` still counts (legacy install). Skip when `name` matches but `id` is present and different.
-3. If missing → stop:
-
-```text
-Install managing-monorepo before composing Expo variants (workspace packages, exports, and imports require it).
-
-npx skills add cedmandocdoc/awesome-skills --skill managing-monorepo
-
-Source: https://github.com/cedmandocdoc/awesome-skills/tree/main/skills/managing-monorepo
-Id: e0e993e7-a5f9-4bea-9923-166b503df045
-```
-
-4. Open that skill’s `SKILL.md`. Follow its entry points by name for workspace placement, `exports`, and imports.
-
-### Optional building-react-native-application
-
-| Field | Value |
-| --- | --- |
-| `name` | `building-react-native-application` |
-| `id` | `ddfed93c-f419-4c5f-8832-85acc8f85f00` |
-| Source | https://github.com/cedmandocdoc/awesome-skills/tree/main/skills/building-react-native-application |
-| Install | `npx skills add cedmandocdoc/awesome-skills --skill building-react-native-application` |
-
-Discover when the variant writes screens, `src/ui`, navigation internals, or forms. Accept `name` + `id` (legacy unique `name` with no `id` still counts). If present, open that skill’s `SKILL.md` and follow its task types. If absent, still compose slots; write screens in the variant package.
+| `name` | `id` | Owns |
+| --- | --- | --- |
+| `managing-monorepo` | `e0e993e7-a5f9-4bea-9923-166b503df045` | Workspace placement, `exports`, cross-package imports |
+| `building-react-native-application` | `ddfed93c-f419-4c5f-8832-85acc8f85f00` | Screens, `src/ui`, navigation internals, forms. Absent → still compose slots; write screens in the variant package |
 
 ### Discovering project skills
 

@@ -6,7 +6,7 @@
 
 ## Prerequisites
 
-[composition-contract.md](./composition-contract.md) — **Naming**, **Structure**, **Product slots**, **Slot kinds**, **Require managing-monorepo**.
+[composition-contract.md](./composition-contract.md) — **Naming**, **Structure**, **Product slots**, **Slot kinds**, **Dependency skills**.
 
 ## Guidelines
 
