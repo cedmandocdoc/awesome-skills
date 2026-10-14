@@ -48,25 +48,18 @@ A design root is the folder holding a valid `index.md`. Roots never nest.
 | Several intentions started together (e.g. web + mobile) | `design/<intention>/` each, or one root holding all surfaces when the user asks |
 | A root already exists and a new intention arrives | New folder named for the intention; ask for the path when `design/` itself is the existing root |
 
+- Target missing or empty → create it. Not empty → ask whether to initialize there (keep existing files) or pick another path. A target that already holds `package.json`, `index.html`, or `viewer/` always needs another path.
+- Only this skill creates or replaces `index.md`.
+
 ### Resolve design root
 
 1. Search the repository for `index.md` files whose frontmatter has `doc_type: design-root-index`, `generated_by: building-design`, and `author` = **Author signature**.
 2. Pick the root:
    - One match → use it.
    - Several → use the one whose `intention` matches the request; ask when unclear (list each `index.md` path).
-   - None → **Initialize design root**.
+   - None → `SKILL.md` → **Setup** creates one.
 3. A root without `viewer/` was built by an earlier major version: refactor it to **Output layout** and [preview-contract.md](./preview-contract.md) first, keeping `design.md`, copy, and decided motion.
-4. Viewer files (see [preview-contract.md](./preview-contract.md) → **Viewer**) that differ from [`../assets/app/`](../assets/app/): copy them over again and replace `index.md` → **Viewer keys** from [`../assets/index.md`](../assets/index.md).
-5. Read and write only under the resolved root.
-
-### Initialize design root
-
-1. Target = user-named folder, else `design/`.
-2. Target missing or empty → create it. Target not empty → ask whether to initialize there (keep existing files) or pick another path. A target that already holds `package.json`, `index.html`, or `viewer/` always needs another path.
-3. Write `index.md` from [`../assets/index.md`](../assets/index.md): `author` = **Author signature**, `intention` = one short phrase.
-4. Copy everything in [`../assets/app/`](../assets/app/), dotfiles included, into the root (`cp -R <skill>/assets/app/. <design-root>/`), then run `npm install` there.
-
-Only this skill creates or replaces `index.md`.
+4. Read and write only under the resolved root.
 
 ### Inputs
 
