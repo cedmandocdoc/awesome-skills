@@ -1,15 +1,15 @@
 ---
 name: managing-skills
 id: 890f6e40-337a-47a7-a3c8-5652ff6fd936
-description: Creates, updates, and reviews agent skills that follow this catalog's house style — directory layout, SKILL.md and reference sections, naming, independence, invocation, and lean writing. Use when the user asks to write, create, add, update, lean, trim, restructure, or review a skill or SKILL.md, or when authoring skills under skills/.
-version: 2.2.0
+description: Creates, updates, and reviews agent skills that follow this catalog's house style — directory layout, SKILL.md and reference sections, naming, independence, invocation, dependencies and setup, and lean writing. Use when the user asks to write, create, add, update, lean, trim, restructure, or review a skill or SKILL.md, or when authoring skills under skills/.
+version: 3.0.0
 ---
 
 # Managing Skills
 
 ## Overview
 
-House style for this catalog's skills. Recipes own create, update, and review; three contracts own the rules: structure, invocation, and leanness.
+House style for this catalog's skills. Recipes own create, update, and review; four contracts own the rules: structure, invocation, setup, and leanness.
 
 ## Agent workflow
 
@@ -31,6 +31,7 @@ Follow this skill when creating, updating, or reviewing a skill that uses this c
 | --- | --- |
 | [skill-contract.md](references/skill-contract.md) | Layout, naming, `SKILL.md` and reference sections, `agents/openai.yaml`, independence, resolve target, checklist |
 | [invocation-contract.md](references/invocation-contract.md) | Loads answer, trigger wording, hard block, standing rule Setup row |
+| [setup-contract.md](references/setup-contract.md) | Dependencies, setup kinds, Setup table, recorded answers, Set up recipe, dependency discovery |
 | [lean-contract.md](references/lean-contract.md) | Leanness test, finding categories, strategies, content shape |
 
 | Doc | When to use |

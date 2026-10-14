@@ -6,7 +6,7 @@
 
 ## Prerequisites
 
-[skill-contract.md](./skill-contract.md). [invocation-contract.md](./invocation-contract.md). [lean-contract.md](./lean-contract.md). When a recent review exists, start from its findings instead of re-scanning.
+[skill-contract.md](./skill-contract.md). [invocation-contract.md](./invocation-contract.md). [setup-contract.md](./setup-contract.md). [lean-contract.md](./lean-contract.md). When a recent review exists, start from its findings instead of re-scanning.
 
 ## Guidelines
 
@@ -22,7 +22,7 @@ List every behavioral instruction — this inventory guards against meaning loss
 
 | Intent | Do |
 | --- | --- |
-| Structure | Align files and sections with [skill-contract.md](./skill-contract.md) and [invocation-contract.md](./invocation-contract.md). Add or rename references per **Naming**. Update Recipes and Reference index together. |
+| Structure | Align files and sections with [skill-contract.md](./skill-contract.md), [invocation-contract.md](./invocation-contract.md), and [setup-contract.md](./setup-contract.md). Add or rename references per **Naming**. Update Recipes and Reference index together. |
 | Leanness | Scan per finding category; restructure per [lean-contract.md](./lean-contract.md) → **Lean writing strategies**. |
 
 ### 4. Rewrite and verify

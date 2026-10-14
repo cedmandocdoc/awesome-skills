@@ -2,17 +2,17 @@
 
 ## Overview
 
-**Authoring mode.** Writes a new skill directory that passes all three contracts.
+**Authoring mode.** Writes a new skill directory that passes all four contracts.
 
 ## Prerequisites
 
-[skill-contract.md](./skill-contract.md). [invocation-contract.md](./invocation-contract.md). [lean-contract.md](./lean-contract.md).
+[skill-contract.md](./skill-contract.md). [invocation-contract.md](./invocation-contract.md). [setup-contract.md](./setup-contract.md). [lean-contract.md](./lean-contract.md).
 
 ## Guidelines
 
 ### 1. Gather intent
 
-Confirm with the user: purpose, trigger scenarios, target directory, required dependencies, and any verbatim wording to preserve. Settle the **Loads** and **Standing rule** answers per [invocation-contract.md](./invocation-contract.md). Verbatim user text goes in unchanged.
+Confirm with the user: purpose, trigger scenarios, target directory, dependencies, one-time setup steps with their kind per [setup-contract.md](./setup-contract.md) → **Setup kinds**, and any verbatim wording to preserve. Settle the **Loads** and **Standing rule** answers per [invocation-contract.md](./invocation-contract.md). Verbatim user text goes in unchanged.
 
 ### 2. Name and layout
 
@@ -20,7 +20,7 @@ Per [skill-contract.md](./skill-contract.md) → **Resolve target skill**, **Nam
 
 ### 3. Plan structure first
 
-Before writing prose, outline files and headings: references by [skill-contract.md](./skill-contract.md) → **Kind map**, formats by [lean-contract.md](./lean-contract.md) → **Content shape**. With skill dependencies, plan the contract's copy of [skill-contract.md](./skill-contract.md) → **Discover dependency skill**.
+Before writing prose, outline files and headings: references by [skill-contract.md](./skill-contract.md) → **Kind map**, formats by [lean-contract.md](./lean-contract.md) → **Content shape**. With skill dependencies, plan the contract's copy of [setup-contract.md](./setup-contract.md) → **Discover dependency skill**. With a non-`auto` Setup row, plan `setting-up-<noun>.md`.
 
 ### 4. Write files
 
@@ -32,7 +32,7 @@ Run [skill-contract.md](./skill-contract.md) → **Checklist** and one pass per 
 
 ### 6. Confirm to the user
 
-Report the created paths, `name`, `id`, **Loads** and **Standing rule** answers, section map, and where shared instructions were extracted.
+Report the created paths, `name`, `id`, **Loads** and **Standing rule** answers, Setup rows by kind, section map, and where shared instructions were extracted.
 
 ## Related
 

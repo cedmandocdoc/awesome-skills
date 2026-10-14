@@ -1,6 +1,6 @@
 # awesome-skills
 
-A catalog of installable [agent skills](https://www.npmjs.com/package/skills) for coding agents such as Cursor, Claude Code, Codex, and OpenCode. Each skill lives under `skills/` and installs on its own. Skills that cannot run fully without something else declare **Dependencies** (one table of installables, each with How) and **Setup** for one-time steps.
+A catalog of installable [agent skills](https://www.npmjs.com/package/skills) for coding agents such as Cursor, Claude Code, Codex, and OpenCode. Each skill lives under `skills/` and installs on its own. Skills that cannot run fully without something else declare **Dependencies** (what must exist first, each with How) and **Setup** (one-time steps, each `interactive`, `auto`, `static`, or `manual`, run by an explicit Set up recipe).
 
 ## Install
 

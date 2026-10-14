@@ -44,12 +44,12 @@ Drop the file clause when the skill owns no files.
 | **Pointer** | Work without the skill must follow it | `- <scope> follows <name>; load it before <work>.` |
 | **Keep-true** | The skill's files describe something that changes outside it | `- When a change alters <what>, run the <name> <recipe> recipe in the same work.` |
 
-A Pointer or Keep-true answer adds one `SKILL.md` → **Setup** row; the Agent workflow intro resolves **Setup** before recipes:
+A Pointer or Keep-true answer adds one `auto` row to `SKILL.md` → **Setup** per [setup-contract.md](./setup-contract.md):
 
 ```markdown
-| Item | Required | When | How |
-| --- | --- | --- | --- |
-| Standing rule | required | <recipe or entry that first creates the root, app, or workspace> | Add `<line>` to root `AGENTS.md` (create when missing) and to root `CLAUDE.md` when it exists without importing `AGENTS.md`; skip a file that has it |
+| Item | Kind | Required | When | Done when | How |
+| --- | --- | --- | --- | --- | --- |
+| Standing rule | auto | required | <recipe or entry that first creates the root, app, or workspace> | Root `AGENTS.md` has the line | Add `<line>` to root `AGENTS.md` (create when missing) and to root `CLAUDE.md` when it exists without importing `AGENTS.md`; skip a file that has it |
 ```
 
 The line names the skill by plain name. That recipe's Confirm step reports the instruction files changed.
@@ -64,3 +64,4 @@ The line names the skill by plain name. That recipe's Confirm step reports the i
 ## Related
 
 - [skill-contract.md](./skill-contract.md) — frontmatter, sections, `agents/openai.yaml`
+- [setup-contract.md](./setup-contract.md) — Setup table, kinds
