@@ -34,14 +34,8 @@ Search the repository for `index.md` whose frontmatter has `doc_type: context-se
 | --- | --- |
 | One | Use it |
 | Several | Ask which root |
-| None, on create | **Initialize sessions root** |
+| None, on create or set up | `SKILL.md` → **Setup** creates one |
 | None, other intents | Stop and report that no sessions root exists |
-
-### Initialize sessions root
-
-1. Target `sessions/` at the repository root unless the user names another path.
-2. Path missing or empty → create it. Path not empty → ask for another path.
-3. Write `<sessions-root>/index.md` from [`../assets/index.md`](../assets/index.md).
 
 ### Session frontmatter
 

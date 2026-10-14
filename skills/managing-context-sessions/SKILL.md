@@ -12,43 +12,33 @@ description: >-
   "managing-context-sessions"), or references a session file under the
   sessions root with a task ("continue @sessions/03-saved-cards.md by building
   the PRD").
-version: 2.1.0
+version: 2.2.0
 ---
 
 # Managing Context Sessions
 
-## Overview
+## Setup
 
-One file per piece of work (`<sessions-root>/<NN>-<slug>.md`) that declares its current state: what is agreed, ruled out, and open. Items point to files, sections, or outside items when a source holds the detail; otherwise the session holds it. Each process — ideation, specs, design, implementation, or any other — reads the state, opens only the sources relevant to its task, and edits the state in place. Process-agnostic: the skill never knows or predicts which process comes next. Rules: [session-contract.md](references/session-contract.md).
+| Item | Kind | Required | When | Done when | How |
+| --- | --- | --- | --- | --- | --- |
+| Root path | ask | required | Create | [session-contract.md](references/session-contract.md) → **Resolve sessions root** finds a root | Ask for the folder (default `sessions/` at the repository root); missing or empty → use it, else ask for another path; recorded as the root's location |
+| Root marker | static | required | Create | `<sessions-root>/index.md` carries [session-contract.md](references/session-contract.md) → **Author signature** | Write `index.md` from [`assets/index.md`](assets/index.md) |
 
-## Agent workflow
+## Workflow
 
-Runs when the user names this skill, or references a session file (`doc_type: context-session`) under a marked sessions root. Once loaded, it stays active for the rest of the chat. Works wherever the agent can read and write repository files. Match one **Recipes** row; open exactly that reference.
+1. **Setup** — for each **Setup** row whose When covers the request, in order: Done when holds → skip; `user` → stop and print its How when required, continue without it when optional; `ask` → fill what the request answers, ask the rest together in one message, record each answer; `auto` and `static` → run.
+2. **Contract** — read [session-contract.md](references/session-contract.md).
+3. **Recipe** — match one **Recipes** row; open every doc in its Read column.
 
-### Recipes
+- Once loaded, it stays active for the rest of the chat.
+- Never predicts which process comes next.
+
+## Recipes
 
 | Intent | Example phrasing | Read |
 | --- | --- | --- |
+| Set up | "Set up managing-context-sessions", "Is managing-context-sessions ready?" | **Setup** — run Workflow step 1 for every row, then report each row's state |
 | Create | "Create a session: …", "Create a session for saved cards", "new session" | [creating-session.md](references/creating-session.md) |
 | Continue | "Continue @sessions/03-… by building the PRD", "Continue the saved cards session" | [continuing-session.md](references/continuing-session.md) |
 | Update | "Update the session", "Update `sessions/03-…` with this work" | [updating-session.md](references/updating-session.md) |
 | Close | "Close the session", "Close `sessions/03-…`" | [closing-session.md](references/closing-session.md) |
-
-## Reference index
-
-### Contract
-
-[session-contract.md](references/session-contract.md) — root marker, layout, frontmatter, session body, item and pointer rules, lifecycle, index mirror.
-
-| Doc | When to use |
-| --- | --- |
-| [session-contract.md](references/session-contract.md) | Resolve root, find a session by name, session body, lifecycle |
-| [creating-session.md](references/creating-session.md) | New session file; record state the chat already settled |
-| [continuing-session.md](references/continuing-session.md) | Brief from a session, run the task, update the state |
-| [updating-session.md](references/updating-session.md) | Edit the state in place for finished work |
-| [closing-session.md](references/closing-session.md) | Mark a session closed |
-
-## Templates
-
-- [`assets/index.md`](assets/index.md) — sessions root marker
-- [`assets/session.md`](assets/session.md) — session file with state sections

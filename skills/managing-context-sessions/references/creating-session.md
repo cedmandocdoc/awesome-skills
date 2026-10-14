@@ -12,7 +12,7 @@ Per [session-contract.md](./session-contract.md) → **Resolve sessions root**, 
 
 ### 1. Resolve sessions root
 
-Per [session-contract.md](./session-contract.md) → **Resolve sessions root**. Initialize when none exists.
+Per [session-contract.md](./session-contract.md) → **Resolve sessions root**.
 
 ### 2. Name the session
 
