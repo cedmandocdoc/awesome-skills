@@ -32,7 +32,7 @@ Columns in this order:
 
 - Rows in run order: a row comes after the rows it needs.
 - No rows → the section reads `None.`
-- A required dependency skill's required rows repeat with When `via <skill>`.
+- A required dependency skill's required `user` rows repeat with When `via <skill>`; its other rows run when that skill runs.
 - A combined install command may sit under the table when several skills from the **same** repo are the usual path.
 - Root initialization is Setup: an `ask` row for the path and a `static` row for the marker, whose How links to the contract's init procedure.
 - The **Standing rule** row: [invocation-contract.md](./invocation-contract.md) → **Standing rule**.
@@ -65,7 +65,7 @@ Copy into the requiring skill's contract with its skill rows, skill-root list in
 - [ ] Every row has a Done when check and a How
 - [ ] A step that asks and creates is split into an `ask` row and the row that uses it
 - [ ] Every `ask` row's How names where the answer is recorded
-- [ ] A required dependency skill's required rows repeat with When `via <skill>`
+- [ ] A required dependency skill's required `user` rows repeat with When `via <skill>`
 - [ ] With rows, the first **Recipes** row is **Set up recipe** verbatim; without rows, **Setup** reads `None.`
 
 ## Related
