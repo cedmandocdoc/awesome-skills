@@ -43,18 +43,12 @@ Search the repository for `index.md` with frontmatter `doc_type: marketing-index
 | --- | --- |
 | One | Use it |
 | Several | Ask which (list each `index.md` path) |
-| None, on start campaign or set up measurement | **Initialize marketing root** |
+| None, on start campaign or set up | `SKILL.md` → **Setup** creates one |
 | None, other intents | Stop and report that no marketing root exists |
 
 A root made before 4.0.0: move each `segments/<slug>.md` into `positioning.md` → **Segments** as `### <slug>`, fold **Candidate segments** and **Problems in their words** into those sections, then delete `segments/`. Delete each campaign's `links.md`; its links already live in the outbox items.
 
 Resolve a campaign by `@`-path, id (`03-clinics-mm`), number (`campaign 3`), or name words against `index.md` rows; several matches → ask.
-
-### Initialize marketing root
-
-1. Target = user-named folder, else `marketing/`.
-2. Target missing or empty → use it. Otherwise ask for another path.
-3. Write `index.md` from [`../assets/index.md`](../assets/index.md).
 
 ### Positioning
 
@@ -104,7 +98,7 @@ A phase sets `state` to its own name when its output is ready and stops for revi
 
 ### Outbox items
 
-One file per message or post: `outbox/NNN-<channel>-<who>.md` from [`../assets/outbox-item.md`](../assets/outbox-item.md). Item code `oNNN`. The skill sends and posts nothing; the user sends each `approved` item by hand and reports it.
+One file per message or post: `outbox/NNN-<channel>-<who>.md` from [`../assets/outbox-item.md`](../assets/outbox-item.md). Item code `oNNN`. The user sends each `approved` item by hand and reports it.
 
 | Status | Meaning |
 | --- | --- |

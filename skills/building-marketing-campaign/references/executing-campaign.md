@@ -6,7 +6,7 @@
 
 ## Prerequisites
 
-Per [marketing-contract.md](./marketing-contract.md) → **States**, **Outbox items**, **Sending caps**. The **Setup** row in `SKILL.md` (measurement) is done before the first send.
+Per [marketing-contract.md](./marketing-contract.md) → **States**, **Outbox items**, **Sending caps**.
 
 ## Guidelines
 

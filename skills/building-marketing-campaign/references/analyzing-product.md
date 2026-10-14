@@ -12,7 +12,7 @@ Per [marketing-contract.md](./marketing-contract.md) → **Resolve marketing roo
 
 ### 1. Resolve marketing root
 
-Initialize when none exists.
+Per [marketing-contract.md](./marketing-contract.md) → **Resolve marketing root**.
 
 ### 2. Position the product
 

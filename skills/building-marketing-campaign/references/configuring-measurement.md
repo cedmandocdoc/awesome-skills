@@ -6,7 +6,7 @@
 
 ## Prerequisites
 
-Per [marketing-contract.md](./marketing-contract.md) → **Resolve marketing root**, **Measurement**. A Cloudflare account; `npx wrangler login` done.
+Per [marketing-contract.md](./marketing-contract.md) → **Resolve marketing root**, **Measurement**.
 
 ## Guidelines
 

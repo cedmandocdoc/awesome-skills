@@ -28,8 +28,6 @@ Per outbox item that carries a link, its full UTM URL per [marketing-contract.md
 
 ### 4. Write the video requests
 
-HyperFrames found per **Discover dependency skill**; missing → print the install and offer text posts in place of the videos.
-
 Per planned video: assign the next code, add it to `videos`, add its **Assets** → **Videos** row (Project and Render empty), and save a request from [`../assets/video-request.md`](../assets/video-request.md) under **Assets** → **Video requests** → `### vN`. Fill it from **Idea**, **Roll-out** → **Assets**, and **Roll-out** → **Material**; its link is the video's UTM URL with `utm_content=vN`. When an earlier video of this campaign or its `follows` was saved as a HyperFrames recipe, name that recipe in the request.
 
 ### 5. Collect a rendered video
