@@ -29,8 +29,8 @@ The delivery agent (`phase-deliverer`) carries frontmatter `author` (this UUID) 
 ### Output layout
 
 ```text
-<goals-root>/                  # default when initializing: goals/
-  index.md                     # root marker — created first
+<goals-root>/
+  index.md                     # root marker
   01-mvp/                      # <goal-id> = <goal-dir>
     goal.md                    # living backlog: phase index, method pin
     phases/
@@ -52,7 +52,8 @@ Search the repository for `index.md` with frontmatter `doc_type: goals-root-inde
 | --- | --- |
 | One | Use it |
 | Multiple | Ask which (list each `index.md` path) |
-| None | On plan / deliver: ask once for a path (default `goals/`), verify it is empty or missing, write `index.md` from the template. Otherwise stop — no goals root |
+| None, on plan, deliver, or set up | `SKILL.md` → **Setup** creates one |
+| None, other intents | Stop and report that no goals root exists |
 
 Resolve a goal by user cue (`01-mvp`, `mvp`) under the root; one goal → use it; several and no cue → ask.
 
@@ -137,7 +138,7 @@ Subagent replies are one line of paths; no bodies, logs, or diffs. Parent prompt
 
 ### Delivery agents
 
-`phase-deliverer` is required wherever the harness supports subagents. Roots, project first:
+Roots, project first:
 
 | IDE | Root | Filename |
 | --- | --- | --- |
@@ -153,4 +154,4 @@ Subagent replies are one line of paths; no bodies, logs, or diffs. Parent prompt
 
 User-level fallbacks (reuse only): `~/.cursor/agents/`, `~/.claude/agents/`, `~/.codex/agents/`, `~/.copilot/agents/`.
 
-**Find:** accept the first file whose `name` is the agent id, `author` is the **Subagent signature**, and `generated_by` is `delivering-goal`. Missing → stop: `Create the subagent first by running delivering-goal creating-delivery-agents.`
+**Find:** accept the first file whose `name` is the agent id, `author` is the **Subagent signature**, and `generated_by` is `delivering-goal`.

@@ -2,7 +2,7 @@
 
 ## Overview
 
-**Docs only.** Creates or refreshes `phase-deliverer` when the user asks to run `delivering-goal creating-delivery-agents`.
+**Docs only.** Creates or refreshes `phase-deliverer` for `SKILL.md` → **Setup**.
 
 ## Prerequisites
 

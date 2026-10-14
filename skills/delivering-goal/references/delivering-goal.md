@@ -6,7 +6,7 @@
 
 ## Prerequisites
 
-Per [goal-contract.md](./goal-contract.md) → **Resolve goals root**, **Handoff style**, **Delivery agents**.
+Per [goal-contract.md](./goal-contract.md) → **Resolve goals root**, **Handoff style**.
 
 ## Guidelines
 

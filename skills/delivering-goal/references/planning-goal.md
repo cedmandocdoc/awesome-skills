@@ -13,7 +13,7 @@ Per [goal-contract.md](./goal-contract.md) → **Require clear goal**, **Resolve
 ### 1. Gate and root
 
 1. Run **Require clear goal**; ask once on gaps and wait for the answer.
-2. Resolve or initialize `<goals-root>`.
+2. Resolve `<goals-root>` per **Resolve goals root**.
 3. Assign `<goal-id>`. If that goal folder exists and the user did not ask to replan → stop and offer to continue it.
 
 ### 2. Survey
