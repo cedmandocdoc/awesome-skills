@@ -2,13 +2,13 @@
 
 ## Overview
 
-**Execution mode.** Prepares a repository for Cloudflare Workers Builds: on each push to the connected branch, Cloudflare runs the build command, then `npx wrangler deploy`.
+**Execution mode.** Prepares a repository to deploy to Cloudflare Workers through GitHub Actions: on each push to the production branch, the workflow builds the app, then runs `wrangler deploy`. Writes repository files only; the **Provision** recipe changes Cloudflare and GitHub settings.
 
 ## Guidelines
 
 ### 1. Discover
 
-Per [discovering-application.md](./discovering-application.md): deploy target, build command, output path, SPA mode, build-time env vars, and dashboard root directory.
+Per [discovering-application.md](./discovering-application.md): deploy target, build command, output path, SPA mode, build-time variables, Wrangler root, hosts, and watch paths.
 
 ### 2. Validate locally
 
@@ -21,13 +21,14 @@ ls <output-directory>
 
 ### 3. Write repository files
 
-1. `wrangler.toml` or `wrangler.jsonc` at the Wrangler project root, with `wrangler` pinned in `devDependencies`, per [configuring-wrangler.md](./configuring-wrangler.md).
-2. Optional Node version hint: `engines` in `package.json` or `.nvmrc`.
+1. `wrangler.toml` or `wrangler.jsonc` at the Wrangler root, with `wrangler` pinned in `devDependencies`, per [configuring-wrangler.md](./configuring-wrangler.md).
+2. `.nvmrc` with the Node major version the build needs, when missing.
+3. `.github/workflows/deploy-<worker>.yml` per [configuring-github-actions.md](./configuring-github-actions.md) → **Workflow file**.
 
 ### 4. Confirm to the user
 
 Reply with:
 
 - Files written
-- A filled [configuring-github-integration.md](./configuring-github-integration.md) → **Settings reference** table to enter in **Workers & Pages → Worker → Settings → Builds**, plus the build variables to set
-- Checks after the first build: the app loads on its `*.workers.dev` URL or custom domain; deep links and refresh work on client-routed paths (SPA); build-time public env vars are in the bundle. A failure → [troubleshooting-deployment.md](./troubleshooting-deployment.md)
+- Resources, runtime secrets, and GitHub values the app still needs; offer the **Provision** recipe ([configuring-resources.md](./configuring-resources.md)), since a push before it fails the workflow
+- Checks after the first run: the app loads on its `*.workers.dev` URL or custom domain; deep links and refresh work on client-routed paths (SPA); build-time public values are in the bundle. A failure → [troubleshooting-deployment.md](./troubleshooting-deployment.md)

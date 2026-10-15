@@ -2,7 +2,7 @@
 
 ## Overview
 
-Workers Builds runs `npx wrangler deploy`, which reads `wrangler.toml` or `wrangler.jsonc` from the dashboard **root directory**.
+The deploy workflow runs `wrangler deploy`, which reads `wrangler.toml` or `wrangler.jsonc` from the Wrangler root (the action's `workingDirectory`).
 
 ## Prerequisites
 
@@ -22,7 +22,7 @@ directory = "./dist"
 
 | Field | Required | Notes |
 | --- | --- | --- |
-| `name` | Yes | Must match the Worker name in the Cloudflare dashboard |
+| `name` | Yes | Worker name; the deploy workflow is named after it |
 | `compatibility_date` | Yes | Use a recent date for new projects |
 | `assets.directory` | Yes | Path to built static files, relative to Wrangler root |
 | `assets.not_found_handling` | SPAs only | See below |
@@ -101,7 +101,7 @@ In `package.json` at the Wrangler project root:
 }
 ```
 
-Workers Builds uses the version from `package.json` when present.
+`wrangler-action` uses the installed version when present.
 
 ### `.assetsignore`
 
@@ -112,14 +112,50 @@ Optional file beside `wrangler.toml` (same syntax as `.gitignore`):
 *.md
 ```
 
+### Account, bindings, and runtime values
+
+```toml
+account_id = "<account id>"
+workers_dev = true
+
+[vars]
+PUBLIC_SITE_KEY = "<public value>"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "my-app-db"
+database_id = "<id from wrangler d1 create>"
+```
+
+| Field | Notes |
+| --- | --- |
+| `account_id` | Recorded at Setup; pins deploys to one account |
+| `vars` | Public runtime values; each deploy overwrites edits made elsewhere |
+| Secrets | Never in the config; `wrangler secret` per [configuring-resources.md](./configuring-resources.md) |
+| D1, KV, R2 ids | Public; written back after the resource is created |
+
+### Custom domains and routes
+
+```toml
+routes = [
+  { pattern = "app.example.com", custom_domain = true },
+  { pattern = "example.com/docs*", zone_name = "example.com" },
+]
+```
+
+| Kind | Use when | Deploy creates |
+| --- | --- | --- |
+| `custom_domain = true` | The Worker serves the whole host | DNS record and certificate, when the zone is in the same account |
+| Route with `zone_name` | The Worker serves a path on a host another Worker or origin serves | The route only; the host needs a proxied record |
+
 ### Environments (staging / production)
 
-For multiple Workers environments, use `wrangler deploy --env <name>` in the dashboard deploy command and define `[env.staging]` blocks.
+For multiple Workers environments, define `[env.<name>]` blocks and deploy with `wrangler deploy --env <name>` ([configuring-github-actions.md](./configuring-github-actions.md) → **Workflow file**).
 
 ## Related
 
 - [discovering-application.md](./discovering-application.md)
-- [configuring-github-integration.md](./configuring-github-integration.md)
+- [configuring-github-actions.md](./configuring-github-actions.md)
 
 ## References
 

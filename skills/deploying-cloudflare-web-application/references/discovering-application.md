@@ -2,7 +2,7 @@
 
 ## Overview
 
-**Read-only.** Run before writing `wrangler.toml` or recommending dashboard settings.
+**Read-only.** Run before writing `wrangler.toml` or the deploy workflow.
 
 ## Guidelines
 
@@ -14,8 +14,10 @@
 | Build command | `package.json` `scripts.build` (or `export`, `generate`, etc.) | Ask user |
 | Build output path | Framework config (`outDir`, `distDir`, `outputPath`) or local build | Ask user |
 | SPA with client-side routing? | React Router, Vue Router, TanStack Router, Expo web, etc. | Default to SPA mode unless fully static HTML |
-| Build-time env vars | `VITE_*`, `NEXT_PUBLIC_*`, `EXPO_PUBLIC_*`, `PUBLIC_*`, or docs | List required vars; user sets them in Cloudflare dashboard |
-| Monorepo root directory | Path where `wrangler.toml` lives and where the build runs | Repo root vs package subdirectory |
+| Build-time env vars | `VITE_*`, `NEXT_PUBLIC_*`, `EXPO_PUBLIC_*`, `PUBLIC_*`, or docs | List required vars and the GitHub variable each reads |
+| Runtime secrets and bindings | `env.<NAME>` in Worker code; D1, KV, R2 bindings in the wrangler config | List names; Worker-less static sites have none |
+| Hosts | Product TRD (`trd.md` with `doc_type: trd`) → **Infrastructure** origin, Wrangler `routes`, or the user | `*.workers.dev` only |
+| Wrangler root and watch paths | Path where `wrangler.toml` lives; the app and the workspace packages it imports | Repo root vs package subdirectory |
 
 ### 1. Find deployable applications
 
@@ -60,7 +62,7 @@ pnpm install --frozen-lockfile && cd <package-path> && <package-build-script>
 pnpm install --frozen-lockfile && pnpm --filter <package-name> build
 ```
 
-Set the dashboard **root directory** to where `wrangler.toml` lives:
+The Wrangler root is where `wrangler.toml` lives:
 
 - **Repo root** — when `wrangler.toml` is at root and build command `cd`s into a package
 - **Package directory** — when `wrangler.toml` lives next to that package's `package.json`
@@ -85,7 +87,7 @@ Preferred order:
 
 3. **Run build locally** and list the directory that contains `index.html` (or the app entry asset)
 
-`assets.directory` is relative to the Wrangler project root (dashboard root directory), not necessarily the git repo root:
+`assets.directory` is relative to the Wrangler root, not necessarily the git repo root:
 
 | Layout | `assets.directory` |
 | --- | --- |
@@ -114,18 +116,21 @@ Scan for public env prefixes baked in at build time:
 - `EXPO_PUBLIC_*` (Expo)
 - `PUBLIC_*` (SvelteKit, Astro)
 
-List required variables for **Workers & Pages → Settings → Builds → Build variables**. These are not runtime Worker secrets unless a Worker script reads `env.*`.
+List required variables for the workflow's build step ([configuring-github-actions.md](./configuring-github-actions.md) → **Variables — two buckets**). These are not runtime Worker secrets unless a Worker script reads `env.*`.
 
 ### 6. Discovery checklist
 
 ```
 - [ ] Deploy target: <package name or path>
 - [ ] Cloudflare Worker name: <must match wrangler name>
-- [ ] Dashboard root directory: <repo root or package path>
+- [ ] Wrangler root: <repo root or package path>
+- [ ] Watch paths: <app path, imported packages, lockfile>
 - [ ] Build command: <command>
 - [ ] Build output directory: <path relative to wrangler root>
 - [ ] SPA client routing: yes / no
 - [ ] Build-time env vars: <list or none>
+- [ ] Runtime secrets and bindings: <list or none>
+- [ ] Hosts: <custom domains, routes, or workers.dev only>
 - [ ] Monorepo install step required: yes / no
 ```
 
@@ -142,4 +147,4 @@ Confirm via discovery — hints only.
 ## Related
 
 - [configuring-wrangler.md](./configuring-wrangler.md)
-- [configuring-github-integration.md](./configuring-github-integration.md)
+- [configuring-github-actions.md](./configuring-github-actions.md)
