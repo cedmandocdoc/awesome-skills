@@ -2,7 +2,7 @@
 name: building-walkthroughs
 id: 62987084-2733-4959-9c53-0e9ae812a34e
 description: Builds and maintains hands-on walkthroughs of a whole app — one Markdown guide per task with exact on-screen steps and expected results, grouped by the app's own areas and chained into goal-driven journeys, with every route or screen covered or listed as a gap — plus a viewer, a full-screen map of areas where selecting a journey numbers its walkthroughs and draws its path, with a navigator, lenses, and a walkthrough sidebar floating over it. Works from the code alone; docs, stories, tests, and designs sharpen it. Use only when the user names this skill (`/building-walkthroughs`, `$building-walkthroughs`, or "building-walkthroughs"), or references a file under a marked walkthroughs root (`@walkthroughs/send-invoice.md`).
-version: 2.1.1
+version: 2.2.0
 ---
 
 # Building Walkthroughs
@@ -11,7 +11,7 @@ version: 2.1.1
 
 | Item | Kind | Required | When | Done when | How |
 | --- | --- | --- | --- | --- | --- |
-| Node.js 20.19+ with npm | user | required | Create, Update | `node --version` reports 20.19 or later | https://nodejs.org |
+| Node.js 22.12+ with npm | user | required | Create, Update | `node --version` reports 22.12 or later | https://nodejs.org |
 | Root path | ask | required | Create | [walkthrough-contract.md](references/walkthrough-contract.md) → **Resolve walkthroughs root** finds a root | Ask for the folder (default `walkthroughs/`); missing or empty → use it, else ask for another path; recorded as the root's location |
 | Root marker | static | required | Create | `<walkthroughs-root>/index.md` carries [walkthrough-contract.md](references/walkthrough-contract.md) → **Author signature** | Write `index.md` from [`assets/index.md`](assets/index.md) |
 | Viewer app | static | required | Create, Update | The root's viewer files match [`assets/app/`](assets/app/) | Copy everything in [`assets/app/`](assets/app/), dotfiles included (`cp -R <skill>/assets/app/. <walkthroughs-root>/`) |

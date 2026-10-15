@@ -13,7 +13,7 @@ description: >-
   `$building-marketing-campaign`, or "building-marketing-campaign"), or
   references a file under a marked marketing root
   (`@marketing/campaigns/03-clinics-mm/campaign.md`).
-version: 5.0.0
+version: 5.1.0
 ---
 
 # Building Marketing Campaign

@@ -64,7 +64,6 @@ Zustand stores → live inside feature hooks (`src/features/<name>/hooks/use<Fea
 ```json
 {
   "compilerOptions": {
-    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     }

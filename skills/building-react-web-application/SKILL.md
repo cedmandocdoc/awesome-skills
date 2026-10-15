@@ -2,7 +2,7 @@
 name: building-react-web-application
 id: 83101311-e63c-4973-811e-5a84cc1a9e19
 description: Guides building Vite + React SPA apps with TypeScript using a consistent architecture and library stack (Tailwind CSS v4, class-variance-authority, TanStack Router file-based routes, TanStack Query, Zustand, Axios, shadcn-style primitives in src/ui). Use when creating a Vite + React SPA, or changing code in an app whose `package.json` has `vite` and `@tanstack/react-router`, to follow these conventions.
-version: 1.2.1
+version: 1.3.0
 ---
 
 # React web application
@@ -11,7 +11,7 @@ version: 1.2.1
 
 | Item | Kind | Required | When | Done when | How |
 | --- | --- | --- | --- | --- | --- |
-| Node.js 20.19+ | user | required | All | `node --version` reports 20.19 or later | https://nodejs.org |
+| Node.js 22.12+ | user | required | All | `node --version` reports 22.12 or later | https://nodejs.org |
 | Standing rule | auto | required | Scaffold new app | Root `AGENTS.md` has the line | Add `` - `<target_path>` follows building-react-web-application; load it before changing code there. `` to root `AGENTS.md` (create when missing) and to root `CLAUDE.md` when it exists without importing `AGENTS.md`; skip a file that has it |
 
 ## Workflow

@@ -8,7 +8,7 @@
 
 - [managing-stepper-hook.md](./managing-stepper-hook.md) — hook/provider pattern, `defineStepper`, exports
 - [creating-form-component.md](./creating-form-component.md) — pre-bound `*Field` components, `useAppForm`
-- [Stepperize — Schema Validation](https://stepperize.vercel.app/docs/react/api-references/schema-validation)
+- [Stepperize — Schema Validation](https://stepperize.com/docs/v8/forms/schema-validation)
 
 ## Guidelines
 
@@ -16,16 +16,16 @@
 
 - Define a Zod schema for each form step.
 - Attach each schema on the corresponding step object (e.g. `schema: PersonalSchema`).
-- Read the active schema from `stepper.state.current.data.schema`.
+- Read the active schema from `stepper.current.schema`.
 - Fall back to `z.object({})` for steps without a schema (e.g. confirmation).
 
 ### Form flow
 
 - Build one form instance with `useAppForm` from `@/ui/Form` and persist values across steps.
 - Use `validators.onChange` (or chosen timing) with the current step schema.
-- In `onSubmit`, call `stepper.navigation.next()` when not on the last step.
-- Render per-step fields with `stepper.flow.switch(...)` and compose via `form.AppField` + pre-bound `field.*` components.
-- Use `stepper.flow.is("done")` for completion state.
+- In `onSubmit`, call `stepper.next()` when not on the last step.
+- Render per-step fields with `stepper.match(...)` and compose via `form.AppField` + pre-bound `field.*` components.
+- Use `stepper.is("done")` for completion state.
 
 ## Setup
 
@@ -52,14 +52,15 @@ const AddressSchema = z.object({
   city: z.string().min(1, "City is required"),
 });
 
-const MultiStepSchema = defineStepper(
+const MultiStepSchema = defineStepper([
   { id: "personal", title: "Personal information", schema: PersonalSchema },
   { id: "address", title: "Address", schema: AddressSchema },
   { id: "done", title: "Done" },
-);
+]);
 
 export const useCheckoutStepper = MultiStepSchema.useStepper;
-export const CheckoutStepperScoped = MultiStepSchema.Scoped;
+export const CheckoutStepperProvider = MultiStepSchema.Provider;
+export const useCheckoutStepperContext = MultiStepSchema.useStepperContext;
 
 type FormValues = {
   name: string;
@@ -70,25 +71,24 @@ type FormValues = {
 
 export function CheckoutStepForm() {
   const stepper = useCheckoutStepper();
-  const stepData = stepper.state.current.data;
-  const schema =
-    "schema" in stepData && stepData.schema
-      ? (stepData.schema as z.ZodType<FormValues>)
-      : z.object({});
+  const step = stepper.current;
+  const schema = (
+    "schema" in step ? step.schema : z.object({})
+  ) as unknown as z.ZodType<FormValues, FormValues>;
 
   const form = useAppForm({
     defaultValues: { name: "", email: "", street: "", city: "" },
     validators: { onChange: schema },
     onSubmit: () => {
-      if (!stepper.state.isLast) stepper.navigation.next();
+      if (!stepper.isLast) stepper.next();
     },
   });
 
-  if (stepper.flow.is("done")) return <p>All done!</p>;
+  if (stepper.is("done")) return <p>All done!</p>;
 
   return (
     <form.AppForm>
-      {stepper.flow.switch({
+      {stepper.match({
         personal: () => (
           <div>
             <form.AppField
@@ -117,7 +117,7 @@ export function CheckoutStepForm() {
       })}
 
       <div>
-        <button type="button" onClick={() => stepper.navigation.prev()} disabled={stepper.state.isFirst}>
+        <button type="button" onClick={() => stepper.prev()} disabled={stepper.isFirst}>
           Back
         </button>
         <button
@@ -126,7 +126,7 @@ export function CheckoutStepForm() {
             void form.handleSubmit();
           }}
         >
-          {stepper.state.isLast ? "Submit" : "Next"}
+          {stepper.isLast ? "Submit" : "Next"}
         </button>
       </div>
     </form.AppForm>

@@ -13,14 +13,14 @@
 
 ### Install
 
-Use NativeWind's docs for config. Add packages with the install scripts, not NativeWind's `npm install`.
+Use NativeWind's docs for config. Add packages with the install scripts, not NativeWind's `npm install`. Pin `tailwindcss@^3.4`: NativeWind 4 does not support Tailwind CSS v4.
 
 ### pnpm isolated JSX runtime
 
 When the manager is pnpm and `node-linker` is isolated (pnpm default; skip if the nearest `.npmrc` sets `node-linker=hoisted`):
 
 - Add `react-native-css-interop` as a direct `dependencies` entry, not a devDependency.
-- Pin the version NativeWind declares (read `nativewind`'s `dependencies`; e.g. NativeWind 4.2.6 → `react-native-css-interop@0.2.6`).
+- Pin the version NativeWind declares (read `nativewind`'s `dependencies`; e.g. NativeWind 4.2.7 → `react-native-css-interop@0.2.7`).
 - Add it on every package Metro compiles JSX for (the Expo app; if a host compiles a JIT workspace runtime's source, both the runtime and each host).
 - Do not switch `node-linker` to `hoisted`.
 - After install: Metro reload or `expo start --clear`. No prebuild, no pod install.

@@ -69,7 +69,7 @@ export function trackEvent(name: string) {
 import { z } from "zod";
 
 export const parseSchema = z.object({
-  EXPO_PUBLIC_API_URL: z.string().url(),
+  EXPO_PUBLIC_API_URL: z.url(),
 });
 
 export const env = parseSchema.parse({

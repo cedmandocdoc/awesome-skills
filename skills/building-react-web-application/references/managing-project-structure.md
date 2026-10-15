@@ -89,7 +89,6 @@ Add `@/*` → `./src/*` in `tsconfig.json` and keep `vite.config.ts` `resolve.al
 ```json
 {
   "compilerOptions": {
-    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     }

@@ -37,7 +37,6 @@ The host may `"extends"` the core’s compiler options. `paths` maps `@/*` to **
 {
   "extends": "@scope/core/tsconfig.json",
   "compilerOptions": {
-    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     }

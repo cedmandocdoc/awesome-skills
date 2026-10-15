@@ -2,40 +2,41 @@
 
 ## Overview
 
-**Execution mode.** Creates one dedicated hook module per stepper flow (e.g. `useBookingStepper.ts`) that exports the typed `useStepper` hook and `Scoped` provider from a single `defineStepper` declaration.
+**Execution mode.** Creates one dedicated hook module per stepper flow (e.g. `useBookingStepper.ts`) that exports the typed hooks and `Provider` from a single `defineStepper` declaration.
 
 ## Prerequisites
 
-- [Stepperize — My first stepper](https://stepperize.vercel.app/docs/react/my-first-stepper)
-- [Stepperize — Scoped](https://stepperize.vercel.app/docs/react/api-references/scoped)
-- [Stepperize — Hook](https://stepperize.vercel.app/docs/react/api-references/hook)
+- [Stepperize — First stepper](https://stepperize.com/docs/v8/getting-started/first-stepper)
+- [Stepperize — Local and shared state](https://stepperize.com/docs/v8/guides/local-and-shared-state)
+- [Stepperize — Stepper instance](https://stepperize.com/docs/v8/api/react/stepper-instance)
 
 ## Guidelines
 
 ### Placement and exports
 
 - One hook file per workflow in `src/features/<feature>/hooks/`, named `use<Feature>Stepper.ts`.
-- Define steps once with `defineStepper(...)`.
+- Define steps once with `defineStepper([...])`.
 - Export at minimum:
   - `use<Feature>Stepper` (alias of `useStepper`)
-  - `<Feature>StepperScoped` (alias of `Scoped`)
+  - `<Feature>StepperProvider` (alias of `Provider`)
+  - `use<Feature>StepperContext` (alias of `useStepperContext`)
 
 ### Step shape
 
 - Each step has a unique `id`.
 - Add display fields (`title`, `description`) for rendering labels and headings.
-- Keep business-specific metadata on the step object so rendering and validation read from `stepper.state.current.data`.
+- Keep business-specific metadata on the step object so rendering and validation read from `stepper.current`.
 
 ### State sharing
 
-- `use<Feature>Stepper()` directly → local stepper state (no provider).
-- `<Feature>StepperScoped>` → multiple descendants share the same instance.
+- `use<Feature>Stepper()` → a new local instance, even inside the provider.
+- `<Feature>StepperProvider` + `use<Feature>StepperContext()` → multiple descendants share the same instance.
 
 ### Navigation API
 
-- `stepper.flow.switch(...)` for multi-step rendering branches.
-- `stepper.flow.is(id)` for simple conditionals.
-- `stepper.navigation.next()`, `prev()`, `goTo(id)`, `reset()` for transitions.
+- `stepper.match(...)` for multi-step rendering branches.
+- `stepper.is(id)` for simple conditionals.
+- `stepper.next()`, `prev()`, `goTo(id)`, `reset()` for transitions.
 
 ## Setup
 
@@ -50,35 +51,36 @@ node ../scripts/install-packages.cjs @stepperize/react
 ```ts
 import { defineStepper } from "@stepperize/react";
 
-const bookingStepper = defineStepper(
+const bookingStepper = defineStepper([
   { id: "details", title: "Booking details" },
   { id: "contact", title: "Contact information" },
   { id: "review", title: "Review booking" },
   { id: "done", title: "Done" },
-);
+]);
 
 export const useBookingStepper = bookingStepper.useStepper;
-export const BookingStepperScoped = bookingStepper.Scoped;
+export const BookingStepperProvider = bookingStepper.Provider;
+export const useBookingStepperContext = bookingStepper.useStepperContext;
 ```
 
-### Shared state with `Scoped`
+### Shared state with `Provider`
 
 ```tsx
-import { BookingStepperScoped, useBookingStepper } from "@/features/booking/hooks/useBookingStepper";
+import { BookingStepperProvider, useBookingStepperContext } from "@/features/booking/hooks/useBookingStepper";
 
 export function BookingFlow() {
   return (
-    <BookingStepperScoped>
+    <BookingStepperProvider>
       <BookingStepContent />
       <BookingStepActions />
-    </BookingStepperScoped>
+    </BookingStepperProvider>
   );
 }
 
 function BookingStepContent() {
-  const stepper = useBookingStepper();
+  const stepper = useBookingStepperContext();
 
-  return stepper.flow.switch({
+  return stepper.match({
     details: () => <p>Choose date and time.</p>,
     contact: () => <p>Enter contact details.</p>,
     review: () => <p>Review booking.</p>,
@@ -87,14 +89,14 @@ function BookingStepContent() {
 }
 
 function BookingStepActions() {
-  const stepper = useBookingStepper();
+  const stepper = useBookingStepperContext();
 
-  return stepper.state.isLast ? (
-    <button type="button" onClick={() => stepper.navigation.reset()}>Reset</button>
+  return stepper.isLast ? (
+    <button type="button" onClick={() => stepper.reset()}>Reset</button>
   ) : (
     <>
-      <button type="button" onClick={() => stepper.navigation.prev()} disabled={stepper.state.isFirst}>Back</button>
-      <button type="button" onClick={() => stepper.navigation.next()}>Next</button>
+      <button type="button" onClick={() => stepper.prev()} disabled={stepper.isFirst}>Back</button>
+      <button type="button" onClick={() => stepper.next()}>Next</button>
     </>
   );
 }
@@ -110,8 +112,8 @@ export function BookingMiniStepper() {
 
   return (
     <section>
-      <h2>{stepper.state.current.data.title}</h2>
-      <button type="button" onClick={() => stepper.navigation.next()} disabled={stepper.state.isLast}>
+      <h2>{stepper.current.title}</h2>
+      <button type="button" onClick={() => stepper.next()} disabled={stepper.isLast}>
         Continue
       </button>
     </section>

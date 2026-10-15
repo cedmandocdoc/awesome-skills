@@ -2,7 +2,7 @@
 
 ## Overview
 
-Build multi-step forms with Stepperize + `useAppForm` + Zod. Attach per-step schemas to step definitions, read the active schema from `stepper.state.current.data`, and apply it to form validators so each step validates only its own inputs.
+Build multi-step forms with Stepperize + `useAppForm` + Zod. Attach per-step schemas to step definitions, read the active schema from `stepper.current`, and apply it to form validators so each step validates only its own inputs.
 
 ## Prerequisites
 
@@ -15,16 +15,16 @@ Build multi-step forms with Stepperize + `useAppForm` + Zod. Attach per-step sch
 
 - Define one Zod schema per form step.
 - Attach each schema on the step object (e.g. `schema: PersonalSchema`).
-- Resolve the active schema from `stepper.state.current.data.schema`.
+- Resolve the active schema from `stepper.current.schema`.
 - Fallback to `z.object({})` for steps without fields.
 
 ### Form flow
 
 - Build one form instance with `useAppForm` from `@/ui/Form` and keep values across steps.
 - Use `validators.onChange` (or another timing) with the active step schema.
-- In `onSubmit`, advance with `stepper.navigation.next()` until the last step.
-- Render step fields using `stepper.flow.switch(...)` and compose via `form.AppField` + pre-bound `field.*` components.
-- Render completion with `stepper.flow.is("done")`.
+- In `onSubmit`, advance with `stepper.next()` until the last step.
+- Render step fields using `stepper.match(...)` and compose via `form.AppField` + pre-bound `field.*` components.
+- Render completion with `stepper.is("done")`.
 
 ## Setup
 
@@ -52,14 +52,15 @@ const AddressSchema = z.object({
   city: z.string().min(1, "City is required"),
 });
 
-const checkoutStepper = defineStepper(
+const checkoutStepper = defineStepper([
   { id: "personal", title: "Personal information", schema: PersonalSchema },
   { id: "address", title: "Address", schema: AddressSchema },
   { id: "done", title: "Done" },
-);
+]);
 
 export const useCheckoutStepper = checkoutStepper.useStepper;
-export const CheckoutStepperScoped = checkoutStepper.Scoped;
+export const CheckoutStepperProvider = checkoutStepper.Provider;
+export const useCheckoutStepperContext = checkoutStepper.useStepperContext;
 
 type FormValues = {
   name: string;
@@ -70,25 +71,24 @@ type FormValues = {
 
 export function CheckoutStepFormScreen() {
   const stepper = useCheckoutStepper();
-  const stepData = stepper.state.current.data;
-  const schema =
-    "schema" in stepData && stepData.schema
-      ? (stepData.schema as z.ZodType<FormValues>)
-      : z.object({});
+  const step = stepper.current;
+  const schema = (
+    "schema" in step ? step.schema : z.object({})
+  ) as unknown as z.ZodType<FormValues, FormValues>;
 
   const form = useAppForm({
     defaultValues: { name: "", email: "", street: "", city: "" },
     validators: { onChange: schema },
     onSubmit: () => {
-      if (!stepper.state.isLast) stepper.navigation.next();
+      if (!stepper.isLast) stepper.next();
     },
   });
 
-  if (stepper.flow.is("done")) return <Text>All done!</Text>;
+  if (stepper.is("done")) return <Text>All done!</Text>;
 
   return (
     <form.AppForm>
-      {stepper.flow.switch({
+      {stepper.match({
         personal: () => (
           <View>
             <form.AppField
@@ -117,7 +117,7 @@ export function CheckoutStepFormScreen() {
       })}
 
       <View className="flex-row gap-2">
-        <Pressable onPress={() => stepper.navigation.prev()} disabled={stepper.state.isFirst}>
+        <Pressable onPress={() => stepper.prev()} disabled={stepper.isFirst}>
           <Text>Back</Text>
         </Pressable>
         <Pressable
@@ -125,7 +125,7 @@ export function CheckoutStepFormScreen() {
             void form.handleSubmit();
           }}
         >
-          <Text>{stepper.state.isLast ? "Submit" : "Next"}</Text>
+          <Text>{stepper.isLast ? "Submit" : "Next"}</Text>
         </Pressable>
       </View>
     </form.AppForm>
@@ -140,5 +140,5 @@ export function CheckoutStepFormScreen() {
 
 ## References
 
-- [Stepperize — Schema Validation](https://stepperize.vercel.app/docs/react/api-references/schema-validation)
+- [Stepperize — Schema Validation](https://stepperize.com/docs/v8/forms/schema-validation)
 - [TanStack Form — Basic concepts](https://tanstack.com/form/latest/docs/framework/react/guides/basic-concepts.md)

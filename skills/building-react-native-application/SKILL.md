@@ -2,7 +2,7 @@
 name: building-react-native-application
 id: ddfed93c-f419-4c5f-8832-85acc8f85f00
 description: Guides building Expo/React Native apps with TypeScript using a consistent architecture and library stack (NativeWind, React Navigation static config, TanStack Query, Zustand, Axios, React Native Reusables-style primitives in src/ui). Use when creating an Expo app, or changing code in an app whose `package.json` has `expo`, `@react-navigation/native`, and `nativewind`, to follow these conventions.
-version: 1.4.0
+version: 1.5.0
 ---
 
 # React Native application
@@ -11,7 +11,7 @@ version: 1.4.0
 
 | Item | Kind | Required | When | Done when | How |
 | --- | --- | --- | --- | --- | --- |
-| Node.js 20.19+ | user | required | All | `node --version` reports 20.19 or later | https://nodejs.org |
+| Node.js 22.12+ | user | required | All | `node --version` reports 22.12 or later | https://nodejs.org |
 | Standing rule | auto | required | Scaffold new app | Root `AGENTS.md` has the line | Add `` - `<target_path>` follows building-react-native-application; load it before changing code there. `` to root `AGENTS.md` (create when missing) and to root `CLAUDE.md` when it exists without importing `AGENTS.md`; skip a file that has it |
 
 ## Workflow

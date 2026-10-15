@@ -15,7 +15,7 @@
 
 ### File-type scoped linting
 
-- One config block for TypeScript source (`**/*.{ts,tsx}`) with `@typescript-eslint/parser`.
+- One config block for TypeScript source (`**/*.{ts,tsx}`) with the `typescript-eslint` parser.
 - Separate block for JavaScript/config files (`**/*.{js,cjs,mjs,jsx}`) with lighter rules.
 
 ### CI and editor alignment
@@ -29,8 +29,10 @@
 ### Install dependencies
 
 ```bash
-node ../scripts/install-packages.cjs --dev eslint prettier eslint-plugin-prettier eslint-config-prettier eslint-config-expo @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint-plugin-react eslint-plugin-react-native
+node ../scripts/install-packages.cjs --dev eslint@^9 prettier eslint-plugin-prettier eslint-config-prettier eslint-config-expo typescript-eslint eslint-plugin-react eslint-plugin-react-native
 ```
+
+Pin `eslint@^9`: `eslint-plugin-react` and `eslint-plugin-react-native` do not support ESLint 10.
 
 ### Add Prettier config
 
@@ -65,20 +67,20 @@ const expoConfig = require("eslint-config-expo/flat");
 const eslintPluginPrettierRecommended = require("eslint-plugin-prettier/recommended");
 const reactPlugin = require("eslint-plugin-react");
 const reactNativePlugin = require("eslint-plugin-react-native");
-const typescriptEslintPlugin = require("@typescript-eslint/eslint-plugin");
+const tseslint = require("typescript-eslint");
 
 module.exports = defineConfig([
   expoConfig,
   {
     files: ["**/*.{ts,tsx}"],
     languageOptions: {
-      parser: require("@typescript-eslint/parser"),
+      parser: tseslint.parser,
       parserOptions: {
-        project: "./tsconfig.json",
+        projectService: true,
       },
     },
     plugins: {
-      "@typescript-eslint": typescriptEslintPlugin,
+      "@typescript-eslint": tseslint.plugin,
       react: reactPlugin,
       "react-native": reactNativePlugin,
     },
