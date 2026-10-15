@@ -2,7 +2,7 @@
 name: deploying-supabase-application
 id: 489208cd-16f5-4e4f-92c3-35813f082ce3
 description: Deploy a Supabase app to production through GitHub Actions — validate migrations and Edge Functions locally, write the deploy workflow, create or link the production project, and set GitHub secrets and variables, Edge Function secrets, and Auth settings with the Supabase CLI and Management API. Use when deploying Supabase, setting up Supabase deploys in GitHub Actions, provisioning a hosted Supabase project, setting Supabase secrets or Auth redirect URLs, deploying functions or migrations from the CLI, or validating migrations and Edge Functions before release.
-version: 3.0.0
+version: 3.0.1
 ---
 
 # Deploying a Supabase application

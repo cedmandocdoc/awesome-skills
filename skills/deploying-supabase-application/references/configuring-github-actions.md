@@ -35,8 +35,8 @@ jobs:
       run:
         working-directory: <working-directory>
     steps:
-      - uses: actions/checkout@v4
-      - uses: supabase/setup-cli@v1
+      - uses: actions/checkout@v7
+      - uses: supabase/setup-cli@v3
         with:
           version: latest
       - run: supabase link --project-ref "${{ vars.SUPABASE_PROJECT_REF }}"
