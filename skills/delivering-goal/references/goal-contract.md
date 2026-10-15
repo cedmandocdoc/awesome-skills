@@ -2,7 +2,7 @@
 
 ## Overview
 
-Shared plumbing for `delivering-goal`: signatures, goals-root layout, living `goal.md`, clear-goal gate, governing skills and method, phase sizing, task rules, commits, handoffs, and the delivery agent.
+Shared plumbing for `delivering-goal`: signatures, goals-root layout, living `goal.md`, clear-goal gate, workflow, review gate, phase sizing, task rules, commits, handoffs, and the delivery agent.
 
 ## Guidelines
 
@@ -32,10 +32,11 @@ The delivery agent (`phase-deliverer`) carries frontmatter `author` (this UUID) 
 <goals-root>/
   index.md                     # root marker
   01-mvp/                      # <goal-id> = <goal-dir>
-    goal.md                    # living backlog: phase index, method pin
+    goal.md                    # living backlog: workflow, phase index, gates
     phases/
       01-first-slice/          # <phase-id> = <phase-dir>
-        phase.md               # phase brief + ordered task list
+        phase.md               # phase brief + ordered task list + review
+        review/                # screenshots for a gated phase
         01-schema.md           # task (ticket): plan, steps, status, findings
         02-login-ui.md
 ```
@@ -63,9 +64,9 @@ Resolve a goal by user cue (`01-mvp`, `mvp`) under the root; one goal → use it
 
 | Rule | Detail |
 | --- | --- |
-| Phase status | `pending` → `ready` (phase dir + tasks written) → `done`; `ready` → `blocked` → `ready` once the user resolves the blocker |
-| Allowed edits | Insert, rewrite, reorder, split, or drop `pending` rows |
-| Protected rows | `ready` / `done` / `blocked` rows change only by the status moves above, or when the user asks to replan |
+| Phase status | `pending` → `ready` (phase dir + tasks written) → `done`; `ready` → `blocked` → `ready` once the user resolves the blocker; `ready` → `review` → `done` per **Review gate** |
+| Allowed edits | Insert, rewrite, reorder, split, or drop `pending` rows; a split row's Gate moves to its last part |
+| Protected rows | `ready` / `review` / `done` / `blocked` rows change only by the status moves above, or when the user asks to replan |
 | Changelog | Every edit to `pending` rows bumps `map_revision` and adds a changelog line; status moves do not |
 
 Task status lives only in each task file’s frontmatter: `pending` → `in-progress` → `done`; or `blocked` with `blocked_reason`.
@@ -81,13 +82,31 @@ Hard gate before writing any goal file — both answerable from the goal stateme
 
 Missing approach detail does not fail the gate. Inline: list gaps and ask once. Subagent: return `Blocked delivery: unclear goal — <gaps>`.
 
-### Governing skills and method
+A goal statement taken from the chat (an idea summary, criteria) goes into `goal.md` → **Goal** in full; phase subagents never see the chat.
 
-Bound once at plan time; phase planning reads the pin and repins only when the user asks.
+### Workflow
+
+The ordered skills that deliver the goal, derived from the installed skills at plan time. Explicit pointers (`AGENTS.md`, the request, **Skills to prefer**) override the order and selection.
 
 1. **Discover skills** — explicit pointers first (`AGENTS.md`, the request, `@`-mentions, **Skills to prefer**), then `<root>/<skill-name>/SKILL.md` under project roots `.agents/skills/`, `.claude/skills/`, `.cursor/skills/`, `.codex/skills/`, `.windsurf/skills/`, `.gemini/skills/`, `.github/skills/`, `.agent/skills/`, `.cline/skills/`, `.continue/skills/`, `.roo/skills/`, then the same folders under `~/`, then custom roots named in `AGENTS.md`. One copy per `name`; prefer a project copy.
-2. **Bind** — record on `goal.md` → **Governing skills** every skill whose description governs the goal’s work. None → `none`.
-3. **Pin method** — in each governing skill’s `SKILL.md`, find one recipe whose intent is delivering a phase or slice. Pin `skill` + reference basename; several → prefer **Skills to prefer**, else the most specific; none → `none`. A `none` pin never stops delivery.
+2. **Bind** — every skill whose description governs part of the goal’s work.
+3. **Order** — upstream first: a skill whose output another bound skill reads or implements comes before it; otherwise keep discovery order.
+4. **Select** — keep a skill when the goal creates or changes what it owns: its output does not exist yet and the outcome needs it, or it exists and the change alters what it describes.
+5. **Record** — `goal.md` → **Workflow** as a numbered list in that order; none → `none`.
+
+A phase that needs a skill outside **Workflow** discovers it at phase start and appends it.
+
+### Review gate
+
+A row with Gate `review` stops delivery after its phase until the user approves.
+
+| Rule | Detail |
+| --- | --- |
+| Suggest | Gate a row when later phases build on its output, or its output rests on taste more than on checks; never the last row |
+| Check these | At most 5 calls the phase made that the goal and Sources did not specify, plus Findings that change what the user expects |
+| See it | Screenshots under `<phase-dir>/review/` when the phase renders UI, taken with the phase skill’s own preview or run step; else the paths to read |
+| Approve | Set the row `done` |
+| Request changes | Add the user’s words under `phase.md` → **Review** → **Requested changes**, set the row `done`, and insert a pending row right after it: Title `Revise <phase-id>`, Gate `review`, Depends on `<phase-id>`, Outcome `<phase-dir>/phase.md → Requested changes applied` |
 
 ### Task rules
 
@@ -97,7 +116,7 @@ Each task is one commit-sized ticket: actionable alone, without inventing the go
 | --- | --- |
 | Requirements → Sources | Every URL, design link, ticket, and `@` path from the goal and phase that the task depends on, verbatim. Empty only when the goal and phase have none for this task |
 | Requirements → Acceptance | Concrete checks; every phase **Done** check lands in some task’s Verification |
-| Context → Skills to load | Governing skills plus skills that govern this task’s files |
+| Context → Skills to load | The phase’s **Workflow** skill plus skills that govern this task’s files |
 | Context → References | Skill reference basenames (`basename` or `skill/basename`), ~6 max, picked from each skill’s recipe table or reference index |
 | Steps | Ordered, with concrete file paths; last step is always `verify` |
 | Order | Tasks run in file order; a later task may build on earlier ones |
@@ -110,7 +129,7 @@ A phase groups work that shares code context, so one survey serves every task.
 | --- | --- |
 | One outcome | Its **Done** reads as one sentence |
 | One area | Tasks touch overlapping files or packages; tasks sharing no files belong in separate phases |
-| One method | The same governing skills and method apply; a different governing skill starts a new phase |
+| One skill | One **Workflow** skill governs the phase; the next one starts a new phase |
 | Leaves things working | After the phase, the project builds and its checks pass — nothing half-wired |
 | Fits one context | At most **7** tasks; the files they touch can be read in one pass |
 | Ends at unknowns | When later work depends on what this phase reveals, end the phase there and let **Findings** shape the next |
@@ -121,9 +140,10 @@ Every commit point writes one commit on the current branch:
 
 | Point | Who | Stages | Subject |
 | --- | --- | --- | --- |
-| Goal planned | Main session | `index.md`, `goal.md` | `docs: plan goal <goal-id>` |
+| Goal planned | Main session, after the plan confirmation | `index.md`, `goal.md` | `docs: plan goal <goal-id>` |
 | Phase planned | Deliverer, before any code | `phase.md`, task files, `goal.md` | `docs: plan phase <phase-id> of <goal-id>` |
-| Task done | Deliverer | The task’s changes and its task file; on the last task also `goal.md` (row `done`) | Task title in the repo’s style |
+| Task done | Deliverer | The task’s changes and its task file; on the last task also `goal.md` (row `done` or `review`), and for a gated row `phase.md` and `review/` | Task title in the repo’s style |
+| Review resolved | Main session | `goal.md`, `phase.md` | `docs: review phase <phase-id> of <goal-id>` |
 | Goal complete | Deliverer | `goal.md` | `docs: complete goal <goal-id>` |
 
 1. Check `git status --short`, `git diff --stat`, `git log -5 --oneline`.

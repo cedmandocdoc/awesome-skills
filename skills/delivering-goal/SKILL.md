@@ -2,14 +2,16 @@
 name: delivering-goal
 id: 317e7227-bf0b-42d4-a288-4650802eace5
 description: >-
-  Delivers a clear goal until done. Plans a living goal.md under goals/, then
-  loops one phase-deliverer subagent per phase: fold prior findings, write
-  phase.md plus ≤7 task files (sources, skills, steps, verification), implement
-  each task with a commit. Halts when a task is blocked. Use only when the user
+  Delivers a clear goal until done — an app, a feature, or a fix. Plans a
+  living goal.md under goals/ with a workflow ordered from the installed skills
+  and review gates the user confirms, then loops one phase-deliverer subagent
+  per phase: fold prior findings, write phase.md plus ≤7 task files (sources,
+  skills, steps, verification), implement each task with a commit. Halts when a
+  task is blocked or a gated phase awaits review. Use only when the user
   names this skill (`/delivering-goal`, `$delivering-goal`, or
   "delivering-goal"), or references a file under a marked goals root
   (`@goals/01-mvp/goal.md`, a phase or task file).
-version: 2.2.1
+version: 3.0.0
 ---
 
 # Delivering Goal
@@ -18,7 +20,8 @@ version: 2.2.1
 
 | Item | Kind | Required | When | Done when | How |
 | --- | --- | --- | --- | --- | --- |
-| Git repository | user | required | All | `git rev-parse --is-inside-work-tree` succeeds | `git init` in the project, or open the project's repository |
+| Git CLI | user | required | All | `git --version` succeeds | https://git-scm.com/downloads |
+| Local repository | auto | required | All | `git rev-parse HEAD` succeeds | `git init` when the project has no repository; then `git commit --allow-empty -m "chore: initialize repository"` when it has no commit |
 | Root path | ask | required | Plan goal, Deliver or continue | [goal-contract.md](references/goal-contract.md) → **Resolve goals root** finds a root | Ask for the folder (default `goals/`); missing or empty → use it, else ask for another path; recorded as the root's location |
 | Root marker | static | required | Plan goal, Deliver or continue | `<goals-root>/index.md` carries [goal-contract.md](references/goal-contract.md) → **Author signature** | Write `index.md` from [`assets/index.md`](assets/index.md) |
 | Delivery agent `phase-deliverer` | auto | required | Deliver or continue, when the harness supports subagents | [goal-contract.md](references/goal-contract.md) → **Delivery agents** → **Find** accepts it and its body matches [`assets/agents/phase-deliverer.md`](assets/agents/phase-deliverer.md) | [creating-delivery-agents.md](references/creating-delivery-agents.md) |
@@ -37,5 +40,5 @@ version: 2.2.1
 | --- | --- | --- |
 | Set up | "Set up delivering-goal", "Is delivering-goal ready?", "Refresh the delivery agent" | **Setup** — run Workflow step 1 for every row, then report each row's state |
 | Plan goal | "Plan this goal", "Create goal.md for …" | [planning-goal.md](references/planning-goal.md) |
-| Deliver or continue | "Deliver this goal", "Ship until done", "Continue @goals/01-mvp/goal.md" | [delivering-goal.md](references/delivering-goal.md) |
+| Deliver or continue | "Deliver this goal", "Build it", "Ship until done", "Continue @goals/01-mvp/goal.md", "Approve the review", "Change the review: …" | [delivering-goal.md](references/delivering-goal.md) |
 | Deliver one phase | "Deliver the next phase only" | [delivering-phase.md](references/delivering-phase.md) |

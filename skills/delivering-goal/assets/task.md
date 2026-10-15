@@ -19,7 +19,7 @@ blocked_reason: none
 
 - **Sources:** {{VERBATIM_URLS_AND_PATHS_OR_none}}
 - **Scope:** {{COMPONENTS_SCREENS_PACKAGES}}
-- **Constraints:** {{METHOD_NOTES_STYLE_REUSE_RULES_OR_none}}
+- **Constraints:** {{STYLE_REUSE_RULES_OR_none}}
 - **Acceptance:** {{DONE_CRITERIA}}
 
 ## Non-goals

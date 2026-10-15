@@ -17,14 +17,10 @@ map_revision: 1
 
 - {{PATH_OR_URL_OR_none}}
 
-## Governing skills
+## Workflow
 
-- {{SKILL_NAME_OR_none}}
-
-## Governing method
-
-- **Skill:** {{SKILL_NAME_OR_none}}
-- **Method:** {{REFERENCE_BASENAME_OR_none}}
+1. {{UPSTREAM_SKILL_NAME_OR_none}}
+2. {{DOWNSTREAM_SKILL_NAME}}
 
 ## Current state
 
@@ -32,10 +28,10 @@ map_revision: 1
 
 ## Phases
 
-| Id | Title | Status | Depends on | Outcome | Phase dir |
-| --- | --- | --- | --- | --- | --- |
-| 01-{{slug}} | {{TITLE}} | pending | none | {{ONE_LINE}} | none |
-| 02-{{slug}} | {{TITLE}} | pending | 01-{{slug}} | {{ONE_LINE}} | none |
+| Id | Title | Gate | Status | Depends on | Outcome | Phase dir |
+| --- | --- | --- | --- | --- | --- | --- |
+| 01-{{slug}} | {{TITLE}} | {{review_OR_none}} | pending | none | {{ONE_LINE}} | none |
+| 02-{{slug}} | {{TITLE}} | none | pending | 01-{{slug}} | {{ONE_LINE}} | none |
 
 ## Verification
 
