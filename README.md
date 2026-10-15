@@ -60,7 +60,7 @@ Source formats also work: full GitHub URL, a path to a single skill, or a local 
 | [`composing-react-native-application`](skills/composing-react-native-application/) | Extends one Expo core app into product variants through declared slots. Requires [`managing-monorepo`](https://github.com/cedmandocdoc/awesome-skills/tree/main/skills/managing-monorepo). |
 | [`deploying-cloudflare-web-application`](skills/deploying-cloudflare-web-application/) | Deploy static web apps to Cloudflare via Workers Builds and GitHub integration — discovery, `wrangler.toml`, and dashboard settings. |
 | [`deploying-supabase-application`](skills/deploying-supabase-application/) | Prepare Supabase backends for production — validate migrations and Edge Functions, connect GitHub integration, document dashboard settings. |
-| [`deploying-expo-native-application`](skills/deploying-expo-native-application/) | Prepare Expo iOS/Android apps for EAS Build — discover the app package, configure `eas.json` profiles and EAS secrets, and validate release readiness. |
+| [`deploying-expo-native-application`](skills/deploying-expo-native-application/) | Deploy Expo iOS/Android apps through GitHub Actions and EAS — `eas.json`, signing and store credentials without an Apple sign-in, TestFlight and Play submissions, and a `DEPLOYMENT.md` of the store steps the user still owns. |
 | [`building-marketing-campaign`](skills/building-marketing-campaign/) | Build a digital product's marketing campaigns under `marketing/` — positioning, then ideation, targeting, roll-out, text drafts and HyperFrames videos, approved outbox batches sent through Buffer and SMTP or by the user, UTM measurement on a Cloudflare Worker and D1, and a conclusion — one reviewed phase per request. Invoke explicitly. |
 | [`managing-skills`](skills/managing-skills/) | Create, update, and review skills in this catalog's house style — layout, `SKILL.md` and reference sections, independence, and lean writing. |
 
@@ -74,7 +74,7 @@ These external skill collections pair well with skills in this catalog. Install 
 | --- | --- | --- |
 | [antfu/skills](https://github.com/antfu/skills) — `pnpm` | `npx skills add antfu/skills --skill pnpm` | [`managing-monorepo`](skills/managing-monorepo/), [`building-react-web-application`](skills/building-react-web-application/), [`building-react-native-application`](skills/building-react-native-application/) |
 | [supabase/agent-skills](https://github.com/supabase/agent-skills) | `npx skills add supabase/agent-skills` | [`deploying-supabase-application`](skills/deploying-supabase-application/) |
-| [expo/skills](https://github.com/expo/skills) — `expo-cicd-workflows`, `expo-deployment`, `expo-dev-client` | `npx skills add expo/skills --skill expo-cicd-workflows --skill expo-deployment --skill expo-dev-client` | [`building-react-native-application`](skills/building-react-native-application/), [`composing-react-native-application`](skills/composing-react-native-application/), [`deploying-expo-native-application`](skills/deploying-expo-native-application/) |
+| [expo/skills](https://github.com/expo/skills) — `expo-dev-client` | `npx skills add expo/skills --skill expo-dev-client` | [`building-react-native-application`](skills/building-react-native-application/), [`composing-react-native-application`](skills/composing-react-native-application/) |
 
 Examples:
 
@@ -85,8 +85,8 @@ npx skills add antfu/skills --skill pnpm
 # Supabase development and Postgres best practices
 npx skills add supabase/agent-skills
 
-# EAS workflows, store deployment, and dev-client builds
-npx skills add expo/skills --skill expo-cicd-workflows --skill expo-deployment --skill expo-dev-client
+# Dev-client builds for Expo apps
+npx skills add expo/skills --skill expo-dev-client
 ```
 
 ## Contributing

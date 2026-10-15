@@ -2,7 +2,7 @@
 
 ## Overview
 
-**Read-only.** Verify the repository has a deployable Expo native app before configuring EAS or running the first cloud build.
+**Read-only.** Resolve the Expo app package and the values every other recipe needs before changing files or remote state.
 
 ## Guidelines
 
@@ -10,125 +10,37 @@
 
 | Question | How to resolve | If unclear |
 | --- | --- | --- |
-| Which package is the native app? | `app.json` / `app.config.*`, `expo` dependency, `eas.json` | List candidates; ask user |
-| Monorepo working directory | Path to the package containing `app.json` and `eas.json` | Ask user |
-| Bundle ID / package name | `app.json` → `ios.bundleIdentifier`, `android.package` | Confirm with user before first store build |
-| Expo project linked? | `extra.eas.projectId` in app config | Run `eas init` from the app package if missing |
-| Build profiles needed | `eas.json` `build` section | Default: `development`, `preview`, `production` |
-| Runtime env vars | `EXPO_PUBLIC_*` usage in source; project docs | List required vars per EAS environment |
-| App scheme | `expo.scheme` in app config; product TRD (`trd.md` with `doc_type: trd`) → **Infrastructure** origin | Ask user; Supabase Auth redirects need it |
+| App package | `app.json` or `app.config.*` beside a `package.json` with an `expo` dependency; several → list them | Ask user |
+| Platforms | `ios.bundleIdentifier` and `android.package` in `npx expo config --type public` | Ask user |
+| Bundle ID and package name | Same; the store records key on them, and changing one after release means new listings and credentials | Confirm with user before the first store build |
+| Expo project | `extra.eas.projectId` in the app config; missing → **Provision** links it | — |
+| Build and submit profiles | `eas.json`; missing or incomplete → [configuring-eas.md](./configuring-eas.md) | — |
+| Runtime variables | `EXPO_PUBLIC_*` names read in source, and which platform owns each value (`SUPABASE_*` → the Supabase skill's GitHub variables) | Ask user |
+| Store IDs | `ascAppId` and `appleTeamId` in the submit profiles, else `DEPLOYMENT.md` | The user, once the App Store Connect record exists |
+| App scheme | `expo.scheme`; product TRD (`trd.md` with `doc_type: trd`) → **Infrastructure** origin | Ask user; Supabase Auth redirects need it |
+| Expo account or organization | Product TRD → **Environments and deployment**, else `eas whoami` | Ask user |
+| Watch paths | The app package, the lockfile, workspace packages it imports | — |
 
-### Required layout
-
-Minimum structure at the Expo app package root:
-
-```
-<app-package>/
-├── app.json              # or app.config.js / app.config.ts
-├── eas.json
-├── package.json
-├── index.ts | App.tsx    # entry
-└── assets/               # icon, splash, etc.
-```
-
-`eas.json` may be missing on a greenfield app — create it with `eas init` or by following [configuring-eas.md](./configuring-eas.md).
-
-### 1. Discover the app package
-
-#### Single-package repo
-
-One `package.json` with `expo` in dependencies and an `app.json` at the same level → that package is the native app.
-
-#### Monorepo
+### Monorepo
 
 | File | What to read |
 | --- | --- |
-| `pnpm-workspace.yaml` | Package globs (`apps/*`, `packages/*`) |
-| `package.json` `workspaces` | npm/yarn workspace paths |
+| `pnpm-workspace.yaml`, `package.json` `workspaces` | Package globs |
 | `turbo.json` / `nx.json` | Named apps |
 
-For each candidate package:
+`eas.json` and `app.json` live in the app package: `eas` commands run there (`cd apps/mobile`) and the workflow sets it as the working directory. Install runs at the repo root; EAS Build installs the workspace from the root lockfile.
 
-1. `dependencies.expo` or `devDependencies.expo`
-2. `app.json` or `app.config.*` beside `package.json`
-3. Optional `eas.json` and `eas:*` scripts in `package.json`
-
-If more than one package is an Expo app, list them and ask the user which one to prepare for release.
-
-#### Existing EAS linkage
-
-In app config, confirm:
-
-```json
-{
-  "expo": {
-    "extra": {
-      "eas": {
-        "projectId": "<uuid>"
-      }
-    }
-  }
-}
-```
-
-If `projectId` is missing, from the app package:
-
-```bash
-eas init
-```
-
-Accept creating or linking an Expo project. This writes `projectId` into app config.
-
-### 2. Validate app.json
-
-| Field | Why it matters |
-| --- | --- |
-| `expo.name`, `expo.slug` | Display name and Expo project slug |
-| `expo.version` | User-facing version (CFBundleShortVersionString / versionName) |
-| `expo.ios.bundleIdentifier` | Must match App Store Connect app record |
-| `expo.android.package` | Must match Play Console package name |
-| `expo.icon`, `expo.splash` | Required assets for store builds |
-| `expo.plugins` | Native modules (e.g. `expo-build-properties` for min OS) |
-| `expo.extra.eas.projectId` | Links local project to EAS |
+### Validate the app config
 
 ```bash
 cd <app-package>
 npx expo config --type public
+eas config --platform ios --profile production --non-interactive
 ```
 
-Confirm `ios.bundleIdentifier` and `android.package` match the intended store records. Changing bundle ID after store apps exist requires new listings and regenerated credentials.
-
-### 3. Monorepo conventions
-
-| Concern | Pattern |
+| Field | Why |
 | --- | --- |
-| Commands run from | App package directory (`cd apps/mobile`) or `pnpm --filter <name> <script>` from repo root |
-| EAS CLI context | `eas.json` and `app.json` must live in the same package EAS builds |
-| Node / pnpm versions | Optional `build.base` in `eas.json` pins toolchain for cloud builds |
-| Lockfile | Install at monorepo root; EAS Build respects workspace layout when configured |
-
-### 4. Local smoke (optional)
-
-```bash
-cd <app-package>
-npx expo start
-```
-
-Confirm the app boots with the intended env vars on simulators/emulators.
-
-## Examples
-
-### Discovery checklist
-
-```
-- [ ] App package path identified (monorepo or single-package)
-- [ ] app.json / app.config present with bundle ID and package name confirmed
-- [ ] extra.eas.projectId present (or eas init planned)
-- [ ] eas.json present or planned with build profiles
-- [ ] Required EXPO_PUBLIC_* (or project-specific) vars listed per EAS environment
-```
-
-## Related
-
-- [configuring-eas.md](./configuring-eas.md)
-- [reviewing-release-readiness.md](./reviewing-release-readiness.md)
+| `expo.version` | User-facing version; build numbers come from EAS (`appVersionSource: remote`) |
+| `expo.ios.bundleIdentifier`, `expo.android.package` | Must match the store records |
+| `expo.icon`, `expo.splash` | Required for store builds |
+| `expo.extra.eas.projectId` | Links the package to EAS |
