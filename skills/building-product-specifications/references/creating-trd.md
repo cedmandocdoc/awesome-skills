@@ -29,6 +29,9 @@ Use [`../assets/trd.md`](../assets/trd.md) for new files. Required:
 - Frontmatter: `doc_type: trd`, correct `scope`, `feature` when feature-scoped, `depends_on`
 - Mermaid diagrams for architecture and communication flows (minimum one at standard tier)
 - Stack table, contracts, security, environments, tradeoffs per tier
+- **Infrastructure** table: one row per deployable component — repo path, platform, origin (`https://` host, app scheme, or an existing resource id), and the other apps sharing it (`—` when none). A component without a decided platform → **Open questions**
+- **Environments and deployment** table: how releases happen (push to `main` via CI, a platform's Git integration, or manual) and the account or organization on each platform
+- No secret values, keys, or values a platform generates on creation
 - Platform sections when stacks or topologies diverge — one file
 
 On amend: [spec-contract.md](./spec-contract.md) → **Create or amend**.

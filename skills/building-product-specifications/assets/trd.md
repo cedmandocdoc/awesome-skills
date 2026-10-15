@@ -39,15 +39,19 @@ depends_on:
 
 {{MERMAID_INFRA_DIAGRAM_OR_DESCRIPTION}}
 
+| Component | Platform | Origin or identifier | Shared with |
+| --- | --- | --- | --- |
+| {{COMPONENT_PATH_1}} | {{PLATFORM_1}} | {{ORIGIN_OR_ID_1}} | {{SHARED_WITH_1}} |
+
 ## Security and authentication
 
 - {{SECURITY_1}}
 
 ## Environments and deployment
 
-| Environment | Purpose | Notes |
-| --- | --- | --- |
-| {{ENV_1}} | {{PURPOSE_1}} | {{NOTES_1}} |
+| Environment | Trigger | Accounts | Notes |
+| --- | --- | --- | --- |
+| {{ENV_1}} | {{TRIGGER_1}} | {{ACCOUNTS_1}} | {{NOTES_1}} |
 
 ## Tradeoffs and risks
 
