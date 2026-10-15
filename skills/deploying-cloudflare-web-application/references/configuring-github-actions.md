@@ -12,7 +12,7 @@ Build command, Wrangler root, build-time variables, and watch paths from [discov
 
 ### Workflow file
 
-`.github/workflows/deploy-<worker>.yml`, one per Worker. Adapt the setup steps to the package manager (drop `pnpm/action-setup` for npm; `npm ci` instead of `pnpm install`).
+`.github/workflows/deploy-<worker>.yml`, one per Worker. Adapt the setup steps to the package manager (drop `pnpm/action-setup` for npm; `npm ci` instead of `pnpm install`). No dependency cache: the job holds the Cloudflare token.
 
 ```yaml
 name: Deploy <worker>
@@ -29,18 +29,17 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
-          cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: <build-command>
         env:
           VITE_SUPABASE_URL: ${{ vars.SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ vars.SUPABASE_PUBLISHABLE_KEY }}
-      - uses: cloudflare/wrangler-action@v3
+      - uses: cloudflare/wrangler-action@v4
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
@@ -59,7 +58,7 @@ jobs:
 | Type | Where | When |
 | --- | --- | --- |
 | **Build variables** | The build step's `env`, from GitHub variables | Values inlined at build time (`VITE_*`, `NEXT_PUBLIC_*`) |
-| **Runtime variables** | `vars` in the wrangler config; secrets via `wrangler secret` | Worker `env.*` at request time |
+| **Runtime variables** | `vars` in the wrangler config; secret names in `secrets.required`, values via **Provision** | Worker `env.*` at request time |
 
 ### GitHub values
 

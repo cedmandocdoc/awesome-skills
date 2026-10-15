@@ -14,7 +14,7 @@ Deploy target, build output path, and SPA mode from [discovering-application.md]
 
 ```toml
 name = "my-app"
-compatibility_date = "2026-07-02"
+compatibility_date = "2026-10-01"
 
 [assets]
 directory = "./dist"
@@ -64,7 +64,7 @@ html_handling = "auto-trailing-slash"
 ```toml
 name = "my-app"
 main = "src/index.ts"
-compatibility_date = "2026-07-02"
+compatibility_date = "2026-10-01"
 
 [assets]
 directory = "./dist"
@@ -81,7 +81,7 @@ Worker fetches static assets via `env.ASSETS.fetch(request)` for non-API routes.
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "my-app",
-  "compatibility_date": "2026-07-02",
+  "compatibility_date": "2026-10-01",
   "assets": {
     "directory": "./dist",
     "not_found_handling": "single-page-application"
@@ -121,6 +121,9 @@ workers_dev = true
 [vars]
 PUBLIC_SITE_KEY = "<public value>"
 
+[secrets]
+required = ["STRIPE_SECRET_KEY"]
+
 [[d1_databases]]
 binding = "DB"
 database_name = "my-app-db"
@@ -131,8 +134,8 @@ database_id = "<id from wrangler d1 create>"
 | --- | --- |
 | `account_id` | Recorded at Setup; pins deploys to one account |
 | `vars` | Public runtime values; each deploy overwrites edits made elsewhere |
-| Secrets | Never in the config; `wrangler secret` per [configuring-resources.md](./configuring-resources.md) |
-| D1, KV, R2 ids | Public; written back after the resource is created |
+| `secrets.required` | Every runtime secret name; deploy fails while one is unset. Values never in the config; set per [configuring-resources.md](./configuring-resources.md) |
+| D1, KV, R2 ids | Public; written back by `create --update-config` |
 
 ### Custom domains and routes
 

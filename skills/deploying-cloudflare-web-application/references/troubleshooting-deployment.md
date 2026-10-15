@@ -12,7 +12,7 @@
 | --- | --- | --- |
 | Build command not found | Wrong working directory or missing install step | Fix the workflow's build step; install before building |
 | Module not found during build | Monorepo deps not installed at root | Install from repo root before package build |
-| Node version error | `.nvmrc` missing or wrong | Set the Node major in `.nvmrc` |
+| Node version error | `.nvmrc` missing or below 22 (Wrangler 4's minimum) | Set the Node major in `.nvmrc` |
 | Missing env at build | GitHub variable not set or not mapped | `gh variable list`; map it in the build step's `env` |
 | Lockfile changes break build | Install not using frozen lockfile | Use `pnpm install --frozen-lockfile` or `npm ci` |
 
@@ -23,6 +23,7 @@
 | Authentication error or 403 | `CLOUDFLARE_API_TOKEN` secret missing, expired, or lacking a permission (D1, the zone for a custom domain) | `gh secret list`; create a new token per **Setup**; `gh secret set -f <wrangler-root>/deploy.secrets.env` |
 | Wrong account | `CLOUDFLARE_ACCOUNT_ID` variable differs from `account_id` | Set the variable to the config's `account_id` |
 | Assets directory empty | Build output path wrong | Fix `assets.directory`; confirm local build output |
+| Deploy lists missing required secrets | A `secrets.required` name is unset on the Worker | Fill `worker.secrets.env`; run **Provision** |
 | Wrangler not found | No wrangler in project | Add `wrangler` to `devDependencies` |
 | `wrangler.toml` not found | Wrong `workingDirectory` | Point it to the folder containing the config |
 

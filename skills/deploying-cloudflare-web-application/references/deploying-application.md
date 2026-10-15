@@ -22,7 +22,7 @@ ls <output-directory>
 ### 3. Write repository files
 
 1. `wrangler.toml` or `wrangler.jsonc` at the Wrangler root, with `wrangler` pinned in `devDependencies`, per [configuring-wrangler.md](./configuring-wrangler.md).
-2. `.nvmrc` with the Node major version the build needs, when missing.
+2. `.nvmrc` with the Node major version the build needs, 22 or later, when missing or older.
 3. `.github/workflows/deploy-<worker>.yml` per [configuring-github-actions.md](./configuring-github-actions.md) → **Workflow file**.
 
 ### 4. Confirm to the user

@@ -16,7 +16,7 @@ Discovery per [discovering-application.md](./discovering-application.md); wrangl
 | --- | --- |
 | Worker name, `account_id`, bindings, `routes` | Wrangler config |
 | Resources to create | A D1, KV, or R2 binding without a real id or an existing bucket |
-| Runtime secret names | `env.<NAME>` read in Worker code and absent from `vars` |
+| Runtime secret names | `secrets.required` in the wrangler config |
 | GitHub values | [configuring-github-actions.md](./configuring-github-actions.md) → **GitHub values** |
 
 Write missing secret names with blank values into `<wrangler-root>/worker.secrets.env`, tell the user where each value comes from, and continue once `grep -c '=$' <file>` returns `0`.
@@ -38,9 +38,9 @@ Show one table: item, remote now, after. Apply after the user confirms.
 
 In this order; skip what already matches.
 
-1. **Resources.** `npx wrangler d1 create <name>`, `npx wrangler kv namespace create <binding>`, `npx wrangler r2 bucket create <name>`. Write each returned id into the binding in the wrangler config.
-2. **Worker.** None exists → run the project's production build from a clean output directory, then `npx wrangler deploy`. Custom domains in `routes` attach on deploy.
-3. **Runtime secrets.** `npx wrangler secret bulk worker.secrets.env --name <worker>`.
+1. **Resources.** `npx wrangler d1 create <name> --binding <BINDING> --update-config`, `npx wrangler kv namespace create <name> --binding <BINDING> --update-config`, `npx wrangler r2 bucket create <name> --binding <BINDING> --update-config`; each writes its id into the wrangler config.
+2. **Worker.** None exists → run the project's production build from a clean output directory, then `npx wrangler deploy --secrets-file worker.secrets.env`. Custom domains in `routes` attach on deploy.
+3. **Runtime secrets.** Worker existed → `npx wrangler secret bulk worker.secrets.env --name <worker>`.
 4. **GitHub values.** `gh variable set` each variable per [configuring-github-actions.md](./configuring-github-actions.md) → **GitHub values**; `gh secret set -f <wrangler-root>/deploy.secrets.env`.
 
 ### 5. Verify

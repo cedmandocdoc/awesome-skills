@@ -2,7 +2,7 @@
 name: deploying-cloudflare-web-application
 id: 72a302f7-9799-45be-a982-a1ab7ebe6222
 description: Deploy web applications to Cloudflare Workers through GitHub Actions — discover the target app, build command, and output path; configure wrangler.toml or wrangler.jsonc for static assets, SPA routing, bindings, and custom domains; write the deploy workflow; provision with Wrangler and the GitHub CLI (D1/KV/R2 resources, runtime secrets, GitHub secrets and variables, first deploy, rollback). Use when deploying a web app to Cloudflare, setting up Cloudflare deploys in GitHub Actions, setting Worker secrets, attaching a custom domain, creating Cloudflare resources for an app, or preparing a monorepo package for Cloudflare.
-version: 3.0.0
+version: 3.1.0
 ---
 
 # Deploying a web application to Cloudflare
@@ -11,7 +11,7 @@ version: 3.0.0
 
 | Item | Kind | Required | When | Done when | How |
 | --- | --- | --- | --- | --- | --- |
-| Node.js with the project's package manager | user | required | All | `node --version` and the lockfile's package manager (`npm`, `pnpm`, `yarn`) run | https://nodejs.org |
+| Node.js 22+ with the project's package manager | user | required | All | `node --version` prints v22 or later and the lockfile's package manager (`npm`, `pnpm`, `yarn`) runs | https://nodejs.org |
 | GitHub CLI | user | required | Deploy, Provision | `gh auth status` succeeds and `gh repo view` finds the repository | https://cli.github.com, then `gh auth login`; create the GitHub repository and push the project |
 | Cloudflare account | user | required | All | `npx wrangler whoami` shows an account | Sign up at https://dash.cloudflare.com/sign-up, then `npx wrangler login` |
 | Account ID | ask | required | Provision, Direct deploy | `account_id` is set in the wrangler config | The product TRD's **Environments and deployment** names the account → use it; else `npx wrangler whoami` lists one account → use it; several → ask which; recorded as `account_id` in the wrangler config |
