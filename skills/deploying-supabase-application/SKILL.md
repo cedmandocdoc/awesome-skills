@@ -1,8 +1,8 @@
 ---
 name: deploying-supabase-application
 id: 489208cd-16f5-4e4f-92c3-35813f082ce3
-description: Prepare a Supabase app for production deploy and connect it to a remote project via Supabase GitHub integration — discover the working directory, validate migrations and functions locally, and document dashboard settings (production branch, deploy to production). Use when deploying Supabase, connecting a repository to Supabase GitHub integration, setting up backend auto-deploy on merge, or validating migrations and Edge Functions before production release.
-version: 1.1.0
+description: Deploy a Supabase app to production through GitHub Actions — validate migrations and Edge Functions locally, write the deploy workflow, create or link the production project, and set GitHub secrets and variables, Edge Function secrets, and Auth settings with the Supabase CLI and Management API. Use when deploying Supabase, setting up Supabase deploys in GitHub Actions, provisioning a hosted Supabase project, setting Supabase secrets or Auth redirect URLs, deploying functions or migrations from the CLI, or validating migrations and Edge Functions before release.
+version: 3.0.0
 ---
 
 # Deploying a Supabase application
@@ -11,24 +11,29 @@ version: 1.1.0
 
 | Item | Kind | Required | When | Done when | How |
 | --- | --- | --- | --- | --- | --- |
-| Supabase CLI | user | required | Deploy | `supabase --version` succeeds | https://supabase.com/docs/guides/local-development/cli/getting-started |
+| Supabase CLI | user | required | All | `supabase --version` succeeds | https://supabase.com/docs/guides/local-development/cli/getting-started |
 | Docker | user | required | Deploy | `docker info` succeeds | https://docs.docker.com/get-docker/, then start Docker |
 | Deno | user | optional | Deploy, when the app has Edge Functions | `deno --version` succeeds | https://docs.deno.com/runtime/getting_started/installation/ |
-| Git repository on GitHub | user | required | Deploy | `git remote get-url origin` points to GitHub | Create the GitHub repository and push the project |
-| Remote Supabase project | user | required | Deploy | The user confirms the project to deploy to | Create one at https://supabase.com/dashboard/new |
+| GitHub CLI | user | required | Deploy, Provision | `gh auth status` succeeds and `gh repo view` finds the repository | https://cli.github.com, then `gh auth login`; create the GitHub repository and push the project |
+| Secrets files ignored | auto | required | Provision, Direct deploy | `git check-ignore -q <supabase-root>/deploy.secrets.env <supabase-root>/functions.secrets.env` succeeds and `git ls-files '*.secrets.*'` prints nothing | Add `*.secrets.*` to root `.gitignore`. A tracked file → `git rm --cached <file>`, then tell the user its values are in git history and must be rotated |
+| Supabase access token | user | required | Provision, Direct deploy, Troubleshoot | `( set -a; . <supabase-root>/deploy.secrets.env; set +a; supabase projects list )` succeeds | Write `SUPABASE_ACCESS_TOKEN=` into `<supabase-root>/deploy.secrets.env`; the user creates a token at https://supabase.com/dashboard/account/tokens, scoped to the project's organization, and pastes it there |
+| Production project | ask | required | Provision, Direct deploy | `<supabase-root>/.temp/project-ref` exists | The product TRD's **Infrastructure** row names the project → use it; else ask: an existing project from `supabase projects list`, or a new one. Existing → recorded by `supabase link --project-ref <ref> --workdir <working-directory>`; new → **Provision** creates and links it |
 
 ## Workflow
 
 1. **Setup** — for each **Setup** row whose When covers the request, in order: Done when holds → skip; `user` → stop and print its How when required, continue without it when optional; `ask` → fill what the request answers, ask the rest together in one message, record each answer; `auto` and `static` → run.
 2. **Recipe** — match one **Recipes** row; open every doc in its Read column.
 
-- Edits repository files only; the user changes Supabase dashboard and GitHub settings.
-- Runs no `supabase link`, `supabase db push`, or `supabase functions deploy`; merges to the production branch deploy.
+- Changes the Supabase project and the GitHub repository settings only after the user confirms that run's plan.
+- Runs remote commands with `<supabase-root>/deploy.secrets.env` loaded in a subshell: `( set -a; . <supabase-root>/deploy.secrets.env; set +a; <command> )`. Never prints a secret value.
+- Releases deploy through the GitHub Actions workflow on push to the production branch; `supabase db push` and `supabase functions deploy` run locally only on a **Direct deploy** request.
 
 ## Recipes
 
 | Intent | Example phrasing | Read |
 | --- | --- | --- |
 | Set up | "Set up Supabase deployment", "Is deploying-supabase-application ready?" | **Setup** — run Workflow step 1 for every row, then report each row's state |
-| Deploy | "Deploy Supabase to production", "Connect the repo to Supabase GitHub integration", "Validate migrations before release" | [deploying-application.md](references/deploying-application.md) |
-| Troubleshoot | "The Supabase deploy failed on merge", "Functions did not update" | [troubleshooting-deployment.md](references/troubleshooting-deployment.md) |
+| Deploy | "Deploy Supabase to production", "Add the Supabase deploy workflow", "Validate migrations before release" | [deploying-application.md](references/deploying-application.md) |
+| Provision | "Create the production Supabase project", "Set the Edge Function secrets", "Set the Auth redirect URLs" | [configuring-remote-project.md](references/configuring-remote-project.md) |
+| Direct deploy | "Deploy the functions now", "Push the migrations without merging" | [executing-direct-deploy.md](references/executing-direct-deploy.md) |
+| Troubleshoot | "The Supabase deploy workflow failed", "Functions did not update", "Reset emails link to localhost" | [troubleshooting-deployment.md](references/troubleshooting-deployment.md) |

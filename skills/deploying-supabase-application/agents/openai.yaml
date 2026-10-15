@@ -1,4 +1,4 @@
 interface:
   display_name: "Supabase Deployment"
-  short_description: "Prepare Supabase apps and connect GitHub integration for auto-deploy on merge"
-  default_prompt: "Use $deploying-supabase-application when deploying Supabase to production, connecting a repository via Supabase GitHub integration, validating migrations before release, or documenting working directory and production branch settings."
+  short_description: "Deploy Supabase through GitHub Actions and provision the production project, secrets, and Auth with the CLI and Management API"
+  default_prompt: "Use $deploying-supabase-application when deploying Supabase, setting up Supabase deploys in GitHub Actions, provisioning a hosted Supabase project, setting Supabase secrets or Auth redirect URLs, deploying functions or migrations from the CLI, or validating migrations and Edge Functions before release."

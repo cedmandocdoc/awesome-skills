@@ -2,7 +2,7 @@
 
 ## Overview
 
-**Read-only.** Locate the Supabase project root, validate `config.toml` and migrations, and confirm the dashboard working directory before GitHub integration.
+**Read-only.** Locate the Supabase project root, read the production intent from the product TRD, and validate `config.toml`, migrations, and Edge Functions before deploy.
 
 ## Guidelines
 
@@ -24,8 +24,10 @@ Optional: `seed.sql`, `package.json` with Supabase CLI scripts, `functions/deno.
 | Question | How to resolve | If unclear |
 | --- | --- | --- |
 | Supabase root | Directory containing `config.toml` and `migrations/` | List candidates; ask user |
-| Working directory | Repo-relative path to the Supabase root (used in dashboard) | See layout table below |
+| Working directory | Repo-relative path the CLI runs from (`--workdir`, the workflow's `working-directory`) | See layout table below |
 | Production branch | User's deploy branch (`main`, `master`, `production`, etc.) | Ask user; default `main` only when repo convention is obvious |
+| Production intent | Product TRD (`trd.md` with `doc_type: trd`) → **Infrastructure** row for Supabase: an existing project ref and the apps sharing it; **Environments and deployment**: the organization | Ask user |
+| Auth origins | Product TRD → **Infrastructure** origins of the web hosts and app schemes that sign in through this project | Ask user |
 | Edge Functions | `[functions.*]` entries in `config.toml` | List declared functions |
 | Storage buckets | `[storage.buckets.*]` entries in `config.toml` | List declared buckets |
 
@@ -33,13 +35,13 @@ Optional: `seed.sql`, `package.json` with Supabase CLI scripts, `functions/deno.
 
 Search for `config.toml` files with Supabase sections (`[api]`, `[db]`, `[functions.*]`, etc.).
 
-| Layout | Working directory (dashboard) |
+| Layout | Working directory |
 | --- | --- |
 | `supabase/config.toml` at repo root | `.` |
 | `apps/backend/config.toml` (monorepo) | `apps/backend` |
 | Nested `apps/foo/supabase/config.toml` | `apps/foo` (parent of the `supabase/` folder) |
 
-Working directory is the repo-relative path the integration uses as the Supabase project root — the folder that directly contains `config.toml` and `migrations/`. When the standard layout nests a `supabase/` subfolder (e.g. `apps/web/supabase/`), use the parent (`apps/web`). When `config.toml` lives directly in a package directory, use that directory.
+When the standard layout nests a `supabase/` subfolder (e.g. `apps/web/supabase/`), the working directory is the parent (`apps/web`). When `config.toml` lives directly in a package directory, use that directory.
 
 If multiple `config.toml` candidates exist, ask the user which app deploys to the target remote project.
 
@@ -69,28 +71,28 @@ deno test --config functions/deno.json functions/
 
 Adapt to project scripts (e.g. `functions:check`, `functions:test`).
 
-### Pre-merge checklist
+### Pre-push checklist
 
 ```
-- [ ] Supabase root identified; working directory documented
+- [ ] Supabase root and working directory identified
 - [ ] Migrations apply locally without error
 - [ ] supabase db lint passes
 - [ ] New/changed functions declared in config.toml
 - [ ] Function checks/tests pass (if applicable)
-- [ ] Secrets and auth config noted for manual dashboard setup (if needed)
+- [ ] Production project, Auth origins, and secret names known for **Provision**
 ```
 
-### What deploys on merge
+### What deploys where
 
-| Deployed on merge to the production branch | Stays manual |
+| Deployed by the workflow on push | **Provision** ([configuring-remote-project.md](./configuring-remote-project.md)) |
 | --- | --- |
-| New files in `migrations/` | Seed data and one-off data jobs |
-| Edge Functions declared in `config.toml` | Undeclared functions; Edge Function secrets (`supabase secrets set` or Project Settings → Edge Functions) |
-| Storage buckets declared in `config.toml` | Undeclared buckets; Auth SMTP, Site URL, redirect allow-list, and API settings in `config.toml` |
+| New files in `migrations/` | The project, and the GitHub secrets and variables the workflow reads |
+| Edge Functions declared in `config.toml` | Edge Function secrets |
+| Storage buckets declared in `config.toml` | Auth settings (Site URL, redirect URLs, sign-up, SMTP) |
 
-The user sets the manual items in the Supabase dashboard after deploy; document those the app depends on. They do not block connecting GitHub integration.
+Undeclared functions and buckets deploy nowhere.
 
 ## Related
 
-- [configuring-github-integration.md](./configuring-github-integration.md)
+- [configuring-github-actions.md](./configuring-github-actions.md)
 - [troubleshooting-deployment.md](./troubleshooting-deployment.md)
