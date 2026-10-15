@@ -68,13 +68,15 @@ After installation, your agent loads skills from its configured skills directory
 
 ## Complementary skills
 
-These external skill collections pair well with skills in this catalog. Install them the same way with the [skills CLI](https://www.npmjs.com/package/skills):
+These external skill collections pair well with skills in this catalog. Most install with the [skills CLI](https://www.npmjs.com/package/skills); HyperFrames uses its own CLI:
 
 | Collection | Install | Pairs with |
 | --- | --- | --- |
 | [antfu/skills](https://github.com/antfu/skills) — `pnpm` | `npx skills add antfu/skills --skill pnpm` | [`managing-monorepo`](skills/managing-monorepo/), [`building-react-web-application`](skills/building-react-web-application/), [`building-react-native-application`](skills/building-react-native-application/) |
+| [vercel/turborepo](https://github.com/vercel/turborepo) — `turborepo` | `npx skills add vercel/turborepo --skill turborepo` | [`managing-monorepo`](skills/managing-monorepo/), [`composing-react-native-application`](skills/composing-react-native-application/) |
 | [supabase/agent-skills](https://github.com/supabase/agent-skills) | `npx skills add supabase/agent-skills` | [`deploying-supabase-application`](skills/deploying-supabase-application/) |
 | [expo/skills](https://github.com/expo/skills) — `expo-dev-client` | `npx skills add expo/skills --skill expo-dev-client` | [`building-react-native-application`](skills/building-react-native-application/), [`composing-react-native-application`](skills/composing-react-native-application/) |
+| [heygen-com/hyperframes](https://github.com/heygen-com/hyperframes) — `hyperframes` | `npx hyperframes skills update` | [`building-marketing-campaign`](skills/building-marketing-campaign/) |
 
 Examples:
 
@@ -82,11 +84,17 @@ Examples:
 # pnpm conventions for Vite and Expo projects
 npx skills add antfu/skills --skill pnpm
 
+# Turborepo tasks, caching, and filtering for pnpm monorepos
+npx skills add vercel/turborepo --skill turborepo
+
 # Supabase development and Postgres best practices
 npx skills add supabase/agent-skills
 
 # Dev-client builds for Expo apps
 npx skills add expo/skills --skill expo-dev-client
+
+# HyperFrames videos for marketing campaigns
+npx hyperframes skills update
 ```
 
 ## Contributing
