@@ -23,7 +23,7 @@ Confirm the `eas.json` build and submit profiles per [configuring-eas.md](./conf
 
 ### 3. Configure EAS environments and secrets
 
-Per [configuring-eas.md](./configuring-eas.md) → **EAS environments and secrets**: map each `build.<profile>.environment` to Expo dashboard variables, store submit credentials in EAS (`eas credentials`), and document the variable matrix.
+Per [configuring-eas.md](./configuring-eas.md) → **EAS environments and secrets**: set each `build.<profile>.environment`'s variables with the EAS CLI, store submit credentials in EAS (`eas credentials`), and document the variable matrix.
 
 ### 4. Write repository files
 
@@ -43,4 +43,4 @@ Reply with:
 
 - Files written and the variable matrix
 - Remaining blockers, including a missing Apple Developer or Google Play Console account for store builds
-- When green: build and submit through **`expo-deployment`**
+- When green: build and submit through **`eas-app-stores`**

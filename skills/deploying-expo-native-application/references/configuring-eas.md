@@ -2,7 +2,7 @@
 
 ## Overview
 
-Configure `eas.json` and EAS environments for cloud builds. Build and submit commands: external **`expo-deployment`** skill.
+Configure `eas.json` and EAS environments for cloud builds. Build and submit commands: external **`eas-app-stores`** skill.
 
 ## Prerequisites
 
@@ -73,7 +73,7 @@ Adapt names, env vars, and extends to the project.
 | --- | --- |
 | `cli.appVersionSource: "remote"` | EAS stores build numbers |
 | `autoIncrement: true` on `production` | Increments iOS build number / Android version code per build |
-| `build.<profile>.environment` | Maps profile to Expo dashboard environment variables |
+| `build.<profile>.environment` | Maps profile to an EAS environment's variables |
 | `developmentClient: true` | Required for dev client profile |
 | `distribution: "store"` | Required for App Store / Play store submission |
 | `ios.simulator: true` | Development builds for iOS Simulator only (no signing) |
@@ -90,23 +90,24 @@ Submit profile names are project-defined. Android `track` maps to Play Console t
 
 Each build profile's `environment` field selects which variables EAS injects at build time.
 
-1. Open [expo.dev](https://expo.dev) → project → **Environment variables**.
-2. Create variables per environment (`development`, `preview`, `production`).
-3. Use `EXPO_PUBLIC_*` prefix for values embedded in the client bundle.
+1. **Names.** Each variable the app reads, per environment (`development`, `preview`, `production`). `EXPO_PUBLIC_*` for values embedded in the client bundle.
+2. **Values.** A value another platform owns comes from its GitHub variable: `gh variable get SUPABASE_URL` for `EXPO_PUBLIC_SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY` for the Supabase key. Missing → that platform's skill sets it (deploying-supabase-application → **Provision**), or the user gives the value. Other values come from the user.
+3. **Plan.** `eas env:list --environment <environment>` per environment; show one matrix of new / changed / unchanged and apply after the user confirms:
 
-Document a matrix for the user:
+   | Variable | development | preview | production | Source |
+   | --- | --- | --- | --- | --- |
+   | `EXPO_PUBLIC_*` | … | … | … | GitHub variable or user |
 
-| Variable | development | preview | production | Notes |
-| --- | --- | --- | --- | --- |
-| `EXPO_PUBLIC_*` | … | … | … | List each var the app reads |
+4. **Apply.**
+
+   ```bash
+   eas env:create --environment production --name EXPO_PUBLIC_SUPABASE_URL \
+     --value "$(gh variable get SUPABASE_URL)" --visibility plaintext --non-interactive   # --force when changed
+   ```
 
 - Never commit API keys, anon keys, or service account JSON.
 - `preview` and `production` often share the same backend URL in single-environment setups — confirm with the user.
 - Feature flags (e.g. `EXPO_PUBLIC_FEATURE_*`) belong in the same environments as the builds that need them.
-
-```bash
-eas env:list --environment production
-```
 
 ### package.json scripts (optional)
 
@@ -132,7 +133,7 @@ Run from the app package or via `pnpm --filter <package> <script>` in a monorepo
 4. eas submit --profile production → App Store + Play production (when ready)
 ```
 
-Command details: **`expo-deployment`**.
+Command details: **`eas-app-stores`**.
 
 ### Version management
 
@@ -150,8 +151,8 @@ eas build:version:set -p ios --build-number <n>   # rarely needed when autoIncre
 | `Invalid UUID appId` on build | Missing `extra.eas.projectId` | `eas init` from app package |
 | Build succeeds but app can't reach API | Missing/wrong EAS env vars for profile | Set vars for matching `environment` |
 | Wrong bundle ID in artifact | `app.json` not updated | `npx expo config --type public`; fix `bundleIdentifier` / `package` |
-| Submit fails with missing credentials | Store credentials not in EAS | `eas credentials` — see `expo-deployment` |
-| Android submit `PERMISSION_DENIED` | Play Android Developer API disabled | Enable `androidpublisher` API — see `expo-deployment` |
+| Submit fails with missing credentials | Store credentials not in EAS | `eas credentials` — see `eas-app-stores` |
+| Android submit `PERMISSION_DENIED` | Play Android Developer API disabled | Enable `androidpublisher` API — see `eas-app-stores` |
 
 ## Related
 

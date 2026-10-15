@@ -2,7 +2,7 @@
 name: deploying-expo-native-application
 id: ba26301f-928c-4984-9b30-7009e3dc5db5
 description: Prepare an Expo native app (iOS/Android) for EAS Build and store release — discover the app package, validate app.json and eas.json profiles, configure EAS environments and secrets, and verify release readiness. Use when setting up EAS deployment for an Expo app, configuring eas.json build/submit profiles, linking an Expo project, or preparing the first EAS build.
-version: 1.1.0
+version: 1.2.0
 ---
 
 # Deploying an Expo native application
@@ -16,13 +16,15 @@ version: 1.1.0
 | Expo account | user | required | All | `eas whoami` shows an account with access to the project's organization | Sign up at https://expo.dev/signup, then `eas login` |
 | Apple Developer Program | user | optional | iOS store builds | The user confirms an active membership | https://developer.apple.com/programs/enroll/ |
 | Google Play Console | user | optional | Android store builds | The user confirms a developer account | https://play.google.com/console/signup |
+| GitHub CLI | user | optional | Prepare release, Configure EAS, when a variable's value comes from another platform | `gh auth status` succeeds | https://cli.github.com, then `gh auth login` |
 
 ## Workflow
 
 1. **Setup** — for each **Setup** row whose When covers the request, in order: Done when holds → skip; `user` → stop and print its How when required, continue without it when optional; `ask` → fill what the request answers, ask the rest together in one message, record each answer; `auto` and `static` → run.
 2. **Recipe** — match one **Recipes** row; open every doc in its Read column.
 
-- Stops at deployable configuration; build and submit belong to the **`expo-deployment`** skill (`npx skills add expo/skills --skill expo-deployment`).
+- Stops at deployable configuration; build and submit belong to the **`eas-app-stores`** skill (`npx skills add expo/skills --skill eas-app-stores`).
+- Changes EAS environment variables only after the user confirms that run's plan.
 
 ## Recipes
 

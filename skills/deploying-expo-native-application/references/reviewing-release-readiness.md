@@ -2,7 +2,7 @@
 
 ## Overview
 
-**Review mode.** Checklist before the first `preview` or `production` EAS build. Configuration items are in scope; handoff items defer to **`expo-deployment`** or project docs.
+**Review mode.** Checklist before the first `preview` or `production` EAS build. Configuration items are in scope; handoff items defer to **`eas-app-stores`** or project docs.
 
 ## Prerequisites
 
@@ -25,7 +25,7 @@
 - [ ] package.json eas:* scripts added (optional but recommended)
 ```
 
-### Credentials and accounts (handoff → expo-deployment)
+### Credentials and accounts (handoff → eas-app-stores)
 
 ```
 - [ ] App Store Connect app record created (bundle ID matches app.json)
@@ -34,7 +34,7 @@
 - [ ] Google Play service account JSON stored in EAS (for automated submit)
 ```
 
-### Store prerequisites (handoff → expo-deployment + project docs)
+### Store prerequisites (handoff → eas-app-stores + project docs)
 
 ```
 - [ ] Privacy policy URL hosted and reachable
@@ -58,8 +58,8 @@ Use the project's manual smoke checklist and task docs when they exist.
 
 | Next step | Where to go |
 | --- | --- |
-| `eas build` / `eas submit` | **`expo-deployment`** skill |
-| Automated builds on tag/merge | **`expo-cicd-workflows`** skill (`npx skills add expo/skills --skill expo-cicd-workflows`) |
+| `eas build` / `eas submit` | **`eas-app-stores`** skill |
+| Automated builds on tag/merge | **`eas-workflows`** skill (`npx skills add expo/skills --skill eas-workflows`) |
 | Dev client builds | **`expo-dev-client`** skill (`npx skills add expo/skills --skill expo-dev-client`) |
 
 ## Related

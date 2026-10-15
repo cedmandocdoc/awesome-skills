@@ -16,6 +16,7 @@
 | Expo project linked? | `extra.eas.projectId` in app config | Run `eas init` from the app package if missing |
 | Build profiles needed | `eas.json` `build` section | Default: `development`, `preview`, `production` |
 | Runtime env vars | `EXPO_PUBLIC_*` usage in source; project docs | List required vars per EAS environment |
+| App scheme | `expo.scheme` in app config; product TRD (`trd.md` with `doc_type: trd`) → **Infrastructure** origin | Ask user; Supabase Auth redirects need it |
 
 ### Required layout
 
