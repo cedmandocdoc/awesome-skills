@@ -2,7 +2,7 @@
 name: managing-monorepo
 id: e0e993e7-a5f9-4bea-9923-166b503df045
 description: Defines the workspace contract for a TypeScript monorepo with pnpm and Turborepo — folder roles (`apps/` vs `packages/`), cross-package imports (`exports`, `workspace:*`), package runners (`<dir>:<script>`, e.g. `pnpm web:dev`), and root `.gitignore`. Use in a workspace with `pnpm-workspace.yaml` and `turbo.json`, or when initializing one, for adding a package, choosing apps vs packages, wiring an import, adding a package script or root runner, or initializing `.gitignore`.
-version: 2.3.0
+version: 2.3.1
 ---
 
 # Managing Monorepo
@@ -12,12 +12,12 @@ version: 2.3.0
 | Item | Kind | Required | When | Done when | How |
 | --- | --- | --- | --- | --- | --- |
 | [pnpm](https://github.com/antfu/skills/tree/main/skills/pnpm) skill | user | required | All | Found per [monorepo-contract.md](references/monorepo-contract.md) → **Discovering project skills** | `npx skills add antfu/skills --skill pnpm` |
-| [turborepo](https://github.com/antfu/skills/tree/main/skills/turborepo) skill | user | required | All | Found per [monorepo-contract.md](references/monorepo-contract.md) → **Discovering project skills** | `npx skills add antfu/skills --skill turborepo` |
+| [turborepo](https://github.com/vercel/turborepo/tree/main/skills/turborepo) skill | user | required | All | Found per [monorepo-contract.md](references/monorepo-contract.md) → **Discovering project skills** | `npx skills add vercel/turborepo --skill turborepo` |
 | pnpm | user | required | All | `pnpm --version` succeeds | https://pnpm.io/installation |
 | Workspace | static | required | All | [monorepo-contract.md](references/monorepo-contract.md) → **Resolve workspace root** finds a root | At the repository root, per [managing-workspace.md](references/managing-workspace.md) → **Initialize workspace** |
 | Standing rule | auto | required | Set up, or a request whose Workspace row ran | Root `AGENTS.md` has the line | Add `- This workspace follows managing-monorepo; load it before adding a package, a cross-package import, or a package script.` to root `AGENTS.md` (create when missing) and to root `CLAUDE.md` when it exists without importing `AGENTS.md`; skip a file that has it |
 
-Install both skills: `npx skills add antfu/skills --skill pnpm --skill turborepo`
+Install both skills: `npx skills add antfu/skills --skill pnpm && npx skills add vercel/turborepo --skill turborepo`
 
 ## Workflow
 
