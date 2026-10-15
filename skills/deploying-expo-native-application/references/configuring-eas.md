@@ -24,12 +24,12 @@ Three build profiles and named submit profiles:
 ```json
 {
   "cli": {
-    "version": ">= 16.0.0",
+    "version": ">= 24.0.0",
     "appVersionSource": "remote"
   },
   "build": {
     "base": {
-      "node": "20.x.x",
+      "node": "22.x.x",
       "pnpm": "10.x.x"
     },
     "development": {
@@ -67,7 +67,7 @@ Three build profiles and named submit profiles:
 }
 ```
 
-Adapt names, env vars, and extends to the project.
+Adapt names, env vars, and extends to the project; `node` and `pnpm` follow `.nvmrc` and `packageManager`.
 
 | Setting | Purpose |
 | --- | --- |
@@ -101,8 +101,8 @@ Each build profile's `environment` field selects which variables EAS injects at 
 4. **Apply.**
 
    ```bash
-   eas env:create --environment production --name EXPO_PUBLIC_SUPABASE_URL \
-     --value "$(gh variable get SUPABASE_URL)" --visibility plaintext --non-interactive   # --force when changed
+   eas env:set --environment preview --environment production --name EXPO_PUBLIC_SUPABASE_URL \
+     --value "$(gh variable get SUPABASE_URL)" --visibility plaintext --non-interactive
    ```
 
 - Never commit API keys, anon keys, or service account JSON.
