@@ -29,7 +29,6 @@ blocked_reason: none
 ## Context
 
 - **Primary files:** {{PATHS}}
-- **Skills to load:** {{SKILL_NAMES_OR_none}}
 - **References:** {{BASENAMES_OR_none}}
 
 ## Steps
@@ -40,7 +39,7 @@ blocked_reason: none
 
 ## Verification
 
-- [ ] {{ACCEPTANCE_CHECK}}
+- [ ] {{TEST_OR_CHECK_COMMAND}}
 - [ ] Typecheck / lint passes for affected packages
 
 ## Findings

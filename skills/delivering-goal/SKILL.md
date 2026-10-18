@@ -3,15 +3,15 @@ name: delivering-goal
 id: 317e7227-bf0b-42d4-a288-4650802eace5
 description: >-
   Delivers a clear goal until done — an app, a feature, or a fix. Plans a
-  living goal.md under goals/ with a workflow ordered from the installed skills
-  and review gates the user confirms, then loops one phase-deliverer subagent
-  per phase: fold prior findings, write phase.md plus ≤7 task files (sources,
-  skills, steps, verification), implement each task with a commit. Halts when a
-  task is blocked or a gated phase awaits review. Use only when the user
+  living goal.md under goals/ as an ordered list of phases the user confirms,
+  then loops one phase-deliverer subagent per phase: load the skills the phase
+  needs, write phase.md plus ≤7 task files (sources, steps, verification),
+  implement each task with a commit, and adjust the remaining phases from its
+  findings. Halts when a task is blocked or the goal's checks pass. Use only when the user
   names this skill (`/delivering-goal`, `$delivering-goal`, or
   "delivering-goal"), or references a file under a marked goals root
   (`@goals/01-mvp/goal.md`, a phase or task file).
-version: 3.0.0
+version: 4.0.0
 ---
 
 # Delivering Goal
@@ -40,5 +40,5 @@ version: 3.0.0
 | --- | --- | --- |
 | Set up | "Set up delivering-goal", "Is delivering-goal ready?", "Refresh the delivery agent" | **Setup** — run Workflow step 1 for every row, then report each row's state |
 | Plan goal | "Plan this goal", "Create goal.md for …" | [planning-goal.md](references/planning-goal.md) |
-| Deliver or continue | "Deliver this goal", "Build it", "Ship until done", "Continue @goals/01-mvp/goal.md", "Approve the review", "Change the review: …" | [delivering-goal.md](references/delivering-goal.md) |
+| Deliver or continue | "Deliver this goal", "Build it", "Ship until done", "Continue @goals/01-mvp/goal.md" | [delivering-goal.md](references/delivering-goal.md) |
 | Deliver one phase | "Deliver the next phase only" | [delivering-phase.md](references/delivering-phase.md) |

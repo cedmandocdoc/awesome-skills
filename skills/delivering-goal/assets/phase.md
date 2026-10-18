@@ -16,9 +16,9 @@ phase_id: "{{NN-slug}}"
 
 - {{PATHS_AND_URLS_OR_none}}
 
-## Current state
+## Skills
 
-{{PATHS_TO_REUSE_OR_GREENFIELD}}
+- {{SKILL_NAME_OR_none}}
 
 ## Done
 
@@ -29,10 +29,3 @@ phase_id: "{{NN-slug}}"
 
 1. `{{NN-task-slug}}` — {{ONE_LINE}}
 2. `{{NN-task-slug}}` — {{ONE_LINE}}
-
-## Review
-
-<!-- Gate review only; omit otherwise. -->
-
-- **Check these:** {{CALLS_THE_GOAL_DID_NOT_SPECIFY}}
-- **See it:** {{SCREENSHOTS_UNDER_review_OR_PATHS}}
