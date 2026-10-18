@@ -23,7 +23,6 @@ Organizes the Vite + React SPA by responsibility — routing, UI, features, API,
 | `src/features/<feature-name>/` | Domain modules — pages, screens, and supporting UI in `components/` — see [creating-feature.md](./creating-feature.md#feature-folder-layout) |
 | `src/libs/`                    | Internal library modules — wrapped third-party logic or from-scratch utilities (imported via `@/libs/...`) |
 | `src/api/`                     | Framework-agnostic HTTP code — see [creating-api.md](./creating-api.md#structure) |
-| `tests/`                       | Playwright E2E tests — see [creating-e2e-testing.md](./creating-e2e-testing.md) |
 
 ### Module internals
 

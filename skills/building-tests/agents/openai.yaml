@@ -1,0 +1,4 @@
+interface:
+  display_name: "Building Tests"
+  short_description: "Write and run committed tests from user expectations — segments, journeys across actors and surfaces, and route-wide properties — with one implementation per surface and a runner that builds and checks backend states"
+  default_prompt: "Use $building-tests only when the user names this skill or references a file under a marked tests root."

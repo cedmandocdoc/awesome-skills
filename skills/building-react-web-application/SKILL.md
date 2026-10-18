@@ -2,7 +2,7 @@
 name: building-react-web-application
 id: 83101311-e63c-4973-811e-5a84cc1a9e19
 description: Guides building Vite + React SPA apps with TypeScript using a consistent architecture and library stack (Tailwind CSS v4, class-variance-authority, TanStack Router file-based routes, TanStack Query, Zustand, Axios, shadcn-style primitives in src/ui). Use when creating a Vite + React SPA, or changing code in an app whose `package.json` has `vite` and `@tanstack/react-router`, to follow these conventions.
-version: 1.3.0
+version: 1.4.0
 ---
 
 # React web application
@@ -42,4 +42,3 @@ version: 1.3.0
 | Fonts | "Use Inter as the body font" | [MDN — @font-face](https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face), [Google Fonts](https://fonts.google.com/), [setting-up-theming.md](references/setting-up-theming.md), [setting-up-tailwind-theme.md](references/setting-up-tailwind-theme.md) |
 | Routing only | "Add a /settings route", "Set up TanStack Router" | [creating-route-component.md](references/creating-route-component.md), [creating-navigation-component.md](references/creating-navigation-component.md), [TanStack Router — Installation with Vite](https://tanstack.com/router/latest/docs/installation/with-vite.md), [TanStack Router — File-based routing](https://tanstack.com/router/latest/docs/routing/file-based-routing.md) |
 | In-app navigation | "Add a sidebar", "Link the header to settings" | [creating-route-component.md](references/creating-route-component.md), [creating-navigation-component.md](references/creating-navigation-component.md) |
-| E2E testing | "Add Playwright tests for login" | [creating-e2e-testing.md](references/creating-e2e-testing.md), [managing-project-structure.md](references/managing-project-structure.md) |
