@@ -140,7 +140,8 @@ Template: [`../assets/property.md`](../assets/property.md). Frontmatter `surface
 
 Use the surface's framework skill for every framework API. Each file holds only the When and the on-screen Then; the runner owns Given, sign-in, and the Then state.
 
-- Name each implemented case `[<case-id>]` (property: `[<property-id>]`) in a test title, or in a `#` comment above its branch in YAML. `npm run check` matches these tags.
+- Name each implemented case `[<case-id>]` (property: `[<property-id>]`) in a test title. `npm run check` matches these tags.
+- A framework that cannot select a test by title (YAML flows) gets one branch per case, run only when `TEST_CASE` equals its id, tagged in a `#` comment above it.
 - Read inputs from the environment: `TEST_CASE`, `TEST_SURFACE`, `TEST_PARAMS` (JSON), `TEST_SUBJECT` (JSON), one `TEST_<KEY>` per subject key (`orderId` → `TEST_ORDER_ID`), `TEST_ROUTES` for properties, plus the persona session variables.
 - Open the starting screen yourself: a URL or a deep link with the subject id. Never rely on where a previous run left the app.
 - Select by stable test ids (`data-testid` on web, `testID` on native) named `<area>:<component>:<element>`. Add missing test ids and deep links to the app code; change nothing else there.

@@ -2,7 +2,7 @@
 name: building-tests
 id: b315ad43-eba0-4d22-9784-9b8765b42360
 description: Builds and runs an app's committed tests, written from the user's expectations rather than per platform — segments (one actor's intent on one surface, from a named backend state to the next), journeys (segments chained on one database across actors and surfaces), and properties (rules swept over every route) — as Markdown definitions with one implementation per surface, run by a bundled runner that builds each state through the app's own backend, signs personas in, calls the surface's test framework, and checks the resulting state. Use only when the user names this skill (`/building-tests`, `$building-tests`, or "building-tests"), or references a file under a marked tests root (`@tests/segments/orders/customer-approves-price.md`).
-version: 1.0.0
+version: 1.0.1
 ---
 
 # Building Tests
