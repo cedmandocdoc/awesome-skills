@@ -64,6 +64,17 @@ jobs:
 | Build only; submit later through **Release** | Drop `--auto-submit-with-profile internal` |
 | Fail the run when the build fails | Drop `--no-wait`; the job then waits for EAS and spends runner minutes |
 
+### CI credentials
+
+The workflow's secrets are credentials made for CI only, with less access than the local ones in [deployment-contract.md](./deployment-contract.md) → **Files**. The user creates each one and sets it with `gh secret set <NAME>`, pasting the value at the prompt, or `gh secret set <NAME> < <downloaded file>`, then deletes the download.
+
+| Secret | Credential | Access |
+| --- | --- | --- |
+| `EXPO_TOKEN` | Robot user token: https://expo.dev → the account that owns the project → Settings → Robot users | **Developer** role. Fallback when the account has no robot users: a personal access token, which acts on every account the user can access |
+| `EXPO_ASC_API_KEY`, `EXPO_ASC_KEY_ID` | A second Team Key at https://appstoreconnect.apple.com/access/integrations/api | **App Manager**: uploads and submits builds; signing credentials come from **Provision** with the local Admin key |
+| `EXPO_ASC_ISSUER_ID`, `EXPO_APPLE_TEAM_ID`, `EXPO_APPLE_TEAM_TYPE` | The values in `deploy.secrets.env` | — |
+| `EXPO_GOOGLE_SERVICE_ACCOUNT_KEY` | A second service account per [configuring-stores.md](./configuring-stores.md) → **Google service account** | **App permissions** on this app only: View app information, Release apps to testing tracks |
+
 ### Ongoing releases
 
 Push or merge to the production branch → the workflow queues the build. `gh run list --workflow deploy-<app>.yml` shows the run; `eas build:list --limit 2 --json --non-interactive` shows the builds and their submissions.

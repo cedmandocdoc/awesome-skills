@@ -28,11 +28,11 @@ generated_by: deploying-expo-native-application
 | Step | Platform | Scope | Owner | Done when | Status |
 | --- | --- | --- | --- | --- | --- |
 | Apple Developer Program membership | iOS | team | user | Membership active at https://developer.apple.com/account | todo |
-| App Store Connect API key with Admin access | iOS | team | user | `credentials/asc-api-key.p8` exists and its IDs are in `deploy.secrets.env` | todo |
+| App Store Connect API key with Admin access, local | iOS | team | user | `credentials/asc-api-key.p8` exists and its IDs are in `deploy.secrets.env` | todo |
 | Google Play developer account | Android | team | user | Account active at https://play.google.com/console | todo |
 | Google service account with release permissions | Android | team | user | `credentials/google-service-account.json` exists and the first Android submission succeeds | todo |
 | Expo project linked | both | app | agent | `extra.eas.projectId` in the app config | todo |
-| GitHub values set | both | app | agent | `gh secret list` shows every name the workflow reads | todo |
+| CI credentials: Expo robot token, App Manager key, CI service account | both | app | user | `gh secret list` shows every name the workflow reads | todo |
 | EAS environment variables set | both | app | agent | `eas env:list --environment production` matches the plan | todo |
 | Signing credentials | both | app | agent | A `production` build finished: `eas build:list --status finished --limit 1 --json --non-interactive` | todo |
 | App record in App Store Connect | iOS | app | user | `ascAppId` in `eas.json`. Create it at https://appstoreconnect.apple.com/apps → New App with the bundle ID; the Apple ID number is under App Information | todo |

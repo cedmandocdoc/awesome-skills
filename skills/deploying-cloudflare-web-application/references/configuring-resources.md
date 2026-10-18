@@ -41,7 +41,7 @@ In this order; skip what already matches.
 1. **Resources.** `npx wrangler d1 create <name> --binding <BINDING> --update-config`, `npx wrangler kv namespace create <name> --binding <BINDING> --update-config`, `npx wrangler r2 bucket create <name> --binding <BINDING> --update-config`; each writes its id into the wrangler config.
 2. **Worker.** None exists → run the project's production build from a clean output directory, then `npx wrangler deploy --secrets-file worker.secrets.env`. Custom domains in `routes` attach on deploy.
 3. **Runtime secrets.** Worker existed → `npx wrangler secret bulk worker.secrets.env --name <worker>`.
-4. **GitHub values.** `gh variable set` each variable per [configuring-github-actions.md](./configuring-github-actions.md) → **GitHub values**; `gh secret set -f <wrangler-root>/deploy.secrets.env`.
+4. **GitHub values.** `gh variable set` each variable per [configuring-github-actions.md](./configuring-github-actions.md) → **GitHub values**.
 
 ### 5. Verify
 

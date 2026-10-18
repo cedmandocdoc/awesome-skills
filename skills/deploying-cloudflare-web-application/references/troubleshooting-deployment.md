@@ -20,7 +20,7 @@
 
 | Symptom | Likely cause | Action |
 | --- | --- | --- |
-| Authentication error or 403 | `CLOUDFLARE_API_TOKEN` secret missing, expired, or lacking a permission (D1, the zone for a custom domain) | `gh secret list`; create a new token per **Setup**; `gh secret set -f <wrangler-root>/deploy.secrets.env` |
+| Authentication error or 403 | `CLOUDFLARE_API_TOKEN` secret missing, expired, or lacking a permission (D1, the zone for a custom domain) | `gh secret list`; add the permission the error names, or replace the token, per [configuring-github-actions.md](./configuring-github-actions.md) → **CI API token** |
 | Wrong account | `CLOUDFLARE_ACCOUNT_ID` variable differs from `account_id` | Set the variable to the config's `account_id` |
 | Assets directory empty | Build output path wrong | Fix `assets.directory`; confirm local build output |
 | Deploy lists missing required secrets | A `secrets.required` name is unset on the Worker | Fill `worker.secrets.env`; run **Provision** |

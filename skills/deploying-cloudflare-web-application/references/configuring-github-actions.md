@@ -70,7 +70,21 @@ jobs:
 | Names | A value another platform reads starts with its platform: `SUPABASE_*`, `CLOUDFLARE_*`, `EXPO_*`; an app-only value keeps the name the app reads |
 | Owner | The platform's skill sets a name; other skills only read it |
 
-This skill sets `CLOUDFLARE_ACCOUNT_ID` (variable, the config's `account_id`), `CLOUDFLARE_API_TOKEN` (secret, from `<wrangler-root>/deploy.secrets.env`), and the app-only build variables. A build variable from another platform (`SUPABASE_URL`) is missing → that platform's skill sets it (deploying-supabase-application → **Provision**), or the user gives the value.
+This skill sets `CLOUDFLARE_ACCOUNT_ID` (variable, the config's `account_id`), `CLOUDFLARE_API_TOKEN` (secret, per **CI API token**), and the app-only build variables. A build variable from another platform (`SUPABASE_URL`) is missing → that platform's skill sets it (deploying-supabase-application → **Provision**), or the user gives the value.
+
+### CI API token
+
+The workflow's `CLOUDFLARE_API_TOKEN`: a custom token used only by GitHub Actions. Local Wrangler uses the `wrangler login` session.
+
+1. The user creates it at https://dash.cloudflare.com/profile/api-tokens → **Create Custom Token**, with Account Resources set to the `account_id` account only, an expiry they track, and only these permissions:
+
+   | Permission | Level | When |
+   | --- | --- | --- |
+   | Account › Workers Scripts | Edit | Always |
+   | Zone › Workers Routes | Edit | The wrangler config has `routes`; Zone Resources → those zones only |
+   | Account › D1 | Edit | The workflow applies D1 migrations |
+
+2. The user runs `gh secret set CLOUDFLARE_API_TOKEN` and pastes the token at the prompt. It is never written to a file.
 
 ### Custom domain
 

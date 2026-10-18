@@ -2,13 +2,37 @@
 
 ## Overview
 
-**Execution mode.** Brings the production project to the state the repository and the product TRD declare: the project itself, the GitHub values the deploy workflow reads, Edge Function secrets, and Auth settings. Each run reads remote state, shows one plan, and applies after the user confirms. Migrations, declared functions, and declared buckets deploy through the workflow ([configuring-github-actions.md](./configuring-github-actions.md)).
+**Execution mode.** Brings the production project to the state the repository and the product TRD declare: the project itself, the GitHub values the deploy workflow reads, Edge Function secrets, and Auth settings from `config.toml`. Each run reads remote state, shows one plan, and applies after the user confirms. Migrations, declared functions, and declared buckets deploy through the workflow ([configuring-github-actions.md](./configuring-github-actions.md)).
 
 ## Prerequisites
 
 Discovery per [discovering-supabase-root.md](./discovering-supabase-root.md). Run CLI commands with `--workdir <working-directory>`.
 
 ## Guidelines
+
+### Auth config
+
+`config.toml` `[auth]` holds local values. Production values live in a `[remotes.production]` block whose `project_id` is the production ref; the CLI overlays it when the linked project matches, and `supabase config push` writes the result.
+
+```toml
+[remotes.production]
+project_id = "<ref>"
+
+[remotes.production.auth]
+site_url = "https://<host>"
+additional_redirect_urls = ["https://<host>/**", "<scheme>://**"]
+
+[remotes.production.auth.email.smtp]
+pass = "env(SMTP_PASS)"
+```
+
+| Rule | Detail |
+| --- | --- |
+| Seed | No block for the ref → `supabase config pull --workdir <working-directory>` writes the live settings into one, so a push changes only what the plan adds |
+| Scope | `config push` writes every remotely managed section the file declares (API, database settings, Auth, Storage); the block holds the production value of each |
+| Secrets | `env(NAME)` for SMTP passwords and OAuth provider secrets; values in `auth.secrets.env` |
+| Redirect URLs | Keep every current URL; add the missing `https://<host>/**` and `<scheme>://**` entries |
+| Shared project | A non-local `site_url` that differs from the TRD belongs to another app → keep it unless the user says otherwise |
 
 ### 1. Discover
 
@@ -18,7 +42,7 @@ Discovery per [discovering-supabase-root.md](./discovering-supabase-root.md). Ru
 | GitHub values | [configuring-github-actions.md](./configuring-github-actions.md) → **GitHub values** |
 | Function secret names | `Deno.env.get("…")` under `functions/`, minus `SUPABASE_*` (hosted functions receive those) |
 | Names to unset | Names the project marks local-only (a local mail catcher URL, a fake-provider flag); ask when a name's scope is unclear |
-| Auth settings | `config.toml` `[auth]` with production values: the TRD's Auth origins, the production mail provider; local values (Mailpit SMTP, `127.0.0.1` URLs) never ship |
+| Auth settings | `[remotes.production]` in `config.toml` per **Auth config**: the TRD's Auth origins, the production mail provider; local values (Mailpit SMTP, `127.0.0.1` URLs) never ship |
 
 ### 2. Fill the secrets files
 
@@ -28,7 +52,7 @@ Write missing names with blank values, tell the user where each value comes from
 | --- | --- |
 | `<supabase-root>/deploy.secrets.env` | `SUPABASE_DB_PASSWORD`. New project → generate it without printing: `printf 'SUPABASE_DB_PASSWORD=%s\n' "$(openssl rand -hex 24)" >> <file>`. Existing → the user's password (Project Settings → Database → Reset database password when unknown) |
 | `<supabase-root>/functions.secrets.env` | Function secret names |
-| `<supabase-root>/auth.secrets.env` | `SMTP_PASS`, when SMTP is set |
+| `<supabase-root>/auth.secrets.env` | Each `env(NAME)` the production block reads (`SMTP_PASS`, OAuth provider secrets) |
 
 ### 3. Read remote state
 
@@ -37,16 +61,11 @@ Write missing names with blank values, tell the user where each value comes from
 | Project | `supabase projects list` |
 | GitHub values | `gh variable list`, `gh secret list` (names only) |
 | Function secrets | `supabase secrets list` (names and digests); compare a local value without printing it: `printf %s "$VALUE" \| shasum -a 256` |
-| Auth | `curl -sf -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" https://api.supabase.com/v1/projects/<ref>/config/auth \| jq '{site_url, uri_allow_list, disable_signup, mailer_autoconfirm, password_min_length, smtp_host, smtp_admin_email}'` |
+| Config | `( set -a; . <supabase-root>/auth.secrets.env; set +a; supabase config diff --workdir <working-directory> )`; no block for the ref yet → seed it first per **Auth config** |
 
 ### 4. Plan and confirm
 
-Show one table: item, remote now, after. Function secrets show as new / changed / unchanged / unset. Auth merges into the current settings:
-
-- `uri_allow_list` keeps every current URL and adds the missing `https://<host>/**` and `<scheme>://**` entries.
-- A non-local `site_url` that differs from the plan belongs to another app on a shared project → keep it unless the user says otherwise.
-
-Apply after the user confirms.
+Show one table: item, remote now, after. Function secrets show as new / changed / unchanged / unset; config shows each `config diff` change. Apply after the user confirms.
 
 ### 5. Apply
 
@@ -61,24 +80,7 @@ In this order; skip what already matches.
    supabase secrets unset <NAME> --workdir <working-directory>   # each name to unset
    ```
 
-4. **Auth.** Build the payload with `jq` from the planned values, `--arg smtp_pass "$SMTP_PASS"` with `auth.secrets.env` also loaded, and `PATCH` only the changed fields:
-
-   ```bash
-   jq -n --arg smtp_pass "$SMTP_PASS" '{site_url: "…", uri_allow_list: "…", smtp_pass: $smtp_pass}' \
-     | curl -sf -X PATCH https://api.supabase.com/v1/projects/<ref>/config/auth \
-         -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" -H "Content-Type: application/json" --data @- > /dev/null
-   ```
-
-   | `config.toml` | API field |
-   | --- | --- |
-   | `auth.site_url` | `site_url`, no trailing slash |
-   | `auth.additional_redirect_urls` | `uri_allow_list`, comma-separated |
-   | `auth.enable_signup` | `disable_signup`, inverted |
-   | `auth.email.enable_confirmations` | `mailer_autoconfirm`, inverted |
-   | `auth.email.secure_password_change` | `security_update_password_require_reauthentication` |
-   | `auth.minimum_password_length` | `password_min_length` |
-   | `auth.email.smtp.*` | `smtp_host`, `smtp_port` (string), `smtp_user`, `smtp_pass`, `smtp_admin_email`, `smtp_sender_name` |
-
+4. **Config.** `( set -a; . <supabase-root>/auth.secrets.env; set +a; supabase config push --yes --workdir <working-directory> )`.
 
 ### 6. Verify
 
@@ -100,4 +102,4 @@ Re-run step 3: every planned item matches.
 
 - [Managing secrets](https://supabase.com/docs/guides/functions/secrets)
 - [Redirect URLs](https://supabase.com/docs/guides/auth/redirect-urls)
-- [Management API: auth config](https://supabase.com/docs/reference/api/v1-update-auth-service-config)
+- [Remote config overrides](https://supabase.com/docs/guides/deployment/branching/configuration)

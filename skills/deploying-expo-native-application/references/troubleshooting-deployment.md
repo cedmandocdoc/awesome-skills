@@ -15,7 +15,7 @@
 | `Set ascAppId in the submit profile` | The App Store Connect record or its ID | `DEPLOYMENT.md` → App record; **Provision** step 4 |
 | `What would you like to submit?` | `--latest` or `--id` | Add the flag |
 | `ascApiKeyPath, ascApiKeyIssuerId and ascApiKeyId must all be defined` | One of the three fields | Complete `submit.base.ios` |
-| `An Expo user account is required` | `EXPO_TOKEN` not loaded or expired | **Setup** → Expo access token |
+| `An Expo user account is required` | Locally: the `eas login` session expired. In the workflow: the `EXPO_TOKEN` secret is missing or revoked | `eas login`; or replace the secret per [configuring-github-actions.md](./configuring-github-actions.md) → **CI credentials** |
 | `Invalid UUID appId` | `extra.eas.projectId` | **Provision** step 1 |
 
 ### Build fails
@@ -23,7 +23,8 @@
 | Symptom | Likely cause | Action |
 | --- | --- | --- |
 | Install fails on EAS | Lockfile, or `node` and `pnpm` pins in `build.base`, differ from the repo | Align with `.nvmrc` and `packageManager` |
-| Provisioning profile or certificate error | The API key lacks Admin access, or the bundle ID belongs to another team | Regenerate the key with Admin; check https://developer.apple.com/account/resources/identifiers |
+| Provisioning profile or certificate error locally | The local API key lacks Admin access, or the bundle ID belongs to another team | Regenerate the key with Admin; check https://developer.apple.com/account/resources/identifiers |
+| Provisioning profile or certificate error in the workflow | The certificate expired or is missing, and the App Manager CI key cannot create one | Renew it locally with **Provision** step 5, then re-run the workflow |
 | Build succeeds but the app cannot reach the API | EAS variable missing in that profile's environment | `eas env:list --environment <environment>`; **Provision** step 3 |
 | Wrong bundle ID or package in the binary | `app.json` changed after the store record was created | Match `app.json` to the record |
 
@@ -32,7 +33,7 @@
 | Symptom | Likely cause | Action |
 | --- | --- | --- |
 | iOS: app not found for the bundle ID | No App Store Connect record, or `ascAppId` belongs to another app | `DEPLOYMENT.md` → App record |
-| Android `PERMISSION_DENIED` or `403` | Service account not invited, missing permissions, or the Android Publisher API disabled | [configuring-stores.md](./configuring-stores.md) → **Google service account** |
+| Android `PERMISSION_DENIED` or `403` | Service account not invited, missing permissions or app access, or the Android Publisher API disabled | [configuring-stores.md](./configuring-stores.md) → **Google service account** |
 | Android: package not found | App not created in Play Console | `DEPLOYMENT.md` → App in Google Play Console |
 | Android: first production release rejected | Store listing, content rating, or data safety incomplete | `DEPLOYMENT.md` → Play store listing |
 | Submitted an `.apk` | A `preview` build was submitted | Submit a `production` build (`.aab`) |

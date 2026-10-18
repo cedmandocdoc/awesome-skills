@@ -18,7 +18,8 @@
 
 | Symptom | Likely cause | Action |
 | --- | --- | --- |
-| `supabase link` fails | `SUPABASE_PROJECT_REF` variable or `SUPABASE_ACCESS_TOKEN` secret missing, or the token lacks access to the project | `gh variable list`, `gh secret list`; run **Provision** |
+| `supabase link` fails | `SUPABASE_PROJECT_REF` variable or `SUPABASE_ACCESS_TOKEN` secret missing | `gh variable list`, `gh secret list`; run **Provision** |
+| A step answers 401 or 403 | The CI access token expired, or lacks the project or a permission the step needs | Fix or replace it per [configuring-github-actions.md](./configuring-github-actions.md) → **CI access token** |
 | `db push` fails on authentication | `SUPABASE_DB_PASSWORD` secret wrong | Fix it in `deploy.secrets.env`; `gh secret set -f <supabase-root>/deploy.secrets.env` |
 | `db push` fails on SQL | Invalid migration | Fix the migration; push again |
 | Functions not updated | Function not declared in `config.toml` | Add `[functions.<name>]` and push again |
@@ -29,8 +30,9 @@
 
 | Symptom | Likely cause | Action |
 | --- | --- | --- |
-| CLI or API call answers 401 or 403 | Token expired, or not scoped to the project's organization or Auth config | Create a new token per **Setup**; replace it in `deploy.secrets.env` and the GitHub secret |
-| Reset or invite links point to `localhost` | `site_url` or `uri_allow_list` holds a local value | Run **Provision**; its Auth step merges the production origins |
+| CLI call answers 401 or 403 | `supabase login` session expired, the account lacks the project's organization, or an exported `SUPABASE_ACCESS_TOKEN` replaces the login | Unset the variable; `supabase login` |
+| `config diff` lists changes outside the plan | `[remotes.production]` missing, or its `project_id` differs from the linked ref | Seed the block per [configuring-remote-project.md](./configuring-remote-project.md) → **Auth config** |
+| Reset or invite links point to `localhost` | `site_url` or `uri_allow_list` holds a local value | Run **Provision**; its config step pushes the production origins |
 | Auth emails fail or are rate-limited | Custom SMTP not set; the built-in sender is in use | Set SMTP through **Provision** |
 | Function fails on a missing setting (an `*_unconfigured` error) | Secret missing on the project | `supabase secrets list`; fill `functions.secrets.env`; run **Provision** |
 

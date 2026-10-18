@@ -2,7 +2,7 @@
 name: deploying-cloudflare-web-application
 id: 72a302f7-9799-45be-a982-a1ab7ebe6222
 description: Deploy web applications to Cloudflare Workers through GitHub Actions — discover the target app, build command, and output path; configure wrangler.toml or wrangler.jsonc for static assets, SPA routing, bindings, and custom domains; write the deploy workflow; provision with Wrangler and the GitHub CLI (D1/KV/R2 resources, runtime secrets, GitHub secrets and variables, first deploy, rollback). Use when deploying a web app to Cloudflare, setting up Cloudflare deploys in GitHub Actions, setting Worker secrets, attaching a custom domain, creating Cloudflare resources for an app, or preparing a monorepo package for Cloudflare.
-version: 3.1.0
+version: 4.0.0
 ---
 
 # Deploying a web application to Cloudflare
@@ -15,8 +15,8 @@ version: 3.1.0
 | GitHub CLI | user | required | Deploy, Provision | `gh auth status` succeeds and `gh repo view` finds the repository | https://cli.github.com, then `gh auth login`; create the GitHub repository and push the project |
 | Cloudflare account | user | required | All | `npx wrangler whoami` shows an account | Sign up at https://dash.cloudflare.com/sign-up, then `npx wrangler login` |
 | Account ID | ask | required | Provision, Direct deploy | `account_id` is set in the wrangler config | The product TRD's **Environments and deployment** names the account → use it; else `npx wrangler whoami` lists one account → use it; several → ask which; recorded as `account_id` in the wrangler config |
-| Secrets files ignored | auto | required | Provision | `git check-ignore -q <wrangler-root>/deploy.secrets.env <wrangler-root>/worker.secrets.env` succeeds and `git ls-files '*.secrets.*'` prints nothing | Add `*.secrets.*` to root `.gitignore`. A tracked file → `git rm --cached <file>`, then tell the user its values are in git history and must be rotated |
-| Cloudflare API token | user | required | Provision | `( set -a; . <wrangler-root>/deploy.secrets.env; set +a; npx wrangler whoami )` shows the account | Write `CLOUDFLARE_API_TOKEN=` into `<wrangler-root>/deploy.secrets.env`; the user creates a token at https://dash.cloudflare.com/profile/api-tokens from the **Edit Cloudflare Workers** template for this account (plus **D1 Edit** when the app uses D1) and pastes it there |
+| Secrets files ignored | auto | required | Provision | `git check-ignore -q <wrangler-root>/worker.secrets.env` succeeds and `git ls-files '*.secrets.*'` prints nothing | Add `*.secrets.*` to root `.gitignore`. A tracked file → `git rm --cached <file>`, then tell the user its values are in git history and must be rotated |
+| CI API token | user | required | Provision | `gh secret list` shows `CLOUDFLARE_API_TOKEN` | Per [configuring-github-actions.md](references/configuring-github-actions.md) → **CI API token** |
 
 ## Workflow
 
@@ -24,7 +24,7 @@ version: 3.1.0
 2. **Recipe** — match one **Recipes** row; open every doc in its Read column.
 
 - Changes Cloudflare and the GitHub repository settings only after the user confirms that run's plan.
-- Loads a `*.secrets.env` file only in a subshell, `( set -a; . <file>; set +a; <command> )`: an exported `CLOUDFLARE_API_TOKEN` replaces the Wrangler login. Never prints a secret value.
+- Runs Wrangler with the `wrangler login` session, never with an exported `CLOUDFLARE_API_TOKEN`; loads a `*.secrets.env` file only in a subshell, `( set -a; . <file>; set +a; <command> )`. Never prints a secret value.
 - Releases deploy through the GitHub Actions workflow on push; `wrangler deploy` runs locally only to create a missing Worker or on a **Direct deploy** request.
 
 ## Recipes

@@ -70,7 +70,9 @@ gcloud iam service-accounts keys create <app-package>/credentials/google-service
   --iam-account eas-submit@<gcp-project>.iam.gserviceaccount.com
 ```
 
-Then at https://play.google.com/console → Users and permissions → Invite new users → the service account's email, **Account permissions**: View app information, Edit and delete draft apps, Release to production, Release apps to testing tracks, Manage testing tracks and edit tester lists, Manage store presence. The key serves every app of the account.
+Then at https://play.google.com/console → Users and permissions → Invite new users → the service account's email, **Account permissions**: View app information, Edit and delete draft apps, Release to production, Release apps to testing tracks, Manage testing tracks and edit tester lists, Manage store presence. The key serves every app of the account and stays local.
+
+For CI, repeat with a second account (`eas-submit-ci`), write its key outside the repository, and invite it with **App permissions** on this app only: View app information, Release apps to testing tracks.
 
 ## Related
 

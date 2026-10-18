@@ -88,7 +88,7 @@ Adapt to project scripts (e.g. `functions:check`, `functions:test`).
 | --- | --- |
 | New files in `migrations/` | The project, and the GitHub secrets and variables the workflow reads |
 | Edge Functions declared in `config.toml` | Edge Function secrets |
-| Storage buckets declared in `config.toml` | Auth settings (Site URL, redirect URLs, sign-up, SMTP) |
+| Storage buckets declared in `config.toml` | Auth and other project settings from `config.toml` (`config push`) |
 
 Undeclared functions and buckets deploy nowhere.
 

@@ -10,9 +10,9 @@ Shared rules for every recipe: the files the skill owns, how `eas` commands run,
 
 | File | Holds | Git |
 | --- | --- | --- |
-| `<app-package>/deploy.secrets.env` | `EXPO_TOKEN`, `EXPO_ASC_KEY_ID`, `EXPO_ASC_ISSUER_ID`, `EXPO_APPLE_TEAM_ID`, `EXPO_APPLE_TEAM_TYPE` | ignored |
-| `<app-package>/credentials/asc-api-key.p8` | App Store Connect API key | ignored |
-| `<app-package>/credentials/google-service-account.json` | Google service account key | ignored |
+| `<app-package>/deploy.secrets.env` | `EXPO_ASC_KEY_ID`, `EXPO_ASC_ISSUER_ID`, `EXPO_APPLE_TEAM_ID`, `EXPO_APPLE_TEAM_TYPE` of the local key | ignored |
+| `<app-package>/credentials/asc-api-key.p8` | App Store Connect API key with Admin access, local only | ignored |
+| `<app-package>/credentials/google-service-account.json` | Google service account key with account-level release permissions, local only | ignored |
 | `<app-package>/eas.json` | Build and submit profiles — [configuring-eas.md](./configuring-eas.md) | committed |
 | `<app-package>/store.config.json` | App Store listing — [configuring-eas.md](./configuring-eas.md) → **App Store metadata** | committed |
 | `<app-package>/DEPLOYMENT.md` | **Deployment doc** | committed |
@@ -28,24 +28,16 @@ From the app package, with the deploy environment loaded:
 ( set -a; . deploy.secrets.env; set +a; EXPO_ASC_API_KEY_PATH=credentials/asc-api-key.p8 eas <command> --non-interactive )
 ```
 
-`EXPO_TOKEN` replaces the `eas login` session. The `EXPO_ASC_*` and `EXPO_APPLE_*` values let EAS register the bundle ID, create the distribution certificate and provisioning profile, submit, and push metadata through the App Store Connect API instead of an Apple ID sign-in. Android signing needs nothing: EAS generates the keystore on the first build.
+Commands run as the `eas login` session; an exported `EXPO_TOKEN` replaces it, so the shell never exports one. The `EXPO_ASC_*` and `EXPO_APPLE_*` values let EAS register the bundle ID, create the distribution certificate and provisioning profile, submit, and push metadata through the App Store Connect API instead of an Apple ID sign-in. Android signing needs nothing: EAS generates the keystore on the first build.
 
 ### GitHub values
 
 | Rule | Detail |
 | --- | --- |
 | Needed names | Every `${{ secrets.<NAME> }}` and `${{ vars.<NAME> }}` in `.github/workflows/*.yml`, minus `gh secret list` and `gh variable list` |
-| Secret value | `gh secret set -f <app-package>/deploy.secrets.env`; a key file: `gh secret set <NAME> < <file>` |
+| Secret value | CI-only credentials per [configuring-github-actions.md](./configuring-github-actions.md) → **CI credentials**; never the local files |
 | Names | A value another platform reads starts with its platform: `SUPABASE_*`, `CLOUDFLARE_*`, `EXPO_*`; an app-only value keeps the name the app reads |
 | Owner | The platform's skill sets a name; other skills only read it |
-
-This skill sets, all as secrets:
-
-| Name | Value |
-| --- | --- |
-| `EXPO_TOKEN`, `EXPO_ASC_KEY_ID`, `EXPO_ASC_ISSUER_ID`, `EXPO_APPLE_TEAM_ID`, `EXPO_APPLE_TEAM_TYPE` | `deploy.secrets.env` |
-| `EXPO_ASC_API_KEY` | `credentials/asc-api-key.p8` |
-| `EXPO_GOOGLE_SERVICE_ACCOUNT_KEY` | `credentials/google-service-account.json` |
 
 App runtime values (`EXPO_PUBLIC_*`) are EAS environment variables, never GitHub values or workflow `env`: the job's environment does not reach the cloud build — [configuring-eas.md](./configuring-eas.md) → **EAS environments**.
 

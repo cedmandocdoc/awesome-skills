@@ -62,8 +62,25 @@ This skill sets:
 | `SUPABASE_PROJECT_REF` | variable | Production project ref |
 | `SUPABASE_URL` | variable | `https://<ref>.supabase.co` |
 | `SUPABASE_PUBLISHABLE_KEY` | variable | The publishable key, or the `anon` key when the project has none, piped so other keys never print: `supabase projects api-keys --project-ref <ref> -o json \| jq -r '[.[] \| select(.type == "publishable" or .name == "anon")][0].api_key' \| gh variable set SUPABASE_PUBLISHABLE_KEY` |
-| `SUPABASE_ACCESS_TOKEN` | secret | From `<supabase-root>/deploy.secrets.env` |
+| `SUPABASE_ACCESS_TOKEN` | secret | Set by the user per **CI access token** |
 | `SUPABASE_DB_PASSWORD` | secret | From `<supabase-root>/deploy.secrets.env` |
+
+### CI access token
+
+The workflow's `SUPABASE_ACCESS_TOKEN`: a personal access token limited to the production project, used only by GitHub Actions. Local commands use the `supabase login` session.
+
+1. The user creates it at https://supabase.com/dashboard/account/tokens with access to the production project only, an expiry they track, and only these permissions:
+
+   | Permission | Level | Used by |
+   | --- | --- | --- |
+   | Project Settings | Read | `supabase link` |
+   | API Keys | Read | `supabase link` |
+   | API Key Secrets | Read | `supabase link` |
+   | Edge Functions | Read-write | `supabase functions deploy` |
+   | Storage | Read-write | `supabase seed buckets` |
+
+   `db push` authenticates with `SUPABASE_DB_PASSWORD`, so the token needs no Database permission.
+2. The user runs `gh secret set SUPABASE_ACCESS_TOKEN` and pastes the token at the prompt. It is never written to a file.
 
 ### Ongoing releases
 
