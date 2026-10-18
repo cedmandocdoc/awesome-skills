@@ -42,7 +42,7 @@ Areas follow the app's own areas (navigation, feature folders, spec features). I
 
 1. Search the repository for `index.md` files whose frontmatter has `doc_type: tests-index`, `generated_by: building-tests`, and `author` = **Author signature**.
 2. One match → use it. Several → ask, listing each path. None → `SKILL.md` → **Setup** creates one on Create; stop and report on other recipes.
-3. Write only under the resolved root, except the instruction files in `SKILL.md` → **Setup**, and the test ids and deep links **Implementations** allows in app code.
+3. Write only under the resolved root, except the instruction files in `SKILL.md` → **Setup**, the test ids and deep links **Implementations** allows in app code, and `.github/workflows/tests.yml` per [configuring-ci.md](./configuring-ci.md).
 
 ### Model
 
@@ -80,6 +80,7 @@ generated_by: building-tests
 author: 5d56e398-7e61-4ce9-9da5-2f8429285959
 app: LabadaGo
 backend:
+  install: npm install -g <cli>              # optional; CI only: installs a backend CLI the lockfile does not
   start: pnpm supabase:start                 # brings the stack up
   reset: pnpm supabase db reset              # restores the seed; runs before the suite and each journey
 health:                                      # every command must succeed before any run
@@ -90,16 +91,34 @@ surfaces:
     ext: .web.spec.ts
     run: pnpm exec playwright test {file} --grep "\[{case}\]"
     requires: pnpm exec playwright --version
+    ci: { on: pr, install: pnpm exec playwright install --with-deps chromium }
   mobile:
     ext: .mobile.yaml
     run: maestro test {envArgs} {file}
     requires: maestro --version
+    ci:
+      on: nightly
+      host: android-emulator
+      install: curl -fsSL "https://get.maestro.mobile.dev" | bash && echo "$HOME/.maestro/bin" >> "$GITHUB_PATH"
+      prepare: pnpm --filter mobile exec expo run:android --variant release --no-bundler
   api:
     ext: .api.test.ts
     run: pnpm exec vitest run {file} -t "\[{case}\]"
+    ci: { on: pr }
 ```
 
 `run` placeholders: `{file}` (path from the tests root), `{case}` (case id, or the property id), `{envArgs}` (every `TEST_*` and session variable as `-e KEY=value`). Every variable also reaches the process environment.
+
+`ci` is optional per surface and read only by the CI workflow; a surface without it stays out of CI.
+
+| Field | Value |
+| --- | --- |
+| `on` | `pr`, `nightly`, or `manual` |
+| `host` | `linux` (default) or `android-emulator` (Linux with a booted emulator). Docker runs only on Linux hosts, so iOS stays local |
+| `install` | Installs the runtime on a fresh machine, from the framework skill; omit when the lockfile installs it |
+| `prepare` | Gets the app under test ready (builds and installs the app on the emulator); omit when the framework starts the app itself |
+
+When `backend` or `surfaces` change and `.github/workflows/tests.yml` exists, rewrite the workflow per [configuring-ci.md](./configuring-ci.md) in the same work.
 
 ### Personas
 
@@ -156,9 +175,10 @@ From the tests root (`npm run test -- <scope>`, or the package manager's equival
 | --- | --- |
 | *(none)* or `all` | `backend.reset`, then every property, segment, and journey |
 | `area <area>` | Every segment in that area |
-| `segment <id> [--surface <s>] [--case <c>]` | One segment, every surface and ready case unless narrowed |
+| `segment <id> [--case <c>]` | One segment, every surface and ready case unless narrowed |
 | `journey <id>` | One journey |
 | `property <id>` | One property |
+| `--surface <s>[,<s>…]` on any scope | Only those surfaces; a journey with a step on another surface is skipped |
 
 Every run checks `health` first and stops on the first failing command. Per segment case: build the Given → sign the actor's persona in → run the implementation → check the Then. Results print per case and land in `.results/last.json`; exit code 1 on any failure. `npm run check` validates every definition and implementation tag, the journey chains, and state ids against `support/`, then rewrites the coverage block in `index.md`.
 
@@ -187,3 +207,4 @@ For each surface in `index.md`:
 - [updating-tests.md](./updating-tests.md) — keep tests true after a change
 - [executing-tests.md](./executing-tests.md) — run and diagnose
 - [reviewing-coverage.md](./reviewing-coverage.md) — gaps and drafts
+- [configuring-ci.md](./configuring-ci.md) — the GitHub Actions workflow

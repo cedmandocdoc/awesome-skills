@@ -1,7 +1,7 @@
 // Runs segments, journeys, and properties from their Markdown definitions.
 // Copied by building-tests; never edited.
 //
-// Usage: tsx runner/run.ts [all | area <area> | segment <id> [--surface <s>] [--case <c>] | journey <id> | property <id>]
+// Usage: tsx runner/run.ts [all | area <area> | segment <id> [--case <c>] | journey <id> | property <id>] [--surface <s>[,<s>…]]
 
 import { spawn } from "node:child_process";
 import { mkdir, writeFile } from "node:fs/promises";
@@ -41,6 +41,8 @@ const results: Result[] = [];
 let config: Config;
 let states: States;
 let personas: Personas | null;
+/** Surfaces named by --surface; null runs every surface. */
+let only: string[] | null = null;
 
 function quote(value: string): string {
   return `'${value.replace(/'/g, `'\\''`)}'`;
@@ -166,8 +168,8 @@ async function runCase(
   }
 }
 
-async function runSegment(segment: Segment, onlySurface?: string, onlyCase?: string): Promise<void> {
-  const surfaces = onlySurface ? [onlySurface] : segment.surfaces;
+async function runSegment(segment: Segment, onlyCase?: string): Promise<void> {
+  const surfaces = only ? segment.surfaces.filter((s) => only!.includes(s)) : segment.surfaces;
   const cases = onlyCase ? segment.cases.filter((c) => c.id === onlyCase) : segment.cases;
   if (cases.length === 0) {
     record({ kind: "segment", id: segment.id, outcome: "failed", reason: `no case ${onlyCase}` }, Date.now());
@@ -189,6 +191,10 @@ async function runJourney(journey: Journey, segments: Map<string, Segment>): Pro
     }
     if (segment.status === "draft" || c.status === "pending") {
       record({ ...base, outcome: "skipped", reason: `${step.segment} [${step.case}] is ${segment.status === "draft" ? "draft" : "pending"}` }, started);
+      return;
+    }
+    if (only && !only.includes(step.surface)) {
+      record({ ...base, outcome: "skipped", reason: `step ${step.segment} needs surface ${step.surface}` }, started);
       return;
     }
     resolved.push([segment, c, step.surface]);
@@ -217,7 +223,7 @@ async function routes(surface: string): Promise<string[]> {
 }
 
 async function runProperty(property: Property): Promise<void> {
-  for (const surface of property.surfaces) {
+  for (const surface of property.surfaces.filter((s) => !only || only.includes(s))) {
     const started = Date.now();
     const base = { kind: "property" as const, id: property.id, surface };
     try {
@@ -242,7 +248,7 @@ function flag(args: string[], name: string): string | undefined {
 }
 
 function usage(message: string): never {
-  console.error(`${message}\nUsage: run [all | area <area> | segment <id> [--surface <s>] [--case <c>] | journey <id> | property <id>]`);
+  console.error(`${message}\nUsage: run [all | area <area> | segment <id> [--case <c>] | journey <id> | property <id>] [--surface <s>[,<s>…]]`);
   process.exit(64);
 }
 
@@ -250,6 +256,9 @@ async function main(): Promise<void> {
   const args = process.argv.slice(2);
   const [scope = "all", target] = args;
   config = await loadConfig();
+  only = flag(args, "surface")?.split(",") ?? null;
+  const unknown = only?.find((s) => !config.surfaces[s]);
+  if (unknown) usage(`No surface ${unknown} in index.md.`);
   const [segments, journeys, properties] = await Promise.all([loadSegments(), loadJourneys(), loadProperties()]);
   const byId = new Map(segments.map((s) => [s.id, s]));
   const find = <T extends { id: string }>(list: T[], kind: string): T => {
@@ -274,7 +283,10 @@ async function main(): Promise<void> {
     for (const j of journeys) await runJourney(j, byId);
   }
   if (scope === "area") for (const s of segments.filter((x) => x.area === target)) await runSegment(s);
-  if (segment) await runSegment(segment, flag(args, "surface"), flag(args, "case"));
+  if (segment) {
+    if (only && !segment.surfaces.some((s) => only!.includes(s))) usage(`Segment ${segment.id} has no ${only.join(", ")} implementation.`);
+    await runSegment(segment, flag(args, "case"));
+  }
   if (journey) await runJourney(journey, byId);
   if (property) await runProperty(property);
 

@@ -5,6 +5,8 @@ import { existsSync } from "node:fs";
 import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import {
+  CI_HOSTS,
+  CI_ON,
   ROOT,
   given,
   implementation,
@@ -44,6 +46,9 @@ const declared = new Set(stateDefs.map((s) => s.id));
 
 for (const [id, surface] of Object.entries(config.surfaces)) {
   if (!surface.ext || !surface.run) error(index, `surface ${id} needs ext and run`);
+  const ci = surface.ci;
+  if (ci?.on && !(CI_ON as readonly string[]).includes(ci.on)) error(index, `surface ${id}: ci.on must be one of ${CI_ON.join(", ")}`);
+  if (ci?.host && !(CI_HOSTS as readonly string[]).includes(ci.host)) error(index, `surface ${id}: ci.host must be one of ${CI_HOSTS.join(", ")}`);
 }
 
 // States: Markdown and support code declare the same ids.

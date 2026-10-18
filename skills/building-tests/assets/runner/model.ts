@@ -10,15 +10,20 @@ import type { Params, Personas, States } from "./types.ts";
 
 export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
+export const CI_ON = ["pr", "nightly", "manual"] as const;
+export const CI_HOSTS = ["linux", "android-emulator"] as const;
+
 export interface SurfaceConfig {
   ext: string;
   run: string;
   requires?: string;
+  /** Read by the CI workflow the skill writes, never by the runner. */
+  ci?: { on?: string; host?: string; install?: string; prepare?: string };
 }
 
 export interface Config {
   app?: string;
-  backend: { start?: string; reset?: string };
+  backend: { install?: string; start?: string; reset?: string };
   health: string[];
   routes?: string;
   surfaces: Record<string, SurfaceConfig>;
