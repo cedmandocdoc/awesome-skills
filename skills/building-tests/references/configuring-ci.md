@@ -24,7 +24,7 @@ One job per `on` and `host` pair, id `<on>-<host>` (`pr-linux`, `nightly-android
 
 | `on` | Job `if` | Workflow trigger it needs |
 | --- | --- | --- |
-| `pr` | `github.event_name != 'schedule'` | `pull_request`, `push` to the production branch |
+| `pr` | `github.event_name != 'schedule'` | `pull_request` |
 | `nightly` | `contains(fromJSON('["schedule", "workflow_dispatch"]'), github.event_name)` | `schedule` at `0 3 * * *` |
 | `manual` | `github.event_name == 'workflow_dispatch'` | `workflow_dispatch` (always present) |
 
@@ -52,8 +52,6 @@ name: Tests
 
 on:
   pull_request:
-  push:
-    branches: [<production-branch>]
   schedule:
     - cron: "0 3 * * *"
   workflow_dispatch:
