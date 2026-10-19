@@ -13,35 +13,36 @@
 | Build command not found | Wrong working directory or missing install step | Fix the workflow's build step; install before building |
 | Module not found during build | Monorepo deps not installed at root | Install from repo root before package build |
 | Node version error | `.nvmrc` missing or below 22 (Wrangler 4's minimum) | Set the Node major in `.nvmrc` |
-| Missing env at build | GitHub variable not set or not mapped | `gh variable list`; map it in the build step's `env` |
+| Missing env at build | Value missing from the production env file, or the file is gitignored | Add the value; `git check-ignore <file>` prints nothing |
 | Lockfile changes break build | Install not using frozen lockfile | Use `pnpm install --frozen-lockfile` or `npm ci` |
 
 ### Deploy fails
 
 | Symptom | Likely cause | Action |
 | --- | --- | --- |
-| Authentication error or 403 | `CLOUDFLARE_API_TOKEN` secret missing, expired, or lacking a permission (D1, the zone for a custom domain) | `gh secret list`; add the permission the error names, or replace the token, per [configuring-github-actions.md](./configuring-github-actions.md) → **CI API token** |
-| Wrong account | `CLOUDFLARE_ACCOUNT_ID` variable differs from `account_id` | Set the variable to the config's `account_id` |
+| Check secrets fails | A listed secret is unset in GitHub | Set each per [configuring-secrets.md](./configuring-secrets.md); `gh run rerun <run-id>` |
+| Authentication error or 403 | `CLOUDFLARE_API_TOKEN` expired, or lacking a permission (D1, KV, R2, the zone for a custom domain) | `gh secret list`; add the permission the error names, or replace the token, per [configuring-github-actions.md](./configuring-github-actions.md) → **CI API token** |
+| "Skipping automatic provisioning" | The token cannot read KV or R2 | Add the permission per [configuring-github-actions.md](./configuring-github-actions.md) → **CI API token** |
 | Assets directory empty | Build output path wrong | Fix `assets.directory`; confirm local build output |
-| Deploy lists missing required secrets | A `secrets.required` name is unset on the Worker | Fill `worker.secrets.env`; run **Provision** |
+| Deploy lists missing required secrets | A `secrets.required` name is missing from the wrangler-action `secrets:` input | Run [configuring-secrets.md](./configuring-secrets.md) |
 | Wrangler not found | No wrangler in project | Add `wrangler` to `devDependencies` |
 | `wrangler.toml` not found | Wrong `workingDirectory` | Point it to the folder containing the config |
+| Custom domain deploy fails | Conflicting `A`, `AAAA`, or `CNAME` on the host, or zone in another account | Delete the record; use the zone's account as `account_id` |
 
 ### Runtime issues
 
 | Symptom | Likely cause | Action |
 | --- | --- | --- |
 | 404 on route refresh | SPA mode missing | Set `not_found_handling = "single-page-application"` |
-| Blank page / wrong API URL | Build-time variable missing or wrong | Fix the GitHub variable; re-run the workflow |
+| Blank page / wrong API URL | Build-time variable missing or wrong | Fix the production env file; merge |
 | Old content after deploy | Browser or CDN cache | Hard refresh; check deployment is active |
 | Assets 404 | Output path or base URL mismatch | Check framework `base` / `assetPrefix` config |
 
-### Provision fails
+### Local Wrangler fails
 
 | Symptom | Likely cause | Action |
 | --- | --- | --- |
 | Wrangler fails or targets the wrong account after `wrangler login` worked | `CLOUDFLARE_API_TOKEN` exported in the shell replaces the login | Unset it |
-| Custom domain deploy fails | Conflicting `A`, `AAAA`, or `CNAME` on the host, or zone in another account | Delete the record; deploy from the zone's account |
 
 ### Workflow did not run
 

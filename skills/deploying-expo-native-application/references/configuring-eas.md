@@ -2,11 +2,11 @@
 
 ## Overview
 
-`eas.json` build and submit profiles, EAS environment variables, and the App Store metadata file, so that every build, submission, and metadata push runs non-interactively.
+`eas.json` build and submit profiles, the app's public runtime values, and the App Store metadata file, so that every build, submission, and metadata push runs non-interactively.
 
 ## Prerequisites
 
-App package, platforms, store IDs, and runtime variables per [discovering-application.md](./discovering-application.md). Key files per [deployment-contract.md](./deployment-contract.md) → **Files**.
+App package, platforms, store IDs, and runtime variables per [discovering-application.md](./discovering-application.md).
 
 ## Guidelines
 
@@ -27,33 +27,28 @@ App package, platforms, store IDs, and runtime variables per [discovering-applic
       "extends": "base",
       "developmentClient": true,
       "distribution": "internal",
-      "environment": "development",
       "ios": { "simulator": true },
       "android": { "buildType": "apk" }
     },
     "preview": {
-      "extends": "base",
+      "extends": "production",
       "distribution": "internal",
-      "environment": "preview",
+      "autoIncrement": false,
       "android": { "buildType": "apk" }
     },
     "production": {
       "extends": "base",
       "distribution": "store",
-      "environment": "production",
-      "autoIncrement": true
+      "autoIncrement": true,
+      "env": {
+        "EXPO_PUBLIC_SUPABASE_URL": "https://<ref>.supabase.co",
+        "EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY": "<publishable-key>"
+      }
     }
   },
   "submit": {
     "base": {
-      "ios": {
-        "ascAppId": "<apple-id-number>",
-        "appleTeamId": "<team-id>",
-        "ascApiKeyPath": "./credentials/asc-api-key.p8",
-        "ascApiKeyId": "$EXPO_ASC_KEY_ID",
-        "ascApiKeyIssuerId": "$EXPO_ASC_ISSUER_ID"
-      },
-      "android": { "serviceAccountKeyPath": "./credentials/google-service-account.json" }
+      "ios": { "ascAppId": "<apple-id-number>", "appleTeamId": "<team-id>" }
     },
     "internal": { "extends": "base", "android": { "track": "internal" } },
     "production": { "extends": "base", "android": { "track": "production" } }
@@ -66,36 +61,24 @@ App package, platforms, store IDs, and runtime variables per [discovering-applic
 | Setting | Effect |
 | --- | --- |
 | `appVersionSource: "remote"` with `autoIncrement` | EAS stores and bumps the build number per production build |
-| `build.<profile>.environment` | The EAS environment whose variables the build receives |
+| `build.<profile>.env` | Public runtime values baked into that profile's build; never a secret |
 | `submit.*.ios.ascAppId` | Skips the App Store Connect lookup; required non-interactively. Unknown until the record exists → leave it out; **Provision** writes it |
 | `submit.*.ios.appleTeamId` | Removes the Team ID prompt from `eas metadata:push` |
-| `ascApiKey*`, `serviceAccountKeyPath` | Submit with the key files; `$NAME` reads the shell environment |
 | `android.track` | Play testing track. iOS has no track: TestFlight and App Store release are chosen in App Store Connect |
 
-### EAS environments
+Submit profiles name no key file: submissions and metadata pushes use the keys stored on EAS.
 
-Each build profile's `environment` selects the variables EAS injects at build time.
+### Runtime values
 
-1. **Names.** Each `EXPO_PUBLIC_*` the app reads, per environment (`development`, `preview`, `production`).
-2. **Values.** A value another platform owns comes from its GitHub variable: `gh variable get SUPABASE_URL` for `EXPO_PUBLIC_SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY` for the key. Missing → that platform's skill sets it (deploying-supabase-application → **Provision**), or the user gives the value. App-only values come from the user.
-3. **Plan.** `eas env:list --environment <environment>` per environment; one matrix of new / changed / unchanged, applied after the user confirms:
+1. **Names.** Each `EXPO_PUBLIC_*` the app reads, per build profile.
+2. **Values.** A value another platform owns comes from that platform: `EXPO_PUBLIC_SUPABASE_URL` and the publishable key from the Supabase project (deploying-supabase-application → **Provision**), or the user gives it. App-only values come from the user.
+3. **Write.** Into each profile's `env`; `preview` extends `production` and overrides only what differs.
 
-   | Variable | development | preview | production | Source |
-   | --- | --- | --- | --- | --- |
-   | `EXPO_PUBLIC_*` | … | … | … | GitHub variable or user |
-
-4. **Apply.** Per environment:
-
-   ```bash
-   eas env:set --environment production --name EXPO_PUBLIC_SUPABASE_URL \
-     --value "$(gh variable get SUPABASE_URL)" --visibility plaintext --non-interactive
-   ```
-
-`preview` and `production` often share one backend in single-environment setups; confirm with the user.
+An existing EAS environment variable → move it into the profile's `env`; the user deletes it in the Expo dashboard after the first green build.
 
 ### App Store metadata
 
-`store.config.json` at the app package root (`metadataPath` in the submit profile moves it). First time: `eas metadata:pull --non-interactive` seeds it from the App Store Connect record; then edit it. `eas metadata:push --non-interactive` syncs it once a build is processed in App Store Connect. Apple only: Google Play has no metadata support, and screenshots are not uploaded on either store — `store/apple/` and `store/android/` hold them for the user.
+`store.config.json` at the app package root (`metadataPath` in the submit profile moves it). First time: `eas metadata:pull --non-interactive` seeds it from the App Store Connect record; then edit it. The deploy workflow pushes it when it changes. Apple only: Google Play has no metadata support, and screenshots are not uploaded on either store — `store/apple/` and `store/android/` hold them for the user.
 
 ## References
 

@@ -1,4 +1,4 @@
 interface:
   display_name: "Expo Native Deployment"
-  short_description: "Deploy Expo iOS/Android apps through GitHub Actions and EAS — eas.json, signing and store credentials without an Apple sign-in, TestFlight and Play submissions, and a DEPLOYMENT.md of the store steps the user still owns"
-  default_prompt: "Use $deploying-expo-native-application when deploying an Expo app, setting up EAS builds in GitHub Actions, configuring eas.json, setting EAS environment variables or store credentials, submitting to TestFlight or Google Play, pushing App Store metadata, or asking what is left before a store release."
+  short_description: "Deploy Expo iOS/Android apps through GitHub Actions and EAS — eas.json, store credentials on EAS, TestFlight and Play submissions on every merge, and a DEPLOYMENT.md of the store steps the user still owns"
+  default_prompt: "Use $deploying-expo-native-application when deploying an Expo app, setting up EAS builds in GitHub Actions, configuring eas.json, setting up store credentials, submitting to TestFlight or Google Play, pushing App Store metadata, or asking what is left before a store release."

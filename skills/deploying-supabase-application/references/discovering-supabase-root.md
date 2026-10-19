@@ -79,16 +79,17 @@ Adapt to project scripts (e.g. `functions:check`, `functions:test`).
 - [ ] supabase db lint passes
 - [ ] New/changed functions declared in config.toml
 - [ ] Function checks/tests pass (if applicable)
-- [ ] Production project, Auth origins, and secret names known for **Provision**
+- [ ] Production project, Auth origins, and secret names known
 ```
 
 ### What deploys where
 
-| Deployed by the workflow on push | **Provision** ([configuring-remote-project.md](./configuring-remote-project.md)) |
+| Deployed by the workflow on push ([configuring-github-actions.md](./configuring-github-actions.md)) | **Provision** ([configuring-remote-project.md](./configuring-remote-project.md)) |
 | --- | --- |
-| New files in `migrations/` | The project, and the GitHub secrets and variables the workflow reads |
-| Edge Functions declared in `config.toml` | Edge Function secrets |
-| Storage buckets declared in `config.toml` | Auth and other project settings from `config.toml` (`config push`) |
+| New files in `migrations/` | A new production project |
+| `[remotes.production]` Auth and project settings (`config push`) | The `[remotes.production]` block, seeded from the live project |
+| `[edge_runtime.secrets]`, from GitHub secrets | The public values consuming apps read |
+| Edge Functions and storage buckets declared in `config.toml` | |
 
 Undeclared functions and buckets deploy nowhere.
 

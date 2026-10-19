@@ -2,44 +2,41 @@
 
 ## Overview
 
-Shared rules for every recipe: the files the skill owns, how `eas` commands run, the GitHub values the workflow reads, and `DEPLOYMENT.md`, the per-app record of what releases automatically and which store steps the user still owns.
+Shared rules for every recipe: the files the skill owns, how `eas` commands run, where each value lives, and `DEPLOYMENT.md`, the per-app record of what releases automatically and which store steps the user still owns.
 
 ## Guidelines
 
 ### Files
 
-| File | Holds | Git |
-| --- | --- | --- |
-| `<app-package>/deploy.secrets.env` | `EXPO_ASC_KEY_ID`, `EXPO_ASC_ISSUER_ID`, `EXPO_APPLE_TEAM_ID`, `EXPO_APPLE_TEAM_TYPE` of the local key | ignored |
-| `<app-package>/credentials/asc-api-key.p8` | App Store Connect API key with Admin access, local only | ignored |
-| `<app-package>/credentials/google-service-account.json` | Google service account key with account-level release permissions, local only | ignored |
-| `<app-package>/eas.json` | Build and submit profiles — [configuring-eas.md](./configuring-eas.md) | committed |
-| `<app-package>/store.config.json` | App Store listing — [configuring-eas.md](./configuring-eas.md) → **App Store metadata** | committed |
-| `<app-package>/DEPLOYMENT.md` | **Deployment doc** | committed |
-| `.github/workflows/deploy-<app>.yml` | Deploy workflow — [configuring-github-actions.md](./configuring-github-actions.md) | committed |
+| File | Holds |
+| --- | --- |
+| `<app-package>/eas.json` | Build and submit profiles, with each profile's public runtime values — [configuring-eas.md](./configuring-eas.md) |
+| `<app-package>/store.config.json` | App Store listing — [configuring-eas.md](./configuring-eas.md) → **App Store metadata** |
+| `<app-package>/DEPLOYMENT.md` | **Deployment doc** |
+| `.github/workflows/deploy-<app>.yml` | Deploy workflow — [configuring-github-actions.md](./configuring-github-actions.md) |
 
-`<app>` is the app package's directory name (`mobile` for `apps/mobile`).
+All committed. `<app>` is the app package's directory name (`mobile` for `apps/mobile`).
 
 ### Running EAS commands
 
-From the app package, with the deploy environment loaded:
+From the app package: `eas <command> --non-interactive`, as the `eas login` session; an exported `EXPO_TOKEN` replaces it, so the shell never exports one.
 
-```bash
-( set -a; . deploy.secrets.env; set +a; EXPO_ASC_API_KEY_PATH=credentials/asc-api-key.p8 eas <command> --non-interactive )
-```
+Signing credentials and store keys live on EAS, per app, set up once by the user per [configuring-stores.md](./configuring-stores.md) → **Store credentials**. A non-interactive build reuses them and renews provisioning profiles with the stored App Store Connect key, but never creates or attaches a distribution certificate; Android signing needs nothing, since the first build generates the keystore.
 
-Commands run as the `eas login` session; an exported `EXPO_TOKEN` replaces it, so the shell never exports one. The `EXPO_ASC_*` and `EXPO_APPLE_*` values let EAS register the bundle ID, create the distribution certificate and provisioning profile, submit, and push metadata through the App Store Connect API instead of an Apple ID sign-in. Android signing needs nothing: EAS generates the keystore on the first build.
+### Values
 
-### GitHub values
+| Value | Lives in |
+| --- | --- |
+| `EXPO_TOKEN` | GitHub repository secret, the only one the workflow reads |
+| App runtime values (`EXPO_PUBLIC_*`) | `env` of each build profile in `eas.json`; the job's environment does not reach the cloud build |
+| Store IDs (`ascAppId`, `appleTeamId`) | The submit profiles in `eas.json` |
+| Signing credentials, App Store Connect key, Google service account key | EAS |
 
 | Rule | Detail |
 | --- | --- |
-| Needed names | Every `${{ secrets.<NAME> }}` and `${{ vars.<NAME> }}` in `.github/workflows/*.yml`, minus `gh secret list` and `gh variable list` |
-| Secret value | CI-only credentials per [configuring-github-actions.md](./configuring-github-actions.md) → **CI credentials**; never the local files |
-| Names | A value another platform reads starts with its platform: `SUPABASE_*`, `CLOUDFLARE_*`, `EXPO_*`; an app-only value keeps the name the app reads |
-| Owner | The platform's skill sets a name; other skills only read it |
-
-App runtime values (`EXPO_PUBLIC_*`) are EAS environment variables, never GitHub values or workflow `env`: the job's environment does not reach the cloud build — [configuring-eas.md](./configuring-eas.md) → **EAS environments**.
+| No GitHub variables | Public values are committed, so they travel with the PR and show in its diff |
+| Names | A value from another platform starts with its platform: `EXPO_PUBLIC_SUPABASE_URL`; an app-only value keeps the name the app reads |
+| Owner | The platform's skill names a cross-platform value and where it comes from; other skills only read it |
 
 ### Deployment doc
 
@@ -48,7 +45,7 @@ App runtime values (`EXPO_PUBLIC_*`) are EAS environment variables, never GitHub
 | Column | Values |
 | --- | --- |
 | Scope | `team` — once per Apple team or Play account, reused by every app; `app` — once per app; `release` — per version |
-| Owner | `agent` — a recipe runs it; `user` — no CLI or API exists |
+| Owner | `agent` — a recipe runs it; `user` — no CLI or API exists, or it needs the user's sign-in |
 | Status | `todo`; `done <YYYY-MM-DD>`; `n/a` |
 
 A row turns `done` when its Done when check passes, when the agent ran the step, or when the user says it is done. **Provision** and **Release** re-check every row that has a command check and update the column before reporting; the report lists the rows still `todo`, grouped by owner, with the Done when of each `user` row.

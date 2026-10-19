@@ -2,7 +2,7 @@
 
 ## Overview
 
-**Execution mode.** Prepares a Supabase app to deploy through GitHub Actions: once the workflow and its GitHub values exist, each push to the production branch applies migrations and deploys declared Edge Functions and buckets. Writes repository files only; the **Provision** recipe changes the project and GitHub settings.
+**Execution mode.** Prepares a Supabase app to deploy through GitHub Actions: each push to the production branch applies migrations, the production config, Edge Function secrets, and declared Edge Functions and buckets.
 
 ## Guidelines
 
@@ -14,14 +14,22 @@ Per [discovering-supabase-root.md](./discovering-supabase-root.md): Supabase roo
 
 Per [discovering-supabase-root.md](./discovering-supabase-root.md) → **Local validation**, from the Supabase root. Fix errors before pushing to the production branch.
 
-### 3. Write the workflow
+### 3. Production block
 
-`.github/workflows/deploy-supabase.yml` per [configuring-github-actions.md](./configuring-github-actions.md) → **Workflow file**.
+`config.toml` lacks `[remotes.production]`, or a function secret name is undeclared → run [configuring-remote-project.md](./configuring-remote-project.md).
 
-### 4. Confirm to the user
+### 4. Write the workflow
+
+`.github/workflows/deploy-supabase.yml` per [configuring-github-actions.md](./configuring-github-actions.md) → **Workflow file**. An existing workflow that reads `${{ vars.SUPABASE_PROJECT_REF }}` → the Check production block step replaces it; the variable can go after the first green run.
+
+### 5. Secrets
+
+Run [configuring-secrets.md](./configuring-secrets.md).
+
+### 6. Confirm to the user
 
 Reply with:
 
-- Files written
-- The **Provision** items still missing per [discovering-supabase-root.md](./discovering-supabase-root.md) → **What deploys where**, including the GitHub values the workflow reads; offer to run **Provision**, since a push before it fails the workflow
-- After the push: `gh run list --workflow deploy-supabase.yml` shows success and `supabase functions list --project-ref <ref>` lists the declared functions; then the project's smoke checks. A failure → [troubleshooting-deployment.md](./troubleshooting-deployment.md)
+- Files written, to commit and merge through a PR
+- The secrets still to set, from step 5
+- After the merge: `gh run list --workflow deploy-supabase.yml` shows success and `supabase functions list --project-ref <ref>` lists the declared functions; then the project's smoke checks. A failure → [troubleshooting-deployment.md](./troubleshooting-deployment.md)

@@ -2,25 +2,17 @@
 
 ## Overview
 
-**Execution mode.** Deploys functions and migrations to the linked project without a push: through the workflow on demand, or from the local CLI. Run from a checkout of the production branch.
-
-## Prerequisites
-
-Working directory per [discovering-supabase-root.md](./discovering-supabase-root.md). Local migrations need `SUPABASE_DB_PASSWORD` in `<supabase-root>/deploy.secrets.env`.
+**Execution mode.** Runs or re-runs the deploy without a new push, always through the deploy workflow on the production branch.
 
 ## Guidelines
 
-### 1. Deploy
+### 1. Run
 
-Show what deploys (the declared functions; migrations from `db push --dry-run`) and run after the user confirms.
-
-| Path | Command |
+| Action | Command |
 | --- | --- |
-| Workflow | `gh workflow run deploy-supabase.yml --ref <production-branch>` |
-| Local CLI | `supabase functions deploy --use-api --workdir <working-directory>`, then `supabase db push --dry-run --password "$SUPABASE_DB_PASSWORD" --workdir <working-directory>` and the same without `--dry-run` |
-
-`db push` records the migrations in the remote history, so the next workflow run does not apply them again.
+| Run the workflow | `gh workflow run deploy-supabase.yml --ref <production-branch>` |
+| Re-run a run | `gh run rerun <run-id>`, after setting a missing secret or fixing a token |
 
 ### 2. Confirm to the user
 
-Functions and migrations deployed; `supabase functions list` output, or the run from `gh run list --workflow deploy-supabase.yml`.
+The run started and its URL; after it finishes, `supabase functions list --project-ref <ref>` and `supabase migration list --linked`.

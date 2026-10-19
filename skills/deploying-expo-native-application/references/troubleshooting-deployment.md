@@ -10,22 +10,21 @@
 
 | Prompt or message | Missing | Action |
 | --- | --- | --- |
-| Apple ID sign-in, `authentication with an ASC API key is required` | `EXPO_ASC_*` and `EXPO_APPLE_*` not loaded | **Setup** → App Store Connect API key; run per [deployment-contract.md](./deployment-contract.md) → **Running EAS commands** |
-| `Apple Team ID:` | `appleTeamId` in the submit profile or `EXPO_APPLE_TEAM_ID` | Set both |
+| Apple ID sign-in, `authentication with an ASC API key is required`, missing credentials in non-interactive mode | This app's store credentials on EAS, or an expired distribution certificate | The user runs `eas credentials -p <platform>` per [configuring-stores.md](./configuring-stores.md) → **Store credentials**; then re-run the workflow |
+| `Apple Team ID:` | `appleTeamId` in the submit profile | Set it |
 | `Set ascAppId in the submit profile` | The App Store Connect record or its ID | `DEPLOYMENT.md` → App record; **Provision** step 4 |
 | `What would you like to submit?` | `--latest` or `--id` | Add the flag |
-| `ascApiKeyPath, ascApiKeyIssuerId and ascApiKeyId must all be defined` | One of the three fields | Complete `submit.base.ios` |
-| `An Expo user account is required` | Locally: the `eas login` session expired. In the workflow: the `EXPO_TOKEN` secret is missing or revoked | `eas login`; or replace the secret per [configuring-github-actions.md](./configuring-github-actions.md) → **CI credentials** |
-| `Invalid UUID appId` | `extra.eas.projectId` | **Provision** step 1 |
+| `An Expo user account is required` | Locally: the `eas login` session expired. In the workflow: `EXPO_TOKEN` is revoked | `eas login`; or replace the secret per [configuring-github-actions.md](./configuring-github-actions.md) → **CI token** |
+| `Invalid UUID appId` | `extra.eas.projectId` | **Provision** step 4 |
 
 ### Build fails
 
 | Symptom | Likely cause | Action |
 | --- | --- | --- |
+| Check secrets fails | `EXPO_TOKEN` unset | Set it per [configuring-github-actions.md](./configuring-github-actions.md) → **CI token**; `gh run rerun <run-id>` |
 | Install fails on EAS | Lockfile, or `node` and `pnpm` pins in `build.base`, differ from the repo | Align with `.nvmrc` and `packageManager` |
-| Provisioning profile or certificate error locally | The local API key lacks Admin access, or the bundle ID belongs to another team | Regenerate the key with Admin; check https://developer.apple.com/account/resources/identifiers |
-| Provisioning profile or certificate error in the workflow | The certificate expired or is missing, and the App Manager CI key cannot create one | Renew it locally with **Provision** step 5, then re-run the workflow |
-| Build succeeds but the app cannot reach the API | EAS variable missing in that profile's environment | `eas env:list --environment <environment>`; **Provision** step 3 |
+| Provisioning profile or certificate error | The certificate expired, or the bundle ID belongs to another team | The user runs `eas credentials -p ios`; check https://developer.apple.com/account/resources/identifiers |
+| Build succeeds but the app cannot reach the API | Runtime value missing from that profile's `env` | Add it per [configuring-eas.md](./configuring-eas.md) → **Runtime values**; merge |
 | Wrong bundle ID or package in the binary | `app.json` changed after the store record was created | Match `app.json` to the record |
 
 ### Submission fails
@@ -33,7 +32,7 @@
 | Symptom | Likely cause | Action |
 | --- | --- | --- |
 | iOS: app not found for the bundle ID | No App Store Connect record, or `ascAppId` belongs to another app | `DEPLOYMENT.md` → App record |
-| Android `PERMISSION_DENIED` or `403` | Service account not invited, missing permissions or app access, or the Android Publisher API disabled | [configuring-stores.md](./configuring-stores.md) → **Google service account** |
+| Android `PERMISSION_DENIED` or `403` | Key not uploaded to EAS for this app, service account not invited or missing permissions, or the Android Publisher API disabled | [configuring-stores.md](./configuring-stores.md) → **Store credentials** and **Google service account** |
 | Android: package not found | App not created in Play Console | `DEPLOYMENT.md` → App in Google Play Console |
 | Android: first production release rejected | Store listing, content rating, or data safety incomplete | `DEPLOYMENT.md` → Play store listing |
 | Submitted an `.apk` | A `preview` build was submitted | Submit a `production` build (`.aab`) |

@@ -2,7 +2,7 @@
 
 ## Overview
 
-**Execution mode.** Deploys or rolls back a Worker without a push: through the workflow on demand, or with local Wrangler. Run from a clean checkout of the production branch.
+**Execution mode.** Runs, re-runs, or rolls back a deploy without a new push, always through the deploy workflow.
 
 ## Guidelines
 
@@ -11,11 +11,9 @@
 | Action | Command |
 | --- | --- |
 | Run the workflow | `gh workflow run deploy-<worker>.yml --ref <production-branch>` |
-| Deploy locally | The project's production build, then `npx wrangler deploy [--env <name>]` |
-| Deploy to another account | `[env.<name>]` with its own `account_id` and routes; `npx wrangler deploy --env <name>`; build variables come from the shell or a gitignored env file the build reads |
-| List deployments | `npx wrangler deployments list --name <worker>` |
-| Roll back | `npx wrangler rollback [<version-id>] --name <worker>`; D1 migrations do not roll back |
+| Roll back | `gh run list --workflow deploy-<worker>.yml`, then `gh run rerun <run-id>` on the last good run: it redeploys that commit. A lasting fix is a revert merged to the production branch. D1 migrations do not roll back |
+| Which version is live | `npx wrangler deployments list --name <worker>` |
 
 ### 2. Confirm to the user
 
-The version now live (`npx wrangler deployments list --name <worker>`) and its URL check.
+The run started and its URL; after it finishes, the version now live and its URL check.

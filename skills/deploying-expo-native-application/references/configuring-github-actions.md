@@ -2,17 +2,17 @@
 
 ## Overview
 
-The deploy workflow and the GitHub secrets it reads. On each push to the production branch that touches the app, the workflow installs, writes the store key files from secrets, and starts a `production` EAS build that auto-submits to TestFlight and the Play `internal` track. EAS builds and submits in its own cloud; the job ends once the build is queued.
+The deploy workflow and the one secret it reads. On each push to the production branch that touches the app, the workflow starts a `production` EAS build that auto-submits to TestFlight and the Play `internal` track, and pushes the App Store listing when `store.config.json` changed. EAS builds and submits in its own cloud with the credentials stored there; the job ends once the build is queued. A manual run starts a preview build, a Play promotion, or a listing push.
 
 ## Prerequisites
 
-App package, platforms, production branch, and watch paths from [discovering-application.md](./discovering-application.md). Submit profiles from [configuring-eas.md](./configuring-eas.md). Secret names, and where runtime variables live instead, from [deployment-contract.md](./deployment-contract.md) → **GitHub values**.
+App package, platforms, production branch, and watch paths from [discovering-application.md](./discovering-application.md). Profiles from [configuring-eas.md](./configuring-eas.md).
 
 ## Guidelines
 
 ### Workflow file
 
-`.github/workflows/deploy-<app>.yml`, one per app package. Adapt the setup steps to the package manager (drop `pnpm/action-setup` for npm; `npm ci` instead of `pnpm install`). Drop the key file and `env` lines of a platform the app lacks; set `--platform` to the platforms it has.
+`.github/workflows/deploy-<app>.yml`, one per app package. Adapt the setup steps to the package manager (drop `pnpm/action-setup` for npm; `npm ci` instead of `pnpm install`). Set `--platform` to the platforms the app has; drop the metadata steps and option for an Android-only app and `promote-android` for an iOS-only one. Pin third-party actions to a commit SHA.
 
 ```yaml
 name: Deploy <app>
@@ -22,23 +22,37 @@ on:
     branches: [<production-branch>]
     paths: ["<app-package>/**", "<lockfile>", ".github/workflows/deploy-<app>.yml"]
   workflow_dispatch:
+    inputs:
+      action:
+        type: choice
+        options: [build, preview, promote-android, metadata]
+        default: build
 
 concurrency: deploy-<app>
 
+permissions:
+  contents: read
+
 jobs:
-  build:
+  deploy:
+    if: github.ref == 'refs/heads/<production-branch>'
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: <app-package>
-    env:
-      EXPO_ASC_API_KEY_PATH: credentials/asc-api-key.p8
-      EXPO_ASC_KEY_ID: ${{ secrets.EXPO_ASC_KEY_ID }}
-      EXPO_ASC_ISSUER_ID: ${{ secrets.EXPO_ASC_ISSUER_ID }}
-      EXPO_APPLE_TEAM_ID: ${{ secrets.EXPO_APPLE_TEAM_ID }}
-      EXPO_APPLE_TEAM_TYPE: ${{ secrets.EXPO_APPLE_TEAM_TYPE }}
     steps:
+      - name: Check secrets
+        working-directory: .
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: |
+          if [ -z "$EXPO_TOKEN" ]; then
+            echo "::error::Set EXPO_TOKEN in Settings → Secrets and variables → Actions"
+            exit 1
+          fi
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 2
       - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v7
         with:
@@ -49,31 +63,34 @@ jobs:
           token: ${{ secrets.EXPO_TOKEN }}
       - run: pnpm install --frozen-lockfile
         working-directory: .
-      - run: |
-          mkdir -p credentials
-          printf '%s' "$ASC_API_KEY" > credentials/asc-api-key.p8
-          printf '%s' "$GOOGLE_SERVICE_ACCOUNT_KEY" > credentials/google-service-account.json
-        env:
-          ASC_API_KEY: ${{ secrets.EXPO_ASC_API_KEY }}
-          GOOGLE_SERVICE_ACCOUNT_KEY: ${{ secrets.EXPO_GOOGLE_SERVICE_ACCOUNT_KEY }}
-      - run: eas build --platform all --profile production --auto-submit-with-profile internal --non-interactive --no-wait
+      - name: Build and submit
+        if: github.event_name == 'push' || inputs.action == 'build'
+        run: eas build --platform all --profile production --auto-submit-with-profile internal --non-interactive --no-wait
+      - name: Listing changed
+        id: listing
+        if: github.event_name == 'push'
+        run: git diff --quiet HEAD^ HEAD -- store.config.json || echo "changed=true" >> "$GITHUB_OUTPUT"
+      - name: Push App Store listing
+        if: steps.listing.outputs.changed == 'true' || inputs.action == 'metadata'
+        run: eas metadata:push --profile production --non-interactive
+      - name: Preview build
+        if: inputs.action == 'preview'
+        run: eas build --platform all --profile preview --non-interactive --no-wait
+      - name: Promote to Play production
+        if: inputs.action == 'promote-android'
+        run: eas submit --platform android --profile production --latest --non-interactive
 ```
 
 | Need | Change |
 | --- | --- |
-| Build only; submit later through **Release** | Drop `--auto-submit-with-profile internal` |
 | Fail the run when the build fails | Drop `--no-wait`; the job then waits for EAS and spends runner minutes |
 
-### CI credentials
+### CI token
 
-The workflow's secrets are credentials made for CI only, with less access than the local ones in [deployment-contract.md](./deployment-contract.md) → **Files**. The user creates each one and sets it with `gh secret set <NAME>`, pasting the value at the prompt, or `gh secret set <NAME> < <downloaded file>`, then deletes the download.
+The workflow's `EXPO_TOKEN`. Local commands use the `eas login` session.
 
-| Secret | Credential | Access |
-| --- | --- | --- |
-| `EXPO_TOKEN` | Robot user token: https://expo.dev → the account that owns the project → Settings → Robot users | **Developer** role. Fallback when the account has no robot users: a personal access token, which acts on every account the user can access |
-| `EXPO_ASC_API_KEY`, `EXPO_ASC_KEY_ID` | A second Team Key at https://appstoreconnect.apple.com/access/integrations/api | **App Manager**: uploads and submits builds; signing credentials come from **Provision** with the local Admin key |
-| `EXPO_ASC_ISSUER_ID`, `EXPO_APPLE_TEAM_ID`, `EXPO_APPLE_TEAM_TYPE` | The values in `deploy.secrets.env` | — |
-| `EXPO_GOOGLE_SERVICE_ACCOUNT_KEY` | A second service account per [configuring-stores.md](./configuring-stores.md) → **Google service account** | **App permissions** on this app only: View app information, Release apps to testing tracks |
+1. The user creates a token with the **Developer** role on the Expo account that owns the project: a robot user token at https://expo.dev → the account → Settings → Robot users, or a personal access token. Which accounts it reaches is the user's choice, so one token can serve several repos.
+2. The user sets it as the `EXPO_TOKEN` repository secret: GitHub → Settings → Secrets and variables → Actions → **New repository secret**, or `gh secret set EXPO_TOKEN` in their own terminal.
 
 ### Ongoing releases
 

@@ -14,7 +14,7 @@
 | Build command | `package.json` `scripts.build` (or `export`, `generate`, etc.) | Ask user |
 | Build output path | Framework config (`outDir`, `distDir`, `outputPath`) or local build | Ask user |
 | SPA with client-side routing? | React Router, Vue Router, TanStack Router, Expo web, etc. | Default to SPA mode unless fully static HTML |
-| Build-time env vars | `VITE_*`, `NEXT_PUBLIC_*`, `EXPO_PUBLIC_*`, `PUBLIC_*`, or docs | List required vars and the GitHub variable each reads |
+| Build-time env vars | `VITE_*`, `NEXT_PUBLIC_*`, `EXPO_PUBLIC_*`, `PUBLIC_*`, or docs | List required vars; their production values go in the committed production env file |
 | Runtime secrets and bindings | `env.<NAME>` in Worker code and absent from `vars` → `secrets.required`; D1, KV, R2 bindings in the wrangler config | List names; Worker-less static sites have none |
 | Hosts | Product TRD (`trd.md` with `doc_type: trd`) → **Infrastructure** origin, Wrangler `routes`, or the user | `*.workers.dev` only |
 | Wrangler root and watch paths | Path where `wrangler.toml` lives; the app and the workspace packages it imports | Repo root vs package subdirectory |
@@ -116,7 +116,7 @@ Scan for public env prefixes baked in at build time:
 - `EXPO_PUBLIC_*` (Expo)
 - `PUBLIC_*` (SvelteKit, Astro)
 
-List required variables for the workflow's build step ([configuring-github-actions.md](./configuring-github-actions.md) → **Variables — two buckets**). These are not runtime Worker secrets unless a Worker script reads `env.*`.
+List required variables for the production env file ([configuring-github-actions.md](./configuring-github-actions.md) → **Values**). These are not runtime Worker secrets unless a Worker script reads `env.*`.
 
 ### 6. Discovery checklist
 

@@ -1,4 +1,4 @@
 interface:
   display_name: "Cloudflare Web Deployment"
-  short_description: "Deploy web apps to Cloudflare through GitHub Actions and provision Workers, secrets, resources, and domains with Wrangler"
-  default_prompt: "Use $deploying-cloudflare-web-application when deploying a web app to Cloudflare, setting up Cloudflare deploys in GitHub Actions, setting Worker secrets, attaching a custom domain, creating Cloudflare resources for an app, or preparing a monorepo package for Cloudflare."
+  short_description: "Deploy web apps to Cloudflare through GitHub Actions: Worker, resources, secrets, and domains on every merge"
+  default_prompt: "Use $deploying-cloudflare-web-application when deploying a web app to Cloudflare, setting up Cloudflare deploys in GitHub Actions, adding Worker secrets, attaching a custom domain, adding Cloudflare resources for an app, or preparing a monorepo package for Cloudflare."

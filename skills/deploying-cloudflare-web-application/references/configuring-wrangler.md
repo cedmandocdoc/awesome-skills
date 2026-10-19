@@ -127,15 +127,21 @@ required = ["STRIPE_SECRET_KEY"]
 [[d1_databases]]
 binding = "DB"
 database_name = "my-app-db"
-database_id = "<id from wrangler d1 create>"
+
+[[kv_namespaces]]
+binding = "CACHE"
+
+[[r2_buckets]]
+binding = "FILES"
+bucket_name = "my-app-files"
 ```
 
 | Field | Notes |
 | --- | --- |
 | `account_id` | Recorded at Setup; pins deploys to one account |
 | `vars` | Public runtime values; each deploy overwrites edits made elsewhere |
-| `secrets.required` | Every runtime secret name; deploy fails while one is unset. Values never in the config; set per [configuring-resources.md](./configuring-resources.md) |
-| D1, KV, R2 ids | Public; written back by `create --update-config` |
+| `secrets.required` | Every runtime secret name; deploy fails while one is unset. Values never in the config; set per [configuring-secrets.md](./configuring-secrets.md) |
+| D1 `database_name`, KV binding, R2 `bucket_name` | `wrangler deploy` creates a missing resource (a KV namespace is named `<worker>-<binding>`) and later deploys reuse it; an existing resource's id may stay in the config |
 
 ### Custom domains and routes
 
@@ -150,10 +156,6 @@ routes = [
 | --- | --- | --- |
 | `custom_domain = true` | The Worker serves the whole host | DNS record and certificate, when the zone is in the same account |
 | Route with `zone_name` | The Worker serves a path on a host another Worker or origin serves | The route only; the host needs a proxied record |
-
-### Environments (staging / production)
-
-For multiple Workers environments, define `[env.<name>]` blocks and deploy with `wrangler deploy --env <name>` ([configuring-github-actions.md](./configuring-github-actions.md) → **Workflow file**).
 
 ## Related
 

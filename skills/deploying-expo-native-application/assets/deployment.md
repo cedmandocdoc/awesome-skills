@@ -20,21 +20,22 @@ generated_by: deploying-expo-native-application
 ## Release flow
 
 1. A push to `{{PRODUCTION_BRANCH}}` that touches the app builds the `production` profile and submits it to TestFlight and the Play `internal` track.
-2. `eas metadata:push` updates the App Store listing from `store.config.json` once the build is processed.
-3. Android goes to the Play `production` track through the Release recipe; iOS goes to review in App Store Connect.
+2. The same run pushes the App Store listing when `store.config.json` changed.
+3. Android goes to the Play `production` track through the Release recipe (`-f action=promote-android`); iOS goes to review in App Store Connect.
 
 ## Steps
 
 | Step | Platform | Scope | Owner | Done when | Status |
 | --- | --- | --- | --- | --- | --- |
 | Apple Developer Program membership | iOS | team | user | Membership active at https://developer.apple.com/account | todo |
-| App Store Connect API key with Admin access, local | iOS | team | user | `credentials/asc-api-key.p8` exists and its IDs are in `deploy.secrets.env` | todo |
 | Google Play developer account | Android | team | user | Account active at https://play.google.com/console | todo |
-| Google service account with release permissions | Android | team | user | `credentials/google-service-account.json` exists and the first Android submission succeeds | todo |
+| Google service account with release permissions | Android | team | user | Invited in Play Console per the skill's **Google service account** steps | todo |
 | Expo project linked | both | app | agent | `extra.eas.projectId` in the app config | todo |
-| CI credentials: Expo robot token, App Manager key, CI service account | both | app | user | `gh secret list` shows every name the workflow reads | todo |
-| EAS environment variables set | both | app | agent | `eas env:list --environment production` matches the plan | todo |
-| Signing credentials | both | app | agent | A `production` build finished: `eas build:list --status finished --limit 1 --json --non-interactive` | todo |
+| `EXPO_TOKEN` repository secret | both | app | user | `gh secret list` shows `EXPO_TOKEN` | todo |
+| Runtime values in `eas.json` | both | app | agent | Each build profile's `env` holds every `EXPO_PUBLIC_*` the app reads | todo |
+| iOS credentials on EAS: build credentials and App Store Connect key for submissions | iOS | app | user | `eas credentials -p ios` in your own terminal; a `production` iOS build finished with a submission | todo |
+| Google service account key on EAS | Android | app | user | `eas credentials -p android` in your own terminal uploads it; the first Android submission succeeds | todo |
+| Android keystore copy in a password manager (optional) | Android | app | user | Downloaded with `eas credentials -p android` after the first build | todo |
 | App record in App Store Connect | iOS | app | user | `ascAppId` in `eas.json`. Create it at https://appstoreconnect.apple.com/apps → New App with the bundle ID; the Apple ID number is under App Information | todo |
 | App in Google Play Console | Android | app | user | The first Android submission succeeds. Create it at https://play.google.com/console → Create app with the package name | todo |
 | Play store listing, content rating, data safety, target audience, privacy policy URL | Android | app | user | The Play Console dashboard shows no setup task. Reuse the `store.config.json` description; screenshots from `store/android/` | todo |

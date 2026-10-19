@@ -2,17 +2,17 @@
 
 ## Overview
 
-The deploy workflow and the GitHub secrets and variables it reads. On each push to the production branch that touches the Supabase root, the workflow links the project, applies new migrations, deploys declared Edge Functions, and creates declared buckets.
+The deploy workflow and the secrets it reads. On each push to the production branch that touches the Supabase root, the workflow checks the secrets and the production block, links the project, applies new migrations, pushes the production config, sets Edge Function secrets, deploys declared Edge Functions, and creates declared buckets.
 
 ## Prerequisites
 
-Supabase root, working directory, production branch, functions, and buckets from [discovering-supabase-root.md](./discovering-supabase-root.md).
+Supabase root, working directory, production branch, functions, and buckets from [discovering-supabase-root.md](./discovering-supabase-root.md). Production block per [configuring-remote-project.md](./configuring-remote-project.md) → **Auth config**.
 
 ## Guidelines
 
 ### Workflow file
 
-`.github/workflows/deploy-supabase.yml`; drop the steps for functions or buckets the app does not declare.
+`.github/workflows/deploy-supabase.yml`. Pin third-party actions to a commit SHA.
 
 ```yaml
 name: Deploy Supabase
@@ -25,62 +25,95 @@ on:
 
 concurrency: deploy-supabase
 
+permissions:
+  contents: read
+
 jobs:
   deploy:
+    if: github.ref == 'refs/heads/<production-branch>'
     runs-on: ubuntu-latest
-    env:
-      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-      SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
     defaults:
       run:
         working-directory: <working-directory>
     steps:
+      - name: Check secrets
+        working-directory: .
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+        run: |
+          missing=0
+          for name in SUPABASE_ACCESS_TOKEN SMTP_PASS STRIPE_SECRET_KEY; do
+            if [ -z "${!name}" ]; then
+              echo "::error::Set $name in Settings → Secrets and variables → Actions"
+              missing=1
+            fi
+          done
+          exit $missing
       - uses: actions/checkout@v7
       - uses: supabase/setup-cli@v3
         with:
           version: latest
-      - run: supabase link --project-ref "${{ vars.SUPABASE_PROJECT_REF }}"
-      - run: supabase db push
-      - run: supabase functions deploy --use-api
-      - run: supabase seed buckets --linked
+      - name: Check production block
+        run: |
+          ref=$(sed -n '/^\[remotes\.production\]/,/^\[/s/^project_id *= *"\(.*\)"/\1/p' <config-toml>)
+          if [ -z "$ref" ]; then
+            echo "::error::Add [remotes.production] with project_id to <config-toml>"
+            exit 1
+          fi
+          echo "SUPABASE_PROJECT_REF=$ref" >> "$GITHUB_ENV"
+      - name: Deploy
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+        run: |
+          supabase link --project-ref "$SUPABASE_PROJECT_REF"
+          supabase db push
+          supabase config diff
+          supabase config push --yes
+          supabase secrets set
+          supabase functions deploy --use-api
+          supabase seed buckets --linked
 ```
 
-### GitHub values
+| Part | Rule |
+| --- | --- |
+| `<config-toml>` | Path to `config.toml` from the working directory |
+| Secret names | `SUPABASE_ACCESS_TOKEN` plus every `env(NAME)` in `config.toml`, in both the Check secrets loop and the Deploy step's `env` |
+| `db push` | No `SUPABASE_DB_PASSWORD`: the CLI mints a temporary login role with the access token |
+| `config push` | Runs after `db push`: config can depend on migrations (`[auth.hook.*]` needs its Postgres function, `[api] schemas` needs the schema) |
+| `secrets set` | Sets each `[edge_runtime.secrets]` entry from the step's `env`; drop it when there are none |
+| Functions, buckets | Drop the line when `config.toml` declares none |
+
+### Values
 
 | Rule | Detail |
 | --- | --- |
-| Needed names | Every `${{ vars.<NAME> }}` and `${{ secrets.<NAME> }}` in `.github/workflows/*.yml`, minus `gh variable list` and `gh secret list` |
-| Public value | `gh variable set <NAME> --body "<value>"` |
-| Secret value | Its name with a blank value in a `*.secrets.env` file the user fills; `gh secret set -f <file>` |
-| Names | A value another platform reads starts with its platform: `SUPABASE_*`, `CLOUDFLARE_*`, `EXPO_*`; an app-only value keeps the name the app reads |
-| Owner | The platform's skill sets a name; other skills only read it |
-
-This skill sets:
-
-| Name | Kind | Value |
-| --- | --- | --- |
-| `SUPABASE_PROJECT_REF` | variable | Production project ref |
-| `SUPABASE_URL` | variable | `https://<ref>.supabase.co` |
-| `SUPABASE_PUBLISHABLE_KEY` | variable | The publishable key, or the `anon` key when the project has none, piped so other keys never print: `supabase projects api-keys --project-ref <ref> -o json \| jq -r '[.[] \| select(.type == "publishable" or .name == "anon")][0].api_key' \| gh variable set SUPABASE_PUBLISHABLE_KEY` |
-| `SUPABASE_ACCESS_TOKEN` | secret | Set by the user per **CI access token** |
-| `SUPABASE_DB_PASSWORD` | secret | From `<supabase-root>/deploy.secrets.env` |
+| No GitHub variables | The project ref lives in `[remotes.production]`; public values are committed |
+| Public values for apps | `SUPABASE_URL` (`https://<ref>.supabase.co`) and the publishable key go in each consuming app's committed production config per [configuring-remote-project.md](./configuring-remote-project.md) |
+| Names | A value another platform reads starts with `SUPABASE_`; an app-only value keeps the name the app reads |
 
 ### CI access token
 
-The workflow's `SUPABASE_ACCESS_TOKEN`: a personal access token limited to the production project, used only by GitHub Actions. Local commands use the `supabase login` session.
+The workflow's `SUPABASE_ACCESS_TOKEN`. Local commands use the `supabase login` session.
 
-1. The user creates it at https://supabase.com/dashboard/account/tokens with access to the production project only, an expiry they track, and only these permissions:
+1. The user creates a personal access token at https://supabase.com/dashboard/account/tokens with an expiry they track. It must reach the production project; whether it reaches one project or a whole organization is the user's choice, so one token can serve several repos. Permissions:
 
    | Permission | Level | Used by |
    | --- | --- | --- |
-   | Project Settings | Read | `supabase link` |
-   | API Keys | Read | `supabase link` |
-   | API Key Secrets | Read | `supabase link` |
-   | Edge Functions | Read-write | `supabase functions deploy` |
-   | Storage | Read-write | `supabase seed buckets` |
+   | Project Settings | Read-write | `supabase link`; Auth config push |
+   | API Keys, API Key Secrets | Read | `supabase link`, `seed buckets` |
+   | Connection Pooling | Read | `supabase link` records the IPv4 pooler that `db push` dials |
+   | Database | Read-write | `db push` through the temporary login role |
+   | Auth Config | Read-write | `config push` |
+   | Database Config, SSL Enforcement, Network Restrictions, Data API Config, Realtime Config, Storage Config | Read | `config diff`, `config push` read the project config |
+   | Data API Config, Database Config, Storage Config | Read-write | Only when the production block declares that section |
+   | Edge Function Secrets | Read-write | `secrets set` |
+   | Edge Functions | Read-write | `functions deploy` |
 
-   `db push` authenticates with `SUPABASE_DB_PASSWORD`, so the token needs no Database permission.
-2. The user runs `gh secret set SUPABASE_ACCESS_TOKEN` and pastes the token at the prompt. It is never written to a file.
+2. The user sets it as the `SUPABASE_ACCESS_TOKEN` repository secret per [configuring-secrets.md](./configuring-secrets.md).
 
 ### Ongoing releases
 
@@ -92,9 +125,11 @@ The workflow's `SUPABASE_ACCESS_TOKEN`: a personal access token limited to the p
 
 - [discovering-supabase-root.md](./discovering-supabase-root.md)
 - [configuring-remote-project.md](./configuring-remote-project.md)
+- [configuring-secrets.md](./configuring-secrets.md)
 - [troubleshooting-deployment.md](./troubleshooting-deployment.md)
 
 ## References
 
 - [Deploy with GitHub Actions](https://supabase.com/docs/guides/deployment/managing-environments)
 - [Supabase CLI setup action](https://github.com/supabase/setup-cli)
+- [Personal access token permissions](https://supabase.com/docs/guides/platform/personal-access-tokens)
