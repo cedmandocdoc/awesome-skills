@@ -10,8 +10,6 @@
 
 | Symptom | Likely cause | Action |
 | --- | --- | --- |
-| `supabase db reset` fails | Invalid or conflicting migration | Fix SQL; rerun locally before pushing |
-| `supabase db lint` errors | Schema or policy issues | Resolve lint findings; commit fixes |
 | Function check fails | Type or import errors in Edge Functions | Run `deno check` / project scripts; fix and retest |
 
 ### Deploy workflow fails
@@ -22,6 +20,7 @@
 | Check production block fails | `config.toml` lacks `[remotes.production]` with `project_id` | Run [configuring-remote-project.md](./configuring-remote-project.md) |
 | A step answers 401 or 403 | The CI access token expired, or lacks the project or a permission the step needs | Fix or replace it per [configuring-github-actions.md](./configuring-github-actions.md) → **CI access token** |
 | `db push`: "IPv6 is not supported on your current network" | The token lacks Connection Pooling: Read, so `link` recorded no pooler URL | Add the permission |
+| Rehearse migrations fails | A migration or `seed.sql` fails on an empty database, or `db lint` reports an error; production is untouched | Fix it; merge |
 | `db push` fails on SQL | Invalid migration | Fix the migration; push again |
 | `config diff` lists changes outside the plan | `[remotes.production]` `project_id` differs from the linked ref | Fix the ref; seed the block per [configuring-remote-project.md](./configuring-remote-project.md) → **Auth config** |
 | `secrets set`: no secrets to set | No `[edge_runtime.secrets]` entry, or none resolved | Declare them per [configuring-remote-project.md](./configuring-remote-project.md) → **Edge Function secrets**, or drop the line |

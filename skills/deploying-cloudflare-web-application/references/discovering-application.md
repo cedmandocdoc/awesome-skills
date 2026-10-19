@@ -14,7 +14,7 @@
 | Build command | `package.json` `scripts.build` (or `export`, `generate`, etc.) | Ask user |
 | Build output path | Framework config (`outDir`, `distDir`, `outputPath`) or local build | Ask user |
 | SPA with client-side routing? | React Router, Vue Router, TanStack Router, Expo web, etc. | Default to SPA mode unless fully static HTML |
-| Build-time env vars | `VITE_*`, `NEXT_PUBLIC_*`, `EXPO_PUBLIC_*`, `PUBLIC_*`, or docs | List required vars; their production values go in the committed production env file |
+| Build-time env vars | `VITE_*`, `NEXT_PUBLIC_*`, `EXPO_PUBLIC_*`, `PUBLIC_*`, or docs | List required vars; each production value comes from the repo (another package's committed config) or the user, and goes in the committed production env file |
 | Runtime secrets and bindings | `env.<NAME>` in Worker code and absent from `vars` → `secrets.required`; D1, KV, R2 bindings in the wrangler config | List names; Worker-less static sites have none |
 | Hosts | Product TRD (`trd.md` with `doc_type: trd`) → **Infrastructure** origin, Wrangler `routes`, or the user | `*.workers.dev` only |
 | Wrangler root and watch paths | Path where `wrangler.toml` lives; the app and the workspace packages it imports | Repo root vs package subdirectory |

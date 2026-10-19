@@ -10,9 +10,9 @@
 
 Per [discovering-supabase-root.md](./discovering-supabase-root.md): Supabase root, working directory, production branch, production intent, declared Edge Functions, and storage buckets.
 
-### 2. Validate locally
+### 2. Check Edge Functions
 
-Per [discovering-supabase-root.md](./discovering-supabase-root.md) → **Local validation**, from the Supabase root. Fix errors before pushing to the production branch.
+When the app has Edge Functions: per [discovering-supabase-root.md](./discovering-supabase-root.md) → **Local validation**, from the Supabase root. Fix errors before pushing to the production branch.
 
 ### 3. Production block
 

@@ -41,8 +41,7 @@ App package, platforms, store IDs, and runtime variables per [discovering-applic
       "distribution": "store",
       "autoIncrement": true,
       "env": {
-        "EXPO_PUBLIC_SUPABASE_URL": "https://<ref>.supabase.co",
-        "EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY": "<publishable-key>"
+        "EXPO_PUBLIC_API_URL": "https://api.example.com"
       }
     }
   },
@@ -71,7 +70,7 @@ Submit profiles name no key file: submissions and metadata pushes use the keys s
 ### Runtime values
 
 1. **Names.** Each `EXPO_PUBLIC_*` the app reads, per build profile.
-2. **Values.** A value another platform owns comes from that platform: `EXPO_PUBLIC_SUPABASE_URL` and the publishable key from the Supabase project (deploying-supabase-application → **Provision**), or the user gives it. App-only values come from the user.
+2. **Values.** From the repo (another package's committed config), else the user.
 3. **Write.** Into each profile's `env`; `preview` extends `production` and overrides only what differs.
 
 An existing EAS environment variable → move it into the profile's `env`; the user deletes it in the Expo dashboard after the first green build.

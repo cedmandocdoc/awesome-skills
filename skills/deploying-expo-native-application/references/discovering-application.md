@@ -15,9 +15,9 @@
 | Bundle ID and package name | Same; the store records key on them, and changing one after release means new listings and credentials | Confirm with user before the first store build |
 | Expo project | `extra.eas.projectId` in the app config; missing → **Provision** links it | — |
 | Build and submit profiles | `eas.json`; missing or incomplete → [configuring-eas.md](./configuring-eas.md) | — |
-| Runtime variables | `EXPO_PUBLIC_*` names read in source, and which platform owns each value (`SUPABASE_*` → the Supabase project) | Ask user |
+| Runtime variables | `EXPO_PUBLIC_*` names read in source | Ask user |
 | Store IDs | `ascAppId` and `appleTeamId` in the submit profiles, else `DEPLOYMENT.md` | The user, once the App Store Connect record exists |
-| App scheme | `expo.scheme`; product TRD (`trd.md` with `doc_type: trd`) → **Infrastructure** origin | Ask user; Supabase Auth redirects need it |
+| App scheme | `expo.scheme`; product TRD (`trd.md` with `doc_type: trd`) → **Infrastructure** origin | Ask user; auth redirect URLs need it |
 | Expo account or organization | Product TRD → **Environments and deployment**, else `eas whoami` | Ask user |
 | Watch paths | The app package, the lockfile, workspace packages it imports | — |
 

@@ -54,15 +54,7 @@ If multiple `config.toml` candidates exist, ask the user which app deploys to th
 
 ### Local validation
 
-```bash
-supabase db start
-supabase db reset --local
-supabase db lint
-```
-
-Prefer `db reset --local` when seeds must be exercised; use `supabase migration up --local` for faster incremental checks.
-
-#### Edge Functions (if present)
+Edge Functions, when present:
 
 ```bash
 deno check --config functions/deno.json functions/*/index.ts
@@ -75,8 +67,6 @@ Adapt to project scripts (e.g. `functions:check`, `functions:test`).
 
 ```
 - [ ] Supabase root and working directory identified
-- [ ] Migrations apply locally without error
-- [ ] supabase db lint passes
 - [ ] New/changed functions declared in config.toml
 - [ ] Function checks/tests pass (if applicable)
 - [ ] Production project, Auth origins, and secret names known
@@ -88,7 +78,7 @@ Adapt to project scripts (e.g. `functions:check`, `functions:test`).
 | --- | --- |
 | New files in `migrations/` | A new production project |
 | `[remotes.production]` Auth and project settings (`config push`) | The `[remotes.production]` block, seeded from the live project |
-| `[edge_runtime.secrets]`, from GitHub secrets | The public values consuming apps read |
+| `[edge_runtime.secrets]`, from GitHub secrets | The public values apps read, reported to the user |
 | Edge Functions and storage buckets declared in `config.toml` | |
 
 Undeclared functions and buckets deploy nowhere.

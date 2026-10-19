@@ -2,7 +2,7 @@
 
 ## Overview
 
-The deploy workflow and the secrets it reads. On each push to the production branch that touches the Supabase root, the workflow checks the secrets and the production block, links the project, applies new migrations, pushes the production config, sets Edge Function secrets, deploys declared Edge Functions, and creates declared buckets.
+The deploy workflow and the secrets it reads. On each push to the production branch that touches the Supabase root, the workflow checks the secrets and the production block, rehearses the migrations on a throwaway database, links the project, applies new migrations, pushes the production config, sets Edge Function secrets, deploys declared Edge Functions, and creates declared buckets.
 
 ## Prerequisites
 
@@ -63,6 +63,11 @@ jobs:
             exit 1
           fi
           echo "SUPABASE_PROJECT_REF=$ref" >> "$GITHUB_ENV"
+      - name: Rehearse migrations
+        run: |
+          supabase db start
+          supabase db reset --local
+          supabase db lint --local --fail-on error
       - name: Deploy
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
@@ -82,6 +87,7 @@ jobs:
 | --- | --- |
 | `<config-toml>` | Path to `config.toml` from the working directory |
 | Secret names | `SUPABASE_ACCESS_TOKEN` plus every `env(NAME)` in `config.toml`, in both the Check secrets loop and the Deploy step's `env` |
+| Rehearse migrations | `db start` runs an empty Postgres in Docker on the runner; `db reset --local` replays every migration and `seed.sql` into it; a failure stops the job before `link`. The database is discarded with the runner |
 | `db push` | No `SUPABASE_DB_PASSWORD`: the CLI mints a temporary login role with the access token |
 | `config push` | Runs after `db push`: config can depend on migrations (`[auth.hook.*]` needs its Postgres function, `[api] schemas` needs the schema) |
 | `secrets set` | Sets each `[edge_runtime.secrets]` entry from the step's `env`; drop it when there are none |
@@ -92,8 +98,6 @@ jobs:
 | Rule | Detail |
 | --- | --- |
 | No GitHub variables | The project ref lives in `[remotes.production]`; public values are committed |
-| Public values for apps | `SUPABASE_URL` (`https://<ref>.supabase.co`) and the publishable key go in each consuming app's committed production config per [configuring-remote-project.md](./configuring-remote-project.md) |
-| Names | A value another platform reads starts with `SUPABASE_`; an app-only value keeps the name the app reads |
 
 ### CI access token
 

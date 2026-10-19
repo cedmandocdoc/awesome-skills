@@ -87,8 +87,6 @@ jobs:
 | Rule | Detail |
 | --- | --- |
 | No GitHub variables | Public values are committed, so they travel with the PR and show in its diff |
-| Names | A value from another platform starts with its platform: `SUPABASE_*`, `EXPO_*`; an app-only value keeps the name the app reads |
-| Owner | The platform's skill names a cross-platform value and where it comes from; other skills only read it |
 
 ### CI API token
 

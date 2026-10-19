@@ -1,7 +1,7 @@
 ---
 name: deploying-supabase-application
 id: 489208cd-16f5-4e4f-92c3-35813f082ce3
-description: Deploy a Supabase app to production through GitHub Actions — validate migrations and Edge Functions locally, create the production project, keep its Auth and project settings in config.toml, and write the deploy workflow that applies migrations, config, Edge Function secrets, functions, and buckets on every merge; list the GitHub secrets the user sets. Use when deploying Supabase, setting up Supabase deploys in GitHub Actions, creating a hosted Supabase project, adding Supabase secrets or Auth redirect URLs, re-running a Supabase deploy, or validating migrations and Edge Functions before release.
+description: Deploy a Supabase app to production through GitHub Actions — check Edge Functions locally, create the production project, keep its Auth and project settings in config.toml, and write the deploy workflow that rehearses migrations on a throwaway database, then applies migrations, config, Edge Function secrets, functions, and buckets on every merge; list the GitHub secrets the user sets. Use when deploying Supabase, setting up Supabase deploys in GitHub Actions, creating a hosted Supabase project, adding Supabase secrets or Auth redirect URLs, re-running a Supabase deploy, or validating migrations and Edge Functions before release.
 version: 5.0.0
 ---
 
@@ -12,7 +12,6 @@ version: 5.0.0
 | Item | Kind | Required | When | Done when | How |
 | --- | --- | --- | --- | --- | --- |
 | Supabase CLI 2.120+ | user | required | All | `supabase --version` prints 2.120.0 or later | https://supabase.com/docs/guides/local-development/cli/getting-started |
-| Docker | user | required | Deploy | `docker info` succeeds | https://docs.docker.com/get-docker/, then start Docker |
 | Deno | user | optional | Deploy, when the app has Edge Functions | `deno --version` succeeds | https://docs.deno.com/runtime/getting_started/installation/ |
 | GitHub CLI | user | required | Deploy, Secrets, Run | `gh auth status` succeeds and `gh repo view` finds the repository | https://cli.github.com, then `gh auth login`; create the GitHub repository and push the project |
 | Supabase login | user | required | Deploy, Provision, Run, Troubleshoot | `supabase projects list` succeeds | `supabase login` |
@@ -25,7 +24,8 @@ version: 5.0.0
 1. **Setup** — for each **Setup** row whose When covers the request, in order: Done when holds → skip; `user` → stop and print its How when required, continue without it when optional; `ask` → fill what the request answers, ask the rest together in one message, record each answer; `auto` and `static` → run.
 2. **Recipe** — match one **Recipes** row; open every doc in its Read column.
 
-- Writes repository files; project changes run in the deploy workflow on push to the production branch. Locally it only creates the production project, after the user confirms, and reads remote state.
+- Writes files only under the Supabase root and `.github/workflows/deploy-supabase.yml`; project changes run in the deploy workflow on push to the production branch. Locally it only creates the production project, after the user confirms, and reads remote state.
+- Never runs `db reset` on a local or hosted database.
 - Runs the local CLI with the `supabase login` session, never with an exported `SUPABASE_ACCESS_TOKEN`.
 - Sets no secret and reads only secret names; the user sets every secret in GitHub.
 

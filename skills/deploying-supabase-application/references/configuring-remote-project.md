@@ -2,7 +2,7 @@
 
 ## Overview
 
-**Execution mode.** Creates the production project when it is missing and writes what production needs into the repository: the `[remotes.production]` block with Auth and project settings, Edge Function secret declarations, and the public values consuming apps read. The deploy workflow applies all of it on merge ([configuring-github-actions.md](./configuring-github-actions.md)).
+**Execution mode.** Creates the production project when it is missing and writes what production needs into the repository: the `[remotes.production]` block with Auth and project settings and Edge Function secret declarations, then reports the public values apps read. The deploy workflow applies all of it on merge ([configuring-github-actions.md](./configuring-github-actions.md)).
 
 ## Prerequisites
 
@@ -50,17 +50,16 @@ One entry per `Deno.env.get("…")` name under `functions/`, minus `SUPABASE_*` 
 | Project | **Setup** → Production project; new → name, organization (TRD or `supabase orgs list`), and region from the user |
 | Auth settings | Per **Auth config**: the TRD's Auth origins, the production mail provider; local values (Mailpit SMTP, `127.0.0.1` URLs) never ship |
 | Function secret names | Per **Edge Function secrets** |
-| Consuming apps | The TRD's apps that read this project, and each app's committed production config (`.env.production`, `eas.json`) |
 
 ### 2. Plan and confirm
 
-Show one table: item, now, after. A new project; the production block's changes (`supabase config diff --workdir <working-directory>` once linked); the function secrets to declare; the public values per app. Apply after the user confirms.
+Show one table: item, now, after. A new project; the production block's changes (`supabase config diff --workdir <working-directory>` once linked); the function secrets to declare. Apply after the user confirms.
 
 ### 3. Apply
 
 1. **Project.** New → `supabase projects create <name> --org-id <org> --region <region> --db-password "$(openssl rand -hex 24)"`. Keep no copy of the password; a dashboard reset recovers database access.
 2. **Production block and function secrets.** Write them into `config.toml` per **Auth config** and **Edge Function secrets**.
-3. **Public values.** Write `SUPABASE_URL` and the publishable key into each consuming app's production config. Read the key with a filter that prints no other key: `supabase projects api-keys --project-ref <ref> -o json | jq -r '[.[] | select(.type == "publishable" or .name == "anon")][0].api_key'`.
+3. **Public values.** The URL is `https://<ref>.supabase.co`. Read the publishable key with a filter that prints no other key: `supabase projects api-keys --project-ref <ref> -o json | jq -r '[.[] | select(.type == "publishable" or .name == "anon")][0].api_key'`.
 
 ### 4. Secrets
 
@@ -70,6 +69,7 @@ Run [configuring-secrets.md](./configuring-secrets.md).
 
 - Applied changes, per the plan table; the files to commit and merge through a PR
 - The secrets still to set, from step 4
+- Public values for the apps that read this project: the URL and publishable key
 - Items left for the user, such as a kept `site_url`
 
 ## Related
