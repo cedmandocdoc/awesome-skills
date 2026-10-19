@@ -27,7 +27,7 @@ Scripts log the resolved manager to stderr (for example `[install-packages] pack
 
 ### Install packages
 
-Use [`install-packages.cjs`](../scripts/install-packages.cjs) for dependencies listed in setup and managing references.
+Use [`install-packages.cjs`](../scripts/install-packages.cjs) for dependencies listed in references.
 
 ```bash
 node <path-to-skill>/scripts/install-packages.cjs [options] [<pkg> ...]
@@ -42,18 +42,9 @@ node <path-to-skill>/scripts/install-packages.cjs [options] [<pkg> ...]
 
 No package args runs `pnpm install` / `yarn install` / `bun install` / `npm install` at `--root`.
 
-Examples:
-
-```bash
-node ../scripts/install-packages.cjs --root apps/web
-node ../scripts/install-packages.cjs axios
-node ../scripts/install-packages.cjs --dev eslint prettier
-node ../scripts/install-packages.cjs @tanstack/react-query zustand
-```
-
 ### Run a package (dlx / npx)
 
-Use [`run-package.cjs`](../scripts/run-package.cjs) for one-off runners such as `shadcn view`. On Expo apps, SDK-pinned installs use the same script with `expo install` args.
+Use [`run-package.cjs`](../scripts/run-package.cjs) for one-off runners.
 
 ```bash
 node <path-to-skill>/scripts/run-package.cjs [options] -- <pkg> [args...]
@@ -61,28 +52,20 @@ node <path-to-skill>/scripts/run-package.cjs [options] -- <pkg> [args...]
 
 Yarn Berry (nearest `.yarnrc.yml` walking up from `--root`) uses `yarn dlx`; Yarn 1 uses `npx` for dlx-style runs. Installs still use `yarn add`.
 
-Examples:
-
-```bash
-node ../scripts/run-package.cjs -- shadcn@latest view button
-node ../scripts/run-package.cjs -- expo install tailwindcss-animate
-```
-
-### Registry components
-
-[`add-registry-component.cjs`](../scripts/add-registry-component.cjs) uses the same detection and command helpers for registry dependency installs and `shadcn view`.
-
 ### Agent workflow
 
 When a reference lists packages to install:
 
 1. Resolve the app package root.
 2. Run `install-packages.cjs` with no package args for a lockfile install, or with packages / `--dev` as the reference specifies (`--root` when cwd is not the app).
-3. Run `run-package.cjs` when the step is a one-off CLI (`shadcn view`, create tools).
+3. Run `run-package.cjs` when the step is a one-off CLI.
 4. Skip hand-written `npm install` / `npx` commands unless the script is unavailable.
 
-## Related
+## Examples
 
-- [setting-up-theming.md](./setting-up-theming.md)
-- [managing-linting.md](./managing-linting.md)
-- [add-registry-component.cjs](../scripts/add-registry-component.cjs)
+```bash
+node ../scripts/install-packages.cjs --root apps/web
+node ../scripts/install-packages.cjs @tanstack/react-query @tanstack/react-form zod
+node ../scripts/install-packages.cjs --dev eslint prettier
+node ../scripts/run-package.cjs -- tsc -b
+```

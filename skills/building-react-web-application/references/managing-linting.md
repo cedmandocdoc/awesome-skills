@@ -6,7 +6,7 @@
 
 ## Prerequisites
 
-- [creating-route-component.md](./creating-route-component.md) — where `routeTree.gen.ts` comes from
+- [creating-page.md](./creating-page.md) — where `routeTree.gen.ts` comes from
 - [TanStack Router — Installation with Vite](https://tanstack.com/router/latest/docs/installation/with-vite.md) — official ignore patterns and plugin setup
 
 ## Guidelines
@@ -24,7 +24,7 @@
 
 ### Ignoring generated files
 
-`routeTree.gen.ts` (typical path: `src/routeTree.gen.ts`) is generated from `src/routes/`; edits belong in route modules (see [creating-route-component.md](./creating-route-component.md)). Exclude it from ESLint and Prettier so generated code stays untouched. Optionally mark it readonly in VS Code and exclude from search/watch for quieter diffs.
+`routeTree.gen.ts` (typical path: `src/routeTree.gen.ts`) is generated from `src/routes/`; edits belong in route modules (see [creating-page.md](./creating-page.md)). Exclude it from ESLint and Prettier so generated code stays untouched. Optionally mark it readonly in VS Code and exclude from search/watch for quieter diffs.
 
 ### CI and editors
 

@@ -2,115 +2,90 @@
 
 ## Overview
 
-Apply Tailwind utility classes via `className` with **Tailwind CSS v4** and the Vite plugin. Prefer design tokens and the project style guide; use **`cva`** and **`cx`** from **`class-variance-authority`** for variants and merging (no custom `cn` file or **`tailwind-merge`**).
-
-## Prerequisites
-
-- [Tailwind CSS — Using Vite](https://tailwindcss.com/docs/installation/using-vite)
-- [setting-up-theming.md](./setting-up-theming.md) for `global.css`, `src/theme.css`, and tokens
+Design tokens in the Tailwind CSS v4 theme, classes that keep the design's values, `cva` variants, fonts, and `className` overrides.
 
 ## Guidelines
 
-### Style guide first
+### Tokens
 
-- Follow the repo or team style guide before inventing new patterns.
-- Reuse `src/ui/` primitives and established utility patterns before one-off styling.
+- The supplied design's tokens are the only theme source; keep their names and values. With no design, the agent defines the tokens the app needs.
+- Token values are CSS variables in `src/theme.css`: `:root` for light, `.dark` for dark only when the tokens define dark values; `@theme inline` maps each one to its Tailwind namespace (`--color-*`, `--font-*`, `--radius-*`).
+- With dark values, `@custom-variant dark (&:is(.dark *));` enables `dark:`, and the root toggles `.dark` on `<html>`.
+- Project-root `global.css` is the only CSS entry: `@import "tailwindcss";`, then `@import "./src/theme.css";`; `src/main.tsx` imports it once.
 
-### Structure
+### Values
 
-- Configure Tailwind as the Vite plugin (`@tailwindcss/vite`) per the official guide.
-- CSS entry and tokens: [setting-up-theming.md](./setting-up-theming.md).
-- Prefer **semantic utilities** from the theme (`bg-background`, `text-foreground`, etc.).
+- A design value used more than once becomes a token; a one-off uses an arbitrary-value class (`p-[15px]`).
+- Values are never rounded to the Tailwind scale.
 
-### Styling rules
+### Classes
 
-- Use `className` for layout and visuals; reserve inline `style` for values utilities cannot express.
-- Use **`cva`** for variant-heavy components; colocate definitions with the component or a sibling `*.styles.ts`.
-- Use **`cx`** to merge base classes, variant output, and consumer `className`. Registry snippets often say **`cn`**; this stack uses **`cx`**.
-- Use responsive utilities (`sm:`, `md:`, `lg:`, `xl:`) as needed.
-- Use `gap` on flex/grid parents instead of margin chains on children.
-- Third-party or experimental one-offs may stay local; promote repeated values into tokens.
+- Style with `className`; inline `style` only for values computed at runtime (animation, measured layout).
+- `cva` for components with variants; `cx` from `class-variance-authority` merges base classes, variant output, and the consumer's `className`, consumer last.
 
-### Design tokens over raw values
+### Fonts
 
-Prefer theme-backed scale and semantic classes. Use arbitrary bracket utilities only when the value is truly one-off and cannot be expressed on the scale.
-
-#### Spacing and sizing (4px tolerance)
-
-Tailwind’s default scale is **4px-based** (`1` = 4px). Round near-miss specs to the nearest step.
-
-| Spec (example) | Prefer | Avoid |
-| --- | --- | --- |
-| 15px padding | `p-4` (16px) | `p-[15px]` |
-| 22px gap | `gap-5` (20px) or `gap-6` (24px) | `gap-[22px]` |
-| 13px font size | `text-sm` (14px) | `text-[13px]` |
-
-#### Colors
-
-- Prefer **semantic** utilities (`bg-background`, `text-foreground`, `border-border`, `bg-primary`) when defined.
-- Otherwise use **named palette** utilities from the theme (`bg-muted`, `text-destructive`), not hex or RGB in class names.
-- With a linked design: pick the closest existing token; if nothing is close, **add the color to the theme** ([setting-up-theming.md](./setting-up-theming.md), [setting-up-tailwind-theme.md](./setting-up-tailwind-theme.md)), then use the new utility.
-- Prefer semantic token names (intent) over literal shade names when the project defines them.
+Load each font with `@font-face` in `src/theme.css` (or the font provider's stylesheet link in `index.html`) and register it as a `--font-*` token.
 
 ### Overriding `className`
 
-When a consumer passes utilities that overlap classes on a shared component, mark every conflicting token with `!` at the end (for example `text-lg!`, `sm:p-0!`). See [overriding-classname.md](./overriding-classname.md).
+`cx` concatenates without deduplicating, so a consumer utility that conflicts with a component's own class takes Tailwind's `!`:
 
-### Reusable values
-
-When a value repeats—or a design token does not map to the scale—extend tokens in `src/theme.css` per [setting-up-theming.md](./setting-up-theming.md) and [setting-up-tailwind-theme.md](./setting-up-tailwind-theme.md), then use the new utility.
+- Suffix `!` on every consumer utility in the same category as a base or variant class (`text-sm` → `text-lg!`); leave the others unsuffixed.
+- `!` goes at the very end of the token, after any variants: `sm:p-0!`, `md:hover:bg-primary!`.
+- Component authors keep default classes minimal when `className` is public, and expose common choices as variants.
 
 ## Examples
 
-### Start with utility classes
+### `global.css`
 
-```tsx
-<button
-  type="button"
-  className="rounded-lg bg-primary px-4 py-2 font-semibold text-primary-foreground"
->
-  Click me
-</button>
+```css
+@import "tailwindcss";
+@import "./src/theme.css";
 ```
 
-### Use variants with `cva`
+### `src/theme.css`
 
-```tsx
-import { cva } from "class-variance-authority";
+```css
+@custom-variant dark (&:is(.dark *));
 
-const pill = cva("rounded-full px-3 py-1", {
-  variants: {
-    tone: {
-      neutral: "bg-muted text-muted-foreground",
-      success: "bg-green-100 text-green-800 dark:bg-green-950 dark:text-green-200",
-    },
-  },
-  defaultVariants: { tone: "neutral" },
-});
-```
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/Inter.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
 
-### Merge classes with `cx`
+:root {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.15 0 0);
+  --primary: oklch(0.55 0.22 263);
+}
 
-```tsx
-import type { ComponentProps } from "react";
-import { cx } from "class-variance-authority";
+.dark {
+  --background: oklch(0.15 0 0);
+  --foreground: oklch(0.98 0 0);
+  --primary: oklch(0.62 0.19 260);
+}
 
-export function Card({
-  className,
-  ...props
-}: ComponentProps<"div">) {
-  return (
-    <div
-      className={cx("rounded-xl border border-border bg-card p-4 text-card-foreground", className)}
-      {...props}
-    />
-  );
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --font-body: "Inter", sans-serif;
 }
 ```
 
-## Related
+### Override
 
-- [setting-up-theming.md](./setting-up-theming.md)
-- [setting-up-tailwind-theme.md](./setting-up-tailwind-theme.md)
-- [overriding-classname.md](./overriding-classname.md)
-- [creating-ui-component.md](./creating-ui-component.md)
+```tsx
+<Label className="text-lg! text-foreground">Name</Label>
+```
+
+`text-lg` conflicts with the `Label`'s own text size; `text-foreground` does not.
+
+## References
+
+- [Tailwind CSS — Theme variables](https://tailwindcss.com/docs/theme)
+- [Tailwind CSS — Dark mode](https://tailwindcss.com/docs/dark-mode)
+- [MDN — @font-face](https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face)

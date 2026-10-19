@@ -2,7 +2,7 @@
 
 ## Overview
 
-Apply Tailwind utilities through `className` with NativeWind. Prefer design tokens; extend the theme when a value is shared. Follow the team style guide and reuse `src/ui/` primitives before inventing local patterns.
+Design tokens in the Tailwind theme, classes that keep the design's values, `cva` variants, and `className` overrides with NativeWind.
 
 ## Prerequisites
 
@@ -10,74 +10,87 @@ Apply Tailwind utilities through `className` with NativeWind. Prefer design toke
 
 ## Guidelines
 
-### Structure
+### Tokens
 
-- Keep `tailwind.config.js` and `global.css` at the project root.
-- Add shared tokens in `src/theme.css` and `theme.extend`.
-- Import only `global.css` from `App.tsx`; import `src/theme.css` from `global.css`.
-- Extend `tailwind.config.js`; keep an existing config and add tokens instead of replacing the file.
+- The supplied design's tokens are the only theme source; keep their names and values. With no design, the agent defines the tokens the app needs.
+- Token values are CSS variables in `src/theme.css`: `:root` for light, `.dark:root` for dark only when the tokens define dark values.
+- `global.css` imports `src/theme.css` before the Tailwind layers; `App.tsx` imports only `global.css`.
+- `tailwind.config.js` maps each token to its variable under `theme.extend`, in the token's color format; merge into an existing config.
+- The navigation theme repeats the color values in `src/theme.ts` per [managing-platform-fixes.md](./managing-platform-fixes.md); change both together.
 
-### Styling rules
+### Values
 
-- Prefer `className` over inline `style` or `StyleSheet.create`.
-- Use `cva` for variant-heavy components; use **`cx`** to merge base classes, variant output, and consumer `className`.
-- Prefer shared tokens over arbitrary values; extend the theme when a value repeats.
-- Use mobile-first responsive utilities (`sm:`, `md:`, `lg:`, `xl:`) when NativeWind supports them.
-- Use `gap` on parents instead of margin chains on children.
-- Use `@media ios { }` and `@media android { }` in `global.css` for platform-specific CSS.
-- Prefer semantic token names (intent) over literal shade names when the project defines them.
-- Keep exceptions (platform quirks, third-party, one experimental screen) local; promote repeated values into tokens.
+- A design value used more than once becomes a token; a one-off uses an arbitrary-value class (`p-[15px]`).
+- Values are never rounded to the Tailwind scale.
 
-### Spacing and sizing (4px tolerance)
+### Classes
 
-Tailwind’s default scale is **4px-based** (`1` = 4px). Round specs within a few pixels to the nearest step.
-
-| Spec (example) | Prefer | Avoid |
-| --- | --- | --- |
-| 15px padding | `p-4` (16px) | `p-[15px]` |
-| 22px gap | `gap-5` (20px) or `gap-6` (24px) | `gap-[22px]` |
-| 13px font size | `text-sm` (14px) | `text-[13px]` |
-
-Use arbitrary bracket utilities only when the value is truly one-off and cannot use the scale.
-
-### Colors
-
-| Prefer | Avoid |
-| --- | --- |
-| Semantic utilities (`bg-background`, `text-foreground`, `bg-primary`) | Bracket hex/RGB (`bg-[#1a1a1a]`, `text-[rgb(...)]`) |
-| Named palette steps (`bg-neutral-100`, `text-success-700`) | Inline `style` colors when a class exists |
-| Add a token to `theme.extend` / `src/theme.css`, then use it | Shipping one-off bracket colors from design |
+- Style with `className`; inline `style` only for values computed at runtime (animation, measured layout).
+- `cva` for components with variants; `cx` from `class-variance-authority` merges base classes, variant output, and the consumer's `className`, consumer last.
+- Platform-specific values use `ios:` / `android:` variants, or `@media ios {}` / `@media android {}` in `global.css`.
 
 ### Overriding `className`
 
-When consumer utilities overlap shared component classes, prefix conflicting tokens with `!` (for example `!text-lg`, `sm:!p-0`). See [overriding-classname.md](./overriding-classname.md).
+`cx` concatenates without deduplicating, so a consumer utility that conflicts with a component's own class takes Tailwind's `!`:
+
+- Prefix `!` on every consumer utility in the same category as a base or variant class (`text-sm` → `!text-lg`); leave the others unprefixed.
+- `!` goes after variants and before the utility: `sm:!p-0`, `md:hover:!bg-primary`.
+- Component authors keep default classes minimal when `className` is public, and expose common choices as variants.
 
 ## Examples
 
-```tsx
-<Pressable className="rounded-lg bg-blue-600 px-4 py-2">
-  <Text className="font-semibold text-white">Click me</Text>
-</Pressable>
+### `src/theme.css`
+
+```css
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 4%;
+    --primary: 221 83% 53%;
+  }
+
+  .dark:root {
+    --background: 0 0% 4%;
+    --foreground: 0 0% 98%;
+    --primary: 217 91% 60%;
+  }
+}
 ```
 
-```tsx
-import { cva, cx } from "class-variance-authority";
+### `global.css`
 
-const pill = cva("rounded-full px-3 py-1", {
-  variants: {
-    tone: {
-      neutral: "bg-neutral-100 text-neutral-700",
-      success: "bg-success-50 text-success-700",
+```css
+@import "./src/theme.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+
+### `tailwind.config.js`
+
+```js
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  darkMode: "class",
+  content: ["./App.tsx", "./src/**/*.{ts,tsx}"],
+  presets: [require("nativewind/preset")],
+  theme: {
+    extend: {
+      colors: {
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        primary: "hsl(var(--primary))",
+      },
     },
   },
-  defaultVariants: { tone: "neutral" },
-});
-
-<View className={cx("rounded-md p-4", isActive && "bg-primary", className)} />;
+};
 ```
 
-## Related
+### Override
 
-- [overriding-classname.md](./overriding-classname.md)
-- [setting-up-theming.md](./setting-up-theming.md)
-- [setting-up-tailwind-theme.md](./setting-up-tailwind-theme.md)
+```tsx
+<Label className="!text-lg text-foreground">Name</Label>
+```
+
+`text-lg` conflicts with the `Label`'s own text size; `text-foreground` does not.

@@ -2,163 +2,122 @@
 
 ## Overview
 
-Create and use **AsyncView**, **AsyncScrollView**, and **AsyncFlatList** — server-backed UI wrappers sharing one state machine that differ only in scroll refresh and list pagination. Keep all wrappers under `src/ui/Async/` and export from `src/ui/Async/index.tsx` so screens import `@/ui/Async`.
+Build the async-state components once in `src/ui/Async/`; every server-backed surface renders through them. This guide owns the states and their behavior; the design owns how each state looks.
 
 ## Prerequisites
 
-- [creating-component.md](./creating-component.md)
-- [managing-state.md](./managing-state.md) — TanStack Query hooks
-- [managing-api-error.md](./managing-api-error.md) — error copy
+- [managing-data.md](./managing-data.md) — query hooks, `ApiError`
 
 ## Guidelines
 
-### Folder placement
+### States
+
+A surface passes all of its queries; the states combine them.
+
+| State | When | Shows |
+| --- | --- | --- |
+| Loading | A query has no data yet and none failed | Loading presentation in place of content |
+| Error | A query failed with no data | Error presentation; retry refetches the failed queries |
+| Empty | Every query has data and the surface marks it empty | Empty presentation; a surface may pass its own |
+| Success | Every query has data | Content |
+| Refreshing | A query refetches while it has data | Content stays, with a refresh indicator; a failed refresh keeps the content |
+
+With no design for a state, the agent builds its presentation once in `src/ui/Async/`.
+
+### Layout
 
 ```text
 src/ui/Async/
-  ErrorMessage.tsx    — internal error copy helper
-  AsyncView.tsx
-  AsyncScrollView.tsx
-  AsyncFlatList.tsx
-  index.tsx           — re-exports AsyncView, AsyncScrollView, AsyncFlatList
+  asyncState.ts       — derives the state from queries
+  AsyncLoading.tsx    — loading presentation
+  AsyncError.tsx      — error presentation and retry
+  AsyncEmpty.tsx      — default empty presentation
+  AsyncView.tsx       — non-scrolling content
+  AsyncScrollView.tsx — scrolling content with pull-to-refresh
+  AsyncFlatList.tsx   — virtualized lists, infinite loading
+  index.tsx           — exports the three wrappers
 ```
 
-- One wrapper per file. Keep small helpers (e.g. `ErrorMessage`) alongside wrappers.
-- Export only from the barrel — features import `@/ui/Async`, not individual files.
-
-### UI states
-
-| State | Condition | Presentation |
-| --- | --- | --- |
-| **Loading** | First request in flight, no cached data | Full-area loader (or custom `loader`); no main content |
-| **Error** | First request failed | Full-area message + **Try again** → `reload` |
-| **Data** | Successful load (may be stale during refetch) | Render `children` or list items |
-| **Reloading** | Pull-to-refresh in flight | `RefreshControl`; keep existing data visible |
-| **Loading more** | Next page fetching (AsyncFlatList only) | Footer spinner; keep existing items visible |
-
-Do **not** replace the data UI with the full error state on a failed refresh — show the refresh indicator only.
-
-### Shared behavior
-
-1. While `isLoading`, show only the loader.
-2. On `error`, show error UI with **Try again** wired to `reload`.
-3. When data is available, render `children` or list content.
-4. Forward remaining props to the underlying `View`, `ScrollView`, or `FlatList`.
-
-### Props
-
-| Prop | Role |
-| --- | --- |
-| `isLoading` | True during initial load (no data yet) |
-| `error` | Truthy when initial load failed; pass `query.error` (`ApiError` — use `error.message`) |
-| `reload` | Retry after error; also `RefreshControl.onRefresh` on scroll/list variants |
-| `isReloading` | Pull-to-refresh in flight (AsyncScrollView / AsyncFlatList) |
-| `loader` | Optional custom node for initial loading |
-| `isLoadingMore` | (AsyncFlatList only) Next page in flight |
-| `loadMore` | (AsyncFlatList only) Called from `onEndReached`; guard in the hook with `hasNextPage` + in-flight flags |
+The wrappers share `asyncState` and the presentations; they differ only in refresh and pagination.
 
 ### TanStack Query mapping
 
-| Prop | Source |
+| Input | Source |
 | --- | --- |
-| `isLoading` | `query.isLoading` |
-| `isReloading` | `query.isRefetching` |
-| `isLoadingMore` | `query.isFetchingNextPage` (infinite query only) |
+| No data yet | `query.isPending` |
+| Failed | `query.isError` with `query.data === undefined` |
+| Refreshing | `query.isRefetching` |
+| Retry and pull-to-refresh | `query.refetch()` |
+| Loading more | `query.isFetchingNextPage` |
 
-### Wrapper selection
+### `AsyncFlatList`
 
-| Wrapper | Use when |
-| --- | --- |
-| **AsyncView** | Non-scroll content (forms, dashboards). No pull-to-refresh; recovery via Try again only. |
-| **AsyncScrollView** | Scrollable content with pull-to-refresh (`RefreshControl` + `isReloading` / `reload`). |
-| **AsyncFlatList** | Long lists with virtualization; optional infinite scroll via `loadMore` + `isLoadingMore` footer. |
-
-### AsyncFlatList contract
-
-- Default `onEndReachedThreshold` to `0.2`.
-- On `onEndReached`, run the caller’s `onEndReached` (if provided) **before** `loadMore`.
-- Own `ListFooterComponent`: when `isLoadingMore`, show a footer spinner; when the caller also passes `ListFooterComponent`, render both (caller footer + loading footer).
-
-### Naming
-
-- Wrapper exports: `AsyncView`, `AsyncScrollView`, `AsyncFlatList`.
-- Internal helper: `ErrorMessage` (not exported from public barrel unless needed).
-- Do **not** fork the state machine per screen — compose wrappers, share the machine.
+- `isFetchingNextPage` shows a footer indicator; items stay.
+- `onEndReached` runs the caller's handler first, then `fetchNextPage()` when `hasNextPage` is true and no page is in flight.
+- `onEndReachedThreshold` defaults to `0.2`.
+- A caller's `ListFooterComponent` renders together with the loading footer.
 
 ## Examples
 
-### Feature screen usage
+### `asyncState.ts`
 
-```tsx
-import { AsyncView } from "@/ui/Async";
+```ts
+export interface QueryState {
+  data: unknown;
+  isPending: boolean;
+  isError: boolean;
+  isRefetching: boolean;
+  refetch: () => unknown;
+}
 
-const workshops = useWorkshops();
+export type AsyncState = "loading" | "error" | "empty" | "success";
 
-return (
-  <AsyncView
-    isLoading={workshops.isLoading}
-    error={workshops.isError ? workshops.error : undefined}
-    reload={() => void workshops.refetch()}
-  >
-    <WorkshopList data={workshops.data} />
-  </AsyncView>
-);
+export function asyncState(queries: QueryState[], isEmpty = false): AsyncState {
+  if (queries.some((query) => query.isError && query.data === undefined)) return "error";
+  if (queries.some((query) => query.isPending)) return "loading";
+  return isEmpty ? "empty" : "success";
+}
 ```
 
-### Infinite list usage
+### `AsyncView.tsx`
 
 ```tsx
-import { AsyncFlatList } from "@/ui/Async";
+import type { ReactNode } from "react";
+import { AsyncEmpty } from "./AsyncEmpty";
+import { AsyncError } from "./AsyncError";
+import { AsyncLoading } from "./AsyncLoading";
+import { asyncState, type QueryState } from "./asyncState";
 
-<AsyncFlatList
-  isLoading={query.isLoading}
-  isReloading={query.isRefetching}
-  isLoadingMore={query.isFetchingNextPage}
-  loadMore={() => void query.fetchNextPage()}
-  reload={() => void query.refetch()}
-  error={query.isError ? query.error : undefined}
-  data={items}
-  renderItem={renderItem}
-  keyExtractor={(item) => item.id}
-/>
-```
-
-### Prop signatures (stubs)
-
-```tsx
-// AsyncView
-interface AsyncViewProps extends ComponentProps<typeof View> {
-  isLoading: boolean;
-  error: unknown;
-  reload: () => void;
-  loader?: ReactNode;
+interface AsyncViewProps {
+  queries: QueryState[];
+  isEmpty?: boolean;
+  empty?: ReactNode;
   children: ReactNode;
 }
 
-// AsyncScrollView — adds isReloading
-interface AsyncScrollViewProps extends ComponentProps<typeof ScrollView> {
-  isLoading: boolean;
-  isReloading: boolean;
-  reload: () => void;
-  error: unknown;
-  loader?: ReactNode;
-  children: ReactNode;
-}
-
-// AsyncFlatList<T> — adds loadMore + isLoadingMore
-interface AsyncFlatListProps<T> extends Omit<ComponentProps<typeof FlatList<T>>, "ListFooterComponent" | "onEndReached" | "onEndReachedThreshold"> {
-  isLoading: boolean;
-  isReloading: boolean;
-  isLoadingMore: boolean;
-  loadMore: () => void;
-  reload: () => void;
-  error: unknown;
-  loader?: ReactNode;
+export function AsyncView({ queries, isEmpty, empty, children }: AsyncViewProps) {
+  switch (asyncState(queries, isEmpty)) {
+    case "loading":
+      return <AsyncLoading />;
+    case "error":
+      return <AsyncError queries={queries} />;
+    case "empty":
+      return empty ?? <AsyncEmpty />;
+    case "success":
+      return children;
+  }
 }
 ```
 
-## Related
+### Surface with two queries
 
-- [creating-component.md](./creating-component.md)
-- [managing-state.md](./managing-state.md)
-- [managing-api-error.md](./managing-api-error.md)
+```tsx
+const orders = useOrders();
+const profile = useProfile();
+
+<AsyncView queries={[orders, profile]} isEmpty={orders.data?.length === 0}>
+  {orders.data && profile.data ? (
+    <OrderList orders={orders.data} profile={profile.data} />
+  ) : null}
+</AsyncView>
+```

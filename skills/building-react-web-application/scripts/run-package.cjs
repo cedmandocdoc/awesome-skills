@@ -6,7 +6,7 @@
  *   node <path-to-skill>/scripts/run-package.cjs [options] -- <pkg> [args...]
  *
  * Example:
- *   node .../run-package.cjs -- shadcn@latest view button
+ *   node .../run-package.cjs -- create-vite@latest apps/web --template react-ts
  *
  * Options:
  *   --root <dir>              App package root (default: cwd); PM detection walks up

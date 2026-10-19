@@ -2,74 +2,91 @@
 
 ## Overview
 
-Organize the React Native app by responsibility. Keep routing, UI, features, API code, and state separate so each layer stays easy to change.
+Where code lives, which layer may import which, and how features and components are named. Rendering runs route → screen → feature component → UI primitive.
 
 ## Guidelines
 
-### Structure
+### Layers
 
-| Area | Purpose |
+| Area | Holds |
 | --- | --- |
-| `src/routes/` | Navigator setup, route types, registration, navigation component wiring |
-| `src/ui/` | Presentation-only primitives — see [creating-ui-component.md](./creating-ui-component.md#folder-layout) |
-| `src/features/navigation/` | Reusable navigation components (headers, tab icons, drawer) and navigation hooks |
-| `src/features/<feature-name>/` | Domain modules — screens and supporting UI in `components/` — see [creating-feature.md](./creating-feature.md#feature-folder-layout) |
-| `src/libs/` | Internal library modules — wrapped third-party logic or from-scratch utilities (imported via `@/libs/...`) |
-| `src/api/` | Framework-agnostic HTTP code — see [creating-api.md](./creating-api.md#structure) |
-| `src/theme.css` | Design tokens |
-| `src/theme.ts` | React Navigation theme objects |
-
-- Keep `App.tsx` at the project root; import app modules from `src/`.
-- Use kebab-case for feature folders.
-
-### Module internals
-
-Use the owning guide for folder-level detail; this table is the map only.
-
-| Area | Detail in |
-| --- | --- |
-| `src/features/<feature-name>/` | [creating-feature.md](./creating-feature.md#feature-folder-layout) |
-| `src/ui/` | [creating-ui-component.md](./creating-ui-component.md#folder-layout) |
-| `src/api/<backend-name>/` | [creating-api.md](./creating-api.md#structure) |
-| Feature `env.ts` | [managing-environment.md](./managing-environment.md) |
-| Feature hooks and stores | [managing-state.md](./managing-state.md) |
-
-### `src/libs/`
-
-- Treat each lib as an internal library: wrapped third-party APIs, adapters, or shared utilities.
-- Libs may depend on any npm package.
-- Libs must not import from other app folders (`src/api/`, `src/features/`, `src/routes/`, `src/ui/`); depend only on npm packages and other files under `src/libs/`.
-- Single file when small: `src/libs/ApiError.ts`. Folder with `index.ts` when it grows.
-- Import via `@/libs/<name>` regardless of shape.
+| `App.tsx` | Root providers and `Navigation` |
+| `src/routes/` | Navigators, route types, navigation component wiring — [creating-screen.md](./creating-screen.md) |
+| `src/features/<feature-name>/` | Domain modules: screens, feature components, hooks, types |
+| `src/features/navigation/` | Shared headers, tab bars, drawer content, navigation hooks — [creating-screen.md](./creating-screen.md) |
+| `src/ui/` | Presentation-only primitives — [creating-ui-component.md](./creating-ui-component.md) |
+| `src/api/<backend-name>/` | HTTP clients and request functions — [managing-data.md](./managing-data.md) |
+| `src/libs/` | Internal libraries: wrapped third-party APIs, adapters, shared utilities |
+| `global.css`, `src/theme.css`, `src/theme.ts` | Tokens and navigation theme — [managing-styling.md](./managing-styling.md) |
 
 ### Dependency flow
 
-`src/routes/` → features, `ui`, API hooks, stores
-`src/features/` → other features (via barrel), `ui`, `libs`, `api`
-`src/ui/` → presentation only; no features, API hooks, or stores
-`src/api/` → plain TypeScript HTTP helpers; React components call in from feature code
-`src/libs/` → isolated; `api`, `features`, and `ui` import from it
-Zustand stores → live inside feature hooks (`src/features/<name>/hooks/use<Feature>Store.ts`)
+Imports point one way:
+
+| Layer | May import |
+| --- | --- |
+| `src/routes/` | Other routes, features, `ui` |
+| `src/features/` | Other features through their barrel, `ui`, `api`, `libs` |
+| `src/ui/` | Other `ui` files, `libs`, npm packages |
+| `src/api/` | `libs`, npm packages; no React |
+| `src/libs/` | Other `libs`, npm packages |
+
+### Feature module
+
+```text
+src/features/<feature-name>/
+├── index.ts              # public barrel
+├── components/           # screens and feature components, one per file
+├── hooks/                # query hooks and feature state, one per file
+├── types.ts              # → types/ when > ~200 lines
+├── utils.ts              # → utils/ when > ~200 lines
+├── schemas.ts            # → schemas/ when > ~200 lines
+├── constants.ts          # → constants/ when > ~200 lines
+└── env.ts                # when the feature reads env — managing-environment.md
+```
+
+- Feature folders are kebab-case.
+- The barrel exports only what other modules need: screens, components, hooks, helpers, types, constants.
+- A type file with several exports from day one starts as a folder, one export per file.
+
+| Grouping | When |
+| --- | --- |
+| Isolated feature | Callers use it as one package (one screen + hooks + types) |
+| Grouped feature | Exports are inseparable in practice (screen + toolbar + search helper) |
+| Per-screen module | Logic is owned by one screen flow |
+
+Split a feature when its folder is hard to reason about.
+
+### Components
+
+- Functional components with named exports; one component per file; the file name matches the export.
+- Compound parts share a root prefix (`Button`, `ButtonText`, `ButtonIcon`) instead of `typeof children` switches.
+- Props or `cva` variants encode state, not names (`Button` with `tone`, not `PrimaryButton`).
+- Suffixes name the role (`Card`, `Row`, `Form`, `Dialog`); use one list-item suffix (`Item` or `Row`) across the app.
+
+| Scope | Naming |
+| --- | --- |
+| All | PascalCase singular nouns (`UserCard`) |
+| `src/ui/` | Generic: `Button`, `TextInput`, `Modal` |
+| Feature components | `<Feature><Entity><Type>`: `AuthLoginForm`, `CartItemRow`, `OrderSummaryCard` |
+| Screens | `<Feature>Screen`: `WorkshopListScreen`; shared wrappers `<Name>Layout` |
+
+### Recategorizing
+
+| Signal | Move to |
+| --- | --- |
+| Presentation-only and used across features | `src/ui/` |
+| Business logic inside `src/ui/` | Feature `hooks/`; the primitive keeps presentation |
+| Navigation UI reused across screens | `src/features/navigation/` |
+| Domain behavior used across screens | A new feature module |
+
+Update the barrel exports when moving code.
 
 ### Imports
 
-- Use `@/*` for cross-module imports; relative imports inside the same module.
-- Import features through `index.ts`.
-- Import order: `import type` → `react` → `react-native` → external packages → internal `@/...`
-
-## Setup
-
-### Configure the path alias
-
-```json
-{
-  "compilerOptions": {
-    "paths": {
-      "@/*": ["./src/*"]
-    }
-  }
-}
-```
+- `@/*` (alias of `./src/*`) across modules; relative imports inside one module.
+- A lib is `src/libs/<name>.ts` while small and `src/libs/<name>/index.ts` once it grows; import `@/libs/<name>` either way.
+- Import features through their `index.ts`.
 
 ## Examples
 
@@ -79,12 +96,4 @@ Zustand stores → live inside feature hooks (`src/features/<name>/hooks/use<Fea
 export { WorkshopListScreen } from "./components/WorkshopListScreen";
 export { useWorkshops } from "./hooks/useWorkshops";
 export type { Workshop } from "./types";
-```
-
-### Cross-module imports
-
-```ts
-import { WorkshopListScreen } from "@/features/workshop-list";
-import { AppHeader } from "@/features/navigation";
-import { Button } from "@/ui/Button";
 ```

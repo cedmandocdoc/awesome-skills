@@ -6,8 +6,8 @@
  *   node <path-to-skill>/scripts/run-package.cjs [options] -- <pkg> [args...]
  *
  * Examples:
- *   node .../run-package.cjs -- shadcn@latest view https://example.com/button.json
- *   node .../run-package.cjs -- expo install tailwindcss-animate lucide-react-native
+ *   node .../run-package.cjs -- create-expo-app@latest apps/mobile --template blank-typescript
+ *   node .../run-package.cjs -- expo install react-native-keyboard-controller expo-font
  *
  * Options:
  *   --root <dir>              App package root (default: cwd); PM detection walks up

@@ -52,34 +52,20 @@ node <path-to-skill>/scripts/run-package.cjs [options] -- <pkg> [args...]
 
 Yarn Berry (nearest `.yarnrc.yml` walking up from `--root`) uses `yarn dlx`; Yarn 1 uses `npx` for dlx-style runs. `install-packages.cjs` still uses `yarn add`.
 
-### Registry components
-
-[`add-registry-component.cjs`](../scripts/add-registry-component.cjs) uses the same detection and command helpers for registry dependency installs and `shadcn view`.
-
 ### Agent workflow
 
 1. Resolve the Expo app package root.
 2. Run `install-packages.cjs` with no package args for a lockfile install.
 3. Run `run-package.cjs -- expo install …` for Expo-pinned native packages (`--root` when cwd is not the app).
 4. Run `install-packages.cjs` for plain JS packages (`--dev` when the reference says devDependency).
-5. Run `run-package.cjs -- …` for one-off CLIs (`shadcn view`, create tools).
+5. Run `run-package.cjs -- …` for one-off CLIs.
 6. Skip hand-written `npm install` / `npx expo install` unless the scripts are unavailable.
 
 ## Examples
 
 ```bash
 node ../scripts/install-packages.cjs --root apps/mobile
-node ../scripts/install-packages.cjs axios
+node ../scripts/install-packages.cjs @tanstack/react-query @tanstack/react-form zod
 node ../scripts/install-packages.cjs --dev eslint prettier eslint-config-expo
-node ../scripts/install-packages.cjs @date-fns/tz
-node ../scripts/run-package.cjs -- shadcn@latest view "https://reactnativereusables.com/r/nativewind/button.json"
-node ../scripts/run-package.cjs -- expo install tailwindcss-animate
-node ../scripts/run-package.cjs -- expo install lucide-react-native @gorhom/bottom-sheet
+node ../scripts/run-package.cjs -- expo install react-native-keyboard-controller expo-font
 ```
-
-## Related
-
-- [setting-up-theming.md](./setting-up-theming.md)
-- [setting-up-registry-components.md](./setting-up-registry-components.md)
-- [managing-linting.md](./managing-linting.md)
-- [add-registry-component.cjs](../scripts/add-registry-component.cjs)

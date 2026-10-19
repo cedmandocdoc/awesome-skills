@@ -2,112 +2,99 @@
 
 ## Overview
 
-Organizes the Vite + React SPA by responsibility — routing, UI, features, API, and state each live in a dedicated area.
+Where code lives, which layer may import which, and how features and components are named. Rendering runs route → page → feature component → UI primitive.
 
 ## Guidelines
 
-### Structure
+### Layers
 
-- Keep app code in `src/`.
-- Keep Vite entry (`main.tsx`) at the project root or under `src/` per the Vite template; import **one** root stylesheet.
-- Use kebab-case for feature folders.
-
-| Area                           | Purpose                                                                         |
-| ------------------------------ | ------------------------------------------------------------------------------- |
-| `global.css`                   | Project root: Tailwind + shadcn Tailwind imports; `@import` of `theme.css`      |
-| `src/theme.css`                | Design tokens and `@theme` / `:root` / `.dark` — see [setting-up-theming.md](./setting-up-theming.md) |
-| `src/routes/`                  | TanStack Router file-based routes — flat filenames map to URLs (see [creating-route-component.md](./creating-route-component.md)) |
-| `src/routeTree.gen.ts`         | Generated route tree (from `src/routes/`; edit route modules)                   |
-| `src/ui/`                      | Presentation-only primitives — see [creating-ui-component.md](./creating-ui-component.md#folder-layout) |
-| `src/features/navigation/`     | Reusable navigation components (headers, shells, sidebars) and navigation hooks |
-| `src/features/<feature-name>/` | Domain modules — pages, screens, and supporting UI in `components/` — see [creating-feature.md](./creating-feature.md#feature-folder-layout) |
-| `src/libs/`                    | Internal library modules — wrapped third-party logic or from-scratch utilities (imported via `@/libs/...`) |
-| `src/api/`                     | Framework-agnostic HTTP code — see [creating-api.md](./creating-api.md#structure) |
-
-### Module internals
-
-| Area | Detail in |
+| Area | Holds |
 | --- | --- |
-| `src/features/<feature-name>/` | [creating-feature.md](./creating-feature.md#feature-folder-layout) |
-| `src/ui/` | [creating-ui-component.md](./creating-ui-component.md#folder-layout) |
-| `src/api/<backend-name>/` | [creating-api.md](./creating-api.md#structure) |
-| Feature `env.ts` | [managing-environment.md](./managing-environment.md) |
-| Feature hooks and stores | [managing-state.md](./managing-state.md) |
-
-### `src/libs/`
-
-- Each lib wraps third-party APIs, adapters, or from-scratch utilities shared across the app.
-- Libs may depend on any npm package.
-- Import only from npm packages and other files under `src/libs/` — not from `src/api/`, `src/features/`, `src/routes/`, or `src/ui/`.
-- Prefer a single file when the module is small: `src/libs/ApiError.ts`.
-- Use a folder with `index.ts` when the module grows: `src/libs/date-utils/index.ts`.
-- Import from app code via `@/libs/<name>`.
-
-### Registry and `src/ui`
-
-Add primitives with **[`add-registry-component.cjs`](../scripts/add-registry-component.cjs)**. The script writes under `src/ui/`, rewrites imports, and normalizes `cn` → `cx` from `class-variance-authority`. See [creating-ui-component.md](./creating-ui-component.md) for layout and [setting-up-theming.md](./setting-up-theming.md) for theming.
-
-### Root providers
-
-Wire cross-cutting providers once, above the router:
-
-1. **`QueryClientProvider`** (TanStack Query) — see [managing-state.md](./managing-state.md).
-2. **`RouterProvider`** — from TanStack Router, using the generated route tree (see [creating-route-component.md](./creating-route-component.md)).
-3. **Theme / document class** — for class-based dark mode (`.dark` on `<html>`), set it from a root component or layout route effect; keep tokens in `src/theme.css` per [setting-up-theming.md](./setting-up-theming.md).
-
-Typical shape: `main.tsx` imports `../global.css`, creates `queryClient`, renders `QueryClientProvider` → `RouterProvider`.
+| `src/main.tsx` | Root providers and `RouterProvider` |
+| `src/routes/` | File-based routes and layout routes — [creating-page.md](./creating-page.md) |
+| `src/routeTree.gen.ts` | Generated route tree; edit route files instead |
+| `src/features/<feature-name>/` | Domain modules: pages, feature components, hooks, types |
+| `src/features/navigation/` | Shells, sidebars, headers, tab bars, navigation hooks — [creating-page.md](./creating-page.md) |
+| `src/ui/` | Presentation-only primitives — [creating-ui-component.md](./creating-ui-component.md) |
+| `src/api/<backend-name>/` | HTTP clients and request functions — [managing-data.md](./managing-data.md) |
+| `src/libs/` | Internal libraries: wrapped third-party APIs, adapters, shared utilities |
+| `global.css`, `src/theme.css` | CSS entry and tokens — [managing-styling.md](./managing-styling.md) |
 
 ### Dependency flow
 
-- Route modules compose features, `ui`, API hooks, and stores.
-- Features import other features through their barrel file.
-- Keep `src/ui/` free of feature, API, and store imports.
-- Keep route files focused on routing concerns; delegate domain logic to features.
-- Keep `src/api/` independent from React and Zustand.
-- Keep `src/libs/` isolated from other app folders; `src/api/`, `src/features/`, and `src/ui/` import shared library code via `@/libs/...`.
-- Keep Zustand stores inside feature hooks (`src/features/<feature-name>/hooks/use<Feature>Store.ts`), even when other features consume them.
+Imports point one way:
+
+| Layer | May import |
+| --- | --- |
+| `src/routes/` | Features, `ui` |
+| `src/features/` | Other features through their barrel, `ui`, `api`, `libs` |
+| `src/ui/` | Other `ui` files, `libs`, npm packages |
+| `src/api/` | `libs`, npm packages; no React |
+| `src/libs/` | Other `libs`, npm packages |
+
+### Feature module
+
+```text
+src/features/<feature-name>/
+├── index.ts              # public barrel
+├── components/           # pages and feature components, one per file
+├── hooks/                # query hooks and feature state, one per file
+├── types.ts              # → types/ when > ~200 lines
+├── utils.ts              # → utils/ when > ~200 lines
+├── schemas.ts            # → schemas/ when > ~200 lines
+├── constants.ts          # → constants/ when > ~200 lines
+└── env.ts                # when the feature reads env — managing-environment.md
+```
+
+- Feature folders are kebab-case.
+- The barrel exports only what other modules need: pages, components, hooks, helpers, types, constants.
+- A type file with several exports from day one starts as a folder, one export per file.
+
+| Grouping | When |
+| --- | --- |
+| Isolated feature | Callers use it as one package (one page + hooks + types) |
+| Grouped feature | Exports are inseparable in practice (page + toolbar + search helper) |
+| Per-route module | Logic is owned by one route flow |
+
+Split a feature when its folder is hard to reason about.
+
+### Components
+
+- Functional components with named exports; one component per file; the file name matches the export.
+- Compound parts share a root prefix (`Button`, `ButtonText`, `ButtonIcon`) instead of `typeof children` switches.
+- Props or `cva` variants encode state, not names (`Button` with `tone`, not `PrimaryButton`).
+- Suffixes name the role (`Card`, `Row`, `Form`, `Dialog`); use one list-item suffix (`Item` or `Row`) across the app.
+
+| Scope | Naming |
+| --- | --- |
+| All | PascalCase singular nouns (`UserCard`) |
+| `src/ui/` | Generic: `Button`, `TextInput`, `Dialog` |
+| Feature components | `<Feature><Entity><Type>`: `AuthLoginForm`, `CartItemRow`, `OrderSummaryCard` |
+| Pages | `<Feature>Page`: `WorkshopListPage`; shared wrappers `<Name>Layout` |
+
+### Recategorizing
+
+| Signal | Move to |
+| --- | --- |
+| Presentation-only and used across features | `src/ui/` |
+| Business logic inside `src/ui/` | Feature `hooks/`; the primitive keeps presentation |
+| Navigation UI reused across routes | `src/features/navigation/` |
+| Domain behavior used across routes | A new feature module |
+
+Update the barrel exports when moving code.
 
 ### Imports
 
-- Use `@/*` for cross-module imports (maps to `./src/*`).
-- Use relative imports inside the same module.
-- Import features through `index.ts`.
-- Import order:
-  1. `import type`
-  2. `react`
-  3. `react-dom` (when needed)
-  4. external packages
-  5. internal `@/...`
-
-## Setup
-
-### Configure the path alias
-
-Add `@/*` → `./src/*` in `tsconfig.json` and keep `vite.config.ts` `resolve.alias` aligned.
-
-```json
-{
-  "compilerOptions": {
-    "paths": {
-      "@/*": ["./src/*"]
-    }
-  }
-}
-```
-
-### Global CSS entry
-
-Import the root stylesheet from `main.tsx`:
-
-```tsx
-import "../global.css";
-```
+- `@/*` (alias of `./src/*`) across modules; relative imports inside one module.
+- A lib is `src/libs/<name>.ts` while small and `src/libs/<name>/index.ts` once it grows; import `@/libs/<name>` either way.
+- Import features through their `index.ts`.
 
 ## Examples
 
-### Import from module boundaries
+### Feature barrel
 
 ```ts
-import { WorkshopListPage } from "@/features/workshop-list";
-import { Button } from "@/ui/Button";
+export { WorkshopListPage } from "./components/WorkshopListPage";
+export { useWorkshops } from "./hooks/useWorkshops";
+export type { Workshop } from "./types";
 ```

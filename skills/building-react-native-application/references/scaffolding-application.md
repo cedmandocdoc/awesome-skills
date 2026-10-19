@@ -2,7 +2,7 @@
 
 ## Overview
 
-**Execution mode.** Creates a minimal Expo `blank-typescript` app at a resolved target path. Installs template deps via [managing-package-installs.md](./managing-package-installs.md). Run stack setup references only when the user asks.
+**Execution mode.** Creates an Expo app at a resolved target path and bootstraps the fixed stack; on an existing app, runs only the steps whose result is missing. Done when typecheck and lint pass.
 
 ## Prerequisites
 
@@ -16,7 +16,7 @@
 | --- | --- |
 | Explicit path (`apps/mobile`, …) | That path |
 | Scaffold here / `.` | `.` |
-| Workspace detected, path not stated | Ask — do not guess `apps/<name>` |
+| Workspace detected, path not stated | Ask |
 
 ### 2. Resolve create cwd
 
@@ -40,18 +40,57 @@ node <path-to-skill>/scripts/install-packages.cjs --root <resolved-app-path>
 
 `<resolved-app-path>` is `target_path` resolved against create cwd. No package args (lockfile install).
 
-### 6. Confirm to the user
+### 6. Bootstrap the stack
 
-Report `target_path`, template `blank-typescript`, that template deps are installed, and the instruction files changed.
+| Piece | How |
+| --- | --- |
+| NativeWind | [setting-up-nativewind.md](./setting-up-nativewind.md) |
+| React Navigation | [React Navigation — Getting started](https://reactnavigation.org/docs/getting-started.md); root navigator per [creating-screen.md](./creating-screen.md) |
+| TanStack Query | Install `@tanstack/react-query`; `QueryClientProvider` at the root (**Examples**) |
+| TypeScript | `strict`, `moduleResolution: "bundler"`, and the `@/*` alias (**Examples**); folders per [managing-project-structure.md](./managing-project-structure.md) |
+| Typed env | [managing-environment.md](./managing-environment.md), when the app reads env |
+| Lint | [managing-linting.md](./managing-linting.md) |
 
-## Related
+### 7. Verify
 
-- [managing-project-structure.md](./managing-project-structure.md)
-- [managing-linting.md](./managing-linting.md)
-- [managing-environment.md](./managing-environment.md)
-- [setting-up-theming.md](./setting-up-theming.md)
-- [setting-up-registry-components.md](./setting-up-registry-components.md)
-- [creating-route-component.md](./creating-route-component.md)
+Run `run-package.cjs -- tsc --noEmit` and `run-package.cjs -- eslint .` at the app root; fix every error.
+
+### 8. Confirm to the user
+
+Report `target_path`, the stack pieces installed, the verify result, and the instruction files changed.
+
+## Examples
+
+### `App.tsx`
+
+```tsx
+import "./global.css";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Navigation } from "@/routes";
+
+const queryClient = new QueryClient();
+
+export default function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Navigation />
+    </QueryClientProvider>
+  );
+}
+```
+
+### `tsconfig.json`
+
+```json
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "moduleResolution": "bundler",
+    "paths": { "@/*": ["./src/*"] }
+  }
+}
+```
 
 ## References
 
