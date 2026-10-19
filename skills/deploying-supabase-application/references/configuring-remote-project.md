@@ -32,7 +32,7 @@ pass = "env(SMTP_PASS)"
 | Scope | `config push` writes every remotely managed section the block declares (API, database settings, Auth, Storage) and leaves undeclared settings as they are |
 | Secrets | `env(NAME)` for SMTP passwords and OAuth provider secrets; the value is a GitHub secret of the same name |
 | Redirect URLs | Keep every current URL; add the missing `https://<host>/**` and `<scheme>://**` entries |
-| Shared project | A non-local `site_url` that differs from the TRD belongs to another app → keep it unless the user says otherwise |
+| Shared project | A non-local `site_url` outside the Auth origins belongs to another app → keep it unless the user says otherwise |
 
 ### Edge Function secrets
 
@@ -47,8 +47,8 @@ One entry per `Deno.env.get("…")` name under `functions/`, minus `SUPABASE_*` 
 
 | Item | Source |
 | --- | --- |
-| Project | **Setup** → Production project; new → name, organization (TRD or `supabase orgs list`), and region from the user |
-| Auth settings | Per **Auth config**: the TRD's Auth origins, the production mail provider; local values (Mailpit SMTP, `127.0.0.1` URLs) never ship |
+| Project | **Setup** → Production project; new → name, organization (`supabase orgs list`), and region from the user |
+| Auth settings | Per **Auth config**: the Auth origins from discovery, the production mail provider; local values (Mailpit SMTP, `127.0.0.1` URLs) never ship |
 | Function secret names | Per **Edge Function secrets** |
 
 ### 2. Plan and confirm
@@ -68,7 +68,7 @@ Run [configuring-secrets.md](./configuring-secrets.md).
 ### 5. Confirm to the user
 
 - Applied changes, per the plan table; the files to commit and merge through a PR
-- The secrets still to set, from step 4
+- The `DEPLOYMENT.md` report per [deployment-contract.md](./deployment-contract.md) → **Deployment doc**
 - Public values for the apps that read this project: the URL and publishable key
 - Items left for the user, such as a kept `site_url`
 

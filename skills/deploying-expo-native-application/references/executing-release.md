@@ -23,12 +23,8 @@ Workflow per [configuring-github-actions.md](./configuring-github-actions.md) �
 
 Status: `gh run list --workflow deploy-<app>.yml`, then `eas build:list --limit 5 --json --non-interactive`; a build's page lists its submissions. A build takes 10–30 minutes and a submission a few more; check status instead of waiting in the session.
 
-### 2. Update the doc
-
-Set the `release` rows in `DEPLOYMENT.md` per [deployment-contract.md](./deployment-contract.md) → **Deployment doc**.
-
-### 3. Confirm to the user
+### 2. Confirm to the user
 
 - The run started, and the build or submission with its version and ID once queued
 - Where it lands: TestFlight, the Play track, or the App Store listing
-- The `user` rows still `todo` for this release, with the Done when of each
+- The `DEPLOYMENT.md` → **Each release** steps left for that platform

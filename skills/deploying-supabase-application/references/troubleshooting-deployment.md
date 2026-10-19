@@ -2,11 +2,11 @@
 
 ## Overview
 
-**Read-only.** Diagnose local validation failures, deploy workflow failures, and production misbehavior.
+**Read-only.** Diagnose Edge Function check failures, deploy workflow failures, and production misbehavior.
 
 ## Guidelines
 
-### Local validation fails
+### Edge Function check fails
 
 | Symptom | Likely cause | Action |
 | --- | --- | --- |
@@ -45,7 +45,6 @@
 ### Debugging deploys
 
 - `gh run list --workflow deploy-supabase.yml`, then `gh run view <run-id> --log-failed`
-- Re-run: `gh run rerun <run-id>` after fixing a secret, or push a fix to the production branch
 - Remote state: `supabase functions list`, `supabase secrets list` (names and digests), `supabase migration list --linked`
 
 ## References

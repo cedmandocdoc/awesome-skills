@@ -5,7 +5,7 @@ generated_by: deploying-expo-native-application
 
 # {{APP_NAME}} deployment
 
-## App
+## Target
 
 | Field | Value |
 | --- | --- |
@@ -17,31 +17,40 @@ generated_by: deploying-expo-native-application
 | Production branch | `{{PRODUCTION_BRANCH}}` |
 | Workflow | `.github/workflows/deploy-{{APP}}.yml` |
 
-## Release flow
+## Automatic
 
-1. A push to `{{PRODUCTION_BRANCH}}` that touches the app builds the `production` profile and submits it to TestFlight and the Play `internal` track.
-2. The same run pushes the App Store listing when `store.config.json` changed.
-3. Android goes to the Play `production` track through the Release recipe (`-f action=promote-android`); iOS goes to review in App Store Connect.
+A push to `{{PRODUCTION_BRANCH}}` that touches the app builds the `production` profile, submits it to TestFlight and the Play `internal` track, and pushes the App Store listing when `store.config.json` changed.
 
-## Steps
+## Manual setup
 
-| Step | Platform | Scope | Owner | Done when | Status |
-| --- | --- | --- | --- | --- | --- |
-| Apple Developer Program membership | iOS | team | user | Membership active at https://developer.apple.com/account | todo |
-| Google Play developer account | Android | team | user | Account active at https://play.google.com/console | todo |
-| Google service account with release permissions | Android | team | user | Invited in Play Console per the skill's **Google service account** steps | todo |
-| Expo project linked | both | app | agent | `extra.eas.projectId` in the app config | todo |
-| `EXPO_TOKEN` repository secret | both | app | user | `gh secret list` shows `EXPO_TOKEN` | todo |
-| Runtime values in `eas.json` | both | app | agent | Each build profile's `env` holds every `EXPO_PUBLIC_*` the app reads | todo |
-| iOS credentials on EAS: build credentials and App Store Connect key for submissions | iOS | app | user | `eas credentials -p ios` in your own terminal; a `production` iOS build finished with a submission | todo |
-| Google service account key on EAS | Android | app | user | `eas credentials -p android` in your own terminal uploads it; the first Android submission succeeds | todo |
-| Android keystore copy in a password manager (optional) | Android | app | user | Downloaded with `eas credentials -p android` after the first build | todo |
-| App record in App Store Connect | iOS | app | user | `ascAppId` in `eas.json`. Create it at https://appstoreconnect.apple.com/apps → New App with the bundle ID; the Apple ID number is under App Information | todo |
-| App in Google Play Console | Android | app | user | The first Android submission succeeds. Create it at https://play.google.com/console → Create app with the package name | todo |
-| Play store listing, content rating, data safety, target audience, privacy policy URL | Android | app | user | The Play Console dashboard shows no setup task. Reuse the `store.config.json` description; screenshots from `store/android/` | todo |
-| Deploy workflow | both | app | agent | `gh run list --workflow deploy-{{APP}}.yml` shows a successful run | todo |
-| App Store listing | iOS | app | agent | `eas metadata:push --non-interactive` succeeds | todo |
-| App Store screenshots | iOS | app | user | Uploaded under the version in App Store Connect, from `store/apple/` | todo |
-| Build submitted to TestFlight and Play internal | both | release | agent | `eas build:list --limit 1 --json --non-interactive` shows the version with submissions | todo |
-| Promoted to Play production | Android | release | agent | `eas submit --platform android --profile production` succeeds | todo |
-| Submitted for App Store review | iOS | release | user | The build is added to the version and submitted at https://appstoreconnect.apple.com/apps | todo |
+| Step | How | Done when | Status |
+| --- | --- | --- | --- |
+| iOS: Apple Developer Program membership | Enroll at https://developer.apple.com/programs/enroll/ | Membership active at https://developer.apple.com/account | todo |
+| Android: Google Play developer account | Sign up at https://play.google.com/console/signup | Account active at https://play.google.com/console | todo |
+| Android: Google service account with release permissions | Per **Google service account** below | The service account is invited in Play Console | todo |
+| `EXPO_TOKEN` repository secret | Create a robot user token (https://expo.dev → `{{EXPO_ACCOUNT}}` → Settings → Robot users) or a personal access token with the **Developer** role. Set it at GitHub → Settings → Secrets and variables → Actions → **New repository secret**, or with `gh secret set EXPO_TOKEN` in your own terminal | `gh secret list` shows `EXPO_TOKEN` | todo |
+| iOS: App record in App Store Connect | https://appstoreconnect.apple.com/apps → **New App** with `{{BUNDLE_ID}}`; give the agent the Apple ID number under App Information | `ascAppId` in `eas.json` | todo |
+| iOS: build credentials and App Store Connect key on EAS | In your own terminal from `{{APP_PACKAGE}}`: `eas credentials -p ios` → the `production` build profile → set up all build credentials (Apple ID sign-in); then App Store Connect → set up an API key for EAS Submit. A later app of the same team reuses them through the same prompts; the yearly certificate renewal runs the same way | A `production` iOS build finished with a submission | todo |
+| Android: App in Google Play Console | https://play.google.com/console → **Create app** with `{{ANDROID_PACKAGE}}` | The first Android submission succeeds | todo |
+| Android: Google service account key on EAS | In your own terminal from `{{APP_PACKAGE}}`: `eas credentials -p android` → Google Service Account → upload the key; then delete the download | The first Android submission succeeds | todo |
+| Android: keystore copy in a password manager (optional) | After the first build: `eas credentials -p android` → download the keystore | The keystore is in your password manager | todo |
+| Android: Play store listing, content rating, data safety, target audience, privacy policy URL | Play Console dashboard; reuse the `store.config.json` description, screenshots from `store/android/` | The Play Console dashboard shows no setup task | todo |
+| iOS: App Store screenshots | Upload under the version in App Store Connect, from `store/apple/` | The version shows the screenshots | todo |
+
+## Each release
+
+1. iOS: add the build to the version at https://appstoreconnect.apple.com/apps and submit it for review.
+2. Android: promote it to the Play `production` track with `gh workflow run deploy-{{APP}}.yml --ref {{PRODUCTION_BRANCH}} -f action=promote-android`.
+
+## Google service account
+
+Once per Play account, with the gcloud CLI or at https://console.cloud.google.com in the same steps; keep the key outside the repository:
+
+```bash
+gcloud services enable androidpublisher.googleapis.com --project <gcp-project>
+gcloud iam service-accounts create eas-submit --project <gcp-project>
+gcloud iam service-accounts keys create ~/Downloads/eas-submit.json \
+  --iam-account eas-submit@<gcp-project>.iam.gserviceaccount.com
+```
+
+Then at https://play.google.com/console → Users and permissions → Invite new users → the service account's email, with permissions: View app information, Edit and delete draft apps, Release to production, Release apps to testing tracks, Manage testing tracks and edit tester lists, Manage store presence. **Account permissions** let one key serve every app of the account; **App permissions** limit it to chosen apps.

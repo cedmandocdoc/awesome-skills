@@ -60,7 +60,7 @@ App package, platforms, store IDs, and runtime variables per [discovering-applic
 | Setting | Effect |
 | --- | --- |
 | `appVersionSource: "remote"` with `autoIncrement` | EAS stores and bumps the build number per production build |
-| `build.<profile>.env` | Public runtime values baked into that profile's build; never a secret |
+| `build.<profile>.env` | Public runtime values baked into that profile's build; never a secret. The workflow job's environment does not reach the cloud build |
 | `submit.*.ios.ascAppId` | Skips the App Store Connect lookup; required non-interactively. Unknown until the record exists → leave it out; **Provision** writes it |
 | `submit.*.ios.appleTeamId` | Removes the Team ID prompt from `eas metadata:push` |
 | `android.track` | Play testing track. iOS has no track: TestFlight and App Store release are chosen in App Store Connect |
@@ -72,8 +72,6 @@ Submit profiles name no key file: submissions and metadata pushes use the keys s
 1. **Names.** Each `EXPO_PUBLIC_*` the app reads, per build profile.
 2. **Values.** From the repo (another package's committed config), else the user.
 3. **Write.** Into each profile's `env`; `preview` extends `production` and overrides only what differs.
-
-An existing EAS environment variable → move it into the profile's `env`; the user deletes it in the Expo dashboard after the first green build.
 
 ### App Store metadata
 

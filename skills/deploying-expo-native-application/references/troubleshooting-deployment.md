@@ -32,7 +32,7 @@
 | Symptom | Likely cause | Action |
 | --- | --- | --- |
 | iOS: app not found for the bundle ID | No App Store Connect record, or `ascAppId` belongs to another app | `DEPLOYMENT.md` → App record |
-| Android `PERMISSION_DENIED` or `403` | Key not uploaded to EAS for this app, service account not invited or missing permissions, or the Android Publisher API disabled | [configuring-stores.md](./configuring-stores.md) → **Store credentials** and **Google service account** |
+| Android `PERMISSION_DENIED` or `403` | Key not uploaded to EAS for this app, service account not invited or missing permissions, or the Android Publisher API disabled | [configuring-stores.md](./configuring-stores.md) → **Store credentials**; `DEPLOYMENT.md` → Google service account |
 | Android: package not found | App not created in Play Console | `DEPLOYMENT.md` → App in Google Play Console |
 | Android: first production release rejected | Store listing, content rating, or data safety incomplete | `DEPLOYMENT.md` → Play store listing |
 | Submitted an `.apk` | A `preview` build was submitted | Submit a `production` build (`.aab`) |
@@ -55,7 +55,6 @@
 
 - `gh run list --workflow deploy-<app>.yml`, then `gh run view <run-id> --log-failed`
 - `eas build:view <build-id>` and the build page logs
-- Local check: `eas config --platform <platform> --profile production --non-interactive`
 
 ## Related
 

@@ -2,7 +2,7 @@
 
 ## Overview
 
-The deploy workflow and the secrets it reads. On each push to the production branch that touches the Supabase root, the workflow checks the secrets and the production block, rehearses the migrations on a throwaway database, links the project, applies new migrations, pushes the production config, sets Edge Function secrets, deploys declared Edge Functions, and creates declared buckets.
+The deploy workflow and the secrets it reads.
 
 ## Prerequisites
 
@@ -20,7 +20,7 @@ name: Deploy Supabase
 on:
   push:
     branches: [<production-branch>]
-    paths: ["<supabase-root>/**", ".github/workflows/deploy-supabase.yml"]
+    paths: ["<supabase-root>/**", ".github/workflows/deploy-supabase.yml", "!<supabase-root>/DEPLOYMENT.md"]
   workflow_dispatch:
 
 concurrency: deploy-supabase
@@ -92,12 +92,7 @@ jobs:
 | `config push` | Runs after `db push`: config can depend on migrations (`[auth.hook.*]` needs its Postgres function, `[api] schemas` needs the schema) |
 | `secrets set` | Sets each `[edge_runtime.secrets]` entry from the step's `env`; drop it when there are none |
 | Functions, buckets | Drop the line when `config.toml` declares none |
-
-### Values
-
-| Rule | Detail |
-| --- | --- |
-| No GitHub variables | The project ref lives in `[remotes.production]`; public values are committed |
+| GitHub variables | None: the project ref lives in `[remotes.production]` |
 
 ### CI access token
 
@@ -118,12 +113,6 @@ The workflow's `SUPABASE_ACCESS_TOKEN`. Local commands use the `supabase login` 
    | Edge Functions | Read-write | `functions deploy` |
 
 2. The user sets it as the `SUPABASE_ACCESS_TOKEN` repository secret per [configuring-secrets.md](./configuring-secrets.md).
-
-### Ongoing releases
-
-1. Push or merge backend changes to the production branch.
-2. `gh run list --workflow deploy-supabase.yml` shows the run succeeded.
-3. Run smoke tests if schema or function behavior changed.
 
 ## Related
 

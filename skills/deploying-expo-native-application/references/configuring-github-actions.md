@@ -2,7 +2,7 @@
 
 ## Overview
 
-The deploy workflow and the one secret it reads. On each push to the production branch that touches the app, the workflow starts a `production` EAS build that auto-submits to TestFlight and the Play `internal` track, and pushes the App Store listing when `store.config.json` changed. EAS builds and submits in its own cloud with the credentials stored there; the job ends once the build is queued. A manual run starts a preview build, a Play promotion, or a listing push.
+The deploy workflow and the one secret it reads. The job ends once the build is queued; EAS builds and submits in its own cloud with the credentials stored there.
 
 ## Prerequisites
 
@@ -20,7 +20,7 @@ name: Deploy <app>
 on:
   push:
     branches: [<production-branch>]
-    paths: ["<app-package>/**", "<lockfile>", ".github/workflows/deploy-<app>.yml"]
+    paths: ["<app-package>/**", "<lockfile>", ".github/workflows/deploy-<app>.yml", "!<app-package>/DEPLOYMENT.md"]
   workflow_dispatch:
     inputs:
       action:
@@ -91,10 +91,6 @@ The workflow's `EXPO_TOKEN`. Local commands use the `eas login` session.
 
 1. The user creates a token with the **Developer** role on the Expo account that owns the project: a robot user token at https://expo.dev → the account → Settings → Robot users, or a personal access token. Which accounts it reaches is the user's choice, so one token can serve several repos.
 2. The user sets it as the `EXPO_TOKEN` repository secret: GitHub → Settings → Secrets and variables → Actions → **New repository secret**, or `gh secret set EXPO_TOKEN` in their own terminal.
-
-### Ongoing releases
-
-Push or merge to the production branch → the workflow queues the build. `gh run list --workflow deploy-<app>.yml` shows the run; `eas build:list --limit 2 --json --non-interactive` shows the builds and their submissions.
 
 ## References
 

@@ -1,8 +1,8 @@
 ---
 name: deploying-supabase-application
 id: 489208cd-16f5-4e4f-92c3-35813f082ce3
-description: Deploy a Supabase app to production through GitHub Actions — check Edge Functions locally, create the production project, keep its Auth and project settings in config.toml, and write the deploy workflow that rehearses migrations on a throwaway database, then applies migrations, config, Edge Function secrets, functions, and buckets on every merge; list the GitHub secrets the user sets. Use when deploying Supabase, setting up Supabase deploys in GitHub Actions, creating a hosted Supabase project, adding Supabase secrets or Auth redirect URLs, re-running a Supabase deploy, or validating migrations and Edge Functions before release.
-version: 5.0.0
+description: Deploy a Supabase app to production through GitHub Actions — create the production project, keep its Auth and project settings in config.toml, and write the deploy workflow that rehearses migrations, then applies migrations, config, Edge Function secrets, functions, and buckets on every merge; guide the secrets the user sets in DEPLOYMENT.md. Use when deploying Supabase, setting up Supabase deploys in GitHub Actions, creating a hosted Supabase project, adding Supabase secrets or Auth redirect URLs, re-running a Supabase deploy, or validating migrations and Edge Functions before release.
+version: 5.1.0
 ---
 
 # Deploying a Supabase application
@@ -15,14 +15,14 @@ version: 5.0.0
 | Deno | user | optional | Deploy, when the app has Edge Functions | `deno --version` succeeds | https://docs.deno.com/runtime/getting_started/installation/ |
 | GitHub CLI | user | required | Deploy, Secrets, Run | `gh auth status` succeeds and `gh repo view` finds the repository | https://cli.github.com, then `gh auth login`; create the GitHub repository and push the project |
 | Supabase login | user | required | Deploy, Provision, Run, Troubleshoot | `supabase projects list` succeeds | `supabase login` |
-| No secrets files | user | required | Deploy, Secrets | `git ls-files '*.secrets.*'` prints nothing and no `<supabase-root>/*.secrets.env` exists | Move each value into a GitHub secret per [configuring-secrets.md](references/configuring-secrets.md), then delete the file; delete a `SUPABASE_DB_PASSWORD` GitHub secret. A tracked file's values are in git history: rotate them |
-| Production project | ask | required | Deploy, Provision | `config.toml` has `[remotes.production]` with a `project_id` | The product TRD's **Infrastructure** row names the project → use it; else ask: an existing project from `supabase projects list`, or a new one. Recorded as `[remotes.production] project_id` per [configuring-remote-project.md](references/configuring-remote-project.md) |
+| Production project | ask | required | Deploy, Provision | `config.toml` has `[remotes.production]` with a `project_id` | Ask: an existing project from `supabase projects list`, or a new one. Recorded as `[remotes.production] project_id` per [configuring-remote-project.md](references/configuring-remote-project.md) |
 | CI access token | user | required | Secrets | `gh secret list` shows `SUPABASE_ACCESS_TOKEN` | Per [configuring-github-actions.md](references/configuring-github-actions.md) → **CI access token** |
 
 ## Workflow
 
 1. **Setup** — for each **Setup** row whose When covers the request, in order: Done when holds → skip; `user` → stop and print its How when required, continue without it when optional; `ask` → fill what the request answers, ask the rest together in one message, record each answer; `auto` and `static` → run.
-2. **Recipe** — match one **Recipes** row; open every doc in its Read column.
+2. **Contract** — read [deployment-contract.md](references/deployment-contract.md).
+3. **Recipe** — match one **Recipes** row; open every doc in its Read column.
 
 - Writes files only under the Supabase root and `.github/workflows/deploy-supabase.yml`; project changes run in the deploy workflow on push to the production branch. Locally it only creates the production project, after the user confirms, and reads remote state.
 - Never runs `db reset` on a local or hosted database.

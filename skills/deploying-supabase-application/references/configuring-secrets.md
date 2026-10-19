@@ -2,7 +2,7 @@
 
 ## Overview
 
-**Execution mode.** Matches the secrets the deploy needs against the GitHub repository secrets, keeps the deploy workflow's secret lists in step with `config.toml`, and tells the user which secrets to set and where each value comes from.
+**Execution mode.** Matches the secrets the deploy needs against the GitHub repository secrets, keeps the deploy workflow's secret lists in step with `config.toml`, and records in `DEPLOYMENT.md` which secrets the user sets and where each value comes from.
 
 ## Prerequisites
 
@@ -21,21 +21,21 @@ Production block and function secrets per [configuring-remote-project.md](./conf
 
 A needed name missing from the workflow's Check secrets loop or the Deploy step's `env` → add it per [configuring-github-actions.md](./configuring-github-actions.md) → **Workflow file**.
 
-### 3. Tell the user what to set
+### 3. Update the doc
 
-One row per needed name not in `gh secret list`:
+One `DEPLOYMENT.md` secret row per needed name, per [deployment-contract.md](./deployment-contract.md) → **Deployment doc**. Its How names where the value comes from:
 
-| Name | Value comes from | Set it |
-| --- | --- | --- |
-| `SUPABASE_ACCESS_TOKEN` | [configuring-github-actions.md](./configuring-github-actions.md) → **CI access token** | GitHub → Settings → Secrets and variables → Actions → **New repository secret**, or `gh secret set <NAME>` in the user's own terminal |
-| `SMTP_PASS`, an OAuth client secret | The mail or OAuth provider's dashboard | Same |
-| A provider's key (`STRIPE_SECRET_KEY`) | The provider's dashboard: a production key with the narrowest access the app needs | Same |
-| A value the app defines (`AUTH_SECRET`, an encryption key) | The user's password manager: 32+ random characters, kept there as the only readable copy | Same |
+| Name | Value comes from |
+| --- | --- |
+| `SUPABASE_ACCESS_TOKEN` | [configuring-github-actions.md](./configuring-github-actions.md) → **CI access token**, with the permissions the deploy needs |
+| `SMTP_PASS`, an OAuth client secret | The mail or OAuth provider's dashboard |
+| A provider's key (`STRIPE_SECRET_KEY`) | The provider's dashboard: a production key with the narrowest access the app needs |
+| A value the app defines (`AUTH_SECRET`, an encryption key) | The user's password manager: 32+ random characters, kept there as the only readable copy |
 
 ### 4. Confirm to the user
 
-- Workflow changes to commit
-- The table from step 3, or "every secret is set"
+- Workflow and `DEPLOYMENT.md` changes to commit
+- The `DEPLOYMENT.md` report per [deployment-contract.md](./deployment-contract.md) → **Deployment doc**
 - A merge before the secrets are set fails at Check secrets with the missing names; after setting them, re-run that run (`gh run rerun <run-id>`)
 
 ## Related

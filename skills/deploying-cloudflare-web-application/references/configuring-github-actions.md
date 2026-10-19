@@ -2,7 +2,7 @@
 
 ## Overview
 
-The deploy workflow and the values it reads. On each push to the production branch that touches the app, the workflow checks the secrets, builds with the committed public values, creates a missing D1 database, applies D1 migrations, syncs Worker secrets, and runs `wrangler deploy` through `cloudflare/wrangler-action`.
+The deploy workflow and the values it reads.
 
 ## Prerequisites
 
@@ -20,7 +20,7 @@ name: Deploy <worker>
 on:
   push:
     branches: [<production-branch>]
-    paths: ["<watch-path>/**", "<lockfile>", ".github/workflows/deploy-<worker>.yml"]
+    paths: ["<watch-path>/**", "<lockfile>", ".github/workflows/deploy-<worker>.yml", "!<wrangler-root>/DEPLOYMENT.md"]
   workflow_dispatch:
 
 concurrency: deploy-<worker>
@@ -82,11 +82,8 @@ jobs:
 | Public build value (`VITE_*`, `NEXT_PUBLIC_*`) | The app's committed production env file (`.env.production`); `git check-ignore` must not match it | The build |
 | Public runtime value | `vars` in the wrangler config | Worker `env.*` at request time |
 | Runtime secret | Name in `secrets.required`; value in a GitHub repository secret of the same name, per [configuring-secrets.md](./configuring-secrets.md) | Worker `env.*` at request time |
-| Account | `account_id` in the wrangler config | Wrangler |
 
-| Rule | Detail |
-| --- | --- |
-| No GitHub variables | Public values are committed, so they travel with the PR and show in its diff |
+No GitHub variables: public values are committed, so they travel with the PR and show in its diff.
 
 ### CI API token
 
@@ -104,14 +101,6 @@ The workflow's `CLOUDFLARE_API_TOKEN`. Local Wrangler uses the `wrangler login` 
 
 2. The user sets it as the `CLOUDFLARE_API_TOKEN` repository secret per [configuring-secrets.md](./configuring-secrets.md).
 
-### Custom domain
-
-`routes` in the wrangler config ([configuring-wrangler.md](./configuring-wrangler.md) → **Custom domains and routes**); `*.workers.dev` works for the first smoke test.
-
-### Ongoing releases
-
-Push or merge to the production branch → the workflow deploys. `gh run list --workflow deploy-<worker>.yml` shows each run.
-
 ## Related
 
 - [discovering-application.md](./discovering-application.md)
@@ -123,4 +112,3 @@ Push or merge to the production branch → the workflow deploys. `gh run list --
 
 - [GitHub Actions for Workers](https://developers.cloudflare.com/workers/ci-cd/external-cicd/github-actions/)
 - [wrangler-action](https://github.com/cloudflare/wrangler-action)
-- [Static assets](https://developers.cloudflare.com/workers/static-assets/)

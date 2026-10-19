@@ -2,7 +2,7 @@
 
 ## Overview
 
-**Execution mode.** Matches the secrets the deploy needs against the GitHub repository secrets, keeps the deploy workflow's secret lists in step with the wrangler config, and tells the user which secrets to set and where each value comes from.
+**Execution mode.** Matches the secrets the deploy needs against the GitHub repository secrets, keeps the deploy workflow's secret lists in step with the wrangler config, and records in `DEPLOYMENT.md` which secrets the user sets and where each value comes from.
 
 ## Prerequisites
 
@@ -21,20 +21,20 @@ Wrangler config per [configuring-wrangler.md](./configuring-wrangler.md); workfl
 
 A needed name missing from the workflow's Check secrets loop, the wrangler-action `secrets:` input, or its `env` → add it per [configuring-github-actions.md](./configuring-github-actions.md) → **Workflow file**.
 
-### 3. Tell the user what to set
+### 3. Update the doc
 
-One row per needed name not in `gh secret list`:
+One `DEPLOYMENT.md` secret row per needed name, per [deployment-contract.md](./deployment-contract.md) → **Deployment doc**. Its How names where the value comes from:
 
-| Name | Value comes from | Set it |
-| --- | --- | --- |
-| `CLOUDFLARE_API_TOKEN` | [configuring-github-actions.md](./configuring-github-actions.md) → **CI API token** | GitHub → Settings → Secrets and variables → Actions → **New repository secret**, or `gh secret set <NAME>` in the user's own terminal |
-| A provider's key (`STRIPE_SECRET_KEY`) | The provider's dashboard: a production key with the narrowest access the app needs | Same |
-| A value the app defines (`AUTH_SECRET`, an encryption key) | The user's password manager: 32+ random characters, kept there as the only readable copy | Same |
+| Name | Value comes from |
+| --- | --- |
+| `CLOUDFLARE_API_TOKEN` | [configuring-github-actions.md](./configuring-github-actions.md) → **CI API token**, with the permissions the config needs |
+| A provider's key (`STRIPE_SECRET_KEY`) | The provider's dashboard: a production key with the narrowest access the app needs |
+| A value the app defines (`AUTH_SECRET`, an encryption key) | The user's password manager: 32+ random characters, kept there as the only readable copy |
 
 ### 4. Confirm to the user
 
-- Workflow changes to commit
-- The table from step 3, or "every secret is set"
+- Workflow and `DEPLOYMENT.md` changes to commit
+- The `DEPLOYMENT.md` report per [deployment-contract.md](./deployment-contract.md) → **Deployment doc**
 - A merge before the secrets are set fails at Check secrets with the missing names; after setting them, re-run that run (`gh run rerun <run-id>`)
 
 ## Related

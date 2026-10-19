@@ -17,16 +17,13 @@
 | Build and submit profiles | `eas.json`; missing or incomplete → [configuring-eas.md](./configuring-eas.md) | — |
 | Runtime variables | `EXPO_PUBLIC_*` names read in source | Ask user |
 | Store IDs | `ascAppId` and `appleTeamId` in the submit profiles, else `DEPLOYMENT.md` | The user, once the App Store Connect record exists |
-| App scheme | `expo.scheme`; product TRD (`trd.md` with `doc_type: trd`) → **Infrastructure** origin | Ask user; auth redirect URLs need it |
-| Expo account or organization | Product TRD → **Environments and deployment**, else `eas whoami` | Ask user |
+| App scheme | `expo.scheme` | Ask user; auth redirect URLs need it |
+| Expo account or organization | `eas whoami` | Ask user |
 | Watch paths | The app package, the lockfile, workspace packages it imports | — |
 
-### Monorepo
+Show the resolved values for the user to confirm before files are written.
 
-| File | What to read |
-| --- | --- |
-| `pnpm-workspace.yaml`, `package.json` `workspaces` | Package globs |
-| `turbo.json` / `nx.json` | Named apps |
+### Monorepo
 
 `eas.json` and `app.json` live in the app package: `eas` commands run there (`cd apps/mobile`) and the workflow sets it as the working directory. Install runs at the repo root; EAS Build installs the workspace from the root lockfile.
 
