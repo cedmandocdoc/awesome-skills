@@ -6,7 +6,7 @@
 
 ## Prerequisites
 
-[composition-contract.md](./composition-contract.md) — **Naming**, **Structure**, **Product slots**, **Dependency skills**.
+[composition-contract.md](./composition-contract.md) — **Naming**, **Structure**, **Product slots**, **Navigation**, **Dependency skills**.
 
 ## Guidelines
 
@@ -32,6 +32,7 @@ import { createConfig } from "@scope/core/config";
 export default createConfig({
   name: "Acme",
   slug: "acme",
+  scheme: "acme",
   icon: "./assets/icon.png",
   splash: { image: "./assets/splash-icon.png" },
 });
@@ -64,33 +65,43 @@ Swap `Main` for an existing core or variant screen the same way. Writing a new s
 
 ```ts
 import { createApp } from "@scope/core";
-import { RootStackNavigator } from "./routes/RootStackNavigator";
+import { SignedInStackNavigator } from "./routes/SignedInStackNavigator";
 
-export default createApp(RootStackNavigator, {
+const app = createApp(SignedInStackNavigator, {
   theme: { light: { primary: "#0a0" } },
-}).App;
+});
 ```
 
-**Extra routes** — spread additional screens into the stack factory. Screen import: same table as **Home**. Host leaf:
+**Extra routes** — spread additional screens into the stack factory; a screen opened from a link declares `linking`. Screen import: same table as **Home**. Host leaf:
 
 ```ts
 import { createStackNavigator } from "@scope/core";
 import { TabsNavigator } from "./TabsNavigator";
 import { ExtraDetailScreen } from "@/features/extra";
 
-export const RootStackNavigator = createStackNavigator({
+export const SignedInStackNavigator = createStackNavigator({
   Tabs: { screen: TabsNavigator },
-  ExtraDetail: { screen: ExtraDetailScreen },
+  ExtraDetail: { screen: ExtraDetailScreen, linking: "extra/:id" },
 });
 ```
 
 ### 5. Wire the host App
 
+Declare the navigation types from the returned `RootNavigator`:
+
 ```ts
 import { createApp } from "@scope/core";
-import { RootStackNavigator } from "./routes/RootStackNavigator";
+import { SignedInStackNavigator } from "./routes/SignedInStackNavigator";
 
-export default createApp(RootStackNavigator).App;
+const app = createApp(SignedInStackNavigator);
+
+type HostRootNavigator = typeof app.RootNavigator;
+
+declare module "@react-navigation/native" {
+  interface RootNavigator extends HostRootNavigator {}
+}
+
+export default app.App;
 ```
 
 If this package prebuilds, follow [managing-shared-config.md](./managing-shared-config.md).
@@ -144,7 +155,7 @@ import { createStackNavigator } from "@scope/core";
 import { TabsNavigator } from "./TabsNavigator";
 import { DetailStackNavigator } from "./DetailStackNavigator";
 
-export const RootStackNavigator = createStackNavigator({
+export const SignedInStackNavigator = createStackNavigator({
   Tabs: { screen: TabsNavigator },
   DetailStack: {
     screen: DetailStackNavigator,

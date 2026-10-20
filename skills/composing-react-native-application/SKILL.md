@@ -2,7 +2,7 @@
 name: composing-react-native-application
 id: aef3864f-fbd4-415a-8540-0e7ef0ea0f9f
 description: Extends one Expo core app into product variants through declared slots (identity, home, theme, extra routes). Use when adding a variant to, filling a slot of, or declaring a new slot on an Expo core app that exports app and slot factories. Host toolchain wrap is how a variant that prebuilds stays runnable — not a separate purpose. Requires managing-monorepo for workspace packages and imports.
-version: 1.6.2
+version: 2.0.0
 ---
 
 # Composing React Native Application

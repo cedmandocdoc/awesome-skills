@@ -2,11 +2,11 @@
 
 ## Overview
 
-Forms with TanStack Form and Zod: the app form hook in `src/ui/Form/`, field binding, client and server errors mapped to fields, and multi-step flows.
+Forms with TanStack Form and Zod: the app form hook in `src/ui/Form/`, the `src/ui/Field` wiring point, field binding, validation timing, client and server errors mapped to fields, and multi-step flows.
 
 ## Prerequisites
 
-- [managing-data.md](./managing-data.md) — mutations, `ApiError`
+- [managing-data.md](./managing-data.md) — mutations, `ApiError`, model schemas
 
 ## Guidelines
 
@@ -16,32 +16,50 @@ Forms with TanStack Form and Zod: the app form hook in `src/ui/Form/`, field bin
 src/ui/Form/
   contexts.ts       — createFormHookContexts
   index.tsx         — createFormHook; exports useAppForm, withForm
-  FieldShell.tsx    — label, control, and error slot
+  Form.tsx          — the <form> element and submit
   InputField.tsx    — one pre-bound field per file
   SubmitButton.tsx  — pre-bound submit
   FormError.tsx     — form-level server error
 ```
 
-- Screens import `@/ui/Form`.
+- Features import `@/ui/Form`.
 - `fieldComponents` keys become `field.<Key>` inside `form.AppField`; `formComponents` keys become `form.<Key>` inside `form.AppForm`.
-- `SubmitButton` subscribes to `isSubmitting` and `canSubmit`.
-- Each form renders a `<form>` whose `onSubmit` prevents the default and calls `form.handleSubmit()`, so Enter submits.
+- Every form renders inside `form.Form`: a `<form noValidate>` whose submit prevents the default and calls `form.handleSubmit()`, so Enter submits; after a failed submit it focuses its first `[aria-invalid="true"]` control.
+- `SubmitButton` is `type="submit"` and passes `isSubmitting` to the `Button`'s `loading`.
+
+### Field
+
+`src/ui/Field` wraps Base UI `Field`:
+
+| Prop | Role |
+| --- | --- |
+| `label` | Rendered in `Field.Label`, linked to the control |
+| `invalid` | Passed by TanStack Form to `Field.Root` `invalid`; the control gets `aria-invalid` |
+| `error` | The first error message, passed by TanStack Form; rendered in `Field.Error` with `match`, linked to the control |
+| `children` | The control: a `src/ui` primitive built on a Base UI control (`Input`, `Checkbox`, `Select`) |
+
+TanStack Form owns values, validation, and submit; `src/ui/Field` only renders and links. Base UI's `validate`, `validationMode`, and `Form` are not used. Its layout and error look come from the requirements.
 
 ### Binding
 
 | Control | Bind |
 | --- | --- |
 | Used in more than one form | Pre-bound `<Control>Field` in `fieldComponents`; call sites pass `name` through `form.AppField` and domain props only |
-| One-off | Inline `form.Field` in the feature, wrapped in `FieldShell` |
+| One-off | Inline `form.Field` in the feature, wrapped in `src/ui/Field` |
 
-`FieldShell` wires label, control, and error for every field; its layout and error presentation come from the design.
+### Values
+
+- Loaded data goes straight into `defaultValues`: render the form after its query succeeds and pass the data in; never sync values with an effect.
+- Form schemas live in the feature's `schemas.ts` and may derive from API model schemas (`.pick`, `.extend`); a response schema is never reused as is.
 
 ### Validation and errors
 
+Every form sets `validationLogic: revalidateLogic()` and passes its schema to `validators.onDynamic`: errors show on the first submit, then each field revalidates on change. A form deviates only when the requirements set its timing.
+
 | Error | Source | Shown by |
 | --- | --- | --- |
-| Client | Zod schema from the feature's `schemas.ts`, passed to `validators.<timing>` | The field's `FieldShell` |
-| Server, one field | `ApiError` whose `code` concerns a field: `formApi.setErrorMap({ onSubmit: { fields: { <name>: error } } })` | That field's `FieldShell` |
+| Client | The form's Zod schema | The field's `Field` |
+| Server, one field | `ApiError` whose `code` concerns a field: `formApi.setErrorMap({ onSubmit: { fields: { <name>: error } } })` | That field's `Field` |
 | Server, whole form | Any other `ApiError`: `formApi.setErrorMap({ onServer: error as never })` | `FormError` |
 
 `as never`: `setErrorMap` typing rejects `ApiError` on `onServer`; at runtime it holds the `ApiError`.
@@ -51,7 +69,8 @@ src/ui/Form/
 - Define the steps once per flow as a const array; each step has an `id` and the Zod `schema` for its own fields.
 - One hook per flow, `use<Flow>Steps` in the feature's `hooks/`, holds the current step and the direction (`forward` / `back`) and exposes `next`, `back`, `goTo`, `isFirst`, and `isLast`.
 - One form instance spans every step so values persist; it validates with the active step's schema, and `onSubmit` advances until the last step submits.
-- Render steps any way the design needs: conditionally, in a pager that keeps neighbours mounted, or one route per step with the form held above the step routes. Step components receive the form through `withForm`.
+- Render steps any way the requirements need: conditionally, in a pager that keeps neighbours mounted, or one route per step with the form held above the step routes. Step components receive the form through `withForm`.
+- Focus moves to the new step's heading after a step change.
 - A step that must survive a refresh or be shared by link lives in a validated search param (`?step=address`).
 - Progress that must survive leaving the flow is shared client state per [managing-data.md](./managing-data.md).
 
@@ -68,6 +87,7 @@ node ../scripts/install-packages.cjs @tanstack/react-form zod
 ```tsx
 import { createFormHook } from "@tanstack/react-form";
 import { fieldContext, formContext } from "./contexts";
+import { Form } from "./Form";
 import { FormError } from "./FormError";
 import { InputField } from "./InputField";
 import { SubmitButton } from "./SubmitButton";
@@ -76,69 +96,109 @@ export const { useAppForm, withForm } = createFormHook({
   fieldContext,
   formContext,
   fieldComponents: { InputField },
-  formComponents: { FormError, SubmitButton },
+  formComponents: { Form, FormError, SubmitButton },
 });
 ```
 
 ### Pre-bound field
 
 ```tsx
+import { Field } from "@/ui/Field";
 import { Input } from "@/ui/Input";
 import { useFieldContext } from "./contexts";
-import { FieldShell } from "./FieldShell";
 
-export function InputField({ label }: { label: string }) {
+interface InputFieldProps {
+  label: string;
+}
+
+export function InputField({ label }: InputFieldProps) {
   const field = useFieldContext<string>();
+  const error = field.state.meta.errors[0]?.message;
 
   return (
-    <FieldShell label={label} error={field.state.meta.errors[0]}>
+    <Field label={label} invalid={!!error} error={error}>
       <Input
         name={field.name}
         value={field.state.value}
-        onChange={(event) => field.handleChange(event.target.value)}
+        onValueChange={(value) => field.handleChange(value)}
         onBlur={field.handleBlur}
       />
-    </FieldShell>
+    </Field>
   );
 }
 ```
 
-### Form with server errors
+### `src/ui/Field/Field.tsx`
 
 ```tsx
-const updateHandle = useUpdateHandle();
+import type { ReactNode } from "react";
+import { Field as BaseField } from "@base-ui/react/field";
 
-const form = useAppForm({
-  defaultValues: { handle: "" },
-  validators: { onChange: HandleSchema },
-  onSubmit: async ({ value, formApi }) => {
-    try {
-      await updateHandle.mutateAsync(value.handle);
-    } catch (error) {
-      if (error instanceof ApiError && error.code === ProfileErrorCode.HandleTaken) {
-        formApi.setErrorMap({ onSubmit: { fields: { handle: error } } });
-      } else {
-        formApi.setErrorMap({ onServer: error as never });
-      }
-    }
-  },
-});
+interface FieldProps {
+  label: string;
+  invalid?: boolean;
+  error?: string;
+  children: ReactNode;
+}
 
-return (
-  <form
-    onSubmit={(event) => {
-      event.preventDefault();
-      void form.handleSubmit();
-    }}
-  >
-    <form.AppForm>
-      <form.AppField name="handle" children={(field) => <field.InputField label="Handle" />} />
-      <form.FormError />
-      <form.SubmitButton label="Save" />
-    </form.AppForm>
-  </form>
-);
+export function Field({ label, invalid, error, children }: FieldProps) {
+  return (
+    <BaseField.Root invalid={invalid}>
+      <BaseField.Label>{label}</BaseField.Label>
+      {children}
+      <BaseField.Error match>{error}</BaseField.Error>
+    </BaseField.Root>
+  );
+}
 ```
+
+### Form with loaded data and server errors
+
+```tsx
+import { revalidateLogic } from "@tanstack/react-form";
+import { ProfileErrorCode, type Profile } from "@/api/app-api";
+import { ApiError } from "@/libs/ApiError";
+import { useAppForm } from "@/ui/Form";
+import { useUpdateHandle } from "../hooks/useUpdateHandle";
+import { HandleSchema } from "../schemas";
+
+interface ProfileHandleFormProps {
+  profile: Profile;
+}
+
+export function ProfileHandleForm({ profile }: ProfileHandleFormProps) {
+  const updateHandle = useUpdateHandle();
+
+  const form = useAppForm({
+    defaultValues: { handle: profile.handle },
+    validationLogic: revalidateLogic(),
+    validators: { onDynamic: HandleSchema },
+    onSubmit: async ({ value, formApi }) => {
+      try {
+        await updateHandle.mutateAsync(value.handle);
+      } catch (error) {
+        if (error instanceof ApiError && error.code === ProfileErrorCode.HandleTaken) {
+          formApi.setErrorMap({ onSubmit: { fields: { handle: error } } });
+        } else {
+          formApi.setErrorMap({ onServer: error as never });
+        }
+      }
+    },
+  });
+
+  return (
+    <form.AppForm>
+      <form.Form>
+        <form.AppField name="handle" children={(field) => <field.InputField label="Handle" />} />
+        <form.FormError />
+        <form.SubmitButton label="Save" />
+      </form.Form>
+    </form.AppForm>
+  );
+}
+```
+
+`HandleSchema` in `schemas.ts` is `ProfileSchema.pick({ handle: true })`.
 
 ### Step hook
 
@@ -182,7 +242,8 @@ const steps = useCheckoutSteps();
 
 const form = useAppForm({
   defaultValues: { name: "", email: "", street: "", city: "" },
-  validators: { onSubmit: steps.step.schema as unknown as typeof CheckoutSchema },
+  validationLogic: revalidateLogic(),
+  validators: { onDynamic: steps.step.schema as unknown as typeof CheckoutSchema },
   onSubmit: async ({ value }) => {
     if (!steps.isLast) return steps.next();
     await checkout.mutateAsync(value);
@@ -195,5 +256,5 @@ const form = useAppForm({
 ## References
 
 - [TanStack Form — Form composition](https://tanstack.com/form/latest/docs/framework/react/guides/form-composition.md)
-- [TanStack Form — Validation](https://tanstack.com/form/latest/docs/framework/react/guides/validation.md)
+- [TanStack Form — Dynamic validation](https://tanstack.com/form/latest/docs/framework/react/guides/dynamic-validation)
 - [TanStack Form — Submission handling](https://tanstack.com/form/latest/docs/framework/react/guides/submission-handling.md)

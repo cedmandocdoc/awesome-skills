@@ -11,10 +11,10 @@ Fixes every Expo app applies for native platform behavior. Each rule is this ski
 | Fix | Rule |
 | --- | --- |
 | Screen background | The navigation theme paints every screen: screen roots and wrappers carry no background class; backgrounds go only on surfaces that differ (cards, sheets, panels, modals) and on roots rendered outside the navigator |
-| Navigation theme | `src/theme.ts` maps React Navigation's six colors (`primary`, `background`, `card`, `text`, `border`, `notification`) to token values; with no design the agent defines those tokens first; a dark theme exists only when the tokens define dark values; `Navigation` receives the theme for the active color scheme |
+| Navigation theme | `src/theme.ts` maps React Navigation's six colors (`primary`, `background`, `card`, `text`, `border`, `notification`) to token values; with none in the requirements the agent defines those tokens first; a dark theme exists only when the tokens define dark values; `Navigation` receives the theme for the active color scheme |
 | Keyboard | The focused input is never covered: `KeyboardProvider` wraps the app, forms in scroll views use `KeyboardAwareScrollView`, and other keyboard handling uses `react-native-keyboard-controller` components instead of React Native's `KeyboardAvoidingView` |
-| Fonts | Fonts load at startup before first render; each loaded font file is its own Tailwind `fontFamily` token (`font-body`, `font-body-semibold`), since `fontWeight` does not select between custom font files |
-| Splash | The splash stays until fonts, the theme, and the stored session are ready |
+| Fonts | Fonts load at startup before first render through one `useAppFonts` hook; each loaded font file is its own Tailwind `fontFamily` token (`font-body`, `font-body-semibold`), since `fontWeight` does not select between custom font files |
+| Splash | The splash stays until fonts, the color scheme preference, the stored session, and the gate input are ready; the root is `App.tsx` in [scaffolding-application.md](./scaffolding-application.md) → **Examples** |
 
 ## Setup
 
@@ -55,54 +55,6 @@ export const NAV_THEME: Record<"light" | "dark", Theme> = {
     },
   },
 };
-```
-
-### `App.tsx`
-
-```tsx
-import "./global.css";
-import { useEffect } from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useFonts } from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
-import { useColorScheme } from "nativewind";
-import { KeyboardProvider } from "react-native-keyboard-controller";
-import { SessionProvider, useSession } from "@/features/auth";
-import { Navigation } from "@/routes";
-import { NAV_THEME } from "@/theme";
-
-void SplashScreen.preventAutoHideAsync();
-
-const queryClient = new QueryClient();
-
-export default function App() {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <KeyboardProvider>
-        <SessionProvider>
-          <Root />
-        </SessionProvider>
-      </KeyboardProvider>
-    </QueryClientProvider>
-  );
-}
-
-function Root() {
-  const [fontsLoaded] = useFonts({
-    Inter: require("./assets/fonts/Inter-Regular.ttf"),
-    "Inter-SemiBold": require("./assets/fonts/Inter-SemiBold.ttf"),
-  });
-  const { status } = useSession();
-  const { colorScheme } = useColorScheme();
-  const ready = fontsLoaded && status !== "restoring";
-
-  useEffect(() => {
-    if (ready) void SplashScreen.hideAsync();
-  }, [ready]);
-
-  if (!ready) return null;
-  return <Navigation theme={NAV_THEME[colorScheme ?? "light"]} />;
-}
 ```
 
 ### Font tokens

@@ -14,8 +14,8 @@
 
 - Place `env.ts` at the boundary of the owning unit:
   - `src/features/<feature-name>/env.ts` — feature-scoped variables.
+  - `src/common/<module>/env.ts` — cross-feature module variables.
   - `src/api/<backend-name>/env.ts` — API-client variables.
-  - Other cohesive modules follow the same pattern.
 - List every key the module reads from `import.meta.env` in that single `env.ts`; other files import the parsed `env` only.
 
 ### Validation rules

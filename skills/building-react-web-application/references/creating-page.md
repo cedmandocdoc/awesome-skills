@@ -2,7 +2,7 @@
 
 ## Overview
 
-Pages, feature components, the file-based route layer that maps URLs to them, and the navigation components layout routes wrap around their children.
+Pages, feature components, the file-based route layer that maps URLs to them, page titles, and the navigation components layout routes wrap around their children.
 
 ## Prerequisites
 
@@ -34,21 +34,27 @@ Prefer flat route files in `src/routes/`; the filename defines the path.
 A section whose flat names grow long becomes a directory with `route.tsx`; mix both where each section reads clearest.
 
 - Each route file exports `Route` from `createFileRoute(...)`; a leaf route's `component` is the feature page.
-- Route files hold URL mapping, layouts, loaders, `pendingComponent`, `errorComponent`, and search-param validation (`validateSearch` with Zod); domain logic stays in features.
-- `src/routeTree.gen.ts` is generated from `src/routes/`.
+- Route files hold URL mapping, layouts, search-param validation (`validateSearch` with Zod), and guards per [setting-up-auth-guard.md](./setting-up-auth-guard.md); domain logic stays in features.
+- Route loaders never fetch data; pages fetch with query hooks.
+- The router plugin sets `autoCodeSplitting: true`; `src/routeTree.gen.ts` is generated from `src/routes/`.
 
 | Pattern | Route file | Use when |
 | --- | --- | --- |
-| Root layout | `__root.tsx` | Document class, devtools, providers |
-| Pathless layout | `_app.tsx` + `_app.*.tsx` | Shell or auth guard without a URL prefix |
+| Root layout | `__root.tsx` | Document head, devtools, providers |
+| Pathless layout | `_app.tsx` + `_app.*.tsx` | Shell or guard without a URL prefix |
 | Pathful section | `settings.tsx` + `settings.*.tsx` | A URL prefix shares persistent navigation |
 | Leaf page | `dashboard.tsx` | Single URL, no child routes |
+
+### Titles
+
+- Each page route sets its title in `head: () => ({ meta: [{ title }] })`; the title text comes from the requirements.
+- `__root.tsx` renders `<HeadContent />` once.
 
 ### Pages
 
 - `src/features/<feature>/components/<Feature>Page.tsx`, exported from the feature barrel.
 - Route-ready: the page reads its params with `getRouteApi("<route id>")`, never by importing the route file.
-- Composes feature components and `@/ui/*` primitives; wires query hooks and mutations for its flow.
+- Fetches with query hooks; composes feature components and `@/ui/*` primitives.
 - Server-backed content renders through [creating-async-component.md](./creating-async-component.md).
 
 ### Feature components
@@ -58,10 +64,9 @@ A section whose flat names grow long becomes a directory with `route.tsx`; mix b
 
 ### Navigation components
 
-- Live in `src/features/navigation/` (`components/`, `hooks/`).
+- Live in `src/common/navigation/` (`components/`, `hooks/`).
 - Built once and rendered by the layout route around `<Outlet />`; pages never copy shell, sidebar, or header markup.
-- Nav items, icons, labels, and typed `Link`s live inside the component.
-- Exception: a page imports a navigation component directly when it depends on page-local state that layout wiring would obscure.
+- Nav items, labels, and typed `Link`s live inside the component.
 
 Name each component after its layout route segment (leading `_` dropped) plus its role:
 
@@ -73,23 +78,23 @@ Name each component after its layout route segment (leading `_` dropped) plus it
 
 ## Examples
 
-### Pathless layout with a shell
+### `src/routes/__root.tsx`
 
 ```tsx
-// src/routes/_app.tsx
-import { createFileRoute, Outlet } from "@tanstack/react-router";
-import { AppShell } from "@/features/navigation";
+import { createRootRouteWithContext, HeadContent, Outlet } from "@tanstack/react-router";
+import type { Session } from "@/common/auth";
 
-export const Route = createFileRoute("/_app")({
+export const Route = createRootRouteWithContext<{ session: Session }>()({
   component: () => (
-    <AppShell>
+    <>
+      <HeadContent />
       <Outlet />
-    </AppShell>
+    </>
   ),
 });
 ```
 
-### Leaf route with a param
+### Leaf route with a param and a title
 
 ```tsx
 // src/routes/_app.workshops.$workshopId.tsx — URL: /workshops/$workshopId
@@ -97,6 +102,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { WorkshopDetailPage } from "@/features/workshop-detail";
 
 export const Route = createFileRoute("/_app/workshops/$workshopId")({
+  head: () => ({ meta: [{ title: "Workshop" }] }),
   component: WorkshopDetailPage,
 });
 ```
@@ -135,3 +141,5 @@ export function WorkshopDetailPage() {
 
 - [TanStack Router — File-based routing](https://tanstack.com/router/latest/docs/routing/file-based-routing.md)
 - [TanStack Router — File naming conventions](https://tanstack.com/router/latest/docs/framework/react/routing/file-naming-conventions)
+- [TanStack Router — Automatic code splitting](https://tanstack.com/router/latest/docs/framework/react/guide/code-splitting)
+- [TanStack Router — Document head management](https://tanstack.com/router/latest/docs/framework/react/guide/document-head-management)

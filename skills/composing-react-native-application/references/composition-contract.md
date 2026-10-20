@@ -51,10 +51,10 @@ The core ships the working app (owned screens, providers, fonts, tab bar). Varia
 
 | Slot | Required | Variant provides |
 | --- | --- | --- |
-| Identity | yes for a host | `name`, `slug`, icon, splash — `createConfig` |
+| Identity | yes for a host | `name`, `slug`, `scheme`, icon, splash — `createConfig` |
 | Home (`Main` tab) | yes | Screen + tab label/icon — tabs factory |
 | Theme / fonts | no | Overlays on `createApp` |
-| Extra routes | no | Extra tabs/stacks — factory spreads extra screens |
+| Extra routes | no | Extra tabs/stacks inside `SignedIn` — factory spreads extra screens |
 
 An icon-only host is a valid variant (identity slot only).
 
@@ -76,17 +76,23 @@ New product behavior that is not a slot goes into the core (new slot) or into th
 
 | Leave on | Examples |
 | --- | --- |
-| Core | Owned tabs, stacks, providers, fonts, chrome |
+| Core | Owned tabs, stacks, providers, fonts, chrome; the root navigator, its groups, gates, session, and `linking` prefixes |
 | Host wrap | Babel, Metro, ESLint, Tailwind, `global.css` |
 
 ### Product factories
 
 | Concern | Factory | Lives on |
 | --- | --- | --- |
-| App shell | `createApp(Root, options?)` | Core package root export |
+| App shell | `createApp(SignedInNavigator, options?)` → `{ App, RootNavigator }` | Core package root export |
 | Identity | `createConfig({ name, slug, icon, … })` | `exports` subpath e.g. `@scope/core/config` |
 | Home / extra tabs | `createTabsNavigator` | Core package root export |
 | Extra stacks | `createStackNavigator` | Core package root export |
+
+### Navigation
+
+- The core's root navigator holds the `Public`, `SignedOut`, per-gate, and `SignedIn` groups; `createApp` mounts the variant's navigator as the `SignedIn` group's screen. A variant never replaces the root or its groups.
+- `linking` prefixes come from `Linking.createURL("/")`, so each host's `scheme` applies with no slot. An extra screen opened from a link declares `linking` in its screen config.
+- The `@react-navigation/native` `RootNavigator` augmentation lives in the app entry that calls `createApp` (the core's own and each host's), typed from the returned `RootNavigator`. Files under `exports` never declare it, so a host's types never merge with the core's.
 
 ### Host toolchain
 

@@ -14,6 +14,7 @@ Each module that reads configuration keeps a dedicated `env.ts` that validates e
 
 - Place `env.ts` at the boundary of the owning unit:
   - `src/features/<feature-name>/env.ts` — feature-scoped variables.
+  - `src/common/<module>/env.ts` — cross-feature module variables.
   - `src/api/<backend-name>/env.ts` — API client variables.
 - List every key that module reads from `process.env` in that single `env.ts`. Do not scatter raw `process.env` reads across files inside the same module.
 

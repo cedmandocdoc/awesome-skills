@@ -2,7 +2,7 @@
 
 ## Overview
 
-Screens, feature components, the route layer that registers them, and the navigation components wired into navigator slots.
+Screens, feature components, the route layer that registers them, deep links, and the navigation components wired into navigator slots.
 
 ## Prerequisites
 
@@ -12,12 +12,11 @@ Screens, feature components, the route layer that registers them, and the naviga
 
 ### Route layer
 
-- Register routes with static config: pass a config object to `createNativeStackNavigator` / `createBottomTabNavigator` / `createDrawerNavigator`, and wrap the root with `createStaticNavigation`; `src/routes/index.tsx` exports `Navigation` for `App.tsx`.
-- Use dynamic `<Stack.Navigator>` / `<Stack.Screen>` only when runtime composition requires it.
-- Name navigator modules `[Name][NavigatorType]`: `MainBottomNavigator`, `ProfileStackNavigator`, `MainDrawerNavigator`; one navigator per file.
-- Map each route to a feature screen export; navigator files hold the tree, param types, and options only.
-- Extend `RootNavigator` in `@react-navigation/core` so `useNavigation` and links infer from the root navigator.
-- Place thin param adapters beside the navigator in `src/routes/`.
+- Register routes with static config: pass a config object to `createNativeStackNavigator` / `createBottomTabNavigator` / `createDrawerNavigator`; use dynamic `<Stack.Navigator>` only when runtime composition requires it.
+- One navigator per file in `src/routes/`, named `[Name][NavigatorType]`: `RootStackNavigator`, `MainBottomNavigator`, `ProfileStackNavigator`.
+- `RootStackNavigator` holds the root groups (`Public`, `SignedOut`, one per gate, `SignedIn`) per [setting-up-auth-guard.md](./setting-up-auth-guard.md).
+- `src/routes/index.tsx` wraps the root with `createStaticNavigation`, exports `Navigation` for `App.tsx`, and augments `@react-navigation/native` once with `interface RootNavigator extends RootStackType {}` so `useNavigation` and `Link` type-check.
+- Navigator files hold the tree, options, and `linking` only: they map each route to a feature screen export and never fetch data.
 - For each navigator in use, follow its **Installation** section (**References**).
 
 | Navigator | Use when |
@@ -26,12 +25,20 @@ Screens, feature components, the route layer that registers them, and the naviga
 | Bottom tabs | A few peer sections users switch between often |
 | Drawer | Many destinations or secondary navigation |
 
+### Linking
+
+- `Navigation` receives `linking` with the app's prefixes from `Linking.createURL("/")` (`expo-linking`), so the app's `scheme` applies.
+- Each screen opened from outside the app declares its `linking` path in its screen config (`linking: "workshops/:workshopId"`).
+- A screen parses link params with a Zod schema from its feature's `schemas.ts` before use.
+- One fallback screen with `linking: "*"` is the not-found hook point per [managing-errors.md](./managing-errors.md).
+
 ### Screens
 
 - `src/features/<feature>/components/<Feature>Screen.tsx`, exported from the feature barrel.
 - Route-ready: the screen types and reads its own params with `StaticScreenProps<…>`, so registration is a one-line import.
-- Composes feature components and `@/ui/*` primitives; wires query hooks and mutations for its flow.
+- Fetches with query hooks; composes feature components and `@/ui/*` primitives.
 - Server-backed content renders through [creating-async-component.md](./creating-async-component.md).
+- The title lives in the screen's `options.title`; its text comes from the requirements.
 
 ### Feature components
 
@@ -40,10 +47,10 @@ Screens, feature components, the route layer that registers them, and the naviga
 
 ### Navigation components
 
-- Live in `src/features/navigation/` (`components/`, `hooks/`).
+- Live in `src/common/navigation/` (`components/`, `hooks/`).
 - Built once and wired at the navigator; screens never copy header, tab bar, or drawer markup.
-- Presentation-only: navigation actions come from React Navigation props (`navigation`, `route`, `state`, `descriptors`).
-- Exception: a screen imports a navigation component directly when it depends on screen-local state that route-level wiring would obscure.
+- Navigation actions come from React Navigation props (`navigation`, `route`, `state`, `descriptors`).
+- React Navigation owns route tabs; in-screen tabs use the `src/ui` Tabs primitive.
 
 Name each component after its navigator, dropping `Navigator` and appending the slot:
 
@@ -53,6 +60,12 @@ Name each component after its navigator, dropping `Navigator` and appending the 
 | `MainBottomNavigator` | `MainBottomTabBar` | `tabBar` | `BottomTabBarProps` |
 | `MainDrawerNavigator` | `MainDrawerContent` | `drawerContent` | `DrawerContentComponentProps` |
 
+## Setup
+
+```bash
+node ../scripts/run-package.cjs -- expo install expo-linking
+```
+
 ## Examples
 
 ### Stack navigator with a wired header
@@ -60,30 +73,42 @@ Name each component after its navigator, dropping `Navigator` and appending the 
 `src/routes/ProfileStackNavigator.tsx`:
 
 ```tsx
-import { createStaticNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { ProfileStackHeader } from "@/features/navigation";
+import { ProfileStackHeader } from "@/common/navigation";
 import { WorkshopDetailScreen } from "@/features/workshop-detail";
 import { WorkshopListScreen } from "@/features/workshop-list";
 
-const ProfileStackNavigator = createNativeStackNavigator({
+export const ProfileStackNavigator = createNativeStackNavigator({
   screenOptions: {
     header: (props) => <ProfileStackHeader {...props} />,
   },
   screens: {
     Workshops: { screen: WorkshopListScreen, options: { title: "Workshops" } },
-    WorkshopDetail: { screen: WorkshopDetailScreen, options: { title: "Workshop" } },
+    WorkshopDetail: {
+      screen: WorkshopDetailScreen,
+      options: { title: "Workshop" },
+      linking: "workshops/:workshopId",
+    },
   },
 });
+```
 
-type RootStackType = typeof ProfileStackNavigator;
+### `src/routes/index.tsx`
 
-declare module "@react-navigation/core" {
+```tsx
+import { createStaticNavigation } from "@react-navigation/native";
+import { RootStackNavigator } from "./RootStackNavigator";
+
+type RootStackType = typeof RootStackNavigator;
+
+declare module "@react-navigation/native" {
   interface RootNavigator extends RootStackType {}
 }
 
-export const Navigation = createStaticNavigation(ProfileStackNavigator);
+export const Navigation = createStaticNavigation(RootStackNavigator);
 ```
+
+`App.tsx` renders `<Navigation linking={{ prefixes: [Linking.createURL("/")] }} />`.
 
 ### Route-ready screen
 
@@ -91,12 +116,14 @@ export const Navigation = createStaticNavigation(ProfileStackNavigator);
 import type { StaticScreenProps } from "@react-navigation/native";
 import { AsyncScrollView } from "@/ui/Async";
 import { useWorkshop } from "../hooks/useWorkshop";
+import { WorkshopParamsSchema } from "../schemas";
 import { WorkshopSummary } from "./WorkshopSummary";
 
 type Props = StaticScreenProps<{ workshopId: string }>;
 
 export function WorkshopDetailScreen({ route }: Props) {
-  const workshop = useWorkshop(route.params.workshopId);
+  const { workshopId } = WorkshopParamsSchema.parse(route.params);
+  const workshop = useWorkshop(workshopId);
 
   return (
     <AsyncScrollView queries={[workshop]}>
@@ -118,6 +145,7 @@ export function MainBottomTabBar({ state, descriptors, navigation }: BottomTabBa
       {state.routes.map((route, index) => (
         <Pressable
           key={route.key}
+          accessibilityRole="tab"
           accessibilityState={{ selected: state.index === index }}
           onPress={() => navigation.navigate(route.name)}
         >
@@ -133,6 +161,7 @@ export function MainBottomTabBar({ state, descriptors, navigation }: BottomTabBa
 
 - [React Navigation — Static configuration](https://reactnavigation.org/docs/hello-react-navigation.md?config=static)
 - [React Navigation — Type checking with TypeScript](https://reactnavigation.org/docs/typescript.md)
+- [React Navigation — Configuring links](https://reactnavigation.org/docs/configuring-links.md?config=static)
 - [Native stack — Usage](https://reactnavigation.org/docs/native-stack-navigator.md)
 - [Bottom tabs — Usage](https://reactnavigation.org/docs/bottom-tab-navigator.md)
 - [Drawer — Usage](https://reactnavigation.org/docs/drawer-navigator.md)

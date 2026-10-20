@@ -2,70 +2,118 @@
 
 ## Overview
 
-**Execution mode.** Guards signed-in pages in the route layer: one session provider passed to the router as context, a pathless layout route that redirects by session state, and a startup that waits for the stored session.
+**Execution mode.** Guards pages in the route layer: ordered gates between signed-in and full access, layout routes that redirect by session and gates, public routes, a `redirect` back to the requested URL, and authorization at the layout owning a scope.
 
 ## Prerequisites
 
+- [setting-up-authentication.md](./setting-up-authentication.md) — session, router context
 - [creating-page.md](./creating-page.md) — route files and layouts
 
 ## Guidelines
 
-### Session
+### Gates
 
-- One app-level provider in `src/features/auth/` restores the stored session at startup and exposes `useSession()` from the feature barrel, with `status` of `restoring`, `signed-in`, or `signed-out`. The auth SDK comes from the TRD.
-- The root passes the session to `RouterProvider` as router context; `__root.tsx` declares its type with `createRootRouteWithContext`.
-- Signing in or out calls `router.invalidate()` so guards run again; signing out also clears the TanStack Query cache with `queryClient.clear()`.
+- Session status stays authentication only; every other access step is a gate.
+- `src/common/auth/gates.ts` declares the app's gates in order: each has an `id`, a condition over the gate input (session, plus query data such as the profile), and the route that resolves it.
+- `firstFailingGate(input)` returns the first gate whose condition fails, else `null`.
+- A gate input that needs a query uses query options in `src/common/auth/` with a key from `@/common/query`, loaded with `queryClient.ensureQueryData` in `beforeLoad`: the one exception to route loaders not fetching.
 
-### Guard
+### Guarded routes
 
-- The route layer alone gates access: pages never check auth or navigate to sign-in.
-- Signed-in pages sit under the pathless `_app` layout; its `beforeLoad` redirects a signed-out visitor to the sign-in route with the current `location.href` in a `redirect` search param.
-- The sign-in route validates `redirect` with Zod; its `beforeLoad` sends a signed-in visitor to `redirect`, else to the app's home, and the page navigates the same way after signing in.
-- Nothing renders while `status` is `restoring`.
+| Route | `beforeLoad` |
+| --- | --- |
+| `_app.tsx` and its children | Signed out → sign-in with `redirect` set to `location.href`; a failing gate → that gate's route |
+| `_gate.tsx` and its children (gate pages) | Signed out → sign-in with `redirect`; each gate page redirects on to `redirect`, else home, once its gate passes |
+| `sign-in.tsx` | Signed in → `redirect`, else home; the page navigates the same way after signing in |
+| Any other route | None: open in both states |
+
+- `redirect` is a search param validated with Zod as an internal path (starts with `/`, not `//`), else home.
+- Pages never check auth or navigate to sign-in.
+
+### Cases
+
+| Case | Structure |
+| --- | --- |
+| Signed in but not finished (profile setup) | A gate whose condition reads the profile query; its page sits under `_gate` |
+| Temporary access (invite → set password) | A route outside `_app` that checks its own token with a query |
+| Open in both states | A route outside `_app` and `_gate` |
+| Scoped authorization (tenant, role) | The layout route owning the scope reads the scope's query through `AsyncView` and renders `<Outlet />` only when allowed; never on the session |
+
+What a denied scope shows comes from the requirements.
 
 ## Examples
 
-### `src/main.tsx` root
+### `src/common/auth/gates.ts`
 
-```tsx
-function App() {
-  const session = useSession();
+```ts
+import type { Session } from "./session";
 
-  if (session.status === "restoring") return null;
-  return <RouterProvider router={router} context={{ session }} />;
+export interface GateInput {
+  session: Session;
+  profile?: { completedAt: string | null };
 }
-```
 
-`App` renders inside `SessionProvider`; `createRouter({ routeTree, context: { session: undefined! } })` declares the context it fills in.
+export const GATES = [
+  {
+    id: "profile-setup",
+    passes: (input: GateInput) => !!input.profile?.completedAt,
+    route: "/profile-setup",
+  },
+] as const;
 
-### `src/routes/__root.tsx`
+export type GateId = (typeof GATES)[number]["id"];
 
-```tsx
-import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
-import type { Session } from "@/features/auth";
-
-export const Route = createRootRouteWithContext<{ session: Session }>()({
-  component: Outlet,
-});
+export function firstFailingGate(input: GateInput) {
+  return GATES.find((gate) => !gate.passes(input)) ?? null;
+}
 ```
 
 ### `src/routes/_app.tsx`
 
 ```tsx
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
-import { AppShell } from "@/features/navigation";
+import { firstFailingGate, profileQueryOptions } from "@/common/auth";
+import { AppShell } from "@/common/navigation";
+import { queryClient } from "@/common/query/client";
 
 export const Route = createFileRoute("/_app")({
-  beforeLoad: ({ context, location }) => {
+  beforeLoad: async ({ context, location }) => {
     if (context.session.status !== "signed-in") {
       throw redirect({ to: "/sign-in", search: { redirect: location.href } });
     }
+    const profile = await queryClient.ensureQueryData(profileQueryOptions());
+    const gate = firstFailingGate({ session: context.session, profile });
+    if (gate) throw redirect({ to: gate.route, search: { redirect: location.href } });
   },
   component: () => (
     <AppShell>
       <Outlet />
     </AppShell>
   ),
+});
+```
+
+### `src/routes/sign-in.tsx`
+
+```tsx
+import { createFileRoute, redirect } from "@tanstack/react-router";
+import { z } from "zod";
+import { SignInPage } from "@/features/sign-in";
+
+const SearchSchema = z.object({
+  redirect: z
+    .string()
+    .refine((path) => path.startsWith("/") && !path.startsWith("//"))
+    .catch("/"),
+});
+
+export const Route = createFileRoute("/sign-in")({
+  validateSearch: SearchSchema,
+  beforeLoad: ({ context, search }) => {
+    if (context.session.status === "signed-in") throw redirect({ to: search.redirect });
+  },
+  head: () => ({ meta: [{ title: "Sign in" }] }),
+  component: SignInPage,
 });
 ```
 

@@ -1,8 +1,8 @@
 ---
 name: building-react-native-application
 id: ddfed93c-f419-4c5f-8832-85acc8f85f00
-description: Guides building Expo/React Native apps with TypeScript on a fixed stack (NativeWind, React Navigation static config, TanStack Query, TanStack Form, Zod) with consistent strategies for structure, data and errors, async states, forms, styling from a supplied design, auth guards, and platform fixes. Use when creating an Expo app, or changing code in an app whose `package.json` has `expo`, `@react-navigation/native`, and `nativewind`, to follow these conventions.
-version: 2.0.0
+description: Guides building Expo/React Native apps with TypeScript on a fixed stack (NativeWind, React Navigation static config, @rn-primitives, TanStack Query, TanStack Form, Zod) on structural foundations — structure, navigation and deep links, styling, UI primitives and accessibility, data, async states, errors, forms, authentication, guards — plus platform fixes, turning whatever requirements exist into that implementation. Use when creating an Expo app, or changing code in an app whose `package.json` has `expo`, `@react-navigation/native`, and `nativewind`, to follow these conventions.
+version: 3.0.0
 ---
 
 # React Native application
@@ -28,12 +28,14 @@ version: 2.0.0
 | --- | --- | --- |
 | Set up | "Set up building-react-native-application", "Is building-react-native-application ready?" | **Setup** — run Workflow step 1 for every row, then report each row's state |
 | Scaffold | "Create an Expo app in apps/mobile", "Scaffold here", "Add linting and env handling to the app" | [scaffolding-application.md](references/scaffolding-application.md), [managing-package-installs.md](references/managing-package-installs.md), [setting-up-nativewind.md](references/setting-up-nativewind.md), [managing-environment.md](references/managing-environment.md), [managing-linting.md](references/managing-linting.md) |
-| Structure | "Where does this module belong?", "Can a feature import another feature?", "Move this component to the right layer" | [managing-project-structure.md](references/managing-project-structure.md) |
-| Screen / feature | "Add a settings screen", "New orders feature", "Custom tab bar", "Add a settings stack" | [managing-project-structure.md](references/managing-project-structure.md), [creating-screen.md](references/creating-screen.md) |
-| UI primitive | "Add a Dialog to src/ui", "Port the design's button" | [managing-project-structure.md](references/managing-project-structure.md), [creating-ui-component.md](references/creating-ui-component.md), [managing-styling.md](references/managing-styling.md) |
-| Data and errors | "Fetch orders from the API", "Add a mutation for checkout", "Format the order date" | [managing-data.md](references/managing-data.md), [managing-environment.md](references/managing-environment.md) |
+| Structure | "Where does this module belong?", "Two features need this hook", "Move this component to the right layer" | [managing-project-structure.md](references/managing-project-structure.md), [managing-linting.md](references/managing-linting.md) |
+| Screen / feature | "Add a settings screen", "New orders feature", "Custom tab bar", "Open this screen from a link" | [managing-project-structure.md](references/managing-project-structure.md), [creating-screen.md](references/creating-screen.md) |
+| UI primitive | "Add a Dialog to src/ui", "Build the select from the spec" | [managing-project-structure.md](references/managing-project-structure.md), [creating-ui-component.md](references/creating-ui-component.md), [managing-styling.md](references/managing-styling.md) |
+| Data | "Fetch orders from the API", "Add a mutation for checkout", "Format the order date" | [managing-data.md](references/managing-data.md), [managing-environment.md](references/managing-environment.md) |
 | Async UI states | "Show the orders list with loading and error states", "Add pull-to-refresh" | [creating-async-component.md](references/creating-async-component.md), [managing-data.md](references/managing-data.md) |
+| Errors / feedback | "Show a toast when saving fails", "Report crashes", "Handle unknown links" | [managing-errors.md](references/managing-errors.md), [managing-data.md](references/managing-data.md) |
 | Form / multi-step | "Add a profile form", "Make checkout a three-step form" | [creating-form.md](references/creating-form.md), [managing-data.md](references/managing-data.md) |
-| Styling / theme | "Apply the design tokens", "Change the brand colors", "Override a className" | [managing-styling.md](references/managing-styling.md) |
-| Auth guard | "Protect the account screens", "Add the sign-in flow" | [setting-up-auth-guard.md](references/setting-up-auth-guard.md), [creating-screen.md](references/creating-screen.md) |
+| Styling / theme | "Apply the design tokens", "Change the brand colors", "Add dark mode", "Override a className" | [managing-styling.md](references/managing-styling.md) |
+| Authentication | "Add the sign-in flow", "Attach the token to API calls", "Sign out on 401" | [setting-up-authentication.md](references/setting-up-authentication.md), [managing-data.md](references/managing-data.md) |
+| Auth guard | "Protect the account screens", "Require profile setup after sign-in", "Add an invite link", "Restrict the team screens to members" | [setting-up-auth-guard.md](references/setting-up-auth-guard.md), [setting-up-authentication.md](references/setting-up-authentication.md), [creating-screen.md](references/creating-screen.md) |
 | Platform fixes | "The keyboard covers the input", "White flash behind the header", "Keep the splash until fonts load", "Use Inter as the body font" | [managing-platform-fixes.md](references/managing-platform-fixes.md) |

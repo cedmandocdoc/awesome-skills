@@ -45,8 +45,11 @@ node <path-to-skill>/scripts/install-packages.cjs --root <resolved-app-path>
 | Piece | How |
 | --- | --- |
 | Tailwind CSS v4 | Install `tailwindcss` and `@tailwindcss/vite`; register the plugin per [Tailwind CSS — Using Vite](https://tailwindcss.com/docs/installation/using-vite); entry CSS per [managing-styling.md](./managing-styling.md) |
-| TanStack Router | Install `@tanstack/react-router` and `@tanstack/router-plugin`; register the plugin before `@vitejs/plugin-react` (**Examples**); routes per [creating-page.md](./creating-page.md) |
-| TanStack Query | Install `@tanstack/react-query`; `QueryClientProvider` above `RouterProvider` (**Examples**) |
+| TanStack Router | Install `@tanstack/react-router` and `@tanstack/router-plugin`; register the plugin before `@vitejs/plugin-react` with `autoCodeSplitting: true` (**Examples**); routes per [creating-page.md](./creating-page.md) |
+| Base UI | [creating-ui-component.md](./creating-ui-component.md) → **Setup** |
+| TanStack Query | `src/common/query/` per [managing-data.md](./managing-data.md) |
+| Errors and feedback | `RouteError`, `reportError`, `FeedbackHost` per [managing-errors.md](./managing-errors.md) |
+| Session and guard | [setting-up-authentication.md](./setting-up-authentication.md), [setting-up-auth-guard.md](./setting-up-auth-guard.md), when the app signs users in |
 | TypeScript | `strict` and the `@/*` alias in `tsconfig.app.json`, mirrored in `vite.config.ts` `resolve.alias` (**Examples**); folders per [managing-project-structure.md](./managing-project-structure.md) |
 | Typed env | [managing-environment.md](./managing-environment.md), when the app reads env |
 | Lint | [managing-linting.md](./managing-linting.md) |
@@ -65,14 +68,23 @@ Report `target_path`, the stack pieces installed, the verify result, and the ins
 
 ```tsx
 import "../global.css";
-import { StrictMode } from "react";
+import { StrictMode, useEffect } from "react";
 import { createRoot } from "react-dom/client";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
+import { SessionProvider, useSession, type Session } from "@/common/auth";
+import { RouteError } from "@/common/errors";
+import { FeedbackHost } from "@/common/feedback";
+import { queryClient } from "@/common/query/client";
+import { NotFoundPage } from "@/features/not-found";
 import { routeTree } from "./routeTree.gen";
 
-const queryClient = new QueryClient();
-const router = createRouter({ routeTree });
+const router = createRouter({
+  routeTree,
+  context: { session: undefined as unknown as Session },
+  defaultErrorComponent: RouteError,
+  defaultNotFoundComponent: NotFoundPage,
+});
 
 declare module "@tanstack/react-router" {
   interface Register {
@@ -80,14 +92,30 @@ declare module "@tanstack/react-router" {
   }
 }
 
+function App() {
+  const session = useSession();
+
+  useEffect(() => {
+    void router.invalidate();
+  }, [session]);
+
+  if (session.status === "restoring") return null;
+  return <RouterProvider router={router} context={{ session }} />;
+}
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
+      <SessionProvider>
+        <App />
+      </SessionProvider>
+      <FeedbackHost />
     </QueryClientProvider>
   </StrictMode>,
 );
 ```
+
+Without sign-in, drop the session pieces and the router context.
 
 ### `vite.config.ts`
 
@@ -100,7 +128,7 @@ import { defineConfig } from "vite";
 
 export default defineConfig({
   plugins: [
-    tanstackRouter({ target: "react", routesDirectory: "src/routes" }),
+    tanstackRouter({ target: "react", routesDirectory: "src/routes", autoCodeSplitting: true }),
     react(),
     tailwindcss(),
   ],

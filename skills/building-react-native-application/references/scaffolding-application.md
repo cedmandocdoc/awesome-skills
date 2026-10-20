@@ -45,8 +45,11 @@ node <path-to-skill>/scripts/install-packages.cjs --root <resolved-app-path>
 | Piece | How |
 | --- | --- |
 | NativeWind | [setting-up-nativewind.md](./setting-up-nativewind.md) |
-| React Navigation | [React Navigation — Getting started](https://reactnavigation.org/docs/getting-started.md); root navigator per [creating-screen.md](./creating-screen.md) |
-| TanStack Query | Install `@tanstack/react-query`; `QueryClientProvider` at the root (**Examples**) |
+| React Navigation | [React Navigation — Getting started](https://reactnavigation.org/docs/getting-started.md); root navigator and `linking` per [creating-screen.md](./creating-screen.md) |
+| TanStack Query | `src/common/query/` per [managing-data.md](./managing-data.md) |
+| Errors and feedback | `ErrorBoundary`, `reportError`, `FeedbackHost` per [managing-errors.md](./managing-errors.md) |
+| Session and guard | [setting-up-authentication.md](./setting-up-authentication.md), [setting-up-auth-guard.md](./setting-up-auth-guard.md), when the app signs users in |
+| Platform fixes | [managing-platform-fixes.md](./managing-platform-fixes.md) |
 | TypeScript | `strict`, `moduleResolution: "bundler"`, and the `@/*` alias (**Examples**); folders per [managing-project-structure.md](./managing-project-structure.md) |
 | Typed env | [managing-environment.md](./managing-environment.md), when the app reads env |
 | Lint | [managing-linting.md](./managing-linting.md) |
@@ -65,19 +68,62 @@ Report `target_path`, the stack pieces installed, the verify result, and the ins
 
 ```tsx
 import "./global.css";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useEffect } from "react";
+import { QueryClientProvider } from "@tanstack/react-query";
+import * as Linking from "expo-linking";
+import * as SplashScreen from "expo-splash-screen";
+import { KeyboardProvider } from "react-native-keyboard-controller";
+import { SessionProvider, useGateInput, useSession } from "@/common/auth";
+import { reportError } from "@/common/errors";
+import { FeedbackHost } from "@/common/feedback";
+import { queryClient } from "@/common/query/client";
+import { useTheme } from "@/common/theme";
 import { Navigation } from "@/routes";
+import { NAV_THEME } from "@/theme";
+import { ErrorBoundary } from "@/ui/ErrorBoundary";
+import { PortalHost } from "@/ui/Portal";
 
-const queryClient = new QueryClient();
+void SplashScreen.preventAutoHideAsync();
+
+const linking = { prefixes: [Linking.createURL("/")] };
 
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <Navigation />
+      <KeyboardProvider>
+        <SessionProvider>
+          <Root />
+        </SessionProvider>
+      </KeyboardProvider>
     </QueryClientProvider>
   );
 }
+
+function Root() {
+  const fontsLoaded = useAppFonts();
+  const { status } = useSession();
+  const gateInput = useGateInput();
+  const theme = useTheme();
+  const ready = fontsLoaded && theme.ready && status !== "restoring" && gateInput.ready;
+
+  useEffect(() => {
+    if (ready) void SplashScreen.hideAsync();
+  }, [ready]);
+
+  if (!ready) return null;
+  return (
+    <>
+      <ErrorBoundary onError={reportError}>
+        <Navigation linking={linking} theme={NAV_THEME[theme.colorScheme]} />
+      </ErrorBoundary>
+      <FeedbackHost />
+      <PortalHost />
+    </>
+  );
+}
 ```
+
+`useAppFonts` loads the fonts per [managing-platform-fixes.md](./managing-platform-fixes.md). Drop the pieces the app does not use: the session and gate input without sign-in, `useTheme` without dark tokens, `PortalHost` until the first overlay.
 
 ### `tsconfig.json`
 

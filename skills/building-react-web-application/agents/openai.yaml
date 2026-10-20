@@ -1,4 +1,4 @@
 interface:
   display_name: "React Web Application"
-  short_description: "Build Vite + React SPAs on a fixed stack with consistent strategies and a ported design"
+  short_description: "Build Vite + React SPAs on a fixed stack and structural foundations from any requirements"
   default_prompt: "Use $building-react-web-application when creating a Vite + React SPA, or changing code in an app built on vite and @tanstack/react-router."
