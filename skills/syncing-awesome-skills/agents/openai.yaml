@@ -1,0 +1,4 @@
+interface:
+  display_name: "Syncing Awesome Skills"
+  short_description: "Sync registered repos to the latest awesome-skills and open PRs"
+  default_prompt: "Use $syncing-awesome-skills only when the user names it, to sync registered repos to awesome-skills main or manage the repo registry."
