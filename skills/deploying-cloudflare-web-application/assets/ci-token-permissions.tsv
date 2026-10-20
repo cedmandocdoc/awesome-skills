@@ -1,0 +1,6 @@
+permission	level	when	method	path	body	used_by
+Account › Workers Scripts	Edit	always	DELETE	/accounts/{account}/workers/scripts/probe-{rand}	-	deploy, secret sync
+Zone › Workers Routes	Edit	routes	DELETE	/zones/{zone_id}/workers/routes/{rand32}	-	routes and custom domains in the zone
+Account › D1	Edit	d1	DELETE	/accounts/{account}/d1/database/{uuid}	-	d1 create, d1 migrations apply
+Account › Workers KV Storage	Edit	kv	DELETE	/accounts/{account}/storage/kv/namespaces/{rand32}	-	KV provisioning
+Account › Workers R2 Storage	Edit	r2	DELETE	/accounts/{account}/r2/buckets/probe-{rand}	-	R2 provisioning

@@ -89,17 +89,21 @@ No GitHub variables: public values are committed, so they travel with the PR and
 
 The workflow's `CLOUDFLARE_API_TOKEN`. Local Wrangler uses the `wrangler login` session.
 
-1. The user creates a custom token at https://dash.cloudflare.com/profile/api-tokens → **Create Custom Token**, with an expiry they track. Account Resources must include the `account_id` account; how many accounts and zones it reaches is the user's choice, so one token can serve several repos. Permissions:
+Permissions: [`../assets/ci-token-permissions.tsv`](../assets/ci-token-permissions.tsv), one row per permission. A row applies when its `when` is `always`; `routes` and the wrangler config has `routes`, with Zone Resources including those zones; or `d1`, `kv`, `r2` and the config has that resource.
 
-   | Permission | Level | When |
-   | --- | --- | --- |
-   | Account › Workers Scripts | Edit | Always |
-   | Zone › Workers Routes | Edit | The wrangler config has `routes`; Zone Resources include those zones |
-   | Account › D1 | Edit | The config has D1 |
-   | Account › Workers KV Storage | Edit | The config has KV |
-   | Account › Workers R2 Storage | Edit | The config has R2 |
-
+1. The user creates a custom token at https://dash.cloudflare.com/profile/api-tokens → **Create Custom Token**, with an expiry they track. Account Resources must include the `account_id` account; how many accounts and zones it reaches is the user's choice, so one token can serve several repos. Show the applying rows as a Permission | Level table headed by their count.
 2. The user sets it as the `CLOUDFLARE_API_TOKEN` repository secret per [configuring-secrets.md](./configuring-secrets.md).
+3. Run **Probe**.
+
+### Probe
+
+From the repository root: `bash <skill-dir>/scripts/probe-ci-token.sh <account-id> [d1] [kv] [r2] [routes=<zone> …]`, naming each resource the config has and each zone its `routes` use. [`../scripts/probe-ci-token.sh`](../scripts/probe-ci-token.sh) pushes a throwaway branch with one workflow that sends each applying row's request with the secret and prints status codes only, then deletes the run and the branch. Each request deletes a random name that does not exist, so nothing changes; 401 or 403 means missing, any other 2xx or 4xx granted.
+
+| Exit | Do |
+| --- | --- |
+| 0 | The token is ready |
+| 1 | Show only the missing rows and their count, or that the secret is unset; the user fixes the token and sets the secret again, then probe again |
+| 2 | Report the error; the probe did not run |
 
 ## Related
 

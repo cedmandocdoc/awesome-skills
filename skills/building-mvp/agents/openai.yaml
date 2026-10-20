@@ -1,0 +1,6 @@
+interface:
+  display_name: "Building MVP"
+  short_description: "Take an app idea to a deployed MVP: settle the idea, set up every skill and credential up front, then deliver to production"
+  default_prompt: "Use $building-mvp only when the user names it, to take an application idea from conversation to a deployed MVP on Vite + React, Cloudflare Workers, and Supabase."
+policy:
+  allow_implicit_invocation: false

@@ -2,7 +2,7 @@
 name: deploying-supabase-application
 id: 489208cd-16f5-4e4f-92c3-35813f082ce3
 description: Deploy a Supabase app to production through GitHub Actions — create the production project, keep its Auth and project settings in config.toml, and write the deploy workflow that rehearses migrations, then applies migrations, config, Edge Function secrets, functions, and buckets on every merge; guide the secrets the user sets in DEPLOYMENT.md. Use when deploying Supabase, setting up Supabase deploys in GitHub Actions, creating a hosted Supabase project, adding Supabase secrets or Auth redirect URLs, re-running a Supabase deploy, or validating migrations and Edge Functions before release.
-version: 5.1.0
+version: 5.2.0
 ---
 
 # Deploying a Supabase application
@@ -16,7 +16,7 @@ version: 5.1.0
 | GitHub CLI | user | required | Deploy, Secrets, Run | `gh auth status` succeeds and `gh repo view` finds the repository | https://cli.github.com, then `gh auth login`; create the GitHub repository and push the project |
 | Supabase login | user | required | Deploy, Provision, Run, Troubleshoot | `supabase projects list` succeeds | `supabase login` |
 | Production project | ask | required | Deploy, Provision | `config.toml` has `[remotes.production]` with a `project_id` | Ask: an existing project from `supabase projects list`, or a new one. Recorded as `[remotes.production] project_id` per [configuring-remote-project.md](references/configuring-remote-project.md) |
-| CI access token | user | required | Secrets | `gh secret list` shows `SUPABASE_ACCESS_TOKEN` | Per [configuring-github-actions.md](references/configuring-github-actions.md) → **CI access token** |
+| CI access token | user | required | Secrets | [configuring-github-actions.md](references/configuring-github-actions.md) → **Probe** reports every permission granted | Per [configuring-github-actions.md](references/configuring-github-actions.md) → **CI access token** |
 
 ## Workflow
 
@@ -24,7 +24,7 @@ version: 5.1.0
 2. **Contract** — read [deployment-contract.md](references/deployment-contract.md).
 3. **Recipe** — match one **Recipes** row; open every doc in its Read column.
 
-- Writes files only under the Supabase root and `.github/workflows/deploy-supabase.yml`; project changes run in the deploy workflow on push to the production branch. Locally it only creates the production project, after the user confirms, and reads remote state.
+- Writes files only under the Supabase root and `.github/workflows/deploy-supabase.yml`; project changes run in the deploy workflow on push to the production branch. Locally it only creates the production project, after the user confirms, reads remote state, and probes the CI token on a throwaway branch it deletes.
 - Never runs `db reset` on a local or hosted database.
 - Runs the local CLI with the `supabase login` session, never with an exported `SUPABASE_ACCESS_TOKEN`.
 - Sets no secret and reads only secret names; the user sets every secret in GitHub.

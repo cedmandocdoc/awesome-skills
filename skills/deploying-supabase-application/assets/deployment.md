@@ -21,5 +21,5 @@ A push to `{{PRODUCTION_BRANCH}}` that touches `{{SUPABASE_ROOT}}` checks the Gi
 
 | Step | How | Done when | Status |
 | --- | --- | --- | --- |
-| `SUPABASE_ACCESS_TOKEN` repository secret | Create a personal access token at https://supabase.com/dashboard/account/tokens with an expiry you track, reaching project `{{PROJECT_REF}}`, with {{TOKEN_PERMISSIONS}}. Set it at GitHub → Settings → Secrets and variables → Actions → **New repository secret**, or with `gh secret set SUPABASE_ACCESS_TOKEN` in your own terminal | `gh secret list` shows `SUPABASE_ACCESS_TOKEN` | todo |
+| `SUPABASE_ACCESS_TOKEN` repository secret | Create a personal access token at https://supabase.com/dashboard/account/tokens with an expiry you track, reaching project `{{PROJECT_REF}}`, with {{TOKEN_PERMISSIONS}}. Set it at GitHub → Settings → Secrets and variables → Actions → **New repository secret**, or with `gh secret set SUPABASE_ACCESS_TOKEN` in your own terminal | The CI token probe reports every permission granted | todo |
 | `{{SECRET_NAME}}` repository secret | Value from {{SECRET_SOURCE}}; set it the same way | `gh secret list` shows `{{SECRET_NAME}}` | todo |

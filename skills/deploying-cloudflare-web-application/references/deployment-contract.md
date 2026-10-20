@@ -12,5 +12,5 @@
 
 - A `DEPLOYMENT.md` there with another `generated_by` → stop and ask where to write it.
 - **Manual setup** holds one secret row per needed name and one zone row per `custom_domain` host.
-- Status is `todo`, `done <YYYY-MM-DD>`, or `n/a`. Each update re-checks every Done when that is a command and sets Status; a row also turns `done` when the user says so.
+- Status is `todo`, `done <YYYY-MM-DD>`, or `n/a`. Each update re-checks every Done when that is a command and sets Status, running the CI token probe per [configuring-github-actions.md](./configuring-github-actions.md) → **Probe** only while its row is `todo`; a row also turns `done` when the user says so.
 - The report lists the rows still `todo`, each with its How.

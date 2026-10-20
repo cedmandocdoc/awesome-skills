@@ -1,0 +1,18 @@
+permission	level	when	method	path	body	used_by
+Project Settings	Read-write	always	PATCH	/v1/projects/{ref}	{"name":1}	supabase link; Auth config push
+API Keys	Read	always	GET	/v1/projects/{ref}/api-keys	-	supabase link, seed buckets
+API Key Secrets	Read	always	GET	/v1/projects/{ref}/api-keys?reveal=true	-	supabase link, seed buckets
+Connection Pooling	Read	always	GET	/v1/projects/{ref}/config/database/pooler	-	supabase link records the IPv4 pooler that db push dials
+Database	Read-write	always	POST	/v1/projects/{ref}/cli/login-role	{"read_only":"probe"}	db push through the temporary login role
+Auth Config	Read-write	always	PATCH	/v1/projects/{ref}/config/auth	{"jwt_exp":"probe"}	config push
+Database Config	Read	always	GET	/v1/projects/{ref}/config/database/postgres	-	config diff, config push
+SSL Enforcement	Read	always	GET	/v1/projects/{ref}/ssl-enforcement	-	config diff, config push
+Network Restrictions	Read	always	GET	/v1/projects/{ref}/network-restrictions	-	config diff, config push
+Data API Config	Read	always	GET	/v1/projects/{ref}/postgrest	-	config diff, config push
+Realtime Config	Read	always	GET	/v1/projects/{ref}/config/realtime	-	config diff, config push
+Storage Config	Read	always	GET	/v1/projects/{ref}/config/storage	-	config diff, config push
+Edge Function Secrets	Read-write	always	DELETE	/v1/projects/{ref}/secrets	["PROBE_{rand}"]	secrets set
+Edge Functions	Read-write	always	DELETE	/v1/projects/{ref}/functions/probe-{rand}	-	functions deploy
+Data API Config	Read-write	api	PATCH	/v1/projects/{ref}/postgrest	{"max_rows":"probe"}	config push of [api]
+Database Config	Read-write	db	PUT	/v1/projects/{ref}/config/database/postgres	{"max_connections":"probe"}	config push of [db]
+Storage Config	Read-write	storage	PATCH	/v1/projects/{ref}/config/storage	{"fileSizeLimit":"probe"}	config push of [storage]

@@ -98,21 +98,21 @@ jobs:
 
 The workflow's `SUPABASE_ACCESS_TOKEN`. Local commands use the `supabase login` session.
 
-1. The user creates a personal access token at https://supabase.com/dashboard/account/tokens with an expiry they track. It must reach the production project; whether it reaches one project or a whole organization is the user's choice, so one token can serve several repos. Permissions:
+Permissions: [`../assets/ci-token-permissions.tsv`](../assets/ci-token-permissions.tsv), one row per permission. A row applies when its `when` is `always`, or `api`, `db`, or `storage` and the production block declares that section.
 
-   | Permission | Level | Used by |
-   | --- | --- | --- |
-   | Project Settings | Read-write | `supabase link`; Auth config push |
-   | API Keys, API Key Secrets | Read | `supabase link`, `seed buckets` |
-   | Connection Pooling | Read | `supabase link` records the IPv4 pooler that `db push` dials |
-   | Database | Read-write | `db push` through the temporary login role |
-   | Auth Config | Read-write | `config push` |
-   | Database Config, SSL Enforcement, Network Restrictions, Data API Config, Realtime Config, Storage Config | Read | `config diff`, `config push` read the project config |
-   | Data API Config, Database Config, Storage Config | Read-write | Only when the production block declares that section |
-   | Edge Function Secrets | Read-write | `secrets set` |
-   | Edge Functions | Read-write | `functions deploy` |
-
+1. The user creates a personal access token at https://supabase.com/dashboard/account/tokens with an expiry they track. It must reach the production project; whether it reaches one project or a whole organization is the user's choice, so one token can serve several repos. Show the applying rows as a Permission | Level table headed by their count.
 2. The user sets it as the `SUPABASE_ACCESS_TOKEN` repository secret per [configuring-secrets.md](./configuring-secrets.md).
+3. Run **Probe**.
+
+### Probe
+
+From the repository root: `bash <skill-dir>/scripts/probe-ci-token.sh <project-ref> [api] [db] [storage]`, naming each section the production block declares. [`../scripts/probe-ci-token.sh`](../scripts/probe-ci-token.sh) pushes a throwaway branch with one workflow that sends each applying row's request with the secret and prints status codes only, then deletes the run and the branch. A write row's request carries a wrong-typed body or a random missing name, so nothing changes; 401 or 403 means missing, any other 2xx or 4xx granted.
+
+| Exit | Do |
+| --- | --- |
+| 0 | The token is ready |
+| 1 | Show only the missing rows and their count, or that the secret is unset; the user fixes the token and sets the secret again, then probe again |
+| 2 | Report the error; the probe did not run |
 
 ## Related
 
