@@ -12,10 +12,11 @@ App package, platforms, production branch, and watch paths from [discovering-app
 
 ### Workflow file
 
-`.github/workflows/deploy-<app>.yml`, one per app package. Adapt the setup steps to the package manager (drop `pnpm/action-setup` for npm; `npm ci` instead of `pnpm install`). Set `--platform` to the platforms the app has; drop the metadata steps and option for an Android-only app and `promote-android` for an iOS-only one. Pin third-party actions to a commit SHA.
+`.github/workflows/deploy-<app>.yml`, one per app package. Adapt the setup steps to the package manager (drop `pnpm/action-setup` for npm; `npm ci` instead of `pnpm install`). Set `--platform` to the platforms the app has; drop the metadata steps and option for an Android-only app. Pin third-party actions to a commit SHA.
 
 ```yaml
 name: Deploy <app>
+run-name: Deploy <app> · ${{ inputs.action || 'build' }}
 
 on:
   push:
@@ -25,7 +26,7 @@ on:
     inputs:
       action:
         type: choice
-        options: [build, preview, promote-android, metadata]
+        options: [build, preview, metadata]
         default: build
 
 concurrency: deploy-<app>
@@ -35,6 +36,7 @@ permissions:
 
 jobs:
   deploy:
+    name: ${{ inputs.action || 'build' }}
     if: github.ref == 'refs/heads/<production-branch>'
     runs-on: ubuntu-latest
     defaults:
@@ -72,13 +74,10 @@ jobs:
         run: git diff --quiet HEAD^ HEAD -- store.config.json || echo "changed=true" >> "$GITHUB_OUTPUT"
       - name: Push App Store listing
         if: steps.listing.outputs.changed == 'true' || inputs.action == 'metadata'
-        run: eas metadata:push --profile production --non-interactive
+        run: EXPO_APPLE_TEAM_ID=$(jq -r '.submit.base.ios.appleTeamId' eas.json) eas metadata:push --profile production --non-interactive
       - name: Preview build
         if: inputs.action == 'preview'
         run: eas build --platform all --profile preview --non-interactive --no-wait
-      - name: Promote to Play production
-        if: inputs.action == 'promote-android'
-        run: eas submit --platform android --profile production --latest --non-interactive
 ```
 
 | Need | Change |

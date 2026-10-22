@@ -40,7 +40,7 @@ A push to `{{PRODUCTION_BRANCH}}` that touches the app builds the `production` p
 ## Each release
 
 1. iOS: add the build to the version at https://appstoreconnect.apple.com/apps and submit it for review.
-2. Android: promote it to the Play `production` track with `gh workflow run deploy-{{APP}}.yml --ref {{PRODUCTION_BRANCH}} -f action=promote-android`.
+2. Android: at https://play.google.com/console → Testing → Internal testing, open the release → **Promote release** → Production, then send it for review. A promotion moves the uploaded build; Play rejects a re-upload of the same version code.
 
 ## Google service account
 

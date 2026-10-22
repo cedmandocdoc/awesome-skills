@@ -11,7 +11,7 @@
 | Prompt or message | Missing | Action |
 | --- | --- | --- |
 | Apple ID sign-in, `authentication with an ASC API key is required`, missing credentials in non-interactive mode | This app's store credentials on EAS, or an expired distribution certificate | The user runs `eas credentials -p <platform>` per [configuring-stores.md](./configuring-stores.md) → **Store credentials**; then re-run the workflow |
-| `Apple Team ID:` | `appleTeamId` in the submit profile | Set it |
+| `Apple Team ID:` | `EXPO_APPLE_TEAM_ID` on the metadata step; the EAS-stored key carries no team | Set `submit.base.ios.appleTeamId` and the step per [configuring-github-actions.md](./configuring-github-actions.md) → **Workflow file** |
 | `Set ascAppId in the submit profile` | The App Store Connect record or its ID | `DEPLOYMENT.md` → App record; **Provision** step 4 |
 | `What would you like to submit?` | `--latest` or `--id` | Add the flag |
 | `An Expo user account is required` | Locally: the `eas login` session expired. In the workflow: `EXPO_TOKEN` is revoked | `eas login`; or replace the secret per [configuring-github-actions.md](./configuring-github-actions.md) → **CI token** |

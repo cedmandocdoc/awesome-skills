@@ -50,7 +50,7 @@ App package, platforms, store IDs, and runtime variables per [discovering-applic
       "ios": { "ascAppId": "<apple-id-number>", "appleTeamId": "<team-id>" }
     },
     "internal": { "extends": "base", "android": { "track": "internal" } },
-    "production": { "extends": "base", "android": { "track": "production" } }
+    "production": { "extends": "base" }
   }
 }
 ```
@@ -62,8 +62,8 @@ App package, platforms, store IDs, and runtime variables per [discovering-applic
 | `appVersionSource: "remote"` with `autoIncrement` | EAS stores and bumps the build number per production build |
 | `build.<profile>.env` | Public runtime values baked into that profile's build; never a secret. The workflow job's environment does not reach the cloud build |
 | `submit.*.ios.ascAppId` | Skips the App Store Connect lookup; required non-interactively. Unknown until the record exists → leave it out; **Provision** writes it |
-| `submit.*.ios.appleTeamId` | Removes the Team ID prompt from `eas metadata:push` |
-| `android.track` | Play testing track. iOS has no track: TestFlight and App Store release are chosen in App Store Connect |
+| `submit.base.ios.appleTeamId` | The Team ID the workflow's metadata step passes as `EXPO_APPLE_TEAM_ID`. `eas metadata:push` reads the team from the EAS-stored key, which is unset when the key was uploaded as a `.p8`, and never from the submit profile |
+| `android.track` | Play testing track a build is submitted to. Production is promoted from it in Play Console, as the App Store release is chosen in App Store Connect |
 
 Submit profiles name no key file: submissions and metadata pushes use the keys stored on EAS.
 
