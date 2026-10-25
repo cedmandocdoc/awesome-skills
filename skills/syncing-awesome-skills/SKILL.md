@@ -2,7 +2,7 @@
 name: syncing-awesome-skills
 id: 6697e357-b751-42ae-a893-5ec49eddf936
 description: Syncs project repos to the latest awesome-skills main — keeps a registry of repos (add, delete, hold, resume), asks which repos to sync, then runs one subagent per repo that copies the updated skills, makes the implementation changes the skill diff requires, and opens a PR — pausing to ask the user when a change is complex (deliver it with the repo's delivering-goal, sync only the simple changes, or abort) or a step fails. Use only when the user names this skill (`/syncing-awesome-skills`, `$syncing-awesome-skills`, or "syncing-awesome-skills").
-version: 1.0.0
+version: 1.1.0
 ---
 
 # Syncing Awesome Skills

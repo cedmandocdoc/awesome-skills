@@ -2,7 +2,7 @@
 
 ## Overview
 
-**Orchestration mode.** Asks which registered repos to sync, runs one subagent per repo per [syncing-repo.md](./syncing-repo.md), relays any subagent that needs the user, and reports the outcome. The orchestrator itself only runs `registry.mjs`, spawns and messages subagents, and reads.
+**Orchestration mode.** Asks which registered repos to sync, runs one subagent per repo per [syncing-repo.md](./syncing-repo.md), relays any subagent that needs the user, and reports the outcome. The orchestrator itself only runs `registry.mjs`, spawns, messages, and stops subagents, and reads.
 
 ## Prerequisites
 
@@ -44,7 +44,13 @@ Run at most 4 at once; start the next as one finishes.
 
 A subagent ending with `status: needs-input` → tell the user right away: **`<repo>` needs your input** — its question and state, unedited (a phase plan in full). Pass the user's replies to that subagent with SendMessage until it reports `succeeded` or `failed`; one subagent may ask several times (complex-change options, delivering-goal's phase plan, a blocked phase). What to do (deliver, simple only, abort, push through, clean up) is the user's call with the subagent.
 
-### 5. Report
+### 5. Relay handoffs
+
+- A phase deliverer's one-line handoff (`Phase done: …`, `Blocked phase: …`) reaching you instead of its worker → SendMessage it verbatim to the worker of the repo in its path.
+- A worker ending with `waiting on phase …` → wait for that handoff. Never launch, resume, or relaunch a phase deliverer yourself.
+- The user pauses a sync → stop the worker first, then its running deliverer, so the worker cannot launch another; resume by messaging the worker the state it stopped at.
+
+### 6. Report
 
 When every subagent has reported `succeeded` or `failed`:
 
