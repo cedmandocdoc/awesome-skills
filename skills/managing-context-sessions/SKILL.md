@@ -5,14 +5,15 @@ description: >-
   Carries focused context for one piece of work across chats. Creates
   a context session file under sessions/ that declares the work's current state
   — what is agreed, ruled out, and open, with pointers to where each part lives
-  — continues it by reading only the pointed sources, running the requested
-  task, and editing the state in place, updates it with work done outside a
+  and the content of every outside source it relies on — continues it by reading
+  only the pointed sources, running the requested task, and editing the state
+  in place, updates it with work done outside a
   continue, and closes it when the work is done. Use only when the user names
   this skill (`/managing-context-sessions`, `$managing-context-sessions`, or
   "managing-context-sessions"), or references a session file under the
   sessions root with a task ("continue @sessions/03-saved-cards.md by building
   the PRD").
-version: 2.2.1
+version: 3.0.0
 ---
 
 # Managing Context Sessions
