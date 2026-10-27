@@ -6,7 +6,7 @@
 
 ## Prerequisites
 
-Per [session-contract.md](./session-contract.md) → **Find a session**, **Session body**, **Item rules**, **Pointer rules**.
+Per [session-contract.md](./session-contract.md) → **Find a session**, **Session body**, **Item rules**, **Pointer rules**, **Outside sources**.
 
 ## Guidelines
 
@@ -16,7 +16,7 @@ Per [session-contract.md](./session-contract.md) → **Find a session**; skip wh
 
 ### 2. Collect what the work settled
 
-Sort it into the sections per [session-contract.md](./session-contract.md) → **Session body**. **Agreed** items point to the files, sections, or outside items this work created or changed.
+Sort it into the sections per [session-contract.md](./session-contract.md) → **Session body**. **Agreed** items point to the files and sections this work created or changed. Content the work took from outside the project becomes items per [session-contract.md](./session-contract.md) → **Outside sources**.
 
 ### 3. Edit the state
 
@@ -29,6 +29,7 @@ Change only the items this work affected; keep every other item word for word.
 | Reversed an agreed item | Remove it; add the old option to **Ruled out** with the reason |
 | Answered an **Open** item | Remove it; add the answer to **Agreed** |
 | Updated a source marked `(recheck: …)` | Remove the marker |
+| Wrote an item's content into a project file | Point the item to that file; keep its `(from: …)` |
 
 Confirm each `#heading` and symbol exists in the current file.
 

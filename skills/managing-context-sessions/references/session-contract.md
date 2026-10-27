@@ -2,9 +2,13 @@
 
 ## Overview
 
-Shared plumbing for all `managing-context-sessions` recipes: sessions root discovery, layout, session frontmatter, finding a session, session body, item and pointer rules, reading a session, lifecycle, and the `index.md` mirror.
+Shared plumbing for all `managing-context-sessions` recipes: project, sessions root discovery, layout, session frontmatter, finding a session, session body, item, pointer, and outside source rules, reading a session, lifecycle, and the `index.md` mirror.
 
 ## Guidelines
+
+### Project
+
+The folder the agent works in: the workspace root.
 
 ### Author signature
 
@@ -28,7 +32,7 @@ Templates: [`../assets/index.md`](../assets/index.md), [`../assets/session.md`](
 
 ### Resolve sessions root
 
-Search the repository for `index.md` whose frontmatter has `doc_type: context-sessions-index`, `generated_by: managing-context-sessions`, and `author` = **Author signature**. The root is its parent directory.
+Search the project for `index.md` whose frontmatter has `doc_type: context-sessions-index`, `generated_by: managing-context-sessions`, and `author` = **Author signature**. The root is its parent directory.
 
 | Matches | Action |
 | --- | --- |
@@ -93,6 +97,7 @@ Omit a section while it has no items. Record only what falls within the intent l
 - **With a pointer**, the statement summarizes; detail stays in the source.
 - **Without a pointer**, the session is the content's only home: the item carries it in full, as sub-bullets or a table under the item.
 - `(recheck: <what changed>)` after a pointer marks a source built on an item that has since changed.
+- `(from: <origin>)` after an item, or after the lead item of a group, names the outside source its content came from. The session is complete without it: open an origin only when the user asks to refresh from it.
 
 ### Pointer rules
 
@@ -101,7 +106,16 @@ Omit a section while it has no items. Record only what falls within the intent l
 | Markdown | `path#heading-slug` |
 | Code | `path` plus symbol (`SavedCardList`, `savePaymentMethod`) |
 | Whole file | `path` — only for files the work created |
-| Outside the repository | URL or ID (Figma frame, ticket, PR, store listing) |
+
+Every pointer targets a file in the project.
+
+### Outside sources
+
+A source outside the project — a URL, document, Figma frame, ticket, PR, or file elsewhere on the machine, in any format — becomes items without a pointer, marked `(from: <origin>)`, holding what the work needs from it:
+
+- Distill by understanding into the session's sections: the rules, values, decisions, and examples the work relies on, not the source's layout.
+- Keep values exact: numbers, codes, names, formats.
+- The user reports a new version of an origin → read it and edit the items from it per [updating-session.md](./updating-session.md) step 3.
 
 ### Reading a session
 
