@@ -6,7 +6,7 @@
 
 ## Prerequisites
 
-Per [spec-contract.md](./spec-contract.md) → **Resolve docs root**, **Feature slug**, **Create or amend**, **Hub sync**, **Tier**, **Platform differences**.
+Per [spec-contract.md](./spec-contract.md) → **Resolve docs root**, **Feature slug**, **Create or amend**, **Hub sync**, **Tier**, **Roles and access**, **Platform differences**.
 
 ## Guidelines
 
@@ -19,7 +19,7 @@ Per [spec-contract.md](./spec-contract.md) → **Resolve docs root** and **Featu
 | Source | What to extract |
 | --- | --- |
 | User input | Feature behavior, rules, acceptance criteria |
-| `prd.md` | Personas, product scope, feature placement — read if present |
+| `prd.md` | Personas, roles, product scope, feature placement — read if present |
 | Existing `frd.md` | On amend: preserve structure; apply requested changes |
 | Related FRDs | Adjacent features for dependency notes |
 
@@ -36,6 +36,8 @@ Use [`../assets/frd.md`](../assets/frd.md) for new files. Required:
 - Frontmatter: `doc_type: frd`, `scope: feature`, `feature`, `depends_on` → `../../prd.md`
 - Initialize or sync `related` with sibling paths; mark missing siblings as TBD in **Related documents**
 - All template sections per tier
+- **Access** — one row per capability (a verb on a resource) the feature exposes, one column per PRD role; each cell `Allowed`, `Own only`, `Denied`, or `Allowed when <condition>`; **Requirement** names the FR ID. Notes below the table say whether a denied resource is hidden or visible but not actionable
+- **Acceptance criteria** — at least one denial per capability a role is denied (`Viewer cannot edit an invoice`)
 - Platform sections inside this file when needed
 
 On amend: [spec-contract.md](./spec-contract.md) → **Create or amend**.

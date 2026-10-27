@@ -29,7 +29,7 @@ Use [`../assets/user-story.md`](../assets/user-story.md) for new files. Required
 - Frontmatter per contract
 - **Stories** in As / I want / So that format with testable acceptance criteria
 - **User journey** table at standard tier for feature docs
-- Alternate and error paths for feature-level docs at standard tier
+- Alternate and error paths for feature-level docs at standard tier, including each denied attempt from FRD **Access**
 - Platform sections when journeys diverge materially
 
 On amend: [spec-contract.md](./spec-contract.md) → **Create or amend**.

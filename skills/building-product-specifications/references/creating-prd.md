@@ -6,7 +6,7 @@
 
 ## Prerequisites
 
-Per [spec-contract.md](./spec-contract.md) → **Resolve docs root**, **Create or amend**, **Tier**, **No auto-spawn**.
+Per [spec-contract.md](./spec-contract.md) → **Resolve docs root**, **Create or amend**, **Tier**, **Roles and access**, **No auto-spawn**.
 
 ## Guidelines
 
@@ -34,6 +34,7 @@ Use [`../assets/prd.md`](../assets/prd.md) for new files. Required:
 
 - Full YAML frontmatter per contract (`doc_type: prd`, `scope: product`)
 - All template sections; omit or shorten sections per tier
+- **Roles** — one row per role: Scope (`global`, `per <container>`, or `per resource`) and how the role is granted (signup default, invited by a role, system). **Access rules** for product-wide rules: ownership (`own` vs `any`), invariants (an org keeps at least one Owner), effect of revoking a role. Each **Personas** row lists the roles that persona holds
 - **Features** table: link each row to `features/<slug>/frd.md` only for features the user named; use TBD for planned features without FRDs yet
 - **Related documents** table for product-level companions (mark TBD if not created)
 

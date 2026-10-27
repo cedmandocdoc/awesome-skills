@@ -24,9 +24,20 @@ generated_by: building-product-specifications
 
 ## Personas
 
-| Persona | Role | Primary needs |
+| Persona | Roles | Primary needs |
 | --- | --- | --- |
-| {{PERSONA_1}} | {{ROLE_1}} | {{NEEDS_1}} |
+| {{PERSONA_1}} | {{ROLE_NAMES_1}} | {{NEEDS_1}} |
+
+## Roles
+
+| Role | Scope | Granted by | Description |
+| --- | --- | --- | --- |
+| Anonymous | — | Signed out | {{ANONYMOUS_DESCRIPTION}} |
+| {{ROLE_1}} | {{SCOPE_1}} | {{GRANTED_BY_1}} | {{ROLE_DESCRIPTION_1}} |
+
+### Access rules
+
+- {{ACCESS_RULE_1}}
 
 ## Product scope
 

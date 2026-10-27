@@ -33,6 +33,14 @@ related:
 
 - {{RULE_1}}
 
+## Access
+
+| Capability | {{ROLE_1}} | Anonymous | Requirement |
+| --- | --- | --- | --- |
+| {{CAPABILITY_1}} | {{ACCESS_1}} | Denied | FR-001 |
+
+- {{ACCESS_NOTE_1}}
+
 ## States and edge cases
 
 | State / case | Expected behavior |

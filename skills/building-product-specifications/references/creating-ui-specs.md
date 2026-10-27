@@ -53,7 +53,7 @@ On amend: [spec-contract.md](./spec-contract.md) → **Create or amend**.
 
 When a state changes region placement, add a placement drawing for that state in **States**. Composition change includes affordances. Copy / sample is `—` when unchanged.
 
-Minimum coverage at standard tier: loading, empty (when the screen can have no data), validation (when the screen has input), success and error for mutating actions, and the happy-path idle/populated state.
+Minimum coverage at standard tier: loading, empty (when the screen can have no data), validation (when the screen has input), success and error for mutating actions, a `denied` state for each role FRD **Access** leaves visible but not actionable, and the happy-path idle/populated state.
 
 ### 5. Sync hubs
 

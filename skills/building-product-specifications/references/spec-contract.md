@@ -136,6 +136,13 @@ Missing upstream: ask once whether to proceed with TBD sections or create upstre
 
 Infer tier from user phrasing; if unclear, default to **standard**. On amend, keep the existing tier unless the user asks to change depth.
 
+### Roles and access
+
+- PRD **Roles** is the only place roles are defined; every other spec uses its role names. A role the PRD lacks → ask the user to add it to the PRD before using it.
+- **Roles** lists Anonymous and every system actor (scheduled job, webhook) the product has.
+- PRD **Roles** and FRD **Access** appear at every tier; minimal tier may collapse each to one line (`Signed-in user: all; Anonymous: denied`).
+- Specs state what each role may do; how it is enforced belongs in TRD **Security and authentication**.
+
 ### Platform differences
 
 When web, mobile, or API diverge, add a short section inside the same file (e.g. `## Web`, `## Mobile`). Omit sections that do not apply.
