@@ -2,7 +2,7 @@
 name: building-product-specifications
 id: c4912b84-e88f-4515-8c83-e99288abca07
 description: Creates and amends product specification markdown — PRD, FRD, TRD, user story, and UI specs (flow, screen structure, view states) — with consistent layout and frontmatter. Use only when the user names this skill (`/building-product-specifications`, `$building-product-specifications`, or "building-product-specifications"), or references a spec file under a marked docs root (`@docs/prd.md`, `@docs/features/checkout/frd.md`) — no code implementation.
-version: 2.6.0
+version: 2.7.0
 ---
 
 # Building Product Specifications
