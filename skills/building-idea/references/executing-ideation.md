@@ -25,6 +25,7 @@ Each turn takes the first open branch whose dependencies are met and picks one m
 | Situation | Move |
 | --- | --- |
 | Codebase, docs, or earlier chat answers it | **Look up** — state the finding and resolve the branch. Confirm only when it contradicts the user. |
+| Rests on domain knowledge none of those confirm, even where a default seems conventional | **Park** — name what needs confirming, park the branch as needing expert input, and move on. |
 | A conventional or easily reversed default exists | **Suggest** — propose the decision with a one-line reason; resolve it as `agent` unless the user objects. |
 | Depends on the user's goals, taste, audience, business, or private constraints | **Ask** — one question with 2–4 options, the recommended option first and marked. |
 

@@ -29,7 +29,7 @@ For a feature inside an existing app, resolve **Platform and stack** and existin
 | --- | --- |
 | Open | No decision yet |
 | Resolved | Meets its **Resolved when** criteria; records the decision and who made it (`user` or `agent`) |
-| Parked | Deliberately deferred by the user; records why |
+| Parked | Deliberately deferred by the user, or by the agent when the branch needs expert input; records why |
 
 A later answer that contradicts a resolved branch reopens that branch and every branch that depends on it.
 

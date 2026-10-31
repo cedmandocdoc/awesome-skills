@@ -7,7 +7,7 @@ description: >-
   answer up, walking an idea tree from problem to MVP scope, flows, data, and
   stack until every branch is decided or parked. Use only when the user names
   this skill (`/building-idea` or `$building-idea`).
-version: 1.1.0
+version: 1.2.0
 disable-model-invocation: true
 ---
 
