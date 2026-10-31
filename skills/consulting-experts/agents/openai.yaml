@@ -1,0 +1,4 @@
+interface:
+  display_name: "Consulting Experts"
+  short_description: "Declare the team of experts any goal needs, confirm it with the user, run it, and deliver the output"
+  default_prompt: "Use $consulting-experts only when the user names this skill, to declare, confirm, and run the team of experts a goal needs."
