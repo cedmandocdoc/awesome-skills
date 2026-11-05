@@ -1,4 +1,4 @@
-// Publishes approved posts through Buffer and hosts their media on R2.
+// Queues approved posts in Buffer and hosts their media on R2.
 // Run from the repository root: node --env-file=.env <marketing-root>/sender/send.js <command>
 import { readFileSync } from 'node:fs';
 import { dirname, join, resolve, relative, extname } from 'node:path';
@@ -83,16 +83,10 @@ async function push(argv) {
   console.log(r.post.id);
 }
 
-async function status([id]) {
-  if (!id) throw new Error('usage: status <buffer-id>');
-  const { post } = await buffer('query($input: PostInput!) { post(input: $input) { status sentAt error { message } } }', { input: { id } });
-  console.log([post.status, post.sentAt ?? '', post.error?.message ?? ''].join('\t'));
-}
-
 const [command, ...args] = process.argv.slice(2);
-const commands = { verify, channels, upload, push, status };
+const commands = { verify, channels, upload, push };
 if (!commands[command]) {
-  console.error('usage: send.js verify | channels | upload <file> | push --channel <name> --text <file> [--media <url>…] [--at <time>] | status <buffer-id>');
+  console.error('usage: send.js verify | channels | upload <file> | push --channel <name> --text <file> [--media <url>…] [--at <time>]');
   process.exit(2);
 }
 try {

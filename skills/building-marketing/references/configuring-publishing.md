@@ -20,7 +20,6 @@ node --env-file=.env <marketing-root>/sender/send.js <command>
 | `channels` | Lists Buffer channels: id, service, name |
 | `upload <file>` | Puts the file in the media bucket at its path under the marketing root; prints its public URL |
 | `push --channel <name> --text <file> [--media <url>…] [--at "YYYY-MM-DD HH:MM"]` | Creates a Buffer post on the mapped channel: queued without `--at`, scheduled at a future `--at` (local time), now at a past one; prints the Buffer post id |
-| `status <buffer-id>` | Prints the post's status and sent time |
 
 `--media` takes one video URL, or one or more image URLs for a carousel.
 

@@ -2,7 +2,7 @@
 
 ## Overview
 
-**Docs only.** Studies the reference the user gives (a mockup folder, a codebase, a URL, a store listing, or a description) with the framing their prompt sets, and writes the item's `plan.md` through **Brief**, **Study**, and **Message**. Also re-studies an existing item, keeping its **Promotions**, **Reach**, and **Next**.
+**Docs only.** Studies the reference the user gives (a mockup folder, a codebase, a URL, a store listing, or a description) with the framing their prompt sets, and writes the item's `plan.md` through **Brief**, **Study**, and **Message**. Also re-studies an existing item, keeping its **Promotions** and **Reach**.
 
 ## Prerequisites
 
@@ -54,4 +54,4 @@ Set `studied` to today; update the `index.md` row. Reply with:
 - Each audience in one line, its top pain quote, and its best hook
 - The features to show
 - What was assumed and what the user should check
-- Next: "make a promotion" for this item
+- Next: "make a promotion" proposes concepts for this item

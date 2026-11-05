@@ -2,11 +2,11 @@
 
 ## Overview
 
-**Execution mode.** Plans one promotion in the item's `plan.md` (format, script, scenes, voice, music brief, paid calls), stops for approval, then makes it: ElevenLabs voiceover, the user's music track, HyperFrames video per ratio or stills, and the renders. Also changes a promotion.
+**Execution mode.** Takes an item from concepts to a finished promotion: proposes concepts the user steers until one fits, plans the chosen one, previews it as a free silent draft when the user wants one, then makes the final with ElevenLabs voiceover and hands it to posting. Continues a promotion from wherever it stands.
 
 ## Prerequisites
 
-Per [marketing-contract.md](./marketing-contract.md) → **Output layout**, **Items and promotions**, **plan.md**, **Statuses**, **Platform rules**, **Honesty rules**, **Media and paid calls**, **Discover dependency skill**.
+Per [marketing-contract.md](./marketing-contract.md) → **Output layout**, **Items and promotions**, **plan.md**, **Where a promotion stands**, **Platform rules**, **Honesty rules**, **Media and paid calls**, **Discover dependency skill**.
 
 ## Guidelines
 
@@ -14,28 +14,36 @@ Per [marketing-contract.md](./marketing-contract.md) → **Output layout**, **It
 
 Per [marketing-contract.md](./marketing-contract.md) → **Resolve marketing root**. No item or no **Study** yet → run [studying-reference.md](./studying-reference.md) first, then continue here.
 
-| Request | Route |
+| Request | Step |
 | --- | --- |
-| A new promotion | Steps 2–9 with the next `NN-slug` |
-| Change a promotion not yet posted | Edit its section, then steps 4–9 for what the change touches |
-| Change a promotion already posted | A new promotion copied from it, then steps 4–9 |
+| A new promotion, or more variants | 2 |
+| Continue a promotion | The step after where it stands per [marketing-contract.md](./marketing-contract.md) → **Where a promotion stands** |
+| Change a draft | 5 |
+| "Go final" | 6 |
+| Change a posted promotion | 3, with a new promotion copied from it |
 
-### 2. Pick the format
+### 2. Propose concepts
+
+Propose 3 concepts from **Study** and **Message**, each a card:
+
+- Format (below), audience, hook line
+- Storyline in 4–6 beats, and the screens or footage it shows
+- Music mood
 
 | Format | Flow | Fits |
 | --- | --- | --- |
 | Demo walkthrough | hook → pain → app on a phone doing the job → offer → CTA | One clear feature that answers the pain |
 | Problem → solution | the messy way (notebook, chat) → the same task in the app → result | An audience still on a manual workaround |
 | Founder overlay | founder talking + app screens alongside → trust line → CTA | Trust matters more than features; needs the founder's footage |
-| Static ad / carousel | hook frame → 2–3 screen frames → offer frame | Feed placements, low budget, fast variants |
+| Static ad / carousel | hook frame → 2–3 screen frames → offer frame | Feed placements, fast variants |
 
-Use the format the user names; else recommend one per audience from **Study** and **Message**.
+Render each concept's hook frame as a still in `concepts/` (one composition per concept, `npx hyperframes snapshot --at <t>`) and show the cards with their stills. The user picks one, or steers ("more variants, warmer, show the reminder"): propose 3 new concepts shaped by the feedback, keeping what they liked, and repeat until they pick.
 
-### 3. Write the promotion
+### 3. Plan the chosen concept
 
-Add `### <NN-slug>` under **Promotions** from [`../assets/plan.md`](../assets/plan.md), status `planned`:
+Add `### <NN-slug>` under **Promotions** from [`../assets/plan.md`](../assets/plan.md):
 
-1. **Spec**: format, placements, ratios and length per [marketing-contract.md](./marketing-contract.md) → **Platform rules**, audience, hook, must show (features and flow steps), label, offer + CTA.
+1. **Spec**: format, placements, ratios and length per [marketing-contract.md](./marketing-contract.md) → **Platform rules**, audience, hook, must show, label, offer + CTA.
 2. **Script**: one row per beat (time, visual, voiceover, on-screen text), timed to the length. Voiceover in the **Brief**'s language, about 2.5 words a second.
 3. **Scenes**: per beat, its source per [marketing-contract.md](./marketing-contract.md) → **Media and paid calls**, and the motion (a flow step's tap at its x/y, or on the named control when the mockup gives no coordinates; fields filling; a hold).
 4. **Voice**: ElevenLabs voice, model, pace, tone.
@@ -43,54 +51,56 @@ Add `### <NN-slug>` under **Promotions** from [`../assets/plan.md`](../assets/pl
 6. **Sound**: effects per visible action (tap, swipe, success).
 7. **Paid calls**: each call and its size (ElevenLabs: voiceover characters, counted from the script).
 
-### 4. Approve
+Show the section, then ask in one message:
 
-Show the promotion's section. A change edits the section and shows it again. Approval → status `approved`.
+- The music: a track downloaded per the brief into `promotions/<NN-slug>/music.<ext>`, or "no music"
+- The founder's footage, when the format needs it
+- A video: preview a silent draft first (free), or go straight to the final with voiceover (the paid calls above)
 
-### 5. Voiceover
+Wait for the answers.
 
-Per text-to-speech, render the script's voiceover with its CLI:
+### 4. Build
 
-```bash
-set -a; . ./.env; set +a
-npx -y @elevenlabs/cli@latest text-to-speech convert --voice-id <id> --model-id <model> \
-  --text "<voiceover>" --output <marketing-root>/<slug>/promotions/<NN-slug>/voiceover.mp3
-```
-
-Record the characters used under **Paid calls**. A rejected key (401) → setup-api-key. Longer than the spec's length → tighten the script and ask before paying for another render.
-
-### 6. Music
-
-Ask the user to download a track per the music brief into `promotions/<NN-slug>/music.<ext>`, or to say "no music"; wait for it.
-
-### 7. Build
-
-Open hyperframes and build the first ratio in `promotions/<NN-slug>/<ratio>/`:
+Open hyperframes and build the first ratio in `<promotion>/<ratio>/`, where `<promotion>` is `<marketing-root>/<slug>/promotions/<NN-slug>`:
 
 ```bash
-npx hyperframes init <promotion>/<ratio> --resolution <preset> --audio <promotion>/voiceover.mp3
+npx hyperframes init <promotion>/<ratio> --resolution <preset>
 ```
 
-Presets: `portrait` for 9x16, `square` for 1x1, `landscape` for 16x9; for 4x5, `portrait` with the composition set to 1080×1350. `<promotion>` is `<marketing-root>/<slug>/promotions/<NN-slug>`. `--audio` copies the voiceover in and transcribes it locally into word timings; a promotion without voiceover omits it.
+Presets: `portrait` for 9x16, `square` for 1x1, `landscape` for 16x9; for 4x5, `portrait` with the composition set to 1080×1350.
 
 - The approved script and scenes are the chosen storyline: skip its storyline pitch.
-- Copy the music and the mockup screens into the project's `assets/`.
-- Time scenes, taps, and burned-in captions to the transcript's word timings; the words come from the approved script, the timings from the transcript.
+- Copy the music, the footage, and the mockup screens into the project's `assets/`; time the scenes to the script.
 - Sound effects per media-use with `--local-only`.
 - Labels, captions, and safe zones per [marketing-contract.md](./marketing-contract.md) → **Platform rules**, **Honesty rules**.
-- Its check, review, and preview run as hyperframes says; the user approves the preview before the render.
-- Render to `renders/<NN-slug>-<ratio>.mp4`. Static ad or carousel: one composition per frame, `npx hyperframes snapshot --at <t>` per frame into `stills/<NN-slug>-<n>.png`.
+- Its check and review run as hyperframes says.
 
-Each further ratio starts from a copy of the first project, transcript included, and re-lays out for that ratio's size and safe zones.
+A static ad or carousel: one composition per frame, `npx hyperframes snapshot --at <t>` per frame into `stills/<NN-slug>-<n>.png`; show the stills, change them on feedback, and go to step 7 once the user approves them.
 
-### 8. Record
+### 5. Draft
 
-List every render and still under the promotion's **Files**; status `rendered`; update the `index.md` row.
+When the user chose a draft: render `renders/<NN-slug>-<ratio>-draft.mp4` with every voiceover line shown as on-screen text where the voice will play. Show it. Feedback (music, effects, pacing, scenes, wording) → change the project or the section, then render the draft again. Repeat until the user says to go final.
 
-### 9. Confirm to the user
+### 6. Final
 
-Reply with:
+1. Show the **Paid calls**; approval runs them.
+2. Per text-to-speech, render the voiceover with its CLI:
 
-- The promotion id, format, and render paths
-- Paid calls made and their size
-- Next: "run marketing" to post or advertise it
+   ```bash
+   set -a; . ./.env; set +a
+   npx -y @elevenlabs/cli@latest text-to-speech convert --voice-id <id> --model-id <model> \
+     --text "<voiceover>" --output <promotion>/voiceover.mp3
+   ```
+
+   Record the characters used under **Paid calls**. A rejected key (401) → setup-api-key. Longer than the spec's length → tighten the script and ask before paying for another render.
+3. Copy `voiceover.mp3` into the project and transcribe it per media-use (`npx hyperframes transcribe`); time the scenes, taps, and captions to its word timings. The words come from the approved script, the timings from the transcript.
+4. The user approves the hyperframes preview; render `renders/<NN-slug>-<ratio>.mp4`.
+5. Each further ratio starts from a copy of the first project, transcript included, re-lays out for that ratio's size and safe zones, and renders.
+
+### 7. Record
+
+List every final render and still under the promotion's **Files**; update the `index.md` row.
+
+### 8. Hand off to posting
+
+Ask where and when to post it, suggesting the channels where its audience gathers and a time for each; the answer runs [publishing-promotion.md](./publishing-promotion.md). Reply with the promotion id, its files, and the paid calls made.

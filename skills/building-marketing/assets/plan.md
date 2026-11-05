@@ -15,7 +15,7 @@ studied: {{YYYY-MM-DD}}
 - CTA: {{ACTION}} → {{DESTINATION}}
 - Markets: {{WHERE}}
 - Language: {{LANGUAGE}}
-- Budget: {{PER DAY, DURATION}}; kill rule: {{SPEND WITH NO RESULTS}}
+- Ad budget: {{TOTAL OR PER DAY, DURATION}}
 - Trust rules: {{WHAT BUILDS TRUST; WHAT NEVER TO CLAIM}}
 
 ## Study
@@ -61,7 +61,6 @@ studied: {{YYYY-MM-DD}}
 
 ### {{NN-slug}}
 
-- Status: planned
 - Spec: {{FORMAT}}; {{PLACEMENTS}}; {{RATIOS}}; {{LENGTH}}; audience {{audience-slug}}
 - Hook (first 2 s): "{{HOOK}}"
 - Must show: {{FEATURES, FLOW STEPS}}
@@ -77,13 +76,9 @@ studied: {{YYYY-MM-DD}}
 - Music brief: {{MOOD}}, {{TEMPO}}, {{LENGTH}} — {{PIXABAY SEARCH URL}}
 - Sound: {{EFFECTS PER ACTION}}
 - Paid calls: {{CALL}} — {{SIZE}}
-- Files: {{RENDER AND STILL PATHS}}
+- Files: {{FINAL RENDER AND STILL PATHS}}
 
 ## Reach
 
-| Promotion | Channel | How | When | Status | Copy | Media URL | Buffer id | Numbers |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
-
-## Next
-
-{{THE NEXT MOVE AND THE NUMBERS BEHIND IT}}
+| Promotion | Channel | How | When | Copy | Media URL | Buffer id |
+| --- | --- | --- | --- | --- | --- | --- |

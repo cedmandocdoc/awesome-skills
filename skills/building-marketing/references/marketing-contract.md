@@ -2,7 +2,7 @@
 
 ## Overview
 
-Shared rules for every `building-marketing` recipe: the marketing root and its layout, items and promotions, `plan.md`, statuses, platform rules, honesty rules, media and paid calls, and discovery of the dependency skills.
+Shared rules for every `building-marketing` recipe: the marketing root and its layout, items and promotions, `plan.md`, where a promotion stands, platform rules, honesty rules, media and paid calls, and discovery of the dependency skills.
 
 ## Guidelines
 
@@ -21,14 +21,17 @@ Every `<marketing-root>/index.md` and `plan.md` carries this value in frontmatte
 ```text
 <marketing-root>/                    # default: marketing/
   index.md                           # root marker + one row per item; buffer_channels, media_url
-  sender/                            # Buffer sender from ../assets/sender/, for Run marketing
+  sender/                            # Buffer sender from ../assets/sender/, for Post
   <slug>/                            # one item
-    plan.md                          # the item's whole state
-    promotions/<NN-slug>/            # one promotion
-      voiceover.mp3                  # ElevenLabs output, shared by every ratio
+    plan.md                          # Brief, Study, Message, Promotions, Reach
+    concepts/                        # HyperFrames project for concept hook frames; each round overwrites it
+      stills/<round>-<n>.png
+    promotions/<NN-slug>/            # one chosen promotion
       music.<ext>                    # the track the user downloaded
+      voiceover.mp3                  # ElevenLabs output, made at final; shared by every ratio
       <ratio>/                       # one HyperFrames project per aspect ratio: 9x16, 4x5, 1x1, 16x9
-        renders/<NN-slug>-<ratio>.mp4
+        renders/<NN-slug>-<ratio>-draft.mp4   # silent preview
+        renders/<NN-slug>-<ratio>.mp4         # final
       stills/<NN-slug>-<n>.png       # static ad and carousel frames
       captions/<channel>.txt         # post copy per channel, organic and manual
       ad-spec.md                     # the Meta ad spec, when the promotion runs as an ad
@@ -41,7 +44,7 @@ Templates: [`../assets/index.md`](../assets/index.md), [`../assets/plan.md`](../
 | Unit | Is | New one when |
 | --- | --- | --- |
 | Item | One reference studied with one framing; slug from the reference (`dentist-clinic`) | The reference, the audience, or the framing differs: a salon mockup is a new item |
-| Promotion | One asset idea: a format, a hook, a length, its ratios; id `NN-slug`, `NN` = highest in the item + 1, slug names format and hook (`01-walkthrough-notebook`) | A different format, hook, or audience within the item; a change to a promotion already posted |
+| Promotion | One chosen concept: a format, a hook, a length, its ratios; id `NN-slug`, `NN` = highest in the item + 1, slug names format and hook (`01-walkthrough-notebook`) | A different format, hook, or audience within the item; a change to a promotion already posted |
 
 
 ### Resolve marketing root
@@ -62,25 +65,27 @@ Resolve an item by `@`-path, slug, or the user's words against `index.md` rows; 
 | Section | Holds | Written by |
 | --- | --- | --- |
 | Frontmatter | `reference` (path or URL), `studied` (date) | Study |
-| **Brief** | The user's framing: what to promote, offer, CTA and its destination, markets, language, budget, kill rule, trust rules | Study |
+| **Brief** | The user's framing: what to promote, offer, CTA and its destination, markets, language, ad budget, trust rules | Study |
 | **Study** | What it does; audiences; features to show; alternatives and differentiator; proof | Study |
 | **Message** | One core message per audience; hooks | Study |
-| **Promotions** | `### <NN-slug>` per promotion: spec, script, scenes, voice, music brief, sound, paid calls, status, files | Make promotion |
-| **Reach** | One row per post or ad: promotion, channel, how, when, status, copy file, media URL, Buffer id, numbers | Run marketing |
-| **Next** | The next move and why | Run marketing |
+| **Promotions** | `### <NN-slug>` per chosen promotion: spec, script, scenes, voice, music brief, sound, paid calls, files | Make promotion |
+| **Reach** | One row per post that went out: promotion, channel, how (`buffer`, `ad spec`, `manual`), when, copy file, media URL, Buffer id | Post |
 
-`plan.md` and the files on disk are the only record; nothing else logs what went out.
+Re-study rewrites **Brief**, **Study**, and **Message** only; each promotion keeps the spec it was made from.
 
-### Statuses
+### Where a promotion stands
 
-| Thing | Status flow |
+Read from disk, never stored:
+
+| On disk | Stands at |
 | --- | --- |
-| Promotion | `planned` → `approved` → `rendered`; a change before it is posted returns it to `planned` |
-| Organic post | `planned` → `approved` → `queued` (Buffer id) → `sent`; a Buffer error → back to `approved` with the error |
-| Ad | `planned` → `approved` → `live` (the user reports it entered) → `stopped` |
-| Manual post | `planned` → `approved` → `sent` (the user reports it) |
+| No `### <NN-slug>` in **Promotions** | Concepts only (chat and `concepts/`) |
+| Its section, no renders | Chosen and planned |
+| `renders/*-draft.mp4` | Silent draft made |
+| `voiceover.mp3` and a final render (or, for a static, its stills) | Final made |
+| A **Reach** row for it | Posted; a row is written only once the post is queued in Buffer, the ad spec is handed over, or the manual post is handed to the user |
 
-A promotion is **posted** once one of its **Reach** rows is `queued`, `live`, or `sent`.
+A posted promotion is never edited; a change makes a new promotion from it.
 
 ### Platform rules
 
