@@ -1,0 +1,4 @@
+interface:
+  display_name: "Building App Mockup"
+  short_description: "Mock up an app's hero flow as static phone-sized HTML screens, a flow.md, and a compact design.md"
+  default_prompt: "Use $building-app-mockup only when the user names this skill or references a file under a marked mockups root (flow.md)."

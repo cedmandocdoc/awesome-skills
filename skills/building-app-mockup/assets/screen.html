@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=390, initial-scale=1">
+<title>[NN] [Screen name] — [App name]</title>
+<style>
+  @font-face { font-family: "[Heading family]"; src: url("../fonts/[heading].woff2") format("woff2"); font-weight: 400 800; }
+  @font-face { font-family: "[Body family]"; src: url("../fonts/[body].woff2") format("woff2"); font-weight: 400 700; }
+  :root {
+    /* from design.md tokens */
+    --background: [#FFFFFF]; --foreground: [#0F172A];
+    --primary: [brand]; --primary-foreground: [#FFFFFF];
+    --muted: [#F1F5F9]; --muted-foreground: [#64748B];
+    --border: [#E2E8F0]; --success: [#16A34A];
+    --radius-md: 10px; --radius-lg: 16px; --radius-full: 9999px;
+    --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-6: 24px;
+    --font-brand: "[Heading family]", system-ui, sans-serif; --font-body: "[Body family]", system-ui, sans-serif;
+    --text-heading-lg: 700 24px/1.25 var(--font-brand); --text-heading-md: 600 18px/1.3 var(--font-brand);
+    --text-body-base: 400 16px/1.5 var(--font-body); --text-body-sm: 400 14px/1.43 var(--font-body);
+    --text-label: 600 14px/1.3 var(--font-body);
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { width: 390px; height: 844px; overflow: hidden; }
+  body { position: relative; background: var(--background); color: var(--foreground); font: var(--text-body-base); }
+  /* phone chrome and badge: fixed values */
+  .status { height: 47px; padding: 14px 28px 0; display: flex; justify-content: space-between; font-weight: 600; font-size: 15px; }
+  .badge { position: absolute; top: 52px; right: 16px; padding: 2px 8px; border-radius: var(--radius-full); background: var(--muted); color: var(--muted-foreground); font-size: 11px; font-weight: 600; }
+  main { padding: var(--space-4); }
+  .primary { display: block; width: 100%; padding: var(--space-4); border: 0; border-radius: var(--radius-md); background: var(--primary); color: var(--primary-foreground); font: var(--text-label); }
+  .home { position: absolute; bottom: 8px; left: 50%; width: 134px; height: 5px; margin-left: -67px; border-radius: var(--radius-full); background: var(--foreground); }
+</style>
+</head>
+<body>
+  <div class="status"><span>9:41</span><span>[signal · wifi · battery as inline SVG]</span></div>
+  <div class="badge">Sample app</div>
+  <main>
+    <!-- [Screen content with realistic sample data] -->
+    <button class="primary" id="[target-id]">[Action]</button>
+  </main>
+  <div class="home"></div>
+</body>
+</html>

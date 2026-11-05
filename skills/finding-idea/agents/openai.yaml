@@ -1,0 +1,4 @@
+interface:
+  display_name: "Finding Idea"
+  short_description: "Search an industry's real problems and propose ranked app ideas with core features and a hero flow"
+  default_prompt: "Use $finding-idea only when the user names this skill."
