@@ -11,7 +11,7 @@ description: >-
   names this skill (`/building-marketing`, `$building-marketing`, or
   "building-marketing"), or references a file under a marked marketing root
   (`@marketing/dentist-clinic/plan.md`).
-version: 1.1.0
+version: 1.1.1
 ---
 
 # Building Marketing

@@ -5,6 +5,8 @@
 **/stills/
 **/.hyperframes/
 **/.media/
+**/.thumbnails/
+**/.waveform-cache/
 *.mp4
 *.mov
 *.webm
