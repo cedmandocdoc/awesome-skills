@@ -20,19 +20,20 @@ Every `<marketing-root>/index.md` and `plan.md` carries this value in frontmatte
 
 ```text
 <marketing-root>/                    # default: marketing/
+  .gitignore                         # from ../assets/media.gitignore; keeps every [media] path below out of git
   index.md                           # root marker + one row per item; buffer_channels, media_url
   sender/                            # Buffer sender from ../assets/sender/, for Post
   <slug>/                            # one item
     plan.md                          # Brief, Study, Message, Promotions, Reach
-    concepts/                        # HyperFrames project for concept hook frames; each round overwrites it
+    concepts/                        # [media] HyperFrames project for concept hook frames; each round overwrites it
       stills/<round>-<n>.png
     promotions/<NN-slug>/            # one chosen promotion
-      music.<ext>                    # the track the user downloaded
-      voiceover.mp3                  # ElevenLabs output, made at final; shared by every ratio
-      <ratio>/                       # one HyperFrames project per aspect ratio: 9x16, 4x5, 1x1, 16x9
-        renders/<NN-slug>-<ratio>-draft.mp4   # silent preview
-        renders/<NN-slug>-<ratio>.mp4         # final
-      stills/<NN-slug>-<n>.png       # static ad and carousel frames
+      music.<ext>                    # [media] the track the user downloaded
+      voiceover.mp3                  # [media] ElevenLabs output, made at final; shared by every ratio
+      <ratio>/                       # one HyperFrames project per aspect ratio: 9x16, 4x5, 1x1, 16x9; its source is tracked, its media files are not
+        renders/<NN-slug>-<ratio>-draft.mp4   # [media] silent preview
+        renders/<NN-slug>-<ratio>.mp4         # [media] final
+      stills/<NN-slug>-<n>.png       # [media] static ad and carousel frames
       captions/<channel>.txt         # post copy per channel, organic and manual
       ad-spec.md                     # the Meta ad spec, when the promotion runs as an ad
 ```

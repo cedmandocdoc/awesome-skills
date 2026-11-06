@@ -11,7 +11,7 @@ description: >-
   names this skill (`/building-marketing`, `$building-marketing`, or
   "building-marketing"), or references a file under a marked marketing root
   (`@marketing/dentist-clinic/plan.md`).
-version: 1.0.0
+version: 1.1.0
 ---
 
 # Building Marketing
@@ -22,6 +22,7 @@ version: 1.0.0
 | --- | --- | --- | --- | --- | --- |
 | Root path | ask | required | Set up, Study | [marketing-contract.md](references/marketing-contract.md) → **Resolve marketing root** finds a root | Ask for the folder (default `marketing/`); missing or empty → use it, else ask for another path; recorded as the root's location |
 | Root marker | static | required | Set up, Study | `<marketing-root>/index.md` carries [marketing-contract.md](references/marketing-contract.md) → **Author signature** | Write `index.md` from [`assets/index.md`](assets/index.md) |
+| Media ignored | auto | required | Set up, Study, Make promotion | `<marketing-root>/.gitignore` holds every rule in [`assets/media.gitignore`](assets/media.gitignore) | Add the missing rules to `<marketing-root>/.gitignore` (create when missing) |
 | Web search and fetch | user | required | Study | The harness offers web search and page fetch tools | Run in a harness with web access, such as Claude Code |
 | Node.js 22+ | user | required | Make promotion, Post | `node --version` reports 22 or later | https://nodejs.org |
 | [hyperframes](https://github.com/heygen-com/hyperframes/tree/main/skills/hyperframes) | user | required | Make promotion | Found per [marketing-contract.md](references/marketing-contract.md) → **Discover dependency skill** | `npx hyperframes skills update` |

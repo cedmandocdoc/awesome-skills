@@ -1,0 +1,14 @@
+# building-marketing: generated media stays out of git. Finals reach other machines
+# through the media bucket (index.md media_url) when a promotion posts.
+*/concepts/
+**/renders/
+**/stills/
+**/.hyperframes/
+**/.media/
+*.mp4
+*.mov
+*.webm
+*.mp3
+*.wav
+*.m4a
+sender/node_modules/
