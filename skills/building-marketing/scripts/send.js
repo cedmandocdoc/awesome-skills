@@ -1,22 +1,34 @@
 // Queues approved posts in Buffer and hosts their media on R2.
-// Run from the repository root: node --env-file=.env <marketing-root>/sender/send.js <command>
+// Run from the repository root: node --env-file="$env" <skill>/scripts/send.js <command>, $env = the main worktree's .env
 import { readFileSync } from 'node:fs';
 import { dirname, join, resolve, relative, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
 import { parseArgs } from 'node:util';
-import { parse } from 'yaml';
 
-const SENDER = dirname(fileURLToPath(import.meta.url));
-const ROOT = resolve(SENDER, '..');
-const WRANGLER = join(SENDER, 'wrangler.toml');
+const WRANGLER = join(dirname(fileURLToPath(import.meta.url)), 'wrangler.toml');
 const BUCKET = 'marketing-media';
 const VIDEO = new Set(['.mp4', '.mov', '.webm']);
 
-function rootIndex() {
-  const m = readFileSync(join(ROOT, 'index.md'), 'utf8').match(/^---\n([\s\S]*?)\n---/);
+// index.md frontmatter holds `key: value` lines and one-level maps (`buffer_channels:`, then `  <name>: <id>` lines).
+function rootIndex(root) {
+  const m = readFileSync(join(root, 'index.md'), 'utf8').match(/^---\r?\n([\s\S]*?)\r?\n---/);
   if (!m) throw new Error('index.md has no frontmatter');
-  return parse(m[1]) ?? {};
+  const out = {};
+  let map = null;
+  for (const line of m[1].split(/\r?\n/)) {
+    const kv = line.match(/^(\s*)([^\s#:][^:]*):\s*(.*)$/);
+    if (!kv) continue;
+    const [, indent, key, raw] = kv;
+    const value = raw.replace(/\s+#.*$/, '').trim().replace(/^(['"])(.*)\1$/, '$2');
+    if (indent) {
+      if (map) map[key.trim()] = value;
+    } else {
+      map = value === '' || value === '{}' ? {} : null;
+      out[key.trim()] = map ?? value;
+    }
+  }
+  return out;
 }
 
 async function buffer(query, variables = {}) {
@@ -52,11 +64,13 @@ async function channels() {
 }
 
 // The object key mirrors the file's path under the marketing root, so each render has one stable URL.
-function upload([file]) {
-  if (!file) throw new Error('usage: upload <file>');
-  const base = rootIndex().media_url;
+function upload(argv) {
+  const { values, positionals } = parseArgs({ args: argv, options: { root: { type: 'string' } }, allowPositionals: true });
+  const [file] = positionals;
+  if (!values.root || !file) throw new Error('usage: upload --root <marketing-root> <file>');
+  const base = rootIndex(values.root).media_url;
   if (!base || base === 'none') throw new Error('media_url missing from index.md');
-  const key = relative(ROOT, resolve(file)).split('\\').join('/');
+  const key = relative(resolve(values.root), resolve(file)).split('\\').join('/');
   if (key.startsWith('..')) throw new Error(`${file} is outside the marketing root`);
   execFileSync('npx', ['wrangler', 'r2', 'object', 'put', `${BUCKET}/${key}`, '--file', file, '--remote', '-c', WRANGLER], { stdio: 'inherit' });
   console.log(`${base.replace(/\/$/, '')}/${key}`);
@@ -65,15 +79,25 @@ function upload([file]) {
 async function push(argv) {
   const { values } = parseArgs({
     args: argv,
-    options: { channel: { type: 'string' }, text: { type: 'string' }, media: { type: 'string', multiple: true }, at: { type: 'string' } },
+    options: {
+      root: { type: 'string' },
+      channel: { type: 'string' },
+      text: { type: 'string' },
+      media: { type: 'string', multiple: true },
+      at: { type: 'string' },
+    },
   });
-  if (!values.channel || !values.text) throw new Error('usage: push --channel <name> --text <file> [--media <url>…] [--at "YYYY-MM-DD HH:MM"]');
-  const channelId = rootIndex().buffer_channels?.[values.channel];
+  if (!values.root || !values.channel || values.text !== '-') {
+    throw new Error('usage: push --root <marketing-root> --channel <name> --text - [--media <url>…] [--at "YYYY-MM-DD HH:MM"] < caption');
+  }
+  const channelId = rootIndex(values.root).buffer_channels?.[values.channel];
   if (!channelId) throw new Error(`channel ${values.channel} is not in buffer_channels`);
+  const text = readFileSync(0, 'utf8').trim();
+  if (!text) throw new Error('no caption on stdin');
   const assets = (values.media ?? []).map((url) => (VIDEO.has(extname(new URL(url).pathname).toLowerCase()) ? { video: { url } } : { image: { url } }));
   const when = values.at ? new Date(values.at.replace(' ', 'T')) : null;
   const mode = !when ? 'addToQueue' : when > new Date() ? 'customScheduled' : 'shareNow';
-  const input = { channelId, text: readFileSync(values.text, 'utf8').trim(), assets, mode, schedulingType: 'automatic', needsApproval: false };
+  const input = { channelId, text, assets, mode, schedulingType: 'automatic', needsApproval: false };
   if (mode === 'customScheduled') input.dueAt = when.toISOString();
   const { createPost: r } = await buffer(
     'mutation($input: CreatePostInput!) { createPost(input: $input) { __typename ... on PostActionSuccess { post { id } } ... on MutationError { message } } }',
@@ -86,7 +110,7 @@ async function push(argv) {
 const [command, ...args] = process.argv.slice(2);
 const commands = { verify, channels, upload, push };
 if (!commands[command]) {
-  console.error('usage: send.js verify | channels | upload <file> | push --channel <name> --text <file> [--media <url>…] [--at <time>]');
+  console.error('usage: send.js verify | channels | upload --root <dir> <file> | push --root <dir> --channel <name> --text - [--media <url>…] [--at <time>]');
   process.exit(2);
 }
 try {

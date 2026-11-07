@@ -8,9 +8,4 @@ media_url: none
 
 # Marketing
 
-Marketing root managed by the `building-marketing` skill. Each item's state lives in its `plan.md`.
-
-## Items
-
-| Slug | Reference | Promotions | Studied |
-| --- | --- | --- | --- |
+Marketing root managed by the `building-marketing` skill. Each folder holding a `product.md` is a product; each of its `NN-slug/` folders is a campaign.

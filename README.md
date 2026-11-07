@@ -66,7 +66,7 @@ Source formats also work: full GitHub URL, a path to a single skill, or a local 
 | [`deploying-expo-native-application`](skills/deploying-expo-native-application/) | Deploy Expo iOS/Android apps through GitHub Actions and EAS — `eas.json`, signing and store credentials without an Apple sign-in, TestFlight and Play submissions, and a `DEPLOYMENT.md` of the store steps the user still owns. |
 | [`finding-idea`](skills/finding-idea/) | Find app ideas worth building — research where an industry or audience complains, write each problem with quoted evidence, rank by pain, frequency, willingness to pay, and buildability, and propose the top apps with core features and a hero flow. Invoke explicitly. |
 | [`building-app-mockup`](skills/building-app-mockup/) | Mock up an app's hero flow under `mockups/` — 3–6 static phone-sized HTML screens with realistic sample data and a "Sample app" label, a `flow.md` of each step's tap, fill, and hold, and a compact `design.md`. Invoke explicitly. |
-| [`building-marketing`](skills/building-marketing/) | Market any app or mockup under `marketing/` — study it into audiences, pains, and hooks; propose concepts you steer, preview a free silent HyperFrames draft, make the final with ElevenLabs voiceover, and post it through Buffer or as a Meta ad spec you enter. Invoke explicitly. |
+| [`building-marketing`](skills/building-marketing/) | Market an app's source (mockup or codebase) under `marketing/` — study it into audiences, pains, and hooks; propose concepts you steer, preview a free HyperFrames draft, voice, score, and add effects with ElevenLabs from a reusable sound bank, and post it through Buffer. Invoke explicitly. |
 | [`managing-skills`](skills/managing-skills/) | Create, update, and review skills in this catalog's house style — layout, `SKILL.md` and reference sections, independence, and lean writing. |
 | [`syncing-awesome-skills`](skills/syncing-awesome-skills/) | Sync your project repos to the latest skills in this catalog — one subagent per repo copies the updated skills, makes the changes they require, hands complex changes to `delivering-goal` when you choose, and opens a PR. Install globally (`-g`). Invoke explicitly. |
 
@@ -83,7 +83,7 @@ These external skill collections pair well with skills in this catalog. Most ins
 | [supabase/agent-skills](https://github.com/supabase/agent-skills) | `npx skills add supabase/agent-skills` | [`deploying-supabase-application`](skills/deploying-supabase-application/) |
 | [expo/skills](https://github.com/expo/skills) — `expo-dev-client` | `npx skills add expo/skills --skill expo-dev-client` | [`building-react-native-application`](skills/building-react-native-application/), [`composing-react-native-application`](skills/composing-react-native-application/) |
 | [heygen-com/hyperframes](https://github.com/heygen-com/hyperframes) — `hyperframes`, `media-use` | `npx hyperframes skills update` | [`building-marketing`](skills/building-marketing/) |
-| [elevenlabs/skills](https://github.com/elevenlabs/skills) — `text-to-speech`, `setup-api-key` | `npx skills add elevenlabs/skills --skill text-to-speech --skill setup-api-key` | [`building-marketing`](skills/building-marketing/) |
+| [elevenlabs/skills](https://github.com/elevenlabs/skills) — `text-to-speech`, `music`, `sound-effects`, `setup-api-key` | `npx skills add elevenlabs/skills --skill text-to-speech --skill music --skill sound-effects --skill setup-api-key` | [`building-marketing`](skills/building-marketing/) |
 
 Examples:
 

@@ -1,4 +1,4 @@
 interface:
   display_name: "Building Marketing"
-  short_description: "Study any app or mockup, make HyperFrames promos with ElevenLabs voiceover, and run reach through Buffer and Meta ad specs"
-  default_prompt: "Use $building-marketing only when the user names this skill or references a file under a marked marketing root (plan.md)."
+  short_description: "Study an app's source, make HyperFrames promo videos with ElevenLabs voice, music and effects, and post them through Buffer"
+  default_prompt: "Use $building-marketing only when the user names this skill or references a file under a marked marketing root (product.md, campaign.md)."
