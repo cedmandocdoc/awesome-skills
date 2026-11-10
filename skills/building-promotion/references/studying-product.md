@@ -12,7 +12,7 @@ Per [promotion-contract.md](./promotion-contract.md) → **Output layout**, **Pr
 
 ### 1. Resolve the product
 
-Per [promotion-contract.md](./promotion-contract.md) → **Resolve promotions root**. A new product in a `single` root that already has one → **Single to multi** first. A new product: create its `product.md` from [`../assets/product.md`](../assets/product.md).
+Per [promotion-contract.md](./promotion-contract.md) → **Resolve promotions root**. A new app in a root that already has a product → ask for its own root (`SKILL.md` → **Setup**, Root path and intention), never inside this one. A new product: create its `product.md` from [`../assets/product.md`](../assets/product.md), and set the root's `intention` to the app.
 
 ### 2. Read the source
 
@@ -68,7 +68,7 @@ Per audience: the core line in their words, its anchor phrase, and 3 hooks of di
 
 Set `studied` to today. Reply with:
 
-- The `product.md` path, and the move to `multi` when one ran
+- The `product.md` path
 - Each audience in one line, its top pain quote (or "no own-words quote found"), and its best hook
 - The features to show
 - What was assumed and what the user should check

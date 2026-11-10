@@ -1,7 +1,0 @@
-# building-promotion-video: a promotion's HyperFrames project is source; only its outputs and caches stay out of git.
-**/renders/
-**/snapshots/
-**/.hyperframes/
-**/.media/
-**/.thumbnails/
-**/.waveform-cache/

@@ -41,7 +41,7 @@ Read the promotion's files for what exists, and redo only what the change reache
 
 1. From **Study** and **Message**, write 3 concept cards per [choosing-style.md](./choosing-style.md) → **Recommending**, each with its length.
 2. Show the cards. The user picks one or more, mixes dials, or steers: "warmer", "show the reminder". Steering gets 3 new cards that keep what they liked; repeat until they pick.
-3. Each pick becomes its own promotion: run `npx hyperframes init <promotions-root>/[<app>/]<NN-slug> --resolution portrait` before writing anything into the folder, since init refuses a folder that isn't empty. Then write `promotion.md` from [`../assets/promotion.md`](../assets/promotion.md) with its **Spec**, the voice coverage included ([directing-voice.md](./directing-voice.md) → **Coverage**).
+3. Each pick becomes its own promotion: run `npx hyperframes init <promotions-root>/<NN-slug> --resolution portrait` before writing anything into the folder, since init refuses a folder that isn't empty. Then write `promotion.md` from [`../assets/promotion.md`](../assets/promotion.md) with its **Spec**, the voice coverage included ([directing-voice.md](./directing-voice.md) → **Coverage**).
 
 ### 3. Message plan
 
