@@ -7,7 +7,6 @@ import { execFileSync } from 'node:child_process';
 import { parseArgs } from 'node:util';
 
 const WRANGLER = join(dirname(fileURLToPath(import.meta.url)), 'wrangler.toml');
-const BUCKET = 'marketing-media';
 const VIDEO = new Set(['.mp4', '.mov', '.webm']);
 
 // index.md frontmatter holds `key: value` lines and one-level maps (`buffer_channels:`, then `  <name>: <id>` lines).
@@ -63,16 +62,17 @@ async function channels() {
   }
 }
 
-// The object key mirrors the file's path under the marketing root, so each render has one stable URL.
+// The object key mirrors the file's path from the repository root (the working directory), so each file has one stable URL.
 function upload(argv) {
   const { values, positionals } = parseArgs({ args: argv, options: { root: { type: 'string' } }, allowPositionals: true });
   const [file] = positionals;
-  if (!values.root || !file) throw new Error('usage: upload --root <marketing-root> <file>');
-  const base = rootIndex(values.root).media_url;
+  if (!values.root || !file) throw new Error('usage: upload --root <posts-root> <file>');
+  const { media_url: base, media_bucket: bucket } = rootIndex(values.root);
   if (!base || base === 'none') throw new Error('media_url missing from index.md');
-  const key = relative(resolve(values.root), resolve(file)).split('\\').join('/');
-  if (key.startsWith('..')) throw new Error(`${file} is outside the marketing root`);
-  execFileSync('npx', ['wrangler', 'r2', 'object', 'put', `${BUCKET}/${key}`, '--file', file, '--remote', '-c', WRANGLER], { stdio: 'inherit' });
+  if (!bucket || bucket === 'none') throw new Error('media_bucket missing from index.md');
+  const key = relative(process.cwd(), resolve(file)).split('\\').join('/');
+  if (key.startsWith('..')) throw new Error(`${file} is outside the repository`);
+  execFileSync('npx', ['wrangler', 'r2', 'object', 'put', `${bucket}/${key}`, '--file', file, '--remote', '-c', WRANGLER], { stdio: 'inherit' });
   console.log(`${base.replace(/\/$/, '')}/${key}`);
 }
 
@@ -88,7 +88,7 @@ async function push(argv) {
     },
   });
   if (!values.root || !values.channel || values.text !== '-') {
-    throw new Error('usage: push --root <marketing-root> --channel <name> --text - [--media <url>…] [--at "YYYY-MM-DD HH:MM"] < caption');
+    throw new Error('usage: push --root <posts-root> --channel <name> --text - [--media <url>…] [--at "YYYY-MM-DD HH:MM"] < caption');
   }
   const channelId = rootIndex(values.root).buffer_channels?.[values.channel];
   if (!channelId) throw new Error(`channel ${values.channel} is not in buffer_channels`);

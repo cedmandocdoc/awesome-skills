@@ -1,3 +1,3 @@
 # Config for the media bucket only; keeps Wrangler away from any app config in the repository.
-name = "marketing-media"
+name = "posting-content"
 compatibility_date = "2026-01-01"
