@@ -1,0 +1,4 @@
+interface:
+  display_name: "Posting Content"
+  short_description: "Post a finished video, images or text through Buffer with media on Cloudflare R2, or hand it over for a manual post"
+  default_prompt: "Use $posting-content only when the user names this skill."

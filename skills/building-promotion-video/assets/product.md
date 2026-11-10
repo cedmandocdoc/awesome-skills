@@ -1,22 +1,26 @@
 ---
-doc_type: marketing-product
-generated_by: building-marketing
-author: ce69e630-08ef-4e0c-8e05-32a1c405546b
+doc_type: promotion-product
+generated_by: building-promotion-video
+author: d5c5849b-3fed-4204-a7a1-d245dcf86d09
 source: "{{MOCKUP FOLDER OR CODEBASE PATH}}"
 studied: {{YYYY-MM-DD}}
 ---
 
-# Marketing — {{PRODUCT NAME}}
+# Product — {{PRODUCT NAME}}
 
 ## Brief
 
-- Promote: {{WHAT IS MARKETED AND HOW IT IS FRAMED}}
-- Sold vs shown: {{SOLD}} / {{SHOWN}}; said by 6.5 s: "{{LINE}}"; label: "{{LABEL}}"
-- Offer: {{OFFER}}
-- CTA: {{ACTION}} → {{DESTINATION}}
+- Promote: {{WHAT IS PROMOTED AND HOW IT IS FRAMED}}
+- Sold vs shown: {{SOLD}} / {{SHOWN}}
+- Offer: "{{THE WORDS THE FILM SAYS}}"
+- CTA and destination: {{ACTION}} → {{DESTINATION}}
+- Who it's for: {{THE CUE THAT SELECTS THE RIGHT VIEWER}}
 - Markets: {{WHERE}}
-- Language: {{LANGUAGE}}
-- Trust rules: {{WHAT BUILDS TRUST; WHAT NEVER TO CLAIM}}
+- Language and address: {{VOICE AND CAPTION LANGUAGE, CODE-SWITCH}}; UI {{UI LANGUAGE}}; address {{FORM}}; native check by {{WHO}}
+- Trust and proof: {{REAL PROOF}}; never claim {{WHAT}}
+- Never say: {{WORDS, OFFERS, TOPICS}}
+- Disclosure wording: "{{SAMPLE LINE}}"; end card "{{END-CARD LINE}}"
+- Brand kit: mark {{FILE}}; colours {{HEXES}}; type {{FONT, WEIGHT}}; end card {{LAYOUT}}; sonic cue {{FILE OR NONE}}
 
 ## Study
 
@@ -27,14 +31,16 @@ studied: {{YYYY-MM-DD}}
 #### {{audience-slug}}
 
 - Who exactly: {{ROLE, BUSINESS TYPE, SIZE, LOCATION}}; they call themselves "{{LABEL}}"
-- Pain in their words:
+- Pain in their own words:
   - "{{QUOTE}}" — {{SOURCE URL}}
+- Context: {{VENDOR, ACADEMIC OR NEWS SOURCE}} — {{URL}}
 - Trigger: {{WHAT MAKES IT URGENT NOW}}
-- Old way: {{WORKAROUND}}, on {{MEDIUM}}
+- Old way: {{WORKAROUND}}, on {{ARTIFACT}}
 - Awareness: {{UNAWARE / PROBLEM-AWARE / SOLUTION-AWARE}}
 - Digital literacy: {{LOW / MODERATE / FLUENT}}; age band: {{AGES}}; speaks / reads: {{LANGUAGES}}
 - Risk class: {{MONEY / HEALTH / LEGAL / RECORDS / NONE}}
-- Where they gather: {{PLATFORMS, GROUPS, WITH URLS}}
+- Objections: {{WHAT WOULD STOP THEM ACTING}}
+- Who sees vs who decides: {{VIEWER}} / {{BUYER}}
 - Disqualifiers: {{WHO LOOKS LIKE THEM BUT ISN'T}}
 
 ### Features to show
@@ -43,11 +49,11 @@ studied: {{YYYY-MM-DD}}
 | --- | --- | --- | --- | --- |
 | {{FEATURE}} | {{INPUT}} → {{RESULT}} | {{SCREEN FILES}} | {{DATUM}} | {{PAIN}} |
 
-### Alternatives and differentiator
+### Alternatives
 
 | Alternative | Why they'd switch |
 | --- | --- |
-| {{TOOL OR HABIT}} | {{DIFFERENCE}} |
+| {{TOOL, HABIT, OR DOING NOTHING}} | {{DIFFERENCE}} |
 
 ### Proof
 

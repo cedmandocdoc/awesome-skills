@@ -1,8 +1,0 @@
-# building-marketing: a campaign's HyperFrames project is source; only its outputs and caches stay out of git.
-.concepts/
-**/renders/
-**/snapshots/
-**/.hyperframes/
-**/.media/
-**/.thumbnails/
-**/.waveform-cache/
