@@ -1,6 +1,6 @@
 ---
 doc_type: mockup-flow
-generated_by: building-app-mockup
+generated_by: building-mockup
 author: f487be74-87d9-4e76-8fc3-097325566acb
 app: "[App name]"
 audience: "[Who uses it, e.g. clinic receptionists in Metro Manila]"

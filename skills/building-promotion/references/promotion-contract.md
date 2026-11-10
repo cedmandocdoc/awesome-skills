@@ -2,7 +2,7 @@
 
 ## Overview
 
-Shared rules for every `building-promotion-video` recipe: the promotions root and its layouts, products and promotions, `product.md`, `promotion.md`, frame sizes and safe zones, honesty rules, disclosure, media and paid calls, the sound bank, secrets, and discovery of the dependency skills.
+Shared rules for every `building-promotion` recipe: the promotions root and its layouts, products and promotions, `product.md`, `promotion.md`, frame sizes and safe zones, honesty rules, disclosure, media and paid calls, the sound bank, secrets, and discovery of the dependency skills.
 
 ## Guidelines
 
@@ -19,13 +19,14 @@ Every `<promotions-root>/index.md`, `product.md` and `promotion.md` carries this
 ### Output layout
 
 ```text
-<promotions-root>/                   # default: promotions/
+<promotions-root>/                   # default: promotions/; one app per root
   .gitignore                         # from ../assets/promotions.gitignore
-  index.md                           # root marker; layout: single | multi
-  product.md                         # single: the one app's Brief, Study, Message
-  <NN-slug>/                         # single: one promotion; the folder is its HyperFrames project
-  <app>/product.md, <app>/<NN-slug>/ # multi: the same per app
+  index.md                           # root marker; intention: the app it promotes
+  product.md                         # the app's Brief, Study, Message
+  <NN-slug>/                         # one promotion; the folder is its HyperFrames project
 ```
+
+Another app gets its own root, wherever the user puts it (`promotions/` in one repo per app by default; `promotions/<app>/` when a repo holds several), never inside another root.
 
 A promotion folder:
 
@@ -49,7 +50,6 @@ A promotion folder:
 - A promotion's HyperFrames project is source: every file it reads to render is committed. Only its outputs and caches stay out of git.
 - A promotion keeps only what its video plays: the cut, not the full track. Full tracks and effect takes live in the **Sound bank**; voice takes stay in `assets/vo/raw/`.
 - Files reused from another promotion (an end card, a cut, a take) are copied in.
-- **Single to multi:** when Study adds a second app to a `single` root, ask, then `git mv` `product.md` and every `NN-slug/` into `<first-app>/` and set `layout: multi`.
 
 Templates: [`../assets/index.md`](../assets/index.md), [`../assets/product.md`](../assets/product.md), [`../assets/promotion.md`](../assets/promotion.md).
 
@@ -57,23 +57,25 @@ Templates: [`../assets/index.md`](../assets/index.md), [`../assets/product.md`](
 
 | Unit | Is | Slug | New one when |
 | --- | --- | --- | --- |
-| Product | One app, studied from its source with one framing | The mockup folder's name; for a codebase, the app's name in kebab-case | A different app |
-| Promotion | One video: one audience, one message, one concept | `NN-slug`: `NN` = highest in the product + 1; slug names the concept and hook (`01-one-photo-payroll`) | A different audience, message, concept or hook |
+| Product | One app, studied from its source with one framing: one per root | The mockup folder's name; for a codebase, the app's name in kebab-case | A different app, in a new root |
+| Promotion | One video: one audience, one message, one concept | `NN-slug`: `NN` = highest in the root + 1; slug names the concept and hook (`01-one-photo-payroll`) | A different audience, message, concept or hook |
 
 Any part of a promotion changes whenever the user asks.
 
 ### Resolve promotions root
 
-Search the repository for `index.md` with frontmatter `doc_type: promotions-index`, `generated_by: building-promotion-video`, and `author` = **Author signature**.
+Search the repository for `index.md` with frontmatter `doc_type: promotions-index`, `generated_by: building-promotion`, and `author` = **Author signature**.
 
 | Matches | Action |
 | --- | --- |
 | One | Use it |
-| Several | Ask which (list each `index.md` path) |
+| Several | Use the one whose `@`-path or `intention` matches the request; ask when unclear (list each `index.md` path) |
 | None, on Study or Set up | `SKILL.md` → **Setup** creates one |
 | None, other intents | Stop and report that no promotions root exists |
 
-Resolve a product by `@`-path, slug, or the user's words against the root's `product.md` (single) or `*/product.md` (multi); a promotion by `@`-path, `NN`, or the user's words against its product's `*/promotion.md`. Several matches → ask.
+The root's `product.md` is its product. Resolve a promotion by `@`-path, `NN`, or the user's words against the root's `*/promotion.md`; several matches → ask. Read and write only under the resolved root.
+
+A root built by 1.x (`layout: multi`, with `<app>/` folders): split it into one root per app first, each with its own `index.md` and `.gitignore`.
 
 ### product.md
 
@@ -161,7 +163,7 @@ Frames rebuilt from a codebase, where sold = shown, carry none.
 Every downloaded track and every effect take, kept for every repository on this machine and never committed:
 
 ```text
-~/.awesome-skills/building-promotion-video/media/
+~/.awesome-skills/building-promotion/media/
   sfx/<kind>_<material>_<sha8>.<ext>, .json        # one take; <sha8> = first 8 hex of its SHA-256
   music/<uploader>_<title-slug>_<sha8>.<ext>, .json  # one full track the user downloaded
 ```

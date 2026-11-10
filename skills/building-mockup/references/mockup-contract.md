@@ -2,7 +2,7 @@
 
 ## Overview
 
-Shared rules for every `building-app-mockup` recipe: the mockups root and its layout, the screen rules, the `flow.md` format, and the compact `design.md`.
+Shared rules for every `building-mockup` recipe: the mockup root and its layout, the screen rules, the `flow.md` format, and the compact `design.md`.
 
 ## Guidelines
 
@@ -14,34 +14,37 @@ Static UUID identifying files created by this skill:
 f487be74-87d9-4e76-8fc3-097325566acb
 ```
 
-Every `<mockups-root>/index.md` and `flow.md` carries this value in frontmatter `author`.
+Every `<mockup-root>/index.md` and `flow.md` carries this value in frontmatter `author`.
 
 ### Output layout
 
 ```text
-<mockups-root>/                # default: mockups/
-  index.md                     # root marker + one row per app
-  <app-slug>/
-    design.md                  # visual language, DESIGN.md format
-    flow.md                    # the hero flow, step by step
-    screens/NN-<name>.html     # one static screen per step, in flow order
-    fonts/                     # font files the screens load with @font-face
-    images/                    # photos and logos the screens show
+<mockup-root>/                 # default: mockup/; one app per root
+  index.md                     # root marker: app, intention (the flow's one-line job), screen count
+  design.md                    # visual language, DESIGN.md format
+  flow.md                      # the hero flow, step by step
+  screens/NN-<name>.html       # one static screen per step, in flow order
+  fonts/                       # font files the screens load with @font-face
+  images/                      # photos and logos the screens show
 ```
+
+Another app gets its own root, wherever the user puts it (`mockup/` in one repo per app by default; `mockups/<app-slug>/` when a repo holds several), never inside another root.
 
 Templates: [`../assets/index.md`](../assets/index.md), [`../assets/design.md`](../assets/design.md), [`../assets/flow.md`](../assets/flow.md), [`../assets/screen.html`](../assets/screen.html).
 
-### Resolve mockups root
+### Resolve mockup root
 
-Search the repository for `index.md` with frontmatter `doc_type: mockups-index`, `generated_by: building-app-mockup`, and `author` = **Author signature**.
+Search the repository for `index.md` with frontmatter `doc_type: mockup-index`, `generated_by: building-mockup`, and `author` = **Author signature**.
 
 | Matches | Action |
 | --- | --- |
 | One | Use it |
-| Several | Ask which (list each `index.md` path) |
+| Several | Use the one whose `@`-path, `app` or `intention` matches the request; ask when unclear (list each `index.md` path) |
 | None | `SKILL.md` → **Setup** creates one |
 
-Resolve an app by `@`-path, slug, or the user's words against `index.md` rows; several matches → ask. Mirror slug, app name, screen count, and the flow's one-line job into its `index.md` row on every change.
+Read and write only under the resolved root. Mirror the app name, the flow's one-line job (`intention`) and the screen count into its `index.md` frontmatter on every change.
+
+A root built by 1.x (`doc_type: mockups-index`, one row and one `<app-slug>/` folder per app): split it into one root per app first, each with its own `index.md`.
 
 ### Screen rules
 
@@ -57,7 +60,7 @@ Resolve an app by `@`-path, slug, or the user's words against `index.md` rows; s
 
 ### flow.md
 
-Frontmatter: `doc_type: mockup-flow`, `generated_by: building-app-mockup`, `author` = **Author signature**, `app`, `audience`, `viewport: 390x844`. Body: the job in one line, then one row per step:
+Frontmatter: `doc_type: mockup-flow`, `generated_by: building-mockup`, `author` = **Author signature**, `app`, `audience`, `viewport: 390x844`. Body: the job in one line, then one row per step:
 
 | Column | Holds |
 | --- | --- |

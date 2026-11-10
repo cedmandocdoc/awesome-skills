@@ -1,4 +1,4 @@
 interface:
   display_name: "Building Promotion Video"
   short_description: "Study an app's source and make its promotion videos script-first in HyperFrames, cut to a Pixabay track, with an ElevenLabs voice"
-  default_prompt: "Use $building-promotion-video only when the user names this skill or references a file under a marked promotions root (product.md, promotion.md)."
+  default_prompt: "Use $building-promotion only when the user names this skill or references a file under a marked promotions root (product.md, promotion.md)."

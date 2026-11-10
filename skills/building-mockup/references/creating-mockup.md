@@ -2,17 +2,17 @@
 
 ## Overview
 
-**Authoring mode.** Writes or amends one app's mockup: `design.md`, `flow.md`, and the hero flow's screens. Input: any app description, such as a proposal with its core features and hero flow.
+**Authoring mode.** Writes or amends the root's one app mockup: `design.md`, `flow.md`, and the hero flow's screens. Input: any app description, such as a proposal with its core features and hero flow.
 
 ## Prerequisites
 
-Per [mockup-contract.md](./mockup-contract.md) → **Resolve mockups root**, **Output layout**, **Screen rules**, **flow.md**, **design.md**.
+Per [mockup-contract.md](./mockup-contract.md) → **Resolve mockup root**, **Output layout**, **Screen rules**, **flow.md**, **design.md**.
 
 ## Guidelines
 
 ### 1. Resolve the app
 
-Per [mockup-contract.md](./mockup-contract.md) → **Resolve mockups root**. A new app: create `<app-slug>/`. An amend runs only the steps it touches (a new look → 3, 6; a new step → 4, 6; a busier screen → 6), then 7–8; ids that `flow.md` names stay unchanged.
+Per [mockup-contract.md](./mockup-contract.md) → **Resolve mockup root**. A new app in a root that already holds one → ask for its own root (`SKILL.md` → **Setup**, Root path and intention), never inside this one. An amend runs only the steps it touches (a new look → 3, 6; a new step → 4, 6; a busier screen → 6), then 7–8; ids that `flow.md` names stay unchanged.
 
 ### 2. Pick the hero flow
 
@@ -22,7 +22,7 @@ From the input, the one flow that does the app's main job for its audience, in 3
 
 | Found | Do |
 | --- | --- |
-| A `design.md` in the app folder, or one the user points to | Follow it; copy one from elsewhere into the app folder |
+| A `design.md` in the root, or one the user points to | Follow it; copy one from elsewhere into the root |
 | None | Propose in one message: brand color, type pairing, density, voice (formal or warm, the audience's language); the user confirms or changes; write `design.md` from [`../assets/design.md`](../assets/design.md) |
 
 Fit the audience: a clinic reads calm and trustworthy, a salon warm and stylish, a shop quick and dense.
@@ -50,8 +50,8 @@ With Playwright: `npx -y playwright screenshot --viewport-size=390,844 <screen> 
 
 ### 8. Confirm to the user
 
-Update the `index.md` row. Reply with:
+Update `index.md`'s `app`, `intention` and `screens`. Reply with:
 
-- The app folder path and the `flow.md` steps in one line each
+- The root path and the `flow.md` steps in one line each
 - The visual language in one line (color, type, density, voice)
 - What was assumed and what the user should check
