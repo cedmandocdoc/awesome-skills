@@ -82,8 +82,8 @@ A root built by 1.x (`layout: multi`, with `<app>/` folders): split it into one 
 | Section | Holds | Written by |
 | --- | --- | --- |
 | Frontmatter | `source` (the mockup folder or codebase path), `studied` (date) | Study |
-| **Brief** | The inputs the user or a wrapper skill fills: Promote, Sold vs shown, Offer, CTA and destination, Who it's for, Markets, Language and address, Trust and proof, Never say, Disclosure wording, Brand kit | Study |
-| **Study** | What it does; audiences; features to show; alternatives; proof; context sources | Study |
+| **Brief** | The inputs the user or a wrapper skill fills: Promote, Sold vs shown, Offer, CTA and destination, Objective, Placement, Length, Who it's for, Markets, Language and address, Trust and proof, Never say, Disclosure wording, Brand kit | Study |
+| **Study** | What it does; audiences; features to show; alternatives; proof; structure inputs; context sources | Study |
 | **Message** | Per audience: core line, anchor phrase, hooks | Study |
 
 A re-study rewrites these sections; each promotion keeps the **Spec** and **Message plan** it was made from.
@@ -92,9 +92,9 @@ A re-study rewrites these sections; each promotion keeps the **Spec** and **Mess
 
 | Section | Holds |
 | --- | --- |
-| **Spec** | Audience, concept, preset, signature device, energy, clock (`music` or `voice`), voice coverage, ratios and lengths |
-| **Message plan** | The seven jobs and the trust beat, in the audience's words |
-| **Beat sheet** | Per beat: slot (seconds, then `bar:beat` once the track is in), job, voice line (gloss, syllables, planned seconds), its read (tags, stressed word), caption key phrase, the picture that proves it, the effect |
+| **Spec** | Audience, structure, length (hard or suggested), concept, preset, signature device, energy, clock (`music` or `voice`), voice mode, ratios |
+| **Message plan** | The seven jobs and the trust beat, in the audience's words, each with the block that owns it |
+| **Beat sheet** | Per beat: slot (seconds, then `bar:beat` once the track is in), block, job, energy, voice line (gloss, syllables, planned seconds), its read (tags, stressed word), caption key phrase, the picture that proves it, the effect |
 | **Music** | Title, uploader, page URL, labels, BPM, the grid (downbeat offset, `DROP_BAR`), the cut recipe |
 | **Voice** | The casting line; the voice, model and settings, and why; per line, its takes and the pick |
 | **Sound** | Per effect: slot, moment, file, source, licence |
@@ -105,7 +105,7 @@ A re-study rewrites these sections; each promotion keeps the **Spec** and **Mess
 
 | Cut | Ratio and size | Length | Words that must be read sit in |
 | --- | --- | --- | --- |
-| Master | 9:16, 1080×1920 | 15–60 s | x 65–1015, y 270–1248: clear of Meta's paid Reels zones (top 14 %, bottom 35 %, sides 6 %) |
+| Master | 9:16, 1080×1920 | The Spec's length | x 65–1015, y 270–1248: clear of Meta's paid Reels zones (top 14 %, bottom 35 %, sides 6 %) |
 | Feed | 4:5 1080×1350, or 1:1 1080×1080 | 15–30 s | 6 % each side, 5 % top and bottom |
 | Short cut | 9:16 | ≤ 15 s | As the master |
 | TikTok | 9:16, 1080×1920 | 15–35 s | Its In-Feed safe-zone template; nothing under the right rail |

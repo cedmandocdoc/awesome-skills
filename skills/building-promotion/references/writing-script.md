@@ -2,7 +2,7 @@
 
 ## Overview
 
-What the film says, and how the voice, captions and picture divide it: the viewer, the seven jobs and the trust beat, what to cut first, the core line and anchor phrase, sold vs shown, when each beat lands at each runtime, hook lines, line formulas, writing for the ear, the line budget, coverage and gaps, brand touches, claims, the offer and CTA, the muted read and the honesty scan for words. The **Message plan** and **Beat sheet** in [creating-promotion.md](./creating-promotion.md) steps 3–4 are written to it.
+What the film says inside its structure's blocks, and how the voice, captions and picture divide it: the viewer, the seven jobs and the trust beat, the core line and anchor phrase, sold vs shown, from blocks to beats, hook lines, line formulas, writing for the ear, the line budget, coverage and gaps, brand touches, claims, the offer and CTA, the muted read and the honesty scan for words. The structure, its blocks and their lengths come from [choosing-structure.md](./choosing-structure.md). The **Message plan** and **Beat sheet** in [creating-promotion.md](./creating-promotion.md) steps 3–4 are written to both.
 
 ## Guidelines
 
@@ -14,28 +14,27 @@ What the film says, and how the voice, captions and picture divide it: the viewe
 
 ### The seven jobs and the trust beat
 
-The **Message plan** fills one line per row from **Study**, in the audience's own words. Tag every beat-sheet line with its job. The rows are a checklist, not an order: each must be true in the viewer's head before they act.
+The **Message plan** fills one line per row from **Study**, in the audience's own words, and names the structure's block that owns it. Tag every beat-sheet line with its job. The rows are a checklist; the structure sets their order ([choosing-structure.md](./choosing-structure.md) → **The catalog**): each must be true in the viewer's head before they act.
 
 | # | Job | The viewer must know | Owned by | When missing |
 | --- | --- | --- | --- | --- |
-| 1 | Who | This is for me: my trade or role | Hook: picture + caption + voice | Wrong people stay; right people scroll |
-| 2 | Pain and trigger | The pain, and when it bites | The old way's artifact in the hook picture + the hook line | No reason to keep watching |
+| 1 | Who | This is for me: my trade or role | The promise block: picture + caption + voice | Wrong people stay; right people scroll |
+| 2 | Pain and trigger | The problem, and when it bites | The old way's artifact in the picture + the line that names it | No reason to keep watching |
 | 3 | What it does for you | Before → after, in their terms | The picture proves it (the app performing); a voice line or caption says the consequence | No desire |
-| 4 | What is sold | "We build one like this for you" when sold ≠ shown; else the product and where to get it | Voice, then a caption that names the builder | Read as an app to download |
-| 5 | Offer | What it costs me | Voice or caption early, and the end card | "Free? What's the catch?" |
+| 4 | What is sold | "We build one like this for you" when sold ≠ shown; else the product and where to get it | Voice, then a caption that names the builder, in the block marked B | Read as an app to download |
+| 5 | Offer | What it costs me | Voice or caption in the block marked O, and the end card | "Free? What's the catch?" |
 | 6 | Next step | What happens if I act: small and safe | Voice | Acting feels like a commitment |
 | 7 | CTA | What to do | Voice + button: the button's verb and channel | Watched, not acted on |
-| T | Trust beat | Who builds it, and why believe them; when sold = shown, proof about the product | Voice (the who line, named proof) + those names written on screen | "Who are these people?" |
+| T | Trust beat | Who builds it, and why believe them; when sold = shown, proof about the product | Voice (the who line, any named proof from the Brief) + those names written on screen | "Who are these people?" |
 
-- **The picture proves; the voice sells.** The voice spends its seconds on jobs 4–7 and T, which a UI demo can't show. It never narrates the UI.
-- Job 3 is required in every film: a consequence in the audience's words, never a UI step.
+- **The picture proves; the voice says what it can't.** That is the meaning of a beat in the viewer's words, and the seller and offer facts (jobs 4–7 and T). How much the voice carries is the voice mode ([directing-voice.md](./directing-voice.md) → **Coverage**). In every mode a line about the UI states its consequence, never a button or a step.
+- Jobs 2 and 3 are required in every film: the problem and a consequence, each in the audience's words.
 
-### Priority ladder
+### Cutting to fit
 
-When the slots run out, cut from the right: CTA > offer > service / sold line > hook > what it does for you > trust beat > next step > other consequence lines > lines that echo a caption.
+When the slots run out, cut per [choosing-structure.md](./choosing-structure.md) → **Scaling and cut order**. The promise, one proof, the brand cue, the ask and, when sold ≠ shown, the sold line stay in every film; one that loses its voice slot moves to a caption or the end card.
 
-- The first five stay in every film; one that loses its voice slot moves to a caption or the end card.
-- In a short cut the trust beat shrinks to the who line or the disclosure line; named proof needs a calm cut ≥ 25 s. The brand is not on the ladder: its floor (**Brand touches**) holds at every length.
+- In a short cut the trust beat shrinks to the who line or the disclosure line; named proof needs a calm cut ≥ 25 s. The brand's floor (**Brand touches**) holds at every length.
 
 ### Core line, anchor phrase, value frame
 
@@ -64,34 +63,33 @@ When the slots run out, cut from the right: CTA > offer > service / sold line > 
 
 Never show the shown thing's own CTA, such as a store badge. Where the disclosure line goes: [promotion-contract.md](./promotion-contract.md) → **Disclosure**.
 
-When each beat lands, sold ≠ shown:
+When sold ≠ shown:
 
 | Beat | Lands | Channel |
 | --- | --- | --- |
-| Offer, saying whose it is ("your app") | By ~6–7 s | A voice line before the drop; a plate on the drop, with no voice while it shows; or inside the service line |
 | Builder named | At the reveal, the app's first appearance | The disclosure line, then the who line |
-| "We build one like this for you" | The first app beat after the device's first bar, ≤ ~9.5 s | Voice + a matching caption |
+| "We build one like this for you" | In the block marked B, on its first app beat; never only at the end | Voice + a matching caption |
+| Offer | In the block marked O | Voice or a caption, and the end card |
 
-The offer may come before the full service line only when it says whose it is ("Your app's first version, free."). A bare "the first version is free" before the viewer knows what is built confuses a cold viewer.
+An offer that lands before the sold line says whose it is ("Your app's first version, free."). A bare "the first version is free" before the viewer knows what is built confuses a cold viewer.
 
-### The spine and timelines by runtime
+### From blocks to beats
 
-Default order: hook → offer → device / reveal → service → what it does for you → trust beat → close. Where each preset puts the offer, the service line and its voice-free windows: [choosing-style.md](./choosing-style.md) → **Presets**. Targets in seconds; the film's grid snaps them.
+Lay the structure's blocks out to the length per [choosing-structure.md](./choosing-structure.md) → **Length**; each block becomes one or more beats. Whatever the structure, these lines keep their own rules:
 
-| Beat | Rule | ≤ 15 s cut | 22–25 s | 28–32 s |
-| --- | --- | --- | --- | --- |
-| Hook | **Hook lines** | 0.1–2.6 | 0.1–2.9 | 0.1–2.9 |
-| Offer | Voice or plate, by ~6–7 s, before the device's first bar ends (**Sold vs shown**) | 2.9–5.0 | 3.0–7.0 | 3.0–7.0 |
-| Device / reveal | The signature motion; no voice over the drop + the device's first bar, at least | 5.0–7.5 | The drop + 1 bar | The drop + 1 bar |
-| Service | On the first app beat; never only at the end | 7.5–9.5 | ≤ 9.5 | ≤ 9.5 |
-| What it does for you | Over the app performing | A caption on the device's result | After the service | After the service |
-| Who | One line, ≤ 10 syllables, in a caption-free window or over a caption that says the same; never the disclosure line read aloud in full | In the close; the disclosure line shows it | The late caption beat | Mid-film |
-| Proof | Optional: one line, ≤ 12 syllables, in a caption-free window, its names written | — | — | One |
-| Close | One line, ≤ 12 syllables: the button's verb + the next step; never across the ending hit | 11.5–14.2 | The tail, or the beat before the hit | The tail |
-| Voice lines | — | 3 | 3–5 | 5–6 |
+| Line | Rule |
+| --- | --- |
+| Hook | **Hook lines**; it carries the promise in the form the structure marks P |
+| Device / reveal | The signature motion; in a music-led film, no voice over the drop + the device's first bar |
+| Sold line | In the block marked B (**Sold vs shown**) |
+| What it does for you | Over the app performing |
+| Who | One line, ≤ 10 syllables, in a caption-free window or over a caption that says the same; never the disclosure line read aloud in full |
+| Proof | Only from the Brief's **Trust and proof**: one line, ≤ 12 syllables, in a caption-free window, its names written |
+| Close | One line, ≤ 12 syllables: the button's verb + the next step; never across the ending hit |
 
+- The number of voice lines follows the voice mode and the blocks ([directing-voice.md](./directing-voice.md) → **Coverage**).
 - Fit the close to its slot per [directing-voice.md](./directing-voice.md) → **Ending**; a short slot takes the short form ("Message us.").
-- Muted-first placements (4:5, 1:1) get a picture hook, never a question, and the early offer as a caption.
+- Muted-first placements (4:5, 1:1) get a picture hook, never a question, and the offer as a caption.
 
 ### Hook lines
 
@@ -106,6 +104,8 @@ Default order: hook → offer → device / reveal → service → what it does f
 | Line | Formula | Good | Bad, and why |
 | --- | --- | --- | --- |
 | Hook | [Trade call-out]? + [their workaround or pain, in their words] | "Bakers: still taking cake orders in the chat?" · "Payroll by hand again?" | "Want to grow your business faster?" (a speed promise; no trade) · "Introducing <Name>, the smart payroll solution." (opens on the brand; no pain) |
+| Problem / agitate | [What the old way costs them], in their words, over its artifact | "Every Friday, the time book and a calculator." | "Manual processes are inefficient." (no picture, not their words) |
+| A beat's meaning (narrated) | [What changes for them] at that beat, over the app doing it | "Every add-on reaches the customer's phone first." | "Tap Send for approval." (a step) · "It's that easy!" (ease claim) |
 | Offer | [Free, or the price] + [exactly what] + [whose] | "Your app's first version, free." · a plate on the reveal: "First version free." | "FREE!" (free what?) · "Free app!" (heard as free forever) · "$0 to build" (a price-like number) |
 | Service / sold | [We] + [future build verb] + [you] + [like this] | "We'll build you an app like this." | "An app like this, for your clinic." as the only sold line (no builder: reads as a download) · "<Seller> builds apps like this for contractors." (third person and plural: a catalogue, not yours) |
 | Who | [Made by] + [the seller's name] | "Made by <Seller>." | "This is <Seller>'s app." (a product to get) |
@@ -148,9 +148,9 @@ Default order: hook → offer → device / reveal → service → what it does f
 
 | Rule | Values |
 | --- | --- |
-| Replace, don't add | Seller lines take the slots of lines that would echo a caption; 3–5 lines in 22–25 s; the one echo left is a verbatim hook (**Voice, captions, picture**) |
-| Gaps by energy ([choosing-style.md](./choosing-style.md) → **Energy scale**) | E1–3: ≥ ½ beat between lines. E4–5: ≥ 1/8 note inside one thought, ≥ 1 beat between thoughts (hook → offer is two thoughts). Never isolated statements 2–5 s apart |
-| Voice-free floor | Always music-only: the drop downbeat + 1 beat, the device's first bar, the device's motion (a fill, a spin, a morph), fills and risers, the ending hit; at least one stretch ≥ 3 s for the device |
+| Replace, don't add | A voice line takes the slot of a line that would echo a caption; the one echo left is a verbatim hook (**Voice, captions, picture**) |
+| Gaps by energy ([choosing-style.md](./choosing-style.md) → **Energy scale**) | E1–3: ≥ ½ beat between lines. E4–5: ≥ 1/8 note inside one thought, ≥ 1 beat between thoughts. Never isolated statements 2–5 s apart |
+| Voice-free floor | Always music-only: the drop downbeat + 1 beat, the device's first bar, the device's motion (a fill, a spin, a morph), fills and risers, the ending hit. Key lines and none: at least one stretch ≥ 3 s for the device. Narrated: music-only breaths of 1–2 s, each after a line that framed what to watch |
 | No line across | A drop, a device bar, the ending hit, or a key effect |
 
 - Whether to voice at all: [directing-voice.md](./directing-voice.md) → **Coverage**. Where each line sits on the grid: **Placement on the grid**.
@@ -160,9 +160,9 @@ Default order: hook → offer → device / reveal → service → what it does f
 | Channel | Carries | Never |
 | --- | --- | --- |
 | Picture / UI | The pain's artifact; the app performing; its results; the sample and AI labels | A value or step the source lacks |
-| Captions | The hook phrase; the early offer (a plate, or the hook caption swapped to it); the line naming the builder; the close when it sits before the hit | A transcript; a different sentence from the one the voice is saying |
+| Captions | The hook phrase; each narrated beat's key word; the offer (a plate, or a caption swapped to it); the line naming the builder; the close when it sits before the hit | A transcript; a different sentence from the one the voice is saying |
 | Labels | ≤ 4 words in the app's language; the noun is the anchor | A sentence |
-| Voice | Hook; offer; service; who; close (CTA + next step); seller and offer facts the picture can't show | Per [promotion-contract.md](./promotion-contract.md) → **Honesty rules** |
+| Voice | Key lines: hook, sold line, who, close (CTA + next step), and the offer. Narrated: also the problem and each beat's meaning. Always: seller and offer facts the picture can't show | Per [promotion-contract.md](./promotion-contract.md) → **Honesty rules** |
 | End card | The brand, the offer's short form, the button, the URL, the disclosure | Per [directing-picture.md](./directing-picture.md) → **End card** |
 
 | Caption mode | What it is | Values | Avoid |
@@ -203,13 +203,13 @@ Short touches inside the story, never a logo card.
 
 A claim is a distinct pain, capability, benefit, number, guarantee, price or term, counted when voiced, captioned, labelled or titled. A repeat isn't a new claim; incidental UI text isn't counted but must be true.
 
-- Claims by length: ≤ 15 s → 3 (pain, outcome, offer); 21–25 s → 4; 26–34 s → 5. Never more than 2 per 10 s, or 1 per line. One fewer for SMB, mass-market and second-language audiences.
+- Claims by length: ≤ 15 s → 3 (pain, outcome, offer); 21–25 s → 4; 26–34 s → 5; a longer film adds a claim only with a block that proves it. Never more than 2 per 10 s, or 1 per line. One fewer for SMB, mass-market and second-language audiences.
 - A film holds 1 pain, the outcome, ≤ 2 supports each proven on screen at that moment, and 1 offer.
 - Cut in this order: claims outside the one task; claims with no picture at that moment; second offer terms; pains beyond the first; unmeasured adjectives ("fast"); a support that competes with the outcome. Never cut the outcome, the sold line, the offer or the CTA.
 
 ### Offer and CTA
 
-- **One offer, ≤ 6 words:** "Download <Name> free" (the cold default), "First 10 orders on us", a real guarantee from **Proof**, or a price only when the price is the hook. Said or captioned early (**Sold vs shown**) and again on the end card.
+- **One offer, ≤ 6 words:** "Download <Name> free" (the cold default), "First 10 orders on us", a real guarantee from **Proof**, or a price only when the price is the hook. Said or captioned in the block marked O (**Sold vs shown**), and again on the end card.
 - Name exactly what is free; never a bare "Free". The wording never implies free forever ("Free app"). Where a market's law wants a free offer's limits beside it (Japan, Mexico), put the limit on screen next to the offer.
 - Terms and conditions go to the landing page or the reply, never into the film. Risk: a free-first offer can be heard as "free to keep"; the end card carries its exactly-true form.
 - The spoken verb is the button's verb. One destination per film. Offer and CTA lines together take ≤ 25 % of the runtime.
@@ -224,7 +224,7 @@ A claim is a distinct pain, capability, benefit, number, guarantee, price or ter
 
 ### The muted read
 
-Write the captions, labels and end card in order, with no voice. They alone must read: hook → offer → who builds it → what to tap. Muted, the music's clock is gone, so the words and the picture carry the meaning on their own.
+Write the captions, labels and end card in order, with no voice. They alone must read, in the structure's order: the promise → what it does → who builds it → the offer → what to tap. Muted, the music's clock is gone, so the words and the picture carry the meaning on their own.
 
 - The disclosure line alone, at its small size, doesn't carry the builder: a caption-size line, or the end card's disclosure line, must.
 - Checked on paper at G2 and on the muted render at G3 ([checking-promotion.md](./checking-promotion.md) → **G2 Script budget**, **G3 Measured**).

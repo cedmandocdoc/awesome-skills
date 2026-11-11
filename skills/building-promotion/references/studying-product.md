@@ -33,6 +33,9 @@ Fill each field from the request's framing ("promote that we can build an app li
 | Sold vs shown | What is sold / what is shown, per [writing-script.md](./writing-script.md) → **Sold vs shown** |
 | Offer | The words the film says, ≤ 6 words; terms and conditions go to the conversation |
 | CTA and destination | The action and where it lands: a message, a site, a store, a sign-up |
+| Objective | Awareness, consideration or action; empty → inferred from the CTA ([choosing-structure.md](./choosing-structure.md) → **Choosing**) |
+| Placement | Where the film plays: sound-on or muted-first, a skip window, the placement's length norm or cap |
+| Length | Hard (a guard the runtime meets) or suggested, in seconds; empty → suggested per structure ([choosing-structure.md](./choosing-structure.md) → **Length**) |
 | Who it's for | The cue that selects the right viewer ("for the owner of a …"); needed when the trade's own customers might read the film as being for them |
 | Markets | Where it runs |
 | Language and address | The language and code-switch of voice and captions, the UI language, the form of address, who checks the script natively |
@@ -59,6 +62,7 @@ Fill each field from the request's framing ("promote that we can build an app li
 1. **Features to show:** each as one task, input → result, with the screens it uses, the datum carried through, and the pain it answers. Only features the source shows.
 2. **Alternatives:** what they use today, doing nothing included, and why they would switch.
 3. **Proof:** real proof from the user and the sources only. A mockup has none of its own; its proof comes from the Brief.
+4. **Structure inputs**, for [choosing-structure.md](./choosing-structure.md) → **Choosing**: whether the category has a common name the audience knows, the steps from start to the first result in the hero flow, and the people who can speak on camera (a consenting customer, the founder, a creator), or none.
 
 ### 6. Write the Message
 
@@ -70,6 +74,6 @@ Set `studied` to today. Reply with:
 
 - The `product.md` path
 - Each audience in one line, its top pain quote (or "no own-words quote found"), and its best hook
-- The features to show
+- The features to show, and the structure inputs
 - What was assumed and what the user should check
 - Next: "make a promotion" proposes concepts for this product

@@ -2,7 +2,7 @@
 
 ## Overview
 
-Whether a promotion is voiced, and how. The voice dials and how the plan sets them; coverage; register; casting fit and source; language and address; pronunciation; the read; pace; the ElevenLabs controls; casting and takes; placement on the music's grid; the ending; a second voice; starting values per preset. What the lines say is in [writing-script.md](./writing-script.md); the voice's level in the mix is in [directing-sound.md](./directing-sound.md) → **Mix**.
+Whether a promotion is voiced, and how. The voice dials and how the plan sets them; coverage, the voice mode; register; casting fit and source; language and address; pronunciation; the read; pace; the ElevenLabs controls; casting and takes; placement on the music's grid; the ending; a second voice; starting values per preset. What the lines say is in [writing-script.md](./writing-script.md); the voice's level in the mix is in [directing-sound.md](./directing-sound.md) → **Mix**.
 
 ## Guidelines
 
@@ -18,28 +18,28 @@ Choose each dial on its own; no single setting decides the rest. The dials are t
 | Audience region, home language | Language; accent; pronunciation; the language's normal rate; the shortlist's language filter |
 | Age, literacy, second-language viewers | Pace (cut words, never slow down); address; line length; the older-viewer duck in **Mix** |
 | App category, risk class | Register; read; arc (no hype in clinical health or finance); formal address for finance, clinical health and enterprise |
-| Energy 1–5 ([choosing-style.md](./choosing-style.md) → **Energy scale**) | Coverage; read; arc; pace; tags |
+| Structure ([choosing-structure.md](./choosing-structure.md) → **The catalog**) | The default coverage; which blocks get lines |
+| Energy 1–5 ([choosing-style.md](./choosing-style.md) → **Energy scale**) and the curve per beat | Coverage; read; arc; pace; tags |
 | Preset | Coverage; arc; placement; second voice (**Voice presets per style**) |
 | Clock (music or voice) | Placement; the **Mix** row; the ending |
 | The track: BPM, bed density, tail length | Slots; carving; the spoken close |
-| Runtime | Coverage and counts here are for 20–30 s: scale them with length. Past ~60 s a third emotional turn fits |
+| Length | Line counts scale with the blocks. Past ~60 s a third emotional turn fits |
 | Sold ≠ shown | The seller speaks the sold line and the close ("we") |
-| Platform | YouTube and Google: the brand said early, the on-screen CTA voiced. The share watching muted sets how much the captions carry |
+| Placement (sound-on or muted-first) | Sound-on: the brand said early, the on-screen CTA voiced. Muted-first: every voiced fact also on screen, so none or key lines |
 | Budget | Source; voices × takes |
 
-When rows conflict: honesty and platform policy first, then category risk, then the market's address norm, then energy, then preset.
+When rows conflict: honesty and platform policy first, then category risk, then the market's address norm, then the structure, then energy, then preset.
 
 ### Coverage
 
-Decide coverage for the preset when the concept is picked, and record it in `promotion.md` → **Spec**. None is a full option, not a fallback.
+The voice mode. Decide it when the concept is picked, from the structure's default and the placement, and record it in `promotion.md` → **Spec**. None is a full option, not a fallback.
 
-| Option | What it is | Values | Fits | Avoid when |
+| Mode | What it is | Values | Fits | Avoid when |
 | --- | --- | --- | --- | --- |
-| None | Music, type and UI sounds | 0 phrases | Satisfying UI, Premium Calm, trend edits | — |
-| Sold line only | The sold line, said as it is seen | 1 phrase | Short tails, Satisfying UI | — |
-| Bookends | Hook, sold line, close | 3 phrases | Address or question hooks | Type-device hooks |
-| Sparse | Phrases between the music's moments | 3–6 phrases | Music-led films at energy 3–4 | — |
-| Full narration | Voice-led | Most of the runtime | Teach-first, Founder Lo-fi, Notes-app Lo-fi | Beat-cut films |
+| None | Music, type and UI sounds | 0 lines | Quick demo, Teaser, Offer-led; muted-first placements; ≤ 6 s | A high-involvement buy that needs explaining |
+| Key lines | A few lines carry the key meaning: the sold line alone (1), bookends of hook, sold line and close (3), or phrases between the music's moments (3–6) | 1–6 lines at 20–30 s | Problem–Solution, Before–After–Bridge, Comparison, Feature–Benefit, Listicle; music-led films at energy 3–5 | A high-involvement buy: the problem and what each proof means go unsaid |
+| Narrated | The voice carries the story: it names the problem and says what each proof beat means, in outcome words, never a button or a step; music-only breaths of 1–2 s after a line has framed what to watch | About 1 line per 4–5 s | PAS, How-to, Explainer, Founder story; high-involvement buys; sound-on placements | A muted-first placement without captions; a beat-cut film whose every bar is a hit |
+| Speech on camera | A real person speaks: the founder, a consenting customer, a creator | Voice-led | Founder story, Testimonial, Creator | No such person; never an AI voice in their place |
 
 - The voice-free floor and the gaps between lines: [writing-script.md](./writing-script.md) → **Coverage and gaps**.
 - Voice the hook only when it is an address or a question. A type-device hook (a number reel, a slam list) stays type and music, or the voice takes only its turn word.
@@ -197,6 +197,8 @@ The skill names no voice and has no default voice. Casting runs for each promoti
 
 5. **Pick (the user, by ear).** The user listens dry on a phone speaker at low volume, then on the bed in the preview. Reject a voice whose pain and payoff lines sound alike, or that misreads a name or number. The Brief's native checker approves the language. Record the voice ID, model, settings and reason in **Voice**.
 
+The user may waive steps 3–5. Then pick one voice from the shortlist against the casting line, record the reason in **Voice**, and render the film's takes under their own cost table. The user judges the voice by ear at the sound gate; a rejected voice is recast.
+
 ### Takes
 
 1. One request per line: `POST https://api.elevenlabs.io/v1/text-to-speech/<voice_id>/with-timestamps` with `text` (numbers written as said; the line's tags and punctuation), `model_id`, `language_code`, `voice_settings`, `previous_text` and `next_text`.
@@ -252,27 +254,27 @@ Starting values for each preset in [choosing-style.md](./choosing-style.md) → 
 
 | Preset | Coverage | Register · read · arc | Tags | Placement |
 | --- | --- | --- | --- | --- |
-| Kinetic Slam | Sparse, 4–6 | Peer + seller · dry pain → smiling payoff · 2 turns; optional chant on the slam words | `[dry]` → `[bright, smiling]` → `[warm, confident]` | Slam words rhythm-locked, or left to type |
-| Exploded UI | Sparse, 3–5 | Peer · smile · 1 turn | `[warm, smiling]` | Free over the grid |
-| Chat Chaos | Bookends + 1 | Peer · playful-urgent → relief | `[playful, urgent]` → `[relieved, warm]` | The hook as one take over the build |
-| Satisfying UI | None, or the sold line only; a question hook as an A/B | Peer · quiet, curious | `[quiet, curious]` | Nothing over the fill; the ticks win |
-| Before / After | Sparse, 3–4 | Peer · weary → bright | `[weary, dry]` → `[bright]` | The "before" list rhythm-locked in one take |
-| Data Hero | Sparse, 3–5 | Peer + seller · dry → smile; never reads the numbers | `[matter-of-fact]` → `[bright, relieved, smiling]` | Numbers stay as type; the voice takes the turn word |
-| Paper to App | Bookends + 1 | Peer · warm, knowing | `[warm, knowing]` | Free; silent through the morph |
-| Founder Lo-fi | Full | The real founder, never AI · conversational | — | The voice is the clock |
-| Notes-app Lo-fi | Full | TTS-native, flat by design, labelled | — | The voice is the clock |
-| Premium Calm | None, or 1 line | Guide · intimate | `[soft, intimate]` | Gaps ≥ 2 bars |
-| Offer Blast | Offer + close | Host · light hard sell with a smile | `[bright, upbeat]`, brisk | On the offer slam |
-| Teach-first | Full | Guide · conversational | `[clear, conversational]` | The voice is the clock |
-| Deadline | Hook + offer + close | Light announcer · firm, falling | `[firm]` | The date on the beat |
+| Kinetic Slam | Key lines, 4–6; narrated between the slams in a PAS | Peer + seller · dry pain → smiling payoff · 2 turns; optional chant on the slam words | `[dry]` → `[bright, smiling]` → `[warm, confident]` | Slam words rhythm-locked, or left to type |
+| Exploded UI | Key lines, 3–5 | Peer · smile · 1 turn | `[warm, smiling]` | Free over the grid |
+| Chat Chaos | Key lines: bookends + 1 | Peer · playful-urgent → relief | `[playful, urgent]` → `[relieved, warm]` | The hook as one take over the build |
+| Satisfying UI | None, or key lines: the sold line only; a question hook as an A/B | Peer · quiet, curious | `[quiet, curious]` | Nothing over the fill; the ticks win |
+| Before / After | Key lines, 3–4 | Peer · weary → bright | `[weary, dry]` → `[bright]` | The "before" list rhythm-locked in one take |
+| Data Hero | Key lines, 3–5 | Peer + seller · dry → smile; never reads the numbers | `[matter-of-fact]` → `[bright, relieved, smiling]` | Numbers stay as type; the voice takes the turn word |
+| Paper to App | Key lines: bookends + 1; narrated in a PAS | Peer · warm, knowing | `[warm, knowing]` | Free; silent through the morph |
+| Founder Lo-fi | Speech on camera | The real founder, never AI · conversational | — | The voice is the clock |
+| Notes-app Lo-fi | Narrated | TTS-native, flat by design, labelled | — | The voice is the clock |
+| Premium Calm | None, or 1 key line | Guide · intimate | `[soft, intimate]` | Gaps ≥ 2 bars |
+| Offer Blast | Key lines: offer + close | Host · light hard sell with a smile | `[bright, upbeat]`, brisk | On the offer slam |
+| Teach-first | Narrated | Guide · conversational | `[clear, conversational]` | The voice is the clock |
+| Deadline | Key lines: hook + offer + close | Light announcer · firm, falling | `[firm]` | The date on the beat |
 
 | Energy | Register | Read | Coverage | Pace |
 | --- | --- | --- | --- | --- |
-| 1 | Guide | Intimate, soft | None, or the sold line only | Natural; gaps ≥ 2 bars |
-| 2 | Peer, or the real founder | Warm, conversational | Full or bookends, often voice-led | Natural |
-| 3 | Peer | Conversational, light smile | Bookends, or sparse 3–4 | Natural |
-| 4 | Peer + seller | Dry pain → smiling payoff | Sparse 3–6 | Natural to 1.1× |
-| 5 | Host | Hype or chant | None, chant hits, or a full creator voiceover | Brisk, 1.1–1.2× |
+| 1 | Guide | Intimate, soft | None, or one key line | Natural; gaps ≥ 2 bars |
+| 2 | Peer, or the real founder | Warm, conversational | Narrated, speech on camera, or bookends; often voice-led | Natural |
+| 3 | Peer | Conversational, light smile | Key lines (bookends, or 3–4), or narrated | Natural |
+| 4 | Peer + seller | Dry pain → smiling payoff | Key lines 3–6, or narrated between the hits | Natural to 1.1× |
+| 5 | Host | Hype or chant | None, chant hits, or narrated in a creator style | Brisk, 1.1–1.2× |
 
 | App category | Start with |
 | --- | --- |

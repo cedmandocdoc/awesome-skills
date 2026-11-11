@@ -12,7 +12,7 @@ The Spec's clock picks how the film is timed:
 
 | Clock | Times the picture | The music |
 | --- | --- | --- |
-| `music` (default) | The track's bars and beats; every move, line and effect sits on its grid | A Pixabay track the user picks after the beat sheet and the preset; the cut is planned in bars to the beat sheet's lengths |
+| `music` (default) | The track's bars and beats; every move, line and effect sits on its grid | A Pixabay track the user picks after the beat sheet and the preset; the cut is planned in bars to the beat sheet's lengths and energy curve |
 | `voice` (a person to camera, a teach-first film) | The voice and its pauses | A soft pulse cut to the voice: no busy hi-hats or snare runs, no vocals |
 
 In a music-led film:
@@ -73,7 +73,8 @@ The user downloads the pick while logged in, per [promotion-contract.md](./promo
 
 ### Cutting
 
-- Plan the cut on paper first: source in and out, the bars of each part, the drop bar, the ending, the runtime.
+- Plan the cut on paper first: source in and out, the bars of each part, the drop bar, the ending, the runtime. A hard length is a guard: the runtime meets it within one beat.
+- Fit the beat sheet's energy curve ([choosing-structure.md](./choosing-structure.md) → **Energy curve**): low beats over quiet or breakdown bars, the first peak on the drop, later peaks on lifts, the ask over a steadier phrase or the outro. When the track's sections fall elsewhere, reorder whole phrases on bar lines (a riser cut straight into the drop counts); when no edit fits, take the nearest curve the track allows and note it in **Music**.
 - Cut only on bar lines (a downbeat or a phrase end), at repeating material, in the valley just before the beat. Each join gets a 12–50 ms crossfade; start at 12 ms.
 - For the hook, take the bars just before a lift (a breakdown's last 2–4 bars), so the cut lifts into the drop.
 - The music is audible from frame 0, with a 12 ms fade-in.

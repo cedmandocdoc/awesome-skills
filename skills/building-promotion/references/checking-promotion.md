@@ -20,13 +20,13 @@ The gates a promotion passes before the user sees it, and the diagnostics report
 
 A fresh subagent sees only the beat sheet's voice lines and captions, in order. It doesn't see the Brief or the Study. Then it sees the hook alone. It answers:
 
+- who it's for, and what problem of theirs it is about;
+- how the app helps with it;
 - what is sold, and who sells it;
-- who it's for;
-- what it does for them;
 - what's free or what it costs;
 - what to do next.
 
-Its answers must match the **Message plan**. A miss is fixed in the lines or captions that own that job, per [writing-script.md](./writing-script.md).
+On the hook alone it answers only the first, and why it would keep watching. Its answers must match the **Message plan**. A miss is fixed in the lines or captions of the block that owns that job, per [writing-script.md](./writing-script.md).
 
 ### G2 Script budget
 
@@ -34,11 +34,13 @@ Each check runs on the beat sheet:
 
 | Check | Passes when |
 | --- | --- |
+| Structure and length | Every block of the structure is present, in its order, sized per [choosing-structure.md](./choosing-structure.md) → **Length**; a hard length is met; the energy curve has ≥ 2 peaks after the hook |
 | Lines | Each line fits its slot at the planning rate; each breath group is within [writing-script.md](./writing-script.md) → **Rate and budget** |
 | Voice-free windows | No line crosses the drop, the device's first bar, the ending hit, or a key effect |
-| Timing | The offer, the builder, the sold line and the brand land within [writing-script.md](./writing-script.md) → **Sold vs shown** and **Brand touches** |
+| Timing | The promise lands by ~3 s and no later than 6 s; the builder, the sold line and the offer land in their blocks per [writing-script.md](./writing-script.md) → **Sold vs shown**; the brand per **Brand touches** |
+| Voice mode | Narrated: the problem is spoken, and every proof beat has a line saying its meaning with its key word on screen. Key lines and none: the muted read alone carries the problem and the result |
 | Claims and offer | Claims within the cap; the offer ≤ 6 words; no terms in the film |
-| The muted read | The captions, labels and end card alone, in order, read hook → offer → who builds it → what to tap |
+| The muted read | The captions, labels and end card alone, in order, read per [writing-script.md](./writing-script.md) → **The muted read** |
 | Honesty scan | [writing-script.md](./writing-script.md) → **Honesty scan for words** finds nothing, and nothing from the Brief's **Never say** appears |
 
 ### G3 Measured
@@ -73,6 +75,6 @@ Report the numbers beside G3. Worth a look in the preview: fewer than ~1 distinc
 
 Offered once after the final, before the user posts it; it never blocks.
 
-1. The skill writes three questions: "What is it offering? Who makes it? What would you do next?". It adds one recall question per key beat.
+1. The skill writes four questions: "What problem is it about? What is it offering? Who makes it? What would you do next?". It adds one recall question per key beat.
 2. 5–8 people from the audience, who haven't seen the Brief, each watch the film once on their own phone: muted first, then with sound.
 3. The user brings back the answers. A beat most of them miss is fixed and re-rendered.

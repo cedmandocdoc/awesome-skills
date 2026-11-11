@@ -10,6 +10,7 @@ Per [promotion-contract.md](./promotion-contract.md): **Output layout**, **Produ
 
 The craft lives in these guides:
 
+- [choosing-structure.md](./choosing-structure.md)
 - [writing-script.md](./writing-script.md)
 - [choosing-style.md](./choosing-style.md)
 - [directing-picture.md](./directing-picture.md)
@@ -27,6 +28,7 @@ Resolve the promotions root first, per [promotion-contract.md](./promotion-contr
 | Request | Step |
 | --- | --- |
 | A new promotion, or more concepts | 2 |
+| Change the structure or the length | 2, then 3–4 and the steps the change reaches |
 | Change what it says (lines, captions, beats) | 3 or 4, then the steps the change reaches |
 | Change the style or device | 5, then 7–8 |
 | Change the track or the cut | 6, then the retime in 8 |
@@ -39,23 +41,24 @@ Read the promotion's files for what exists, and redo only what the change reache
 
 ### 2. Propose concepts
 
-1. From **Study** and **Message**, write 3 concept cards per [choosing-style.md](./choosing-style.md) → **Recommending**, each with its length.
-2. Show the cards. The user picks one or more, mixes dials, or steers: "warmer", "show the reminder". Steering gets 3 new cards that keep what they liked; repeat until they pick.
-3. Each pick becomes its own promotion: run `npx hyperframes init <promotions-root>/<NN-slug> --resolution portrait` before writing anything into the folder, since init refuses a folder that isn't empty. Then write `promotion.md` from [`../assets/promotion.md`](../assets/promotion.md) with its **Spec**, the voice coverage included ([directing-voice.md](./directing-voice.md) → **Coverage**).
+1. From **Study**, **Message** and the Brief's length, suggest 3 structures per [choosing-structure.md](./choosing-structure.md) → **Choosing**; a hard length is a guard on every suggestion.
+2. Dress each as a concept card per [choosing-style.md](./choosing-style.md) → **Concept cards**: its structure, length, voice mode, message and preset.
+3. Show the cards. The user picks one or more, mixes dials, swaps the structure or the length, or steers: "warmer", "show the reminder". Steering gets 3 new cards that keep what they liked; repeat until they pick.
+4. Each pick becomes its own promotion: run `npx hyperframes init <promotions-root>/<NN-slug> --resolution portrait` before writing anything into the folder, since init refuses a folder that isn't empty. Then write `promotion.md` from [`../assets/promotion.md`](../assets/promotion.md) with its **Spec**: the structure, the length and the voice mode included ([directing-voice.md](./directing-voice.md) → **Coverage**).
 
 ### 3. Message plan
 
-Fill **Message plan** per [writing-script.md](./writing-script.md): the seven jobs and the trust beat, in the audience's words from **Study**, each with its source line.
+Fill **Message plan** per [writing-script.md](./writing-script.md): the seven jobs and the trust beat, in the audience's words from **Study**, each with its source line and the structure's block that owns it.
 
 ### 4. Beat sheet
 
-1. Write **Beat sheet** per [writing-script.md](./writing-script.md). Each beat gets its slot (in seconds until the track is in, or `bar:beat` on a placeholder 120 BPM grid), its job, the voice line (with syllables and planned seconds), the caption's key phrase, the picture that proves it (which source screen or step, and how it moves), and its effect.
+1. Lay the structure's blocks out to the length per [choosing-structure.md](./choosing-structure.md) → **Length**, then write **Beat sheet** per [writing-script.md](./writing-script.md). Each beat gets its slot (in seconds until the track is in, or `bar:beat` on a placeholder 120 BPM grid), its block, its job, its energy (**Energy curve**), the voice line (with syllables and planned seconds), the caption's key phrase, the picture that proves it (which source screen or step, and how it moves), and its effect.
 2. Run G1 and G2 per [checking-promotion.md](./checking-promotion.md), and fix what they find.
 3. Show the beat sheet with the muted read and what the gates found. Wait for the user's approval of the beat sheet on paper.
 
 ### 5. Preset and device
 
-Fit the approved beats to the picked preset per [choosing-style.md](./choosing-style.md) → **Presets**. The preset dresses the beats: their order and content stay.
+Fit the approved beats to the picked preset per [choosing-style.md](./choosing-style.md) → **Presets**. The preset dresses the beats: their blocks, order and content stay.
 
 Record the preset and the signature device in **Spec**.
 
@@ -65,7 +68,7 @@ Record the preset and the signature device in **Spec**.
 2. Hand the searches to the user with the track test, per **The 30-second track test**.
 3. The user downloads the pick into a folder they name. Take it into the **Sound bank**.
 4. Map its grid and verify it at the drop, per **The grid**.
-5. Plan the cut in bars to the beat sheet's lengths, per **Cutting**: the drop on the device, the track's real ending on the mark.
+5. Plan the cut in bars to the beat sheet's lengths and energy curve, per **Cutting**: the drop on the device, the track's real ending on the mark, inside a hard length.
 6. Write **Music**, cut the track into `assets/music/`, re-slot the beat sheet to `bar:beat` on this grid, and run G2's Timing check again ([checking-promotion.md](./checking-promotion.md)).
 
 ### 7. Style test
@@ -84,7 +87,7 @@ Record the preset and the signature device in **Spec**.
 ### 9. Voice
 
 1. Skip this step when the Spec's coverage is none. Otherwise the voice rows of `SKILL.md` → **Setup** must pass: a missing one → stop and print its How. The guide is [directing-voice.md](./directing-voice.md).
-2. Cast per **Casting**: a cost table for the casting test, then wait for the user's go, then the user picks by ear.
+2. Cast per **Casting**: a cost table for the casting test, then wait for the user's go, then the user picks by ear, unless the user waives the test.
 3. Render the takes per **Takes**, with `$env` loaded per [promotion-contract.md](./promotion-contract.md) → **Secrets**. A rejected key (401) → setup-api-key. Record every call under **Paid calls**.
 4. Place each pick per **Placement on the grid**. Measure every onset from the audio, and duck the bed under each line.
 5. A changed line gets a new take per **Takes**, stitched to its picked neighbours with the `previous_request_ids` / `next_request_ids` or `previous_text` / `next_text` lever (**ElevenLabs model, settings, tags**).
