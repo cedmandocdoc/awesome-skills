@@ -14,6 +14,9 @@ studied: {{YYYY-MM-DD}}
 - Sold vs shown: {{SOLD}} / {{SHOWN}}
 - Offer: "{{THE WORDS THE FILM SAYS}}"
 - CTA and destination: {{ACTION}} → {{DESTINATION}}
+- Objective: {{AWARENESS / CONSIDERATION / ACTION}}
+- Placement: {{SOUND-ON OR MUTED-FIRST; SKIP WINDOW; LENGTH NORM OR CAP}}
+- Length: {{S}} s, {{HARD / SUGGESTED}}, or empty
 - Who it's for: {{THE CUE THAT SELECTS THE RIGHT VIEWER}}
 - Markets: {{WHERE}}
 - Language and address: {{VOICE AND CAPTION LANGUAGE, CODE-SWITCH}}; UI {{UI LANGUAGE}}; address {{FORM}}; native check by {{WHO}}
@@ -58,6 +61,12 @@ studied: {{YYYY-MM-DD}}
 ### Proof
 
 - {{REAL PROOF ONLY}}
+
+### Structure inputs
+
+- Category: {{KNOWN BY A COMMON NAME / NOVEL}}
+- Steps to the first result: {{N}}
+- People who can speak on camera: {{A CONSENTING CUSTOMER / THE FOUNDER / A CREATOR / NONE}}
 
 ## Message
 

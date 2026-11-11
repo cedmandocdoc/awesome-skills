@@ -9,23 +9,24 @@ author: d5c5849b-3fed-4204-a7a1-d245dcf86d09
 ## Spec
 
 - Audience: {{audience-slug}}
+- Structure: {{STRUCTURE}}; length: {{S}} s, {{hard | suggested}}
 - Concept: {{THE MESSAGE IN ONE LINE}}
 - Preset: {{PRESET}}; signature device: {{DEVICE}}; energy: {{1–5}}
 - Clock: {{music | voice}}
-- Voice coverage: {{none | sold line only | bookends | sparse | full}}
-- Ratios and lengths: {{9:16 MASTER S}}; {{FURTHER CUTS}}
+- Voice mode: {{none | key lines | narrated | speech on camera}}
+- Ratios: {{9:16 MASTER}}; {{FURTHER CUTS AND LENGTHS}}
 
 ## Message plan
 
-| # | Job | In the audience's words | Means here | Source |
-| --- | --- | --- | --- | --- |
-| {{1}} | {{JOB}} | "{{LINE}}" | {{MEANING}} | {{product.md LINE}} |
+| # | Job | In the audience's words | Means here | Block | Source |
+| --- | --- | --- | --- | --- | --- |
+| {{1}} | {{JOB}} | "{{LINE}}" | {{MEANING}} | {{BLOCK}} | {{product.md LINE}} |
 
 ## Beat sheet
 
-| Beat | Slot (s, then bar:beat) | Job | Voice line (gloss · syllables · planned s) | Read (tags · stressed word) | Caption | Picture that proves it | Effect |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| {{B1}} | {{0:0 → 1:2}} | {{JOB}} | "{{LINE}}" · {{GLOSS}} · {{N}} · {{S}} | {{TAGS}} · {{WORD}} | {{KEY PHRASE}} | {{SCREEN OR STEP, AND HOW IT MOVES}} | {{EFFECT OR —}} |
+| Beat | Slot (s, then bar:beat) | Block | Job | Energy | Voice line (gloss · syllables · planned s) | Read (tags · stressed word) | Caption | Picture that proves it | Effect |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| {{B1}} | {{0:0 → 1:2}} | {{BLOCK}} | {{JOB}} | {{1–5}} | "{{LINE}}" · {{GLOSS}} · {{N}} · {{S}} | {{TAGS}} · {{WORD}} | {{KEY PHRASE}} | {{SCREEN OR STEP, AND HOW IT MOVES}} | {{EFFECT OR —}} |
 
 ## Music
 

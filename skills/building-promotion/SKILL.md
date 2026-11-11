@@ -4,15 +4,16 @@ id: 6c4545f9-8199-4a1b-bd79-56dc1ec4d9b0
 description: >-
   Makes promotion videos for an app from its source (a mockup or a codebase)
   under promotions/: studies it into audiences, pains in their own words, and a
-  message; proposes 3 concepts that differ in message, each dressed by a style
-  preset; plans the pick script-first as a message plan and a beat sheet the
-  user approves; cuts it to a Pixabay track the user picks; builds it in
+  message; suggests 3 concepts built on different script structures from a
+  catalog, sized to a length the user can fix, each dressed by a style preset
+  and a voice mode; plans the pick script-first as a message plan and a beat
+  sheet the user approves; cuts it to a Pixabay track the user picks; builds it in
   HyperFrames on the music's beat grid after a short style test; voices it with
   ElevenLabs; mixes and renders it; and changes any part of a promotion on
   request. Use only when the user names this skill (`/building-promotion`,
   `$building-promotion`, or "building-promotion"), or references a
   file under a marked promotions root (`@promotions/product.md`).
-version: 2.0.0
+version: 3.0.0
 ---
 
 # Building Promotion Video
@@ -49,4 +50,4 @@ version: 2.0.0
 | --- | --- | --- |
 | Set up | "Set up building-promotion", "Is building-promotion ready?" | **Setup** — run Workflow step 1 for every row, then report each row's state |
 | Study | "/building-promotion study `mockups/clinic-booking/`, promoting that we can build it for you", "/building-promotion study the app in this repo", "re-study the audience" | [studying-product.md](references/studying-product.md) |
-| Make or change a promotion | "Make a promotion for it", "more concepts, warmer", "use this track", "change the hook line", "re-voice line 3", "render the 4:5 cut", a reference to `@promotions/01-one-photo/promotion.md` | [creating-promotion.md](references/creating-promotion.md), [writing-script.md](references/writing-script.md), [choosing-style.md](references/choosing-style.md), [directing-picture.md](references/directing-picture.md), [directing-sound.md](references/directing-sound.md), [directing-voice.md](references/directing-voice.md), [checking-promotion.md](references/checking-promotion.md) |
+| Make or change a promotion | "Make a promotion for it", "more concepts, warmer", "make it 20 s", "try a PAS", "use this track", "change the hook line", "re-voice line 3", "render the 4:5 cut", a reference to `@promotions/01-one-photo/promotion.md` | [creating-promotion.md](references/creating-promotion.md), [choosing-structure.md](references/choosing-structure.md), [writing-script.md](references/writing-script.md), [choosing-style.md](references/choosing-style.md), [directing-picture.md](references/directing-picture.md), [directing-sound.md](references/directing-sound.md), [directing-voice.md](references/directing-voice.md), [checking-promotion.md](references/checking-promotion.md) |
