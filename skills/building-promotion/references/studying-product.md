@@ -19,7 +19,7 @@ Per [promotion-contract.md](./promotion-contract.md) → **Resolve promotions ro
 | Source | Read |
 | --- | --- |
 | Mockup folder | Its flow doc (for example `flow.md`), design doc, and every screen: the job each flow does and its sample data |
-| Codebase | README, routes, landing and onboarding copy, pricing, the main flows' screens and their fixtures |
+| Codebase | README, routes, landing and onboarding copy, pricing (for the conversation only when the Brief's **Never say** bans a price), the main flows' screens and their fixtures |
 
 The skill never runs the app. A URL, store listing, description, recording or footage is not a source: ask for the mockup folder or codebase. Record the path in frontmatter `source`.
 
@@ -31,11 +31,11 @@ Fill each field from the request's framing ("promote that we can build an app li
 | --- | --- |
 | Promote | What is promoted and how it's framed |
 | Sold vs shown | What is sold / what is shown, per [writing-script.md](./writing-script.md) → **Sold vs shown** |
-| Offer | The words the film says, ≤ 6 words; terms and conditions go to the conversation |
+| Offer | The words the promotion says, ≤ 6 words; terms and conditions go to the conversation |
 | CTA and destination | The action and where it lands: a message, a site, a store, a sign-up |
 | Objective | Awareness, consideration or action; empty → inferred from the CTA ([choosing-structure.md](./choosing-structure.md) → **Choosing**) |
-| Placement | Where the film plays: sound-on or muted-first, a skip window, the placement's length norm or cap |
-| Length | Hard (a guard the runtime meets) or suggested, in seconds; empty → suggested per structure ([choosing-structure.md](./choosing-structure.md) → **Length**) |
+| Placement | Where it plays: for a video, sound-on or muted-first, a skip window, the placement's length norm or cap; for a still, its ratios, the master first ([promotion-contract.md](./promotion-contract.md) → **Frame sizes and safe zones**) |
+| Length | A video's: hard (a guard the runtime meets) or suggested, in seconds; empty → suggested per structure ([choosing-structure.md](./choosing-structure.md) → **Length**) |
 | Who it's for | The cue that selects the right viewer ("for the owner of a …"); needed when the trade's own customers might read the film as being for them |
 | Markets | Where it runs |
 | Language and address | The language and code-switch of voice and captions, the UI language, the form of address, who checks the script natively |
@@ -49,7 +49,7 @@ Fill each field from the request's framing ("promote that we can build an app li
 1–3 audiences, each one group that shares one problem:
 
 - **Who exactly:** role, business type, size, location, and their own label for themselves.
-- **Pain in their own words:** quotes written or spoken by the audience itself (their posts, comments, reviews, forum threads, or interviews the user supplies), each with its source URL. Vendor, academic and news sources go under **Context**. None found → say so; the hooks are then the skill's wording and the user is told.
+- **Pain in their own words:** quotes written or spoken by the audience itself (their posts, comments, reviews, forum threads, or interviews the user supplies), each with its source URL. A news piece's verbatim quote of an owner counts, with the outlet named; the rest of vendor, academic and news sources go under **Context**. When the forums are blocked, a wrapper skill's earlier studies in the same repository are a source, each quote keeping its first URL; a figure seen only in a search snippet is marked so. None found → say so; the hooks are then the skill's wording and the user is told.
 - **Trigger:** what makes the pain urgent now.
 - **The old way and its artifact:** the notebook, chat, spreadsheet or paper that becomes the film's problem world.
 - **Awareness:** unaware, problem-aware or solution-aware; digital literacy; age band; the language they speak and read; risk class (money, health, legal, records, or none).
@@ -59,7 +59,7 @@ Fill each field from the request's framing ("promote that we can build an app li
 
 ### 5. Features to show, alternatives and proof
 
-1. **Features to show:** each as one task, input → result, with the screens it uses, the datum carried through, and the pain it answers. Only features the source shows.
+1. **Features to show:** each as one task, input → result, with the screens it uses, the datum carried through, and the pain it answers. Only features the source shows. A seller that builds many things (a studio) gets one row per sample app or kind of work, plus a type-only row for each step of how it works; each app's honesty notes follow the table.
 2. **Alternatives:** what they use today, doing nothing included, and why they would switch.
 3. **Proof:** real proof from the user and the sources only. A mockup has none of its own; its proof comes from the Brief.
 4. **Structure inputs**, for [choosing-structure.md](./choosing-structure.md) → **Choosing**: whether the category has a common name the audience knows, the steps from start to the first result in the hero flow, and the people who can speak on camera (a consenting customer, the founder, a creator), or none.
@@ -76,4 +76,4 @@ Set `studied` to today. Reply with:
 - Each audience in one line, its top pain quote (or "no own-words quote found"), and its best hook
 - The features to show, and the structure inputs
 - What was assumed and what the user should check
-- Next: "make a promotion" proposes concepts for this product
+- Next: "make a promotion video" or "make a carousel" (or a single image) proposes concepts for this product

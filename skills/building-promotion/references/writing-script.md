@@ -203,7 +203,7 @@ Short touches inside the story, never a logo card.
 
 A claim is a distinct pain, capability, benefit, number, guarantee, price or term, counted when voiced, captioned, labelled or titled. A repeat isn't a new claim; incidental UI text isn't counted but must be true.
 
-- Claims by length: ≤ 15 s → 3 (pain, outcome, offer); 21–25 s → 4; 26–34 s → 5; a longer film adds a claim only with a block that proves it. Never more than 2 per 10 s, or 1 per line. One fewer for SMB, mass-market and second-language audiences.
+- Claims by length: ≤ 15 s → 3 (pain, outcome, offer); 21–25 s → 4; 26–34 s → 5; a longer film adds a claim only with a block that proves it. Never more than 2 per 10 s, or 1 per line. One fewer for SMB, mass-market and second-language audiences, never below 3 (pain, outcome, offer).
 - A film holds 1 pain, the outcome, ≤ 2 supports each proven on screen at that moment, and 1 offer.
 - Cut in this order: claims outside the one task; claims with no picture at that moment; second offer terms; pains beyond the first; unmeasured adjectives ("fast"); a support that competes with the outcome. Never cut the outcome, the sold line, the offer or the CTA.
 
