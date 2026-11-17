@@ -2,7 +2,7 @@
 
 ## Overview
 
-Shared rules for every `building-promotion` recipe: the promotions root and its layouts, products and promotions, `product.md`, `promotion.md`, frame sizes and safe zones, honesty rules, disclosure, media and paid calls, the sound bank, secrets, and discovery of the dependency skills.
+Shared rules for every `building-promotion` recipe: the promotions root and its layouts, products and promotions, `product.md`, `promotion.md` for a video and for a still, frame sizes and safe zones, honesty rules, disclosure, media and paid calls, the sound bank, secrets, and discovery of the dependency skills.
 
 ## Guidelines
 
@@ -23,12 +23,12 @@ Every `<promotions-root>/index.md`, `product.md` and `promotion.md` carries this
   .gitignore                         # from ../assets/promotions.gitignore
   index.md                           # root marker; intention: the app it promotes
   product.md                         # the app's Brief, Study, Message
-  <NN-slug>/                         # one promotion; the folder is its HyperFrames project
+  <NN-slug>/                         # one promotion: a video (its HyperFrames project) or a still
 ```
 
 Another app gets its own root, wherever the user puts it (`promotions/` in one repo per app by default; `promotions/<app>/` when a repo holds several), never inside another root.
 
-A promotion folder:
+A video's folder:
 
 ```text
 <NN-slug>/
@@ -47,18 +47,32 @@ A promotion folder:
   renders/, snapshots/               # ignored
 ```
 
-- A promotion's HyperFrames project is source: every file it reads to render is committed. Only its outputs and caches stay out of git.
+A still's folder:
+
+```text
+<NN-slug>/
+  promotion.md                       # Spec, Message plan, Frame sheet, Files
+  styles.css                         # the seller's tokens, type and shared pieces
+  frames/<NN>-<ratio>.html           # one page per frame and ratio (01-4x5.html), <body data-size="1080x1350">
+  render-still.mjs                   # copied from ../scripts/render-still.mjs
+  assets/
+    screens/                         # the source screens the frames show, with the files they read
+    fonts/, images/, images/CREDITS.md
+  renders/                           # ignored: <NN>-<ratio>.png and .jpg, thumbs/, sheet-<ratio>.png
+```
+
+- A promotion folder is source: every file it reads to render is committed. Only its outputs and caches stay out of git.
 - A promotion keeps only what its video plays: the cut, not the full track. Full tracks and effect takes live in the **Sound bank**; voice takes stay in `assets/vo/raw/`.
 - Files reused from another promotion (an end card, a cut, a take) are copied in.
 
-Templates: [`../assets/index.md`](../assets/index.md), [`../assets/product.md`](../assets/product.md), [`../assets/promotion.md`](../assets/promotion.md).
+Templates: [`../assets/index.md`](../assets/index.md), [`../assets/product.md`](../assets/product.md), [`../assets/promotion.md`](../assets/promotion.md) for a video, [`../assets/still-promotion.md`](../assets/still-promotion.md) for a still.
 
 ### Products and promotions
 
 | Unit | Is | Slug | New one when |
 | --- | --- | --- | --- |
 | Product | One app, studied from its source with one framing: one per root | The mockup folder's name; for a codebase, the app's name in kebab-case | A different app, in a new root |
-| Promotion | One video: one audience, one message, one concept | `NN-slug`: `NN` = highest in the root + 1; slug names the concept and hook (`01-one-photo-payroll`) | A different audience, message, concept or hook |
+| Promotion | One video, or one still (a single image or a carousel): one audience, one message, one concept | `NN-slug`: `NN` = highest in the root + 1; slug names the concept and hook (`01-one-photo-payroll`) | A different audience, message, concept or hook |
 
 Any part of a promotion changes whenever the user asks.
 
@@ -90,6 +104,8 @@ A re-study rewrites these sections; each promotion keeps the **Spec** and **Mess
 
 ### promotion.md
 
+Frontmatter `format` is `video` (the default when absent) or `still`. A video's sections:
+
 | Section | Holds |
 | --- | --- |
 | **Spec** | Audience, structure, length (hard or suggested), concept, preset, signature device, energy, clock (`music` or `voice`), voice mode, ratios |
@@ -101,6 +117,15 @@ A re-study rewrites these sections; each promotion keeps the **Spec** and **Mess
 | **Paid calls** | The approved cost table; each call, its size, and when it ran |
 | **Files** | The renders and each crop's recipe; the cover still, the caption file, the music-and-effects stem |
 
+A still's sections:
+
+| Section | Holds |
+| --- | --- |
+| **Spec** | Audience, format (single, or carousel and its frame count), structure, concept and angle, preset, focal device, ratios |
+| **Message plan** | As a video's, with each job's frame or zone |
+| **Frame sheet** | Per frame: block, job, read words by role, the picture that proves it, the focal point, the brand touch |
+| **Files** | The renders per frame and ratio, in posting order, and the sheet |
+
 ### Frame sizes and safe zones
 
 | Cut | Ratio and size | Length | Words that must be read sit in |
@@ -111,6 +136,16 @@ A re-study rewrites these sections; each promotion keeps the **Spec** and **Mess
 | TikTok | 9:16, 1080×1920 | 15–35 s | Its In-Feed safe-zone template; nothing under the right rail |
 
 - A further ratio is a crop when every read word and control sits inside the crop; otherwise it gets its own root composition.
+
+| Still | Ratio and size | Words that must be read sit in |
+| --- | --- | --- |
+| Feed | 4:5, 1080×1350 | 6 % each side, 5 % top and bottom: x 65–1015, y 68–1282 |
+| Square | 1:1, 1080×1080 | 6 % each side, 5 % top and bottom |
+| Full screen | 9:16, 1080×1920 | x 65–1015, y 270–1536: clear of the top 14 % and bottom 20 %, where full-screen viewers lay their own controls |
+| Landscape | 1.91:1, 1200×628 | 5 % on every side |
+
+- The Brief's **Placement** names a still's ratios; the first is the master. A carousel keeps one ratio for every frame.
+- A still's further ratio is its own frame page, laid out for that frame from the same pieces; never a stretch.
 - These values are a snapshot of the platforms' guides; refresh them when a guide changes.
 
 ### Honesty rules
@@ -139,6 +174,8 @@ A mockup source, or a promotion where sold ≠ shown, carries:
 | Every AI result | "Illustrative" |
 | End card | The disclosure line again |
 
+On a still, the app's first appearance is the first frame that shows it, and the end card is a carousel's last frame; a single carries the disclosure line once. A still that shows no app carries no disclosure line; a subline or the CTA names the seller ([writing-copy.md](./writing-copy.md) → **The words-only read**).
+
 Frames rebuilt from a codebase, where sold = shown, carry none.
 
 ### Media and paid calls
@@ -151,6 +188,8 @@ Frames rebuilt from a codebase, where sold = shown, carry none.
 | Sound effects | Free libraries (Kenney and Freesound CC0, Pixabay sound effects, Freesound CC-BY with credit; never CC-BY-NC), the **Sound bank**, ElevenLabs sound effects through sound-effects (paid, optional), or none |
 | Mixing | media-use: volume lanes, ducking, carve, loudness; never its music, effect or voice sourcing |
 | Fonts | Files in `assets/fonts/` with their licences; never a system font |
+| Images | Built in HTML, CSS or SVG; the seller's brand files; or a photo under a licence that allows commercial use, credited in `assets/images/CREDITS.md`, with no person in it using or praising the product |
+| Still renders | `render-still.mjs`, on the local Playwright Chromium; no paid call |
 | Registry blocks | hyperframes-registry; check each block's own licence |
 
 - Never HeyGen services (catalog music, TTS, avatars, image search): free-plan output is for personal, non-commercial use (https://www.heygen.com/terms).

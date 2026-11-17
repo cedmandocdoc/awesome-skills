@@ -2,6 +2,7 @@
 doc_type: promotion
 generated_by: building-promotion
 author: d5c5849b-3fed-4204-a7a1-d245dcf86d09
+format: video
 ---
 
 # Promotion — {{NN-slug}}
