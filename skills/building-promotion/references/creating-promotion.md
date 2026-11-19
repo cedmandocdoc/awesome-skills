@@ -101,7 +101,7 @@ Record the preset and the signature device in **Spec**.
 
 ### 11. Final
 
-1. Render only what will be delivered: `npx hyperframes render --quality delivery -o renders/<NN-slug>-<ratio>.mp4`, adding `-c <name>.html` for a further root composition.
+1. Render only what will be delivered: `npx hyperframes render --quality delivery -o renders/<NN-slug>-<ratio>.mp4`, and `-c <name>.html -o renders/<NN-slug>-<name>-<ratio>.mp4` for a further root composition.
 2. Make each further ratio per [promotion-contract.md](./promotion-contract.md) → **Frame sizes and safe zones**. Make the ≤ 15 s cut as its own root composition when the user asks for it; it is cut on bar lines and keeps the track's ending.
 3. With the master, hand over the frame-0 cover still (`npx hyperframes snapshot --at 0`), a caption file (`.srt`) for a voiced film, and a music-and-effects stem with no voice ([directing-sound.md](./directing-sound.md) → **Mix**).
 4. Offer G4 per [checking-promotion.md](./checking-promotion.md).

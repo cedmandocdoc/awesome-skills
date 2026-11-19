@@ -44,7 +44,8 @@ A video's folder:
     sfx/, sfx/CREDITS.md
     fonts/, images/
   SPEC.md, REVIEW.md, hyperframes.json, package.json, meta.json, AGENTS.md, CLAUDE.md
-  renders/, snapshots/               # ignored
+  renders/                           # ignored: <NN-slug>-<ratio>.mp4; <NN-slug>-<name>-<ratio>.mp4 for a further root composition
+  snapshots/                         # ignored
 ```
 
 A still's folder:
