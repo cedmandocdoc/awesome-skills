@@ -47,10 +47,12 @@ Each check runs on the beat sheet:
 
 | Area | Passes when |
 | --- | --- |
-| Text | Every word that must be read is ≥ 28 px and sits in the read band. Run `npx hyperframes check --caption-zone` once per unsafe zone from [promotion-contract.md](./promotion-contract.md) → **Frame sizes and safe zones**. Line widths are measured in the rendered font, ≤ 950 px. Contrast ≥ 4.5:1, or 3:1 only for text ≥ 72 px |
+| Text | Every word that must be read is ≥ 28 px and sits in the read band. Run `npx hyperframes check --caption-zone` once per unsafe zone from [promotion-contract.md](./promotion-contract.md) → **Frame sizes and safe zones**. Line widths are measured in the rendered font, ≤ 950 px. Contrast ≥ 4.5:1, or 3:1 only for text ≥ 72 px. App text shown as proof renders ≥ 28 px: a whole desktop window, or a phone too small for it, is on screen ≤ 1 beat before a crop |
+| Frame edges | In snapshots every 2 s and at each landing, no word runs across the frame edge: no "rew Payroll", no stray letter at a side. A device fits inside the side margins, or is cropped on one side through a region with no text |
+| Full frame | Every snapshot is filled: the picture runs to the frame's bottom edge, sharp, with no blurred, faded or empty band; no small device or lone element on an empty ground; no frame that is mostly ground with one strip on it |
 | Disclosure and honesty | The chip on every app frame; the disclosure line ≥ 2 s at first sight; "Illustrative" on every AI result; the end card repeats the line; each AI or slow step shows its working state; no outcome-promise line is readable; no platform UI or sound. Per [promotion-contract.md](./promotion-contract.md) → **Disclosure**, **Honesty rules** |
 | Flashes | ≤ 3 flashes in any one second |
-| End card | ≤ 10 unvoiced words, held for their reading budget; the mark on the track's final hit; ≥ 0.8 s of music after the last spoken word |
+| End card | ≤ 10 unvoiced words, held for their reading budget; on screen ≤ 4 s; the film ends 1.0–1.5 s after the last spoken word, with ≥ 0.8 s of music alone after it, on the track's ending or a short fade |
 | Muted render | Watched with the audio off, at phone size, in 9:16 and inside a centred 4:5 window: the muted read still passes on the picture |
 | Voice | Every onset is measured from the audio and sits on its slot; no voice crosses a voice-free window; no time-stretch or playback-rate change; the bed ducks under each line |
 | Effects | Each lands 0–1 frame after its change; each sits ≥ 6 dB under any voice it overlaps; the count and spacing per [directing-sound.md](./directing-sound.md) → **Sound effects** |

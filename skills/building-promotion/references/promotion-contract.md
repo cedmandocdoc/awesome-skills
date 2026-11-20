@@ -131,11 +131,13 @@ A still's sections:
 
 | Cut | Ratio and size | Length | Words that must be read sit in |
 | --- | --- | --- | --- |
-| Master | 9:16, 1080×1920 | The Spec's length | x 65–1015, y 270–1248: clear of Meta's paid Reels zones (top 14 %, bottom 35 %, sides 6 %) |
+| Master, organic (the default) | 9:16, 1080×1920 | The Spec's length | x 65–1015, y 270–1536: clear of the top 14 % and bottom 20 %, where the platform lays the name, the caption and its controls; from y 960 down, also left of x 950, clear of the right-hand buttons |
+| Master, paid Reels | 9:16, 1080×1920 | The Spec's length | x 65–1015, y 270–1248: clear of Meta's paid Reels zones (top 14 %, bottom 35 %, sides 6 %) |
 | Feed | 4:5 1080×1350, or 1:1 1080×1080 | 15–30 s | 6 % each side, 5 % top and bottom |
 | Short cut | 9:16 | ≤ 15 s | As the master |
 | TikTok | 9:16, 1080×1920 | 15–35 s | Its In-Feed safe-zone template; nothing under the right rail |
 
+- The Brief's **Placement** says organic or paid; organic is the default. The zones keep words readable only: the picture always fills the whole frame ([directing-picture.md](./directing-picture.md) → **Framing and the read band**).
 - A further ratio is a crop when every read word and control sits inside the crop; otherwise it gets its own root composition.
 
 | Still | Ratio and size | Words that must be read sit in |

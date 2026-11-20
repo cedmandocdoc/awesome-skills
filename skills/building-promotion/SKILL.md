@@ -17,7 +17,7 @@ description: >-
   Changes any part of a promotion on request. Use only when the user names this skill (`/building-promotion`,
   `$building-promotion`, or "building-promotion"), or references a
   file under a marked promotions root (`@promotions/product.md`).
-version: 4.2.0
+version: 4.3.0
 ---
 
 # Building Promotion
