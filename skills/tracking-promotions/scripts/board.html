@@ -1,0 +1,657 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{{brand}} · Promotion board</title>
+<link rel="icon" href="/logo">
+<style id="defaults">
+/* The board's own tokens and type, so it stands alone. A theme (the tracking root's board_theme) loads after
+   this block and overrides any of them by name. */
+:root {
+  --color-background: #ffffff; --color-foreground: #111111; --color-ink-2: #3a3a36; --color-muted: #efefeb; --color-muted-foreground: #63635c;
+  --color-border: #d4d4cc; --color-input: #111111; --color-ring: #2457d6; --color-accent: #2457d6; --color-accent-text: #2457d6; --color-accent-soft: #2457d624;
+  --color-primary-foreground: #ffffff; --color-invert-background: #111111; --color-invert-foreground: #ffffff; --color-invert-ink-2: #cfcfc7;
+  --color-invert-muted-foreground: #9d9d95; --color-invert-border: #2e2e2a;
+  --font-display: system-ui, sans-serif; --font-body: system-ui, sans-serif; --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  --rounded-radius-field: 12px; --rounded-radius-sheet: 24px; --rounded-radius-full: 999px;
+  --motion-dur: .2s; --motion-ease-ui: cubic-bezier(.2, .7, .2, 1);
+  --gutter: 16px; --maxw: 1240px;
+  --glass-r: 999px; --glass-tint: rgba(255, 255, 255, .78); --glass-ink: #111111;
+  --glass-shadow: 0 1px 1px rgba(0, 0, 0, .05), 0 10px 28px -12px rgba(0, 0, 0, .28), inset 0 0 0 1px rgba(0, 0, 0, .06);
+}
+@media (min-width: 720px) { :root { --gutter: 32px; } }
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; background: var(--color-background); color: var(--color-foreground); font: 400 16px/1.55 var(--font-body); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+img { display: block; max-width: 100%; height: auto; }
+p { margin: 0; } h1, h2, h3 { margin: 0; text-wrap: balance; } ul, ol { margin: 0; padding: 0; } b, strong { font-weight: 600; }
+[hidden] { display: none !important; }
+:focus-visible { outline: 2px solid var(--color-ring); outline-offset: 3px; }
+.wrap { width: 100%; max-width: var(--maxw); margin: 0 auto; padding: 0 var(--gutter); }
+.eyebrow { display: inline-flex; align-items: baseline; gap: .55em; flex-wrap: wrap; color: var(--color-muted-foreground); }
+.eyebrow .n { color: var(--color-accent-text); }
+.meta { color: var(--color-muted-foreground); }
+.arrow { display: inline-block; transition: transform var(--motion-dur) var(--motion-ease-ui); }
+.invert { --color-accent-text: var(--color-accent); }
+.text-display-lg { font: 700 clamp(2.4rem, 8vw, 5rem)/1 var(--font-display); letter-spacing: -.04em; }
+.text-heading-xl { font: 700 clamp(1.7rem, 4.4vw, 2.5rem)/1.08 var(--font-display); letter-spacing: -.03em; }
+.text-heading-lg { font: 700 clamp(1.3rem, 3.2vw, 1.8rem)/1.12 var(--font-display); letter-spacing: -.03em; }
+.text-heading-md { font: 700 clamp(1.1rem, 2.3vw, 1.25rem)/1.15 var(--font-display); letter-spacing: -.02em; }
+.text-heading-sm { font: 700 17px/1.2 var(--font-display); letter-spacing: -.01em; }
+.text-body-base { font: 400 16px/1.6 var(--font-body); }
+.text-body-sm { font: 400 14.5px/1.55 var(--font-body); }
+.text-brand { font: 600 13.5px/1 var(--font-display); letter-spacing: .2em; text-transform: uppercase; }
+.text-label { font: 500 11.5px/1.3 var(--font-mono); letter-spacing: .1em; text-transform: uppercase; }
+.text-label-xs { font: 500 10.5px/1.3 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; }
+.glass { position: relative; color: var(--glass-ink); border-radius: var(--glass-r); background: var(--glass-tint); -webkit-backdrop-filter: blur(18px) saturate(180%); backdrop-filter: blur(18px) saturate(180%); box-shadow: var(--glass-shadow); }
+.glass.on-dark, .invert .glass { --glass-tint: rgba(30, 30, 28, .5); --glass-ink: #ffffff; --glass-shadow: 0 16px 36px -14px rgba(0, 0, 0, .7), inset 0 0 0 1px rgba(255, 255, 255, .12); }
+.glass.glass-accent { --glass-tint: var(--color-accent-text); --glass-ink: var(--color-primary-foreground); }
+</style>
+<!--theme-->
+<style>
+/* The board: flat square content in hairline-divided rows, glass only on what floats or is pressed, the accent
+   as the one colour, one inverted band (the Overview's figures). Status is a mono label with a glyph, never
+   colour alone. */
+body { background: var(--color-background); color: var(--color-foreground); }
+
+/* ---------- header ---------- */
+.top { position: sticky; top: 0; z-index: 40; background: color-mix(in srgb, var(--color-background) 88%, transparent); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); border-bottom: 1px solid var(--color-border); }
+.top .wrap { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; padding-top: 12px; padding-bottom: 12px; }
+.bar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.brand { display: inline-flex; align-items: center; gap: 10px; height: 50px; padding: 0 18px 0 12px; text-decoration: none; }
+.brand img { width: 28px; height: 20px; flex: none; object-fit: contain; }
+.brand .text-brand { margin-right: -.2em; }
+.brand .sub { color: var(--color-muted-foreground); padding-left: 10px; border-left: 1px solid var(--color-border); }
+.top-nav { display: inline-flex; align-items: center; gap: 2px; height: 50px; padding: 0 6px; overflow-x: auto; max-width: 100%; min-width: 0; scrollbar-width: none; }
+.top-nav button { font: inherit; letter-spacing: inherit; text-transform: inherit; display: inline-flex; align-items: center; gap: .5em; height: 44px; padding: 0 12px; border: 0; background: none; color: var(--color-ink-2); cursor: pointer; white-space: nowrap; border-radius: var(--rounded-radius-full); }
+.top-nav button:hover { color: var(--color-foreground); }
+.top-nav button[aria-current="page"] { color: var(--color-accent-text); }
+.top-nav .cnt { color: var(--color-muted-foreground); }
+.bar .end { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+@media (max-width: 900px) { .top-nav { order: 3; flex: 1 1 100%; } .brand .sub { display: none; } }
+.filter-toggle { display: none; }
+@media (max-width: 640px) { .filter-toggle { display: inline-flex; } body:not(.show-filters) .filters, body:not(.show-filters) .showing { display: none; } .filters .field { flex: 1 1 100%; } .field input[type=search] { width: 100%; } .field input, .field select { flex: 1; } .when { white-space: normal; } .ledger td { padding-right: 10px; } }
+.stamp { color: var(--color-muted-foreground); }
+
+/* ---------- filters ---------- */
+.filters { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.field { display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 12px; border: 1px solid var(--color-input); border-radius: var(--rounded-radius-field); background: var(--color-background); }
+.field .text-label-xs { color: var(--color-muted-foreground); }
+.field input, .field select { border: 0; outline: 0; background: transparent; font: 400 14.5px/1.2 var(--font-body); color: var(--color-foreground); min-width: 0; }
+.field input[type=search] { width: 220px; }
+.field:focus-within { outline: 2px solid var(--color-ring); outline-offset: 3px; }
+.showing { color: var(--color-muted-foreground); display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; }
+.showing .tag { display: inline-flex; gap: 6px; align-items: center; color: var(--color-foreground); }
+.showing .tag button { border: 0; background: none; cursor: pointer; color: var(--color-muted-foreground); font: inherit; padding: 2px; }
+.showing .tag button:hover { color: var(--color-accent-text); }
+
+/* ---------- buttons ---------- */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: .55em; min-height: 44px; padding: 0 18px; border: 0; border-radius: var(--rounded-radius-full); text-decoration: none; white-space: nowrap; cursor: pointer; color: var(--glass-ink); font: 600 12.5px/1 var(--font-body); letter-spacing: .06em; text-transform: uppercase; }
+.btn-xs { min-height: 36px; padding: 0 14px; font-size: 11.5px; }
+.btn[disabled] { opacity: .45; pointer-events: none; }
+.text-action { display: inline-flex; align-items: center; gap: .45em; color: var(--color-foreground); text-decoration: none; border: 0; border-bottom: 1.5px solid var(--color-accent); padding: 0 0 3px; background: none; cursor: pointer; font: inherit; }
+.text-action:hover { color: var(--color-accent-text); }
+.text-action.bare { border: 0; padding: 0; }
+.text-action:hover .arrow, .row-link:hover .arrow { transform: translateX(3px); }
+
+/* ---------- page and sections ---------- */
+main { padding-bottom: 80px; }
+.view-head { display: grid; gap: 12px; padding: 44px 0 26px; }
+.view-head .text-body-base { color: var(--color-ink-2); max-width: 42em; }
+.sec-h { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin: 40px 0 14px; }
+.sec-h .text-heading-md { margin-right: auto; }
+.cols { display: grid; gap: 40px; }
+@media (min-width: 980px) { .cols { grid-template-columns: 1fr 1fr; gap: 48px; } }
+
+/* ---------- the inverted band: the Overview's figures ---------- */
+.invert { background: var(--color-invert-background); color: var(--color-invert-foreground); --color-border: var(--color-invert-border); }
+.band { padding: 44px 0 40px; }
+.band .eyebrow { color: var(--color-invert-muted-foreground); }
+.figures { list-style: none; display: grid; border-top: 1px solid var(--color-invert-border); margin-top: 18px; }
+@media (min-width: 700px) { .figures { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1000px) { .figures { grid-template-columns: repeat(4, 1fr); } }
+.figure { display: grid; gap: 8px; align-content: start; padding: 24px 0 26px; border-bottom: 1px solid var(--color-invert-border); }
+@media (min-width: 700px) { .figure { padding: 26px 24px 28px 0; } .figure + .figure { padding-left: 24px; border-left: 1px solid var(--color-invert-border); } }
+@media (min-width: 700px) and (max-width: 999px) { .figure:nth-child(3) { padding-left: 0; border-left: 0; } }
+.figure .num { color: var(--color-invert-foreground); font-variant-numeric: tabular-nums; }
+.figure .cap { color: var(--color-invert-ink-2); }
+.figure .check { color: var(--color-invert-muted-foreground); }
+.band-foot { display: flex; flex-wrap: wrap; gap: 8px 28px; padding-top: 18px; color: var(--color-invert-ink-2); }
+.band-foot b { color: var(--color-invert-foreground); font-weight: 600; }
+
+/* ---------- rows ---------- */
+.rows { list-style: none; border-top: 1px solid var(--color-border); }
+.rows > li { border-bottom: 1px solid var(--color-border); }
+.row-link { display: grid; gap: 10px 24px; padding: 18px 0; color: inherit; text-decoration: none; cursor: pointer; width: 100%; background: none; border: 0; text-align: left; font: inherit; transition: padding var(--motion-dur) var(--motion-ease-ui); }
+.row-link:hover { padding-left: 8px; }
+.row-link:hover .name { color: var(--color-accent-text); }
+.name { color: var(--color-foreground); transition: color var(--motion-dur) ease; overflow-wrap: anywhere; }
+.row-link .n { color: var(--color-accent-text); }
+.row-link .go { justify-self: end; font-size: 18px; color: var(--color-muted-foreground); }
+.promo-row { grid-template-columns: 40px 64px minmax(0, 1.3fr) minmax(0, 1.4fr) 110px 24px; align-items: center; }
+@media (max-width: 899px) { .promo-row { grid-template-columns: 64px minmax(0, 1fr); } .promo-row .n, .promo-row .go, .promo-row .last { display: none; } .promo-row .pipes { grid-column: 1 / -1; } }
+.thumb { width: 64px; aspect-ratio: 4 / 5; object-fit: cover; object-position: top; background: var(--color-muted); display: block; border: 1px solid var(--color-border); }
+.thumb.ph { display: grid; place-items: center; color: var(--color-muted-foreground); text-align: center; padding: 4px; }
+video.thumb { pointer-events: none; }
+.who { color: var(--color-muted-foreground); margin-top: 6px; display: flex; flex-wrap: wrap; gap: 4px 12px; }
+.last { color: var(--color-muted-foreground); text-align: right; }
+
+/* stage tracks: counts in mono, a 3px bar per stage */
+.pipes { display: grid; gap: 10px; }
+.pipe { display: grid; grid-template-columns: 66px 1fr; gap: 10px; align-items: center; }
+.pipe > .text-label-xs { color: var(--color-muted-foreground); }
+.stages { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; min-width: 0; }
+.stage { display: grid; gap: 5px; min-width: 0; }
+.stage .text-label-xs { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--color-ink-2); }
+.stage i { display: block; height: 3px; background: var(--color-border); }
+.stage.on i { background: var(--color-foreground); }
+.stage.mid i { background: repeating-linear-gradient(90deg, var(--color-foreground) 0 4px, transparent 4px 7px); }
+.stage.win i { background: var(--color-accent); }
+.stage.zero { opacity: .45; }
+
+/* status: a mono label with a glyph */
+.st { display: inline-flex; align-items: center; gap: .45em; white-space: nowrap; color: var(--color-ink-2); }
+.st::before { content: attr(data-g); font-family: var(--font-body); font-size: 1.15em; line-height: 1; color: var(--color-foreground); }
+.st.hot, .st.hot::before { color: var(--color-accent-text); }
+.st.dim, .st.dim::before { color: var(--color-muted-foreground); }
+
+/* ledgers */
+.ledger-wrap { overflow-x: auto; }
+.ledger { width: 100%; border-collapse: collapse; }
+.ledger th { text-align: left; font: 500 10.5px/1.3 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--color-muted-foreground); padding: 10px 14px 10px 0; border-bottom: 1px solid var(--color-foreground); white-space: nowrap; }
+.ledger th button { border: 0; background: none; padding: 0; font: inherit; letter-spacing: inherit; text-transform: inherit; color: inherit; cursor: pointer; }
+.ledger th button:hover, .ledger th[aria-sort] button { color: var(--color-foreground); }
+.ledger td { padding: 14px 14px 14px 0; border-bottom: 1px solid var(--color-border); vertical-align: top; font-size: 14.5px; color: var(--color-ink-2); }
+.ledger td.strong, .ledger td b { color: var(--color-foreground); }
+.ledger tr.clickable { cursor: pointer; }
+.ledger tr.clickable:hover td .name { color: var(--color-accent-text); }
+.ledger .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ledger tr.total td { border-bottom: 2px solid var(--color-foreground); color: var(--color-foreground); padding: 18px 14px 18px 0; }
+.clip { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; max-width: 46ch; }
+.when { white-space: nowrap; font-variant-numeric: tabular-nums; }
+.pager { display: flex; gap: 10px; align-items: center; padding-top: 14px; color: var(--color-muted-foreground); }
+@media (max-width: 640px) { .ledger .hide-sm { display: none; } }
+
+.notice { border-left: 2px solid var(--color-accent); padding: 4px 0 4px 14px; color: var(--color-foreground); }
+.notice .meta { display: block; }
+.empty { padding: 28px 0; color: var(--color-muted-foreground); border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border); }
+
+/* ---------- calendar ---------- */
+.cal-nav { display: flex; align-items: center; gap: 8px; }
+.cal { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); border-top: 1px solid var(--color-foreground); border-left: 1px solid var(--color-border); }
+.cal .dow { font: 500 10.5px/1.3 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--color-muted-foreground); padding: 8px; border-right: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border); }
+.cal .day { min-height: 112px; padding: 8px; border-right: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border); display: grid; align-content: start; gap: 6px; min-width: 0; }
+.cal .day.out { background: var(--color-muted); }
+.cal .day .d { font: 500 11.5px/1 var(--font-mono); color: var(--color-muted-foreground); }
+.cal .day.today .d { color: var(--color-accent-text); }
+.cal .day.today { box-shadow: inset 0 2px 0 var(--color-accent); }
+.cal .ev { display: grid; gap: 2px; border: 0; background: none; padding: 0; text-align: left; cursor: pointer; color: inherit; font: inherit; min-width: 0; }
+.cal .ev .text-label-xs { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cal .ev .t { font-size: 12.5px; color: var(--color-ink-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cal .ev:hover .t { color: var(--color-accent-text); }
+@media (max-width: 760px) { .cal, .cal-head { display: none; } }
+
+/* ---------- timeline ---------- */
+.tl-day { padding: 26px 0 8px; border-bottom: 1px solid var(--color-foreground); }
+.tl-ev { display: grid; grid-template-columns: 76px 190px minmax(0, 1fr); gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--color-border); align-items: baseline; }
+.tl-ev .time { font: 500 11.5px/1.3 var(--font-mono); color: var(--color-muted-foreground); }
+.tl-ev .what { color: var(--color-ink-2); min-width: 0; }
+.tl-ev button { border: 0; background: none; padding: 0; font: inherit; color: var(--color-foreground); cursor: pointer; text-align: left; text-decoration: underline; text-decoration-color: var(--color-border); text-underline-offset: 3px; }
+.tl-ev button:hover { color: var(--color-accent-text); text-decoration-color: var(--color-accent-text); }
+@media (max-width: 640px) { .tl-ev { grid-template-columns: 1fr; gap: 4px; } }
+
+/* ---------- sheet ---------- */
+.scrim { position: fixed; inset: 0; z-index: 50; background: rgba(10, 10, 10, .22); }
+.sheet { position: fixed; z-index: 51; top: 12px; right: 12px; bottom: 12px; width: min(720px, calc(100% - 24px)); overflow-y: auto; border-radius: var(--rounded-radius-sheet); --glass-tint: rgba(255, 255, 255, .9); --glass-r: var(--rounded-radius-sheet); }
+.sheet .in { padding: 26px; display: grid; gap: 18px; }
+.sheet .head { display: flex; gap: 12px; align-items: flex-start; }
+.sheet .head > div { display: grid; gap: 8px; min-width: 0; }
+.sheet .head .btn { margin-left: auto; flex: none; }
+.frames { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 10px; }
+.frames button { padding: 0; border: 0; background: none; cursor: zoom-in; display: grid; gap: 6px; text-align: left; color: inherit; font: inherit; }
+.frames img, .frames .ph { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: top; background: var(--color-muted); border: 1px solid var(--color-border); display: grid; place-items: center; color: var(--color-muted-foreground); }
+.frames button:hover img { border-color: var(--color-foreground); }
+.frames .text-label-xs { color: var(--color-muted-foreground); overflow-wrap: anywhere; }
+.msg { white-space: pre-wrap; border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border); padding: 16px 0; font-size: 15px; color: var(--color-ink-2); }
+.plan { display: grid; gap: 12px; color: var(--color-ink-2); }
+.plan .ledger td { font-size: 13.5px; }
+.kv { display: grid; grid-template-columns: 130px minmax(0, 1fr); border-top: 1px solid var(--color-border); }
+.kv > * { padding: 10px 0; border-bottom: 1px solid var(--color-border); }
+.kv dt { color: var(--color-muted-foreground); }
+.kv dd { margin: 0; color: var(--color-foreground); overflow-wrap: anywhere; }
+.kv a { color: inherit; text-decoration: underline; text-decoration-color: var(--color-accent-text); text-underline-offset: 3px; }
+
+/* ---------- viewer ---------- */
+.viewer { position: fixed; inset: 0; z-index: 70; background: var(--color-invert-background); overflow: hidden; touch-action: none; cursor: grab; color: var(--color-invert-foreground); }
+.viewer.drag { cursor: grabbing; }
+.viewer img { position: absolute; left: 0; top: 0; transform-origin: 0 0; user-select: none; -webkit-user-drag: none; max-width: none; }
+.viewer video { display: block; margin: 84px auto 0; max-width: 92vw; max-height: calc(100vh - 140px); }
+.vbar { position: fixed; z-index: 71; top: 14px; left: 14px; right: 14px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.vcap { margin-right: auto; color: var(--color-invert-ink-2); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 52vw; }
+.vbar .btn { color: var(--color-invert-foreground); }
+.vzoom { color: var(--color-invert-muted-foreground); min-width: 44px; text-align: right; }
+.vstatus { position: fixed; inset: 0; display: grid; place-items: center; text-align: center; padding: 40px; color: var(--color-invert-ink-2); pointer-events: none; }
+.vstatus.err { color: var(--color-invert-foreground); }
+.vstatus.err span { border-left: 2px solid var(--color-accent); padding-left: 14px; text-align: left; max-width: 56ch; }
+.vsteps { position: fixed; z-index: 71; bottom: 18px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; }
+
+.toast { position: fixed; z-index: 90; bottom: 18px; left: 50%; transform: translateX(-50%); padding: 12px 20px; opacity: 0; pointer-events: none; transition: opacity var(--motion-dur) ease; max-width: calc(100% - 24px); }
+.toast.on { opacity: 1; }
+body.busy { cursor: progress; } body.busy .btn { pointer-events: none; opacity: .6; }
+@media (prefers-reduced-motion: reduce) { .row-link, .arrow, .toast { transition: none; } }
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <div class="bar">
+    <span class="brand glass"><img id="logo" src="/logo" alt="" hidden><span class="text-brand">{{brand}}</span><span class="sub text-label-xs">Promotion board</span></span>
+    <nav class="top-nav glass text-label" id="nav" aria-label="Views"></nav>
+    <div class="end"><span class="stamp text-label-xs" id="stamp"></span><button class="btn btn-xs glass filter-toggle" data-act="filters" aria-expanded="false" id="ftoggle">Filters</button><button class="btn btn-xs glass" data-act="reload">Reload</button></div>
+  </div>
+  <div class="filters" id="filters"></div>
+  <div class="showing text-label-xs" id="showing"></div>
+</div></header>
+<main id="main"></main>
+<div class="scrim" id="scrim" hidden></div>
+<aside class="sheet glass" id="sheet" hidden aria-label="Details"><div class="in" id="sheet-in"></div></aside>
+<div class="viewer" id="viewer" hidden role="dialog" aria-label="Asset viewer">
+  <div class="vbar"><span class="vcap text-label" id="vcap"></span><span class="vzoom text-label-xs" id="vzoom"></span>
+    <button class="btn btn-xs glass on-dark" data-z="out" aria-label="Zoom out">−</button><button class="btn btn-xs glass on-dark" data-z="in" aria-label="Zoom in">+</button>
+    <button class="btn btn-xs glass on-dark" data-z="fit">Fit</button><button class="btn btn-xs glass on-dark" data-z="1">100%</button>
+    <a class="btn btn-xs glass on-dark" id="vopen" target="_blank" rel="noopener">Open</a><button class="btn btn-xs glass on-dark" data-z="close" aria-label="Close">Close</button></div>
+  <img id="vimg" alt="" hidden><video id="vvid" controls hidden></video>
+  <div class="vstatus text-label" id="vstatus"></div><div class="vsteps" id="vsteps"></div>
+</div>
+<div class="toast glass text-label" id="toast" role="status"></div>
+<script>
+"use strict";
+// ---------- state ----------
+const VIEWS = [["overview", "Overview"], ["promotions", "Promotions"], ["posts", "Posts"], ["messages", "Messages"], ["timeline", "Timeline"]];
+let D = { promotions: [], deliveries: [], now: new Date().toISOString() };
+const hashView = () => { const h = location.hash.slice(1); return VIEWS.some(([k]) => k === h) ? h : "overview"; };
+let view = hashView();
+const F = { q: "", app: "", from: "", to: "", status: "", channel: "", format: "", batch: "", label: "", source: "", type: "" };
+const SORT = { posts: ["when", -1], messages: ["when", -1], promotions: ["last", -1] };
+const PAGE = { posts: 1, messages: 1, timeline: 1 };
+const PER = 40, TL_PER = 120;
+let cal = null;
+
+// ---------- helpers ----------
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const fmtDate = (t) => (t ? new Date(t).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" }) : "");
+const fmtWhen = (t) => (t && String(t).length === 10 ? fmtDate(t + "T12:00:00") : t ? new Date(t).toLocaleString(undefined, { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) : "");
+const fmtTime = (t) => new Date(t).toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
+const pad2 = (n) => String(n).padStart(2, "0");
+const localDay = (t) => { const d = new Date(t); return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`; };
+const uniq = (xs) => [...new Set(xs.filter(Boolean))].sort();
+const count = (xs, f) => xs.filter(f).length;
+const promo = (id) => D.promotions.find((p) => p.id === id);
+const appOf = (id) => String(id).split("/")[0];
+const shortP = (id) => String(id).split("/")[1] ?? id;
+const toast = (t) => { const e = $("#toast"); e.textContent = t; e.classList.add("on"); clearTimeout(toast.t); toast.t = setTimeout(() => e.classList.remove("on"), 3000); };
+const inRange = (t) => (!F.from || (t && localDay(t) >= F.from)) && (!F.to || (t && localDay(t) <= F.to));
+const hit = (...xs) => !F.q || xs.join(" ").toLowerCase().includes(F.q.toLowerCase());
+const assetUrl = (pid, file) => `/asset?promotion=${encodeURIComponent(pid)}&file=${encodeURIComponent(file)}`;
+const isVideo = (f) => /\.(mp4|webm|mov)$/i.test(f);
+const base = (f) => String(f).split("/").pop();
+const posts = () => D.deliveries.filter((d) => d.kind === "post");
+const msgs = () => D.deliveries.filter((d) => d.kind === "message");
+// A scheduled post shows as posted once its time has passed (nothing syncs with the scheduler).
+const pstat = (p) => (p.status === "sent" || (p.status === "scheduled" && p.planned_for && p.planned_for <= D.now) ? "posted" : p.status);
+const postedAt = (p) => p.sent_at || (pstat(p) === "posted" ? p.planned_for : null);
+const ANSWERED = ["replied", "bounced", "stopped"], WENT = ["sent", ...ANSWERED];
+const rendered = (p) => p.renders.images.length + p.renders.videos.length > 0;
+
+const ST = {
+  posted: ["●", ""], sent: ["●", ""], scheduled: ["◐", ""], approved: ["○", ""], cancelled: ["✕", "dim"], failed: ["!", "hot"],
+  replied: ["↩", "hot"], bounced: ["!", "hot"], stopped: ["✕", "hot"], frozen: ["◆", ""], live: ["◇", "dim"], ok: ["✓", ""],
+  changed: ["!", "hot"], missing: ["!", "hot"], "not rendered": ["○", "dim"],
+};
+const st = (s, label) => { const [g, c] = ST[s] ?? ["·", ""]; return `<span class="st text-label-xs ${c}" data-g="${g}">${esc(label ?? s)}</span>`; };
+const eyebrow = (n, label) => `<p class="eyebrow text-label"><span class="n">${n}</span><span>— ${esc(label)}</span></p>`;
+
+// ---------- derived data ----------
+function promoStats(id) {
+  const ps = posts().filter((p) => p.promotion === id), ms = msgs().filter((m) => m.promotion === id);
+  const times = [...ps.flatMap((p) => [postedAt(p), p.scheduled_at, p.approved_at]), ...ms.flatMap((m) => [m.answered_at, m.sent_at, m.approved_at])].filter((t) => t && t <= D.now).sort();
+  return {
+    posts: ps, msgs: ms, last: times.at(-1) ?? promo(id)?.frozen_at,
+    p: { approved: count(ps, (x) => pstat(x) === "approved"), scheduled: count(ps, (x) => pstat(x) === "scheduled"), posted: count(ps, (x) => pstat(x) === "posted") },
+    m: { approved: count(ms, (x) => x.status === "approved"), sent: count(ms, (x) => WENT.includes(x.status)), replied: count(ms, (x) => x.status === "replied") },
+  };
+}
+function stagesHtml(kind, stages) {
+  return `<div class="pipe"><span class="text-label-xs">${kind}</span><div class="stages">${stages.map((s) =>
+    `<div class="stage ${s.cls}${s.n ? "" : " zero"}" title="${s.n} ${esc(s.label)}"><span class="text-label-xs">${s.n} ${esc(s.label)}</span><i></i></div>`).join("")}</div></div>`;
+}
+function pipesHtml(s) {
+  const p = stagesHtml("Posts", [{ n: s.p.approved, label: "approved", cls: "" }, { n: s.p.scheduled, label: "scheduled", cls: "mid" }, { n: s.p.posted, label: "posted", cls: "on" }]);
+  const m = stagesHtml("Messages", [{ n: s.m.approved, label: "approved", cls: "mid" }, { n: s.m.sent - s.m.replied, label: "sent", cls: "on" }, { n: s.m.replied, label: "replied", cls: "win" }]);
+  return `<div class="pipes">${s.posts.length || !s.msgs.length ? p : ""}${s.msgs.length ? m : ""}</div>`;
+}
+const dLabel = (d) => (d.kind === "post" ? `${d.format ?? "post"} on ${d.channel}` : `${d.label ? d.label + " " : ""}${d.channel} to ${d.target_name || d.target}`);
+function events() {
+  const ev = [];
+  const add = (t, type, action, html, app) => { if (t && t <= D.now) ev.push({ t, type, action, html, app }); };
+  for (const p of D.promotions) add(p.frozen_at, "promotion", "frozen", `<button data-promo="${esc(p.id)}">${esc(p.id)}</button> frozen at its first delivery`, p.app);
+  for (const d of D.deliveries) {
+    const s = `<button data-delivery="${d.id}">${esc(dLabel(d))}</button> · ${esc(shortP(d.promotion))}${d.kind === "post" ? ` <span class="meta">${esc((d.text || "").split("\n")[0].slice(0, 60))}</span>` : ""}`;
+    const type = d.kind, app = appOf(d.promotion);
+    add(d.approved_at, type, "approved", s, app); add(d.scheduled_at, type, "scheduled", s, app);
+    if (d.kind === "post") add(postedAt(d), type, "posted", s, app); else add(d.sent_at, type, "sent", s, app);
+    add(d.failed_at, type, "failed", s + ` <span class="meta">${esc(d.error)}</span>`, app); add(d.answered_at, type, d.status, s, app); add(d.cancelled_at, type, "cancelled", s, app);
+  }
+  return ev.sort((a, b) => (a.t < b.t ? 1 : -1));
+}
+
+// ---------- filters ----------
+function sel(key, label, values, counts) {
+  return `<label class="field"><span class="text-label-xs">${label}</span><select data-f="${key}">${["", ...values].map((v) => `<option value="${esc(v)}"${F[key] === v ? " selected" : ""}>${esc(v || "All")}${v && counts ? ` (${counts(v)})` : ""}</option>`).join("")}</select></label>`;
+}
+function filtersHtml() {
+  let h = `<label class="field"><span class="text-label-xs">Search</span><input type="search" data-f="q" value="${esc(F.q)}" placeholder="Name, caption, address…"></label>` +
+    sel("app", "App", uniq(D.promotions.map((p) => p.app))) + `<label class="field"><span class="text-label-xs">From</span><input type="date" data-f="from" value="${esc(F.from)}"></label><label class="field"><span class="text-label-xs">To</span><input type="date" data-f="to" value="${esc(F.to)}"></label>`;
+  const P = posts(), M = msgs();
+  if (view === "promotions") h += sel("format", "Format", uniq(D.promotions.map((p) => p.format)), (v) => count(D.promotions, (p) => p.format === v)) + sel("source", "Source", ["live", "ok", "changed", "missing", "not rendered"], (v) => count(D.promotions, (p) => (v === "not rendered" ? !rendered(p) : p.source === v)));
+  if (view === "posts") h += sel("status", "Status", ["approved", "scheduled", "posted", "failed", "cancelled"], (v) => count(P, (p) => pstat(p) === v)) + sel("format", "Format", uniq(P.map((p) => p.format)), (v) => count(P, (p) => p.format === v)) + sel("channel", "Channel", uniq(P.map((p) => p.channel)), (v) => count(P, (p) => p.channel === v));
+  if (view === "messages") h += sel("status", "Status", ["approved", "scheduled", "sent", "failed", "replied", "bounced", "stopped", "cancelled"], (v) => count(M, (m) => m.status === v)) + sel("label", "Kind", uniq(M.map((m) => m.label)), (v) => count(M, (m) => m.label === v)) + sel("batch", "Batch", uniq(M.map((m) => m.batch)), (v) => count(M, (m) => m.batch === v)) + sel("channel", "Channel", uniq(M.map((m) => m.channel)), (v) => count(M, (m) => m.channel === v));
+  if (view === "timeline") h += sel("type", "What", ["promotion", "post", "message"]);
+  return h;
+}
+function showingHtml(n, total, noun) {
+  const labels = { q: "Search", app: "App", from: "From", to: "To", status: "Status", channel: "Channel", format: "Format", batch: "Batch", label: "Kind", source: "Source", type: "What" };
+  const tags = Object.entries(F).filter(([, v]) => v).map(([k, v]) => `<span class="tag">${labels[k]}: ${esc(v)}<button data-unset="${k}" aria-label="Remove ${labels[k]}">✕</button></span>`);
+  return (noun ? `<span>Showing ${n} of ${total} ${noun}</span>` : "") + tags.join("") + (tags.length ? `<button class="text-action text-label-xs" data-act="clear">Clear all</button>` : "");
+}
+
+// ---------- sorting and paging ----------
+function sortBy(rows, v, keys) { const [k, dir] = SORT[v], f = keys[k]; return rows.slice().sort((a, b) => { const x = f(a), y = f(b); return (x < y ? -1 : x > y ? 1 : 0) * dir; }); }
+const th = (v, k, label, cls = "") => { const [sk, dir] = SORT[v]; return `<th class="${cls}"${sk === k ? ` aria-sort="${dir > 0 ? "ascending" : "descending"}"` : ""}><button data-sort="${v}:${k}">${label}${sk === k ? (dir > 0 ? " ↑" : " ↓") : ""}</button></th>`; };
+function paged(rows, v, per = PER) {
+  const pages = Math.max(1, Math.ceil(rows.length / per)); PAGE[v] = Math.min(PAGE[v], pages);
+  return { slice: rows.slice((PAGE[v] - 1) * per, PAGE[v] * per), pager: pages > 1 ? `<div class="pager text-label-xs"><button class="btn btn-xs glass" data-page="${v}:-1"${PAGE[v] === 1 ? " disabled" : ""}>Previous</button><span>Page ${PAGE[v]} of ${pages}</span><button class="btn btn-xs glass" data-page="${v}:1"${PAGE[v] === pages ? " disabled" : ""}>Next</button></div>` : "" };
+}
+const needRow = (s, label, title, sub, attrs) => `<tr class="clickable" ${attrs}><td>${st(s, label)}</td><td class="strong"><span class="name">${title}</span>${sub ? `<div class="meta text-label-xs">${sub}</div>` : ""}</td><td class="num">Open <span class="arrow">→</span></td></tr>`;
+
+// ---------- views ----------
+function vOverview() {
+  const inApp = (id) => !F.app || appOf(id) === F.app;
+  const P = posts().filter((p) => inApp(p.promotion) && inRange(p.planned_for || p.approved_at));
+  const M = msgs().filter((m) => inApp(m.promotion) && inRange(m.sent_at || m.approved_at));
+  const sent = count(M, (m) => WENT.includes(m.status)), replied = count(M, (m) => m.status === "replied");
+  const PR = D.promotions.filter((p) => !F.app || p.app === F.app);
+  const upcoming = P.filter((p) => ["approved", "scheduled"].includes(pstat(p)) && (p.planned_for ?? "") >= D.now).sort((a, b) => (a.planned_for > b.planned_for ? 1 : -1));
+  const waiting = P.filter((p) => pstat(p) === "approved");
+  const batches = uniq(M.filter((m) => m.status === "approved").map((m) => m.batch || "(no batch)"));
+  const failed = [...P, ...M].filter((d) => d.status === "failed");
+  const broken = PR.filter((p) => ["changed", "missing"].includes(p.source));
+  const unrendered = PR.filter((p) => p.frozen_at && p.source !== "missing" && !rendered(p));
+  const needs = [
+    ...batches.map((b) => needRow("approved", "approved", `${count(M, (m) => m.status === "approved" && (m.batch || "(no batch)") === b)} messages waiting for your go`, `${esc(b)} · send from chat`, `data-go="messages" data-batch="${esc(b)}"`)),
+    ...(waiting.length ? [needRow("approved", "approved", `${waiting.length} approved posts not scheduled yet`, "schedule them when there's room", `data-go="posts" data-status="approved"`)] : []),
+    ...(failed.length ? [needRow("failed", "failed", `${failed.length} deliveries failed`, esc(failed.slice(0, 2).map((d) => d.error).join(" · ")), `data-go="${failed[0].kind === "post" ? "posts" : "messages"}" data-status="failed"`)] : []),
+    ...broken.map((p) => needRow(p.source, p.source, esc(p.id), `source ${esc(p.source)} since it was frozen`, `data-promo="${esc(p.id)}"`)),
+    ...(unrendered.length ? [needRow("not rendered", "not rendered", `${unrendered.length} promotions in use have no renders here`, esc(unrendered.slice(0, 3).map((p) => shortP(p.id)).join(", ")) + " · render them with building-promotion", `data-go="promotions" data-source="not rendered"`)] : []),
+  ];
+  return `<section class="invert band" aria-labelledby="fig-h"><div class="wrap">${eyebrow("01", "Overview")}<h1 class="text-heading-xl" id="fig-h" style="margin-top:12px">Where every promotion stands</h1>
+    <ul class="figures">
+      <li class="figure"><span class="num text-display-lg">${count(P, (p) => pstat(p) === "posted")}</span><span class="cap text-body-sm">posts posted</span><span class="check text-label-xs">${count(P, (p) => pstat(p) === "scheduled")} scheduled · ${waiting.length} approved</span></li>
+      <li class="figure"><span class="num text-display-lg">${count(P, (p) => pstat(p) === "scheduled")}</span><span class="cap text-body-sm">scheduled ahead</span><span class="check text-label-xs">next ${upcoming[0] ? esc(fmtWhen(upcoming[0].planned_for)) : "—"}</span></li>
+      <li class="figure"><span class="num text-display-lg">${sent}</span><span class="cap text-body-sm">messages sent</span><span class="check text-label-xs">${count(M, (m) => m.status === "approved")} approved · ${count(M, (m) => m.status === "failed")} failed</span></li>
+      <li class="figure"><span class="num text-display-lg">${sent ? Math.round((100 * replied) / sent) + "%" : "—"}</span><span class="cap text-body-sm">reply rate</span><span class="check text-label-xs">${replied} replied · ${count(M, (m) => m.status === "bounced")} bounced · ${count(M, (m) => m.status === "stopped")} stopped</span></li>
+    </ul>
+    <div class="band-foot text-label-xs"><span><b>${PR.length}</b> promotions</span><span><b>${count(PR, (p) => p.frozen_at)}</b> frozen</span><span><b>${count(PR, (p) => !rendered(p))}</b> not rendered here</span><span><b>${P.length + M.length}</b> deliveries</span></div></div></section>
+  <div class="wrap"><div class="cols">
+    <section><div class="sec-h"><h2 class="text-heading-md">Needs you</h2><span class="meta text-label-xs">${needs.length} item${needs.length === 1 ? "" : "s"}</span></div>
+      ${needs.length ? `<div class="ledger-wrap"><table class="ledger"><tbody>${needs.join("")}</tbody></table></div>` : `<p class="empty text-body-sm">Nothing waiting on you.</p>`}</section>
+    <section><div class="sec-h"><h2 class="text-heading-md">Up next</h2><button class="text-action text-label-xs" data-go="posts">All posts <span class="arrow">→</span></button></div>
+      ${upcoming.length ? `<div class="ledger-wrap"><table class="ledger"><tbody>${upcoming.slice(0, 8).map((p) => `<tr class="clickable" data-delivery="${p.id}"><td class="when text-label-xs">${esc(fmtWhen(p.planned_for))}</td><td class="strong"><span class="name">${esc(shortP(p.promotion))}</span><div class="meta text-label-xs">${esc(p.format)} · ${esc(p.channel)}</div></td><td>${st(pstat(p))}</td></tr>`).join("")}</tbody></table></div>` : `<p class="empty text-body-sm">Nothing planned ahead.</p>`}</section>
+  </div>
+  <section><div class="sec-h"><h2 class="text-heading-md">Promotions</h2><button class="text-action text-label-xs" data-go="promotions">Filter and sort <span class="arrow">→</span></button></div>${promoRows(sortBy(PR, "promotions", promoKeys))}</section></div>`;
+}
+const promoKeys = { last: (p) => promoStats(p.id).last ?? "", name: (p) => p.id, app: (p) => p.app };
+function promoThumb(p) {
+  const img = p.renders.images[0];
+  if (img) { const t = p.renders.thumbs[base(img).replace(/\.\w+$/, "")]; return `<img class="thumb" loading="lazy" src="${assetUrl(p.id, t ?? img)}" alt="">`; }
+  if (p.renders.videos[0]) return `<video class="thumb" muted playsinline preload="metadata" src="${assetUrl(p.id, p.renders.videos[0])}#t=1" aria-hidden="true"></video>`;
+  return `<span class="thumb ph text-label-xs">${p.source === "missing" ? "!" : "not rendered"}</span>`;
+}
+const promoState = (p) => `${p.frozen_at ? st("frozen", "frozen " + fmtDate(p.frozen_at)) : st("live", "not used yet")}${["changed", "missing"].includes(p.source) ? st(p.source, "source " + p.source) : ""}${p.source !== "missing" && !rendered(p) ? st("not rendered") : ""}`;
+function promoRows(P) {
+  if (!P.length) return `<p class="empty text-body-sm">No promotions match.</p>`;
+  return `<ol class="rows">${P.map((p, i) => { const s = promoStats(p.id);
+    return `<li><button class="row-link promo-row" data-promo="${esc(p.id)}"><span class="n text-label">${pad2(i + 1)}</span>${promoThumb(p)}
+      <span><span class="name text-heading-sm">${esc(shortP(p.id))}</span><span class="who text-label-xs"><span>${esc(p.app)}</span><span>${esc(p.format ?? "")}</span>${promoState(p)}</span></span>
+      ${pipesHtml(s)}<span class="last text-label-xs">${s.last ? esc(fmtDate(s.last)) : ""}</span><span class="go arrow">→</span></button></li>`; }).join("")}</ol>`;
+}
+function vPromotions() {
+  const all = D.promotions;
+  const P = all.filter((p) => (!F.app || p.app === F.app) && (!F.format || p.format === F.format) && (!F.source || (F.source === "not rendered" ? !rendered(p) : p.source === F.source)) && hit(p.id, p.plan, p.note) && (!F.from && !F.to ? true : inRange(promoStats(p.id).last)));
+  $("#showing").innerHTML = showingHtml(P.length, all.length, "promotions");
+  const [k] = SORT.promotions;
+  return `<div class="wrap"><div class="view-head">${eyebrow("02", "Promotions")}<h1 class="text-heading-xl">Every promotion, and where it went</h1><p class="text-body-base">A promotion freezes at its first delivery: its source is fingerprinted, and any change after that shows here. Its assets are its own renders.</p></div>
+    <div class="sec-h"><span class="text-label-xs meta">Sort</span>${["last", "name", "app"].map((x) => `<button class="text-action text-label-xs" data-sort="promotions:${x}" ${x === k ? 'style="color:var(--color-accent-text)"' : ""}>${{ last: "Last activity", name: "Name", app: "App" }[x]}${x === k ? (SORT.promotions[1] > 0 ? " ↑" : " ↓") : ""}</button>`).join("")}</div>
+    ${promoRows(sortBy(P, "promotions", promoKeys))}</div>`;
+}
+const postKeys = { when: (p) => p.planned_for ?? p.approved_at ?? "", status: (p) => pstat(p), promotion: (p) => p.promotion, format: (p) => p.format ?? "" };
+function calendarHtml(rows) {
+  const ref = cal ?? localDay(D.now).slice(0, 7);
+  const [y, m] = ref.split("-").map(Number), first = new Date(y, m - 1, 1), start = new Date(first); start.setDate(1 - ((first.getDay() + 6) % 7));
+  const byDay = new Map(); for (const p of rows) { const t = p.planned_for || p.approved_at; if (!t) continue; const k = localDay(t); (byDay.get(k) ?? byDay.set(k, []).get(k)).push(p); }
+  const today = localDay(D.now); let cells = "";
+  for (let i = 0; i < 42; i++) {
+    const d = new Date(start); d.setDate(start.getDate() + i); const k = `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+    if (i === 35 && d.getMonth() !== m - 1) break;
+    cells += `<div class="day${d.getMonth() !== m - 1 ? " out" : ""}${k === today ? " today" : ""}"><span class="d">${d.getDate()}</span>${(byDay.get(k) ?? []).map((p) => `<button class="ev" data-delivery="${p.id}">${st(pstat(p), p.format)}<span class="t">${esc(shortP(p.promotion))}</span></button>`).join("")}</div>`;
+  }
+  return `<div class="sec-h cal-head"><h2 class="text-heading-md">${esc(first.toLocaleDateString(undefined, { month: "long", year: "numeric" }))}</h2><div class="cal-nav"><button class="btn btn-xs glass" data-cal="-1" aria-label="Previous month">←</button><button class="btn btn-xs glass" data-cal="0">This month</button><button class="btn btn-xs glass" data-cal="1" aria-label="Next month">→</button></div></div>
+    <div class="cal">${["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((x) => `<div class="dow">${x}</div>`).join("")}${cells}</div>`;
+}
+function vPosts() {
+  const all = posts();
+  const rows = all.filter((p) => (!F.app || appOf(p.promotion) === F.app) && (!F.status || pstat(p) === F.status) && (!F.channel || p.channel === F.channel) && (!F.format || p.format === F.format) && inRange(p.planned_for || p.approved_at) && hit(p.text, p.promotion, p.note, p.format, p.batch));
+  $("#showing").innerHTML = showingHtml(rows.length, all.length, "posts");
+  const { slice, pager } = paged(sortBy(rows, "posts", postKeys), "posts");
+  return `<div class="wrap"><div class="view-head">${eyebrow("03", "Posts")}<h1 class="text-heading-xl">Every post, by day</h1><p class="text-body-base">Approved: ready, not scheduled yet. Scheduled: queued with the scheduler. A scheduled post shows as posted once its time has passed.</p></div>
+    ${calendarHtml(rows)}
+    <div class="sec-h"><h2 class="text-heading-md">All posts</h2></div>
+    ${rows.length ? `<div class="ledger-wrap"><table class="ledger"><thead><tr>${th("posts", "when", "When")}${th("posts", "status", "Status")}${th("posts", "format", "Post", "hide-sm")}${th("posts", "promotion", "Promotion")}<th class="hide-sm">Caption</th><th></th></tr></thead><tbody>${slice.map((p) => `<tr class="clickable" data-delivery="${p.id}">
+      <td class="when text-label-xs">${esc(fmtWhen(p.planned_for || p.approved_at))}</td><td>${st(pstat(p))}</td><td class="strong hide-sm">${esc(p.format)}<div class="meta text-label-xs">${esc(p.channel)} · ${p.assets.length} file${p.assets.length > 1 ? "s" : ""}</div></td>
+      <td><span class="name">${esc(shortP(p.promotion))}</span><div class="meta text-label-xs">${esc(appOf(p.promotion))}</div></td><td class="hide-sm"><span class="clip">${esc(p.text)}</span></td>
+      <td class="num"><button class="btn btn-xs glass" data-view="${p.id}">View</button></td></tr>`).join("")}</tbody></table></div>${pager}` : `<p class="empty text-body-sm">No posts match.</p>`}</div>`;
+}
+const msgKeys = { when: (m) => m.answered_at || m.sent_at || m.failed_at || m.cancelled_at || m.approved_at || "", status: (m) => m.status, to: (m) => m.target_name ?? m.target ?? "", label: (m) => m.label ?? "" };
+function vMessages() {
+  const all = msgs();
+  const rows = all.filter((m) => (!F.app || appOf(m.promotion) === F.app) && (!F.status || m.status === F.status) && (!F.label || m.label === F.label) && (!F.batch || m.batch === F.batch) && (!F.channel || m.channel === F.channel) && inRange(m.sent_at || m.approved_at) && hit(m.target_name, m.target, m.subject, m.text, m.batch, m.note));
+  $("#showing").innerHTML = showingHtml(rows.length, all.length, "messages");
+  const waiting = rows.filter((m) => m.status === "approved"), queued = rows.filter((m) => m.status === "scheduled").sort((a, b) => ((a.planned_for ?? "") > (b.planned_for ?? "") ? 1 : -1)), past = rows.filter((m) => !["approved", "scheduled"].includes(m.status));
+  const wh = uniq(waiting.map((m) => m.batch || "(no batch)")).map((b) => { const ms = waiting.filter((m) => (m.batch || "(no batch)") === b);
+    return `<section><div class="sec-h"><h2 class="text-heading-md">${esc(b)}</h2>${st("approved", ms.length + " approved")}<span class="meta text-label-xs">approved ${esc(fmtWhen(ms[0].approved_at))}</span></div>
+      <div class="ledger-wrap"><table class="ledger"><thead><tr><th>To</th><th class="hide-sm">Address</th><th>Subject</th><th class="hide-sm">Promotion</th><th></th></tr></thead><tbody>${ms.map((m) => `<tr class="clickable" data-delivery="${m.id}">
+        <td class="strong"><span class="name">${esc(m.target_name || m.target)}</span><div class="meta text-label-xs">${esc(m.label ?? "")} · ${esc(m.channel)}</div></td><td class="hide-sm">${esc(m.target)}</td><td><span class="clip">${esc(m.subject)}</span></td><td class="hide-sm">${esc(shortP(m.promotion))}</td>
+        <td class="num"><button class="btn btn-xs glass" data-view="${m.id}">View</button></td></tr>`).join("")}
+        <tr class="total"><td colspan="5">${ms.length} message${ms.length > 1 ? "s" : ""} waiting for your go: send them from chat</td></tr></tbody></table></div></section>`; }).join("");
+  const qh = queued.length ? `<section><div class="sec-h"><h2 class="text-heading-md">Queued to send</h2>${st("scheduled", queued.length + " scheduled")}<span class="meta text-label-xs">next ${esc(fmtWhen(queued[0].planned_for))}</span></div>
+      <div class="ledger-wrap"><table class="ledger"><thead><tr><th>Sends</th><th>To</th><th class="hide-sm">Address</th><th class="hide-sm">Batch</th><th></th></tr></thead><tbody>${queued.map((m) => `<tr class="clickable" data-delivery="${m.id}">
+        <td class="when text-label-xs">${esc(fmtWhen(m.planned_for))}</td><td class="strong"><span class="name">${esc(m.target_name || m.target)}</span><div class="meta text-label-xs">${esc(shortP(m.promotion))}</div></td><td class="hide-sm">${esc(m.target)}</td><td class="hide-sm">${esc(m.batch ?? "")}</td>
+        <td class="num"><button class="btn btn-xs glass" data-view="${m.id}">View</button></td></tr>`).join("")}</tbody></table></div></section>` : "";
+  const done = uniq(all.filter((m) => !["approved", "scheduled"].includes(m.status)).map((m) => m.batch || "(no batch)"));
+  const results = done.length ? `<section><div class="sec-h"><h2 class="text-heading-md">Results by batch</h2></div><div class="ledger-wrap"><table class="ledger"><thead><tr><th>Batch</th><th class="num">Sent</th><th class="num">Replied</th><th class="num">Reply rate</th><th class="num hide-sm">Bounced</th><th class="num hide-sm">Stopped</th><th class="num hide-sm">Failed</th><th class="num hide-sm">Cancelled</th></tr></thead><tbody>${done.map((b) => {
+    const ms = all.filter((m) => (m.batch || "(no batch)") === b), s = count(ms, (m) => WENT.includes(m.status)), r = count(ms, (m) => m.status === "replied");
+    return `<tr class="clickable" data-go="messages" data-batch="${esc(b)}"><td class="strong"><span class="name">${esc(b)}</span></td><td class="num">${s}</td><td class="num">${r}</td><td class="num">${s ? Math.round((100 * r) / s) + "%" : "—"}</td><td class="num hide-sm">${count(ms, (m) => m.status === "bounced")}</td><td class="num hide-sm">${count(ms, (m) => m.status === "stopped")}</td><td class="num hide-sm">${count(ms, (m) => m.status === "failed")}</td><td class="num hide-sm">${count(ms, (m) => m.status === "cancelled")}</td></tr>`; }).join("")}</tbody></table></div></section>` : "";
+  const { slice, pager } = paged(sortBy(past, "messages", msgKeys), "messages");
+  const ph = past.length ? `<section><div class="sec-h"><h2 class="text-heading-md">Sent and past</h2></div><div class="ledger-wrap"><table class="ledger"><thead><tr>${th("messages", "when", "When")}${th("messages", "status", "Status")}${th("messages", "to", "To")}<th class="hide-sm">Address</th>${th("messages", "label", "Kind", "hide-sm")}<th></th></tr></thead><tbody>${slice.map((m) => `<tr class="clickable" data-delivery="${m.id}">
+      <td class="when text-label-xs">${esc(fmtWhen(m.answered_at || m.sent_at || m.failed_at || m.cancelled_at || m.approved_at))}</td><td>${st(m.status)}${m.error ? `<div class="meta text-label-xs clip">${esc(m.error)}</div>` : ""}</td>
+      <td class="strong"><span class="name">${esc(m.target_name || m.target)}</span><div class="meta text-label-xs">${esc(shortP(m.promotion))}</div></td><td class="hide-sm">${esc(m.target)}</td><td class="hide-sm">${esc(m.label ?? "")}<div class="meta text-label-xs">${esc(m.batch ?? "")}</div></td>
+      <td class="num"><button class="btn btn-xs glass" data-view="${m.id}">View</button></td></tr>`).join("")}</tbody></table></div>${pager}</section>` : "";
+  return `<div class="wrap"><div class="view-head">${eyebrow("04", "Messages")}<h1 class="text-heading-xl">Every one-to-one message</h1><p class="text-body-base">A message lands here once you approved it. Giving the go, and marking a reply, bounce or stop, happen in chat; a queued message shows when it sends, and its result lands here once it goes. This page only shows where each one stands.</p></div>
+    ${wh}${qh}${results}${ph}${!rows.length ? `<p class="empty text-body-sm">No messages match.</p>` : ""}</div>`;
+}
+function vTimeline() {
+  const allEv = events();
+  const ev = allEv.filter((e) => (!F.type || e.type === F.type) && inRange(e.t) && hit(e.html.replace(/<[^>]+>/g, " ")) && (!F.app || e.app === F.app));
+  $("#showing").innerHTML = showingHtml(ev.length, allEv.length, "events");
+  const shown = ev.slice(0, PAGE.timeline * TL_PER);
+  let out = "", last = "";
+  for (const e of shown) {
+    const d = localDay(e.t);
+    if (d !== last) { out += `<div class="tl-day text-label">${esc(new Date(e.t).toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric", year: "numeric" }))}</div>`; last = d; }
+    out += `<div class="tl-ev"><span class="time">${esc(fmtTime(e.t))}</span><span>${st(e.action, e.type + " " + e.action)}</span><span class="what text-body-sm">${e.html}</span></div>`;
+  }
+  return `<div class="wrap"><div class="view-head">${eyebrow("05", "Timeline")}<h1 class="text-heading-xl">What happened, newest first</h1><p class="text-body-base">Every step a promotion or a delivery took. Nothing planned for later appears until its time.</p></div>
+    ${shown.length ? out + (ev.length > shown.length ? `<div class="pager"><button class="btn btn-xs glass" data-more="1">Show ${Math.min(TL_PER, ev.length - shown.length)} more</button><span class="text-label-xs">${shown.length} of ${ev.length}</span></div>` : "") : `<p class="empty text-body-sm">Nothing happened in this range.</p>`}</div>`;
+}
+
+// ---------- sheets ----------
+function openSheet(html) { $("#sheet-in").innerHTML = html; $("#sheet").hidden = false; $("#scrim").hidden = false; $("#sheet").scrollTop = 0; $("#sheet .head .btn")?.focus(); }
+function closeSheet() { $("#sheet").hidden = true; $("#scrim").hidden = true; }
+const head = (eb, title, extra = "") => `<div class="head"><div><p class="eyebrow text-label">${eb}</p><h2 class="text-heading-lg">${title}</h2>${extra}</div><button class="btn btn-xs glass" data-act="close">Close</button></div>`;
+function historyRows(items) {
+  const rows = items.filter((x) => x.t && x.t <= D.now).sort((a, b) => (a.t < b.t ? 1 : -1));
+  return rows.length ? `<div class="ledger-wrap"><table class="ledger"><tbody>${rows.map((x) => `<tr><td class="when text-label-xs">${esc(fmtWhen(x.t))}</td><td>${st(x.s, x.label)}</td><td>${x.html ?? ""}</td></tr>`).join("")}</tbody></table></div>` : `<p class="meta text-body-sm">Nothing yet.</p>`;
+}
+const steps = (d) => [["approved_at", "approved"], ["scheduled_at", "scheduled"], [d.kind === "post" ? null : "sent_at", "sent"], ["failed_at", "failed"], ["answered_at", d.status], ["cancelled_at", "cancelled"]]
+  .filter(([k]) => k).map(([k, a]) => ({ t: d[k], s: a, label: a })).concat(d.kind === "post" && postedAt(d) ? [{ t: postedAt(d), s: "posted", label: d.sent_at ? "posted" : "posted (by schedule)" }] : []);
+// The files a list of assets names: an image the board shows, a video it plays, or "not rendered".
+function assetTiles(pid, files, attr, value = pid) {
+  const p = promo(pid);
+  return `<div class="frames">${files.map((f, i) => {
+    const has = p && (p.renders.images.includes(f) || p.renders.videos.includes(f));
+    const thumb = has && !isVideo(f) ? p.renders.thumbs[base(f).replace(/\.\w+$/, "")] ?? f : null;
+    return `<button ${attr}="${esc(value)}" data-i="${i}">${!has ? `<span class="ph text-label-xs">not rendered</span>` : isVideo(f) ? `<span class="ph text-label-xs">▶ play</span>` : `<img loading="lazy" src="${assetUrl(pid, thumb)}" alt="">`}<span class="text-label-xs">${esc(base(f))}</span></button>`;
+  }).join("")}</div>`;
+}
+const promoFiles = (p) => [...p.renders.images, ...p.renders.videos];
+// The message plan: its markdown tables as ledgers, the rest as text; bold kept, nothing else interpreted.
+function planHtml(md) {
+  const inline = (s) => esc(s).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>").replace(/`([^`]+)`/g, "$1");
+  const cells = (l) => l.trim().replace(/^\||\|$/g, "").split("|").map((c) => c.trim());
+  const out = []; let table = null;
+  for (const line of md.split("\n")) {
+    if (/^\s*\|/.test(line)) { if (/^\s*\|[\s:|-]+\|\s*$/.test(line)) continue; (table ??= []).push(cells(line)); continue; }
+    if (table) { const [h, ...rows] = table; out.push(`<div class="ledger-wrap"><table class="ledger"><thead><tr>${h.map((c) => `<th>${inline(c)}</th>`).join("")}</tr></thead><tbody>${rows.map((r) => `<tr>${r.map((c) => `<td>${inline(c)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`); table = null; }
+    if (line.trim()) out.push(`<p class="text-body-sm">${inline(line)}</p>`);
+  }
+  if (table) { const [h, ...rows] = table; out.push(`<div class="ledger-wrap"><table class="ledger"><thead><tr>${h.map((c) => `<th>${inline(c)}</th>`).join("")}</tr></thead><tbody>${rows.map((r) => `<tr>${r.map((c) => `<td>${inline(c)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`); }
+  return out.join("");
+}
+function sheetPromo(id) {
+  const p = promo(id), s = promoStats(id);
+  const hist = [{ t: p.frozen_at, s: "frozen", label: "frozen", html: `fingerprint <span class="text-label-xs">${esc((p.fingerprint || "").slice(0, 12))}</span>` },
+    ...[...s.posts, ...s.msgs].flatMap((d) => steps(d).map((x) => ({ ...x, label: `${d.kind} ${x.label}`, html: `<button class="text-action bare" data-delivery="${d.id}">${esc(dLabel(d))}</button>` })))];
+  openSheet(head(`${esc(p.app)} · ${esc(p.format ?? "")}`, esc(shortP(id)), `<div class="who text-label-xs">${promoState(p)}</div>`) +
+    (["changed", "missing"].includes(p.source) ? `<p class="notice text-body-sm">${p.source === "missing" ? "Its source folder is missing." : "Its source changed since it was frozen."}<span class="meta">Restore it from version control, or make the change in a new promotion folder; a delivery can't be recorded with it until then.</span></p>` : "") +
+    `${pipesHtml(s)}
+    <div class="sec-h"><h3 class="text-heading-sm">Assets</h3><span class="meta text-label-xs">its renders/</span></div>${promoFiles(p).length ? assetTiles(id, promoFiles(p), "data-viewpromo") : `<p class="meta text-body-sm">Not rendered in this checkout. Render it with building-promotion.</p>`}
+    ${p.plan ? `<div class="sec-h"><h3 class="text-heading-sm">Message plan</h3><span class="meta text-label-xs">from promotion.md</span></div><div class="plan">${planHtml(p.plan)}</div>` : ""}
+    <div class="sec-h"><h3 class="text-heading-sm">History</h3></div>${historyRows(hist)}`);
+}
+function sheetDelivery(id) {
+  const d = D.deliveries.find((x) => x.id === Number(id));
+  const status = d.kind === "post" ? pstat(d) : d.status;
+  const fill = d.fill ? Object.entries(d.fill).map(([k, v]) => `“${esc(k)}” → ${esc(v)}`).join(", ") : "";
+  const kv = [["To", d.kind === "message" ? esc(d.target) : esc(d.target ?? "")], ["Subject", esc(d.subject ?? "")], ["Filled with", fill], ["Batch", esc(d.batch ?? "")], ["Planned for", esc(fmtWhen(d.planned_for))],
+    ["Link", d.link ? (/^https?:/.test(d.link) ? `<a target="_blank" rel="noopener" href="${esc(d.link)}">${esc(d.link)}</a>` : esc(d.link)) : ""], ["Reference", esc(d.ref ?? "")], ["Note", esc(d.note ?? "")]].filter(([, v]) => v);
+  openSheet(head(`${esc(d.kind)} ${d.id} · ${esc(d.channel)}${d.format ? ` · ${esc(d.format)}` : ""}${d.label ? ` · ${esc(d.label)}` : ""}`, esc(d.kind === "post" ? fmtWhen(d.planned_for || d.approved_at) : d.target_name || d.target),
+    `<div class="who text-label-xs">${st(status, d.kind === "post" && status === "posted" && !d.sent_at ? "posted (by schedule)" : status)}<button class="text-action text-label-xs" data-promo="${esc(d.promotion)}">${esc(d.promotion)}</button></div>`) +
+    assetTiles(d.promotion, d.assets, "data-viewdelivery", d.id) + (fill ? `<p class="meta text-label-xs">The image went out with ${fill}; this is the promotion's own render.</p>` : "") +
+    `<dl class="kv text-body-sm">${kv.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join("")}</dl>
+    <div class="sec-h"><h3 class="text-heading-sm">${d.kind === "post" ? "Caption" : "Message"}, as ${["approved", "scheduled"].includes(d.status) ? "it will go out" : "it went out"}</h3></div><div class="msg">${esc(d.text)}</div>
+    ${d.error ? `<p class="notice text-body-sm">${esc(d.error)}</p>` : ""}
+    <div class="sec-h"><h3 class="text-heading-sm">History</h3></div>${historyRows(steps(d))}`);
+}
+
+// ---------- viewer ----------
+const V = { s: 1, x: 0, y: 0, fit: 1, pts: new Map(), last: null, pinch: null, list: [], i: 0 };
+const vImg = $("#vimg"), vVid = $("#vvid"), vEl = $("#viewer");
+function vApply() { vImg.style.transform = `translate(${V.x}px,${V.y}px) scale(${V.s})`; $("#vzoom").textContent = Math.round(V.s * 100) + "%"; }
+function vFit() { const w = innerWidth, h = innerHeight; V.fit = Math.min((w - 48) / vImg.naturalWidth, (h - 150) / vImg.naturalHeight, 1); V.s = V.fit; V.x = (w - vImg.naturalWidth * V.s) / 2; V.y = (h - vImg.naturalHeight * V.s) / 2 + 20; vApply(); }
+function vZoom(to, cx = innerWidth / 2, cy = innerHeight / 2) { to = Math.min(8, Math.max(V.fit * 0.5, to)); V.x = cx - ((cx - V.x) * to) / V.s; V.y = cy - ((cy - V.y) * to) / V.s; V.s = to; vApply(); }
+// list: [{ pid, file, cap }]
+function openViewer(list, i = 0) { V.list = list; vEl.hidden = false; document.body.style.overflow = "hidden"; showItem(i); }
+async function showItem(i) {
+  V.i = (i + V.list.length) % V.list.length; const it = V.list[V.i], status = $("#vstatus"), src = assetUrl(it.pid, it.file);
+  $("#vcap").textContent = it.cap; $("#vopen").href = src; vVid.pause(); vVid.hidden = true; vImg.hidden = true; status.className = "vstatus text-label"; status.innerHTML = "";
+  $("#vsteps").innerHTML = V.list.length > 1 ? V.list.map((_, j) => `<button class="btn btn-xs glass on-dark" data-step="${j}"${j === V.i ? ' aria-current="true" style="color:var(--color-accent)"' : ""}>${j + 1}</button>`).join("") : "";
+  const err = (t) => { status.className = "vstatus err text-body-sm"; status.innerHTML = `<span>${esc(t)}</span>`; };
+  if (isVideo(it.file)) {
+    const p = promo(it.pid);
+    if (!p?.renders.videos.includes(it.file)) return err(`Not rendered: ${it.pid} has no ${it.file} in this checkout. Render it with building-promotion.`);
+    vVid.hidden = false; vVid.src = src; vVid.onerror = () => { vVid.hidden = true; err(`${it.file} can't play here.`); };
+    return;
+  }
+  status.textContent = "Loading…";
+  const r = await fetch(src);
+  if (V.list[V.i] !== it) return;
+  if (!r.ok) return err(await r.text());
+  vImg.src = URL.createObjectURL(await r.blob()); await vImg.decode(); status.textContent = ""; vImg.hidden = false; vFit();
+}
+function closeViewer() { vEl.hidden = true; vVid.pause(); document.body.style.overflow = ""; }
+vEl.addEventListener("wheel", (e) => { if (vImg.hidden) return; e.preventDefault(); vZoom(V.s * Math.exp(-e.deltaY * (e.ctrlKey ? 0.01 : 0.0015)), e.clientX, e.clientY); }, { passive: false });
+vEl.addEventListener("dblclick", (e) => { if (!vImg.hidden && e.target === vImg) vZoom(Math.abs(V.s - 1) < 0.01 ? V.fit : 1, e.clientX, e.clientY); });
+vEl.addEventListener("pointerdown", (e) => { if (vImg.hidden || e.target.closest(".vbar, .vsteps")) return; vEl.setPointerCapture(e.pointerId); V.pts.set(e.pointerId, { x: e.clientX, y: e.clientY }); V.last = { x: e.clientX, y: e.clientY }; vEl.classList.add("drag");
+  if (V.pts.size === 2) { const [a, b] = [...V.pts.values()]; V.pinch = { d: Math.hypot(a.x - b.x, a.y - b.y), s: V.s }; } });
+vEl.addEventListener("pointermove", (e) => { if (!V.pts.has(e.pointerId)) return; V.pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  if (V.pts.size === 2 && V.pinch) { const [a, b] = [...V.pts.values()]; return vZoom((V.pinch.s * Math.hypot(a.x - b.x, a.y - b.y)) / V.pinch.d, (a.x + b.x) / 2, (a.y + b.y) / 2); }
+  V.x += e.clientX - V.last.x; V.y += e.clientY - V.last.y; V.last = { x: e.clientX, y: e.clientY }; vApply(); });
+const vUp = (e) => { V.pts.delete(e.pointerId); if (V.pts.size < 2) V.pinch = null; V.last = [...V.pts.values()][0] || null; if (!V.pts.size) vEl.classList.remove("drag"); };
+vEl.addEventListener("pointerup", vUp); vEl.addEventListener("pointercancel", vUp);
+document.querySelector(".vbar").addEventListener("click", (e) => { const z = e.target.closest("[data-z]")?.dataset.z; if (!z) return; if (z === "close") closeViewer(); else if (z === "fit") vFit(); else if (z === "1") vZoom(1); else vZoom(V.s * (z === "in" ? 1.25 : 0.8)); });
+$("#vsteps").addEventListener("click", (e) => { const b = e.target.closest("[data-step]"); if (b) showItem(Number(b.dataset.step)); });
+addEventListener("resize", () => { if (!vEl.hidden && !vImg.hidden) vFit(); });
+const deliveryItems = (d) => d.assets.map((f) => ({ pid: d.promotion, file: f, cap: `${d.promotion} · ${base(f)} · ${dLabel(d)}${d.fill ? " · the promotion's own render" : ""}` }));
+
+// ---------- render ----------
+function render() {
+  $("#nav").innerHTML = VIEWS.map(([k, l]) => { const n = k === "messages" ? count(msgs(), (m) => m.status === "approved") : k === "posts" ? count(posts(), (p) => pstat(p) === "approved") : 0;
+    return `<button data-nav="${k}"${view === k ? ' aria-current="page"' : ""}>${l}${n ? ` <span class="cnt">${n}</span>` : ""}</button>`; }).join("");
+  $("#filters").innerHTML = filtersHtml();
+  $("#showing").innerHTML = view === "overview" ? showingHtml() : "";
+  $("#main").innerHTML = { overview: vOverview, promotions: vPromotions, posts: vPosts, messages: vMessages, timeline: vTimeline }[view]();
+  $("#stamp").textContent = "D1 · " + new Date().toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
+  const n = Object.values(F).filter(Boolean).length; if (!document.body.classList.contains("show-filters")) $("#ftoggle").textContent = n ? `Filters ${n}` : "Filters";
+}
+async function load() {
+  const r = await fetch("/api/data"); const j = await r.json().catch(() => ({ error: "unreadable" }));
+  if (!r.ok) return toast("Couldn't read the database: " + (j.error || r.status));
+  D = j; $("#logo").hidden = !D.logo; render();
+}
+const busy = async (fn) => { document.body.classList.add("busy"); try { await fn(); } catch (e) { toast(e.message); } finally { document.body.classList.remove("busy"); } };
+const resetPages = () => { for (const k in PAGE) PAGE[k] = 1; };
+function go(v, set = {}) { view = v; for (const k in F) if (!["q", "app", "from", "to"].includes(k)) F[k] = ""; Object.assign(F, set); resetPages(); if (location.hash.slice(1) !== v) history.pushState(null, "", "#" + v); render(); scrollTo(0, 0); }
+
+let qTimer;
+document.addEventListener("input", (e) => { const k = e.target.dataset?.f; if (!k) return; F[k] = e.target.value; resetPages(); clearTimeout(qTimer);
+  qTimer = setTimeout(() => { const pos = e.target.selectionStart; render(); const el = document.querySelector(`[data-f="${k}"]`); if (el && k === "q") { el.focus(); try { el.setSelectionRange(pos, pos); } catch {} } }, k === "q" ? 220 : 0); });
+addEventListener("popstate", () => { view = hashView(); render(); });
+addEventListener("keydown", (e) => {
+  if (!vEl.hidden) { if (e.key === "Escape") closeViewer(); else if (e.key === "ArrowRight" && V.list.length > 1) showItem(V.i + 1); else if (e.key === "ArrowLeft" && V.list.length > 1) showItem(V.i - 1); else if (e.key === "+" || e.key === "=") vZoom(V.s * 1.25); else if (e.key === "-") vZoom(V.s * 0.8); else if (e.key === "0") vFit(); return; }
+  if (e.key === "Escape" && !$("#sheet").hidden) closeSheet();
+});
+$("#scrim").addEventListener("click", closeSheet);
+document.addEventListener("click", (e) => {
+  const t = e.target.closest("button, tr.clickable"); if (!t || t.closest("#viewer")) return;
+  const d = t.dataset;
+  if (d.nav) return go(d.nav);
+  if (d.act === "reload") return busy(async () => { const r = await fetch("/api/reload", { method: "POST" }); if (!r.ok) throw new Error("Couldn't reload: " + (await r.text())); await load(); toast("Reloaded"); });
+  if (d.act === "clear") { for (const k in F) F[k] = ""; resetPages(); return render(); }
+  if (d.act === "close") return closeSheet();
+  if (d.act === "filters") { const on = document.body.classList.toggle("show-filters"); t.setAttribute("aria-expanded", String(on)); const n = Object.values(F).filter(Boolean).length; t.textContent = on ? "Done" : n ? `Filters ${n}` : "Filters"; return; }
+  if (d.unset) { F[d.unset] = ""; resetPages(); return render(); }
+  if (d.go) { closeSheet(); return go(d.go, { ...(d.batch ? { batch: d.batch } : {}), ...(d.status ? { status: d.status } : {}), ...(d.source ? { source: d.source } : {}) }); }
+  if (d.sort) { const [v, k] = d.sort.split(":"); SORT[v] = SORT[v][0] === k ? [k, -SORT[v][1]] : [k, k === "when" || k === "last" ? -1 : 1]; return render(); }
+  if (d.page) { const [v, step] = d.page.split(":"); PAGE[v] += Number(step); render(); return scrollTo(0, 0); }
+  if (d.more) { PAGE.timeline++; return render(); }
+  if (d.cal) { const ref = cal ?? localDay(D.now).slice(0, 7); const [y, m] = ref.split("-").map(Number); const n = new Date(y, m - 1 + Number(d.cal), 1); cal = d.cal === "0" ? null : `${n.getFullYear()}-${pad2(n.getMonth() + 1)}`; return render(); }
+  if (d.viewpromo) { const p = promo(d.viewpromo); return openViewer(promoFiles(p).map((f) => ({ pid: p.id, file: f, cap: `${p.id} · ${base(f)}` })), Number(d.i)); }
+  if (d.viewdelivery) return openViewer(deliveryItems(D.deliveries.find((x) => x.id === Number(d.viewdelivery))), Number(d.i));
+  if (d.view) { e.stopPropagation(); return openViewer(deliveryItems(D.deliveries.find((x) => x.id === Number(d.view)))); }
+  if (d.promo) return sheetPromo(d.promo);
+  if (d.delivery) return sheetDelivery(d.delivery);
+});
+load();
+</script>
+</body>
+</html>

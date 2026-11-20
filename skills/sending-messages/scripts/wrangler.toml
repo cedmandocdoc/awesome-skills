@@ -1,0 +1,4 @@
+# Config for sending-messages' D1 and KV commands only; keeps Wrangler away from any app config in the
+# repository. The account, the database and the namespace come from the sending root's index.md.
+name = "sending-messages"
+compatibility_date = "2026-01-01"

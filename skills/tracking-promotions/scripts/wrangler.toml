@@ -1,0 +1,4 @@
+# Config for tracking-promotions' database commands only; keeps Wrangler away from any app config in the
+# repository. The database and the account come from the tracking root's index.md.
+name = "tracking-promotions"
+compatibility_date = "2026-01-01"
