@@ -13,6 +13,7 @@ colors:
   border: "[#E2E8F0]"
   success: "[#16A34A]"
 typography:
+  text-display: { fontFamily: "[Heading family]", fontSize: 56px, fontWeight: 800, lineHeight: 1.05 }  # desktop and website heroes; drop for a phone app
   text-heading-lg: { fontFamily: "[Heading family]", fontSize: 24px, fontWeight: 700, lineHeight: 1.25 }
   text-heading-md: { fontFamily: "[Heading family]", fontSize: 18px, fontWeight: 600, lineHeight: 1.3 }
   text-body-base: { fontFamily: "[Body family]", fontSize: 16px, fontWeight: 400, lineHeight: 1.5 }
@@ -52,7 +53,7 @@ spacing:
 
 ## Layout
 
-- 390×844 phone screen, `space-4` side margin, `space-6` between groups; tap targets at least 44 px.
+- [The form's frame: a 390×844 phone screen, `space-4` side margin | a 1440×900 desktop screen, a 240 px sidebar and a content column | a page 1440 and 390 wide, a 1200 px content column, sections `space-6` × 4 apart]; `space-6` between groups; tap targets at least 44 px.
 
 ## Shapes
 

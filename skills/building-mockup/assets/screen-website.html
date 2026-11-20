@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>[Business name] — [Page name]</title>
+<style>
+  @font-face { font-family: "[Heading family]"; src: url("../fonts/[heading].woff2") format("woff2"); font-weight: 400 800; }
+  @font-face { font-family: "[Body family]"; src: url("../fonts/[body].woff2") format("woff2"); font-weight: 400 700; }
+  :root {
+    /* from design.md tokens */
+    --background: [#FFFFFF]; --foreground: [#0F172A];
+    --primary: [brand]; --primary-foreground: [#FFFFFF];
+    --muted: [#F1F5F9]; --muted-foreground: [#64748B];
+    --border: [#E2E8F0]; --success: [#16A34A];
+    --radius-md: 10px; --radius-lg: 16px; --radius-full: 9999px;
+    --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-6: 24px;
+    --font-brand: "[Heading family]", system-ui, sans-serif; --font-body: "[Body family]", system-ui, sans-serif;
+    --text-display: 800 56px/1.05 var(--font-brand);
+    --text-heading-lg: 700 24px/1.25 var(--font-brand); --text-heading-md: 600 18px/1.3 var(--font-brand);
+    --text-body-base: 400 16px/1.5 var(--font-body); --text-body-sm: 400 14px/1.43 var(--font-body);
+    --text-label: 600 14px/1.3 var(--font-body);
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body { background: var(--background); color: var(--foreground); font: var(--text-body-base); }
+  img { display: block; max-width: 100%; }
+  .wrap { width: min(1200px, 100% - 2 * var(--space-4)); margin: 0 auto; }
+  /* sticky header and badge: fixed values */
+  .site-header { position: sticky; top: 0; z-index: 10; background: var(--background); border-bottom: 1px solid var(--border); }
+  .site-header .wrap { height: 72px; display: flex; align-items: center; gap: var(--space-3); }
+  .logo { width: 40px; height: 40px; display: grid; place-items: center; border-radius: var(--radius-md); background: var(--muted); font: var(--text-label); }
+  .badge { flex: none; white-space: nowrap; padding: 2px 8px; border-radius: 9999px; background: #F1F1F4; color: #55555E; font: 600 11px/1.4 system-ui, sans-serif; }
+  .site-header strong { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .site-header .primary { flex: none; margin-left: auto; }
+  section { padding: calc(var(--space-6) * 4) 0; }
+  h1 { font: var(--text-display); }
+  .primary { display: inline-block; padding: var(--space-3) var(--space-6); border: 0; border-radius: var(--radius-md); background: var(--primary); color: var(--primary-foreground); font: var(--text-label); text-decoration: none; }
+  @media (max-width: 767px) {
+    .site-header .wrap { height: 60px; gap: var(--space-2); }
+    .site-header .primary { padding: var(--space-2) var(--space-3); }
+    section { padding: calc(var(--space-6) * 2) 0; }
+    h1 { font-size: 36px; }
+  }
+</style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <div class="logo">[Logo]</div>
+      <strong>[Business name]</strong>
+      <span class="badge">Sample website</span>
+      <a class="primary" id="[header-action-id]">[The job's action]</a>
+    </div>
+  </header>
+  <main>
+    <section id="hero"><div class="wrap">
+      <h1>[What this is, for whom]</h1>
+      <!-- [The trade's best photo from ../images/, the job's action] -->
+    </div></section>
+    <section id="[offer]"><div class="wrap"><!-- [Packages or services with their prices] --></div></section>
+    <section id="[proof]"><div class="wrap"><!-- [Gallery or before-and-after; reviews from sample customers] --></div></section>
+    <section id="[how-it-works]"><div class="wrap"><!-- [What happens after the action, 3–4 steps] --></div></section>
+    <section id="[visit]"><div class="wrap"><!-- [Hours, area, a static map image, how to reach them] --></div></section>
+    <section id="[action]"><div class="wrap"><!-- [The job's action again, with what the visitor needs ready] --></div></section>
+  </main>
+</body>
+</html>
