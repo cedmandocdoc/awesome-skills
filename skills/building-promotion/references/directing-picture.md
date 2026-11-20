@@ -63,7 +63,7 @@ How a promotion looks and moves: the top motion rules, looks and worlds, kinetic
 
 **The UI performs.** Rebuild it live from the source with its sample data, per [promotion-contract.md](./promotion-contract.md) → **Honesty rules**; never move a camera over a frozen screenshot.
 
-- Frame it in a neutral phone, or the phone family the market mostly uses.
+- Frame it in the source's own device: a phone app in a neutral phone, or the phone family the market mostly uses; a desktop web app in a neutral browser window or laptop; a website in a laptop with its phone view overlapping, or in a phone alone.
 - Carry one datum (a name, a number, an item) from the input to the result.
 
 | Treatment | Recipe | Fit; risk | Build |
@@ -71,6 +71,9 @@ How a promotion looks and moves: the top motion rules, looks and worlds, kinetic
 | Phone + push-ins | The phone in frame, pushing to 2–3× crops of the tap | Risk: a small phone on empty ground, zooming in and out, reads as a template; prefer full-bleed UI or a phone filling the frame | `ui-focus-zoom` |
 | Exploded / lifted UI | Components lift out of the phone (~1.5×, 0.4 s `expo.out`), play big and snap back; the phone dims behind | 3–4 features fast. Risk: the viewer loses where the pieces came from | Hand-built lift layer |
 | Full-bleed UI | No device; the UI is the frame | Best legibility | Rebuild + `ui-focus-zoom` |
+| Browser window + crops | The desktop screen in a neutral browser window, pushing to a crop of the region that acts (the row, the total, the button) | Web apps. Risk: a whole 1440-wide screen in a 1080 frame renders its text below the floor (**Framing and the read band** → Text floor); the whole window is context, the crop is the read | Hand-built; `ui-focus-zoom` |
+| Laptop + phone | The site in a laptop, its phone view overlapping one corner; one of them carries the read, the other the context | One website on both devices. Risk: two small screens with nothing readable | Hand-built |
+| Page scroll | A website page scrolling inside a phone or a browser, stopping on each section the script names, each stop held on the beat | Websites: packages, gallery, booking. Risk: a smooth scroll with nothing to read; stop, hold, read | Hand-built: the page in an `<iframe>`, its scroll tweened stop to stop |
 | Camera through the product | A virtual camera films the rebuilt screens, one action at a time | Demos | Hand-built |
 | Screen-recording style | Auto-zoom to each tap, an enlarged, smoothed finger, cut to the beat | Honest walkthrough | `touch-indicator`, `gesture-tap` (no rings) |
 | Tap-led | A finger or tap dot causes every change | "It's this easy" | `touch-indicator` |
@@ -145,7 +148,7 @@ Inside any treatment, each change arrives on a grid slot and then holds (**Motio
 
 - **Read band.** Words that must be read sit inside it ([promotion-contract.md](./promotion-contract.md) → **Frame sizes and safe zones**).
 - **Full frame.** The app or the old-way object fills most of the frame (a phone at ≥ ~60 % of the width, or full-bleed UI). It continues below the band (below y 1248 on the master), blurred, with no readable words, so the bottom third is never empty: start with an 18–40 px backdrop blur, its top edge feathered over ~26 px.
-- **Text floor.** Meaning-bearing text renders ≥ 28 px; aim for 29 px and up. Pick the app's scale so its smallest read string clears it: scale ≥ 29 ÷ that string's source px (a 390-wide mockup screen at 2.56× fills ~1000 px and renders 12 px text at 31 px).
+- **Text floor.** Meaning-bearing text renders ≥ 28 px; aim for 29 px and up. Pick the app's scale so its smallest read string clears it: scale ≥ 29 ÷ that string's source px (a 390-wide mockup screen at 2.56× fills ~1000 px and renders 12 px text at 31 px; a 1440-wide desktop screen fills 1080 px at 0.75×, so its 14 px text reads only from a crop ≤ ~520 source px wide).
   - A string that can't clear it isn't read: a caption or a label carries its meaning.
   - Text that reads as texture (rolling digits, blurred rows, chat floods) needs no floor.
 
