@@ -4,7 +4,8 @@ generated_by: building-mockup
 author: f487be74-87d9-4e76-8fc3-097325566acb
 app: "[App name]"
 audience: "[Who uses it, e.g. clinic receptionists in Metro Manila]"
-viewport: 390x844
+form: "[phone | desktop | website]"
+viewport: "[390x844 | 1440x900 | 1440x900 390x844]"
 ---
 
 # Flow — [App name]
@@ -16,3 +17,5 @@ viewport: 390x844
 | 1 | screens/01-[name].html | [tap "Book"] | [#book (x 72%, y 88%)] | [0.5 s] |
 | 2 | screens/02-[name].html | [fields fill: name, date, time] | [#name (x 50%, y 30%), #date (x 50%, y 42%), #time (x 50%, y 54%)] | [0.5 s] |
 | 3 | screens/03-[name].html | — | — | [1.5 s] |
+
+<!-- A website's Target names the id and its section: #pick-ceramic in #packages. Its Action may be: scroll to #packages. -->

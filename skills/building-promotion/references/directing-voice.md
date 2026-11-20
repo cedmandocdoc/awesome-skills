@@ -226,16 +226,12 @@ Measure every onset from the audio (`ffmpeg … silencedetect`), never from the 
 
 ### Ending
 
-Compute the ending per film from the measured take and the track's 8th note (30 ÷ BPM s), never from a fixed threshold. The tail is the music after the ending hit, under the end card. A 3.0 s close at 120 BPM (8th = 0.25 s) needs a tail ≥ 4.05 s.
+Compute the ending per film from the measured takes and the track's 8th note (30 ÷ BPM s), never from a fixed threshold.
 
-| Tail after the ending hit | The spoken close |
-| --- | --- |
-| ≥ the close take + 1/8 + 0.8 s | The full close, starting at the hit + 1/8 |
-| ≥ the offer take + 1/8 + 0.8 s | The offer only |
-| Shorter | No voice after the hit: the close goes on the last caption beat before the hit, and the end card carries it |
-
-- Music-led: ≥ 0.8 s of music alone after the last word.
-- A tail too short for the close, where the picture allows: extend it per [directing-sound.md](./directing-sound.md) → **Cutting**.
+- The ask's lines (the offer, its reason, the close) play over the last product shot; the end card arrives with the close, or with the last line when there is no close.
+- The end card is on screen ≤ 4 s. The film ends 1.0–1.5 s after the last spoken word: music alone for that tail (≥ 0.8 s), on the track's own ending or a short fade ([directing-sound.md](./directing-sound.md) → **Cutting**).
+- A close that would push the card past 4 s gets shorter, or moves before the card on the last product shot.
+- Music-led: the same tail after the last word, or after the card's last element lands and its words can be read.
 
 ### Second voice
 

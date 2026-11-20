@@ -1,0 +1,8 @@
+{
+  "name": "sending-messages-worker",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "worker-mailer": "1.3.1"
+  }
+}

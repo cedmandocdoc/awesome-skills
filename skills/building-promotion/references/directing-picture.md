@@ -63,7 +63,7 @@ How a promotion looks and moves: the top motion rules, looks and worlds, kinetic
 
 **The UI performs.** Rebuild it live from the source with its sample data, per [promotion-contract.md](./promotion-contract.md) → **Honesty rules**; never move a camera over a frozen screenshot.
 
-- Frame it in a neutral phone, or the phone family the market mostly uses.
+- Frame it in the source's own device: a phone app in a neutral phone, or the phone family the market mostly uses; a desktop web app in a neutral browser window or laptop; a website in a laptop with its phone view overlapping, or in a phone alone.
 - Carry one datum (a name, a number, an item) from the input to the result.
 
 | Treatment | Recipe | Fit; risk | Build |
@@ -71,6 +71,9 @@ How a promotion looks and moves: the top motion rules, looks and worlds, kinetic
 | Phone + push-ins | The phone in frame, pushing to 2–3× crops of the tap | Risk: a small phone on empty ground, zooming in and out, reads as a template; prefer full-bleed UI or a phone filling the frame | `ui-focus-zoom` |
 | Exploded / lifted UI | Components lift out of the phone (~1.5×, 0.4 s `expo.out`), play big and snap back; the phone dims behind | 3–4 features fast. Risk: the viewer loses where the pieces came from | Hand-built lift layer |
 | Full-bleed UI | No device; the UI is the frame | Best legibility | Rebuild + `ui-focus-zoom` |
+| Browser window + crops | The desktop screen in a neutral browser window, pushing to a crop of the region that acts (the row, the total, the button) | Web apps. Risk: a whole 1440-wide screen in a 1080 frame renders its text below the floor (**Framing and the read band** → Text floor); the whole window is context, the crop is the read | Hand-built; `ui-focus-zoom` |
+| Laptop + phone | The site in a laptop, its phone view overlapping one corner; one of them carries the read, the other the context | One website on both devices. Risk: two small screens with nothing readable | Hand-built |
+| Page scroll | A website page scrolling inside a phone or a browser, stopping on each section the script names, each stop held on the beat | Websites: packages, gallery, booking. Risk: a smooth scroll with nothing to read; stop, hold, read | Hand-built: the page in an `<iframe>`, its scroll tweened stop to stop |
 | Camera through the product | A virtual camera films the rebuilt screens, one action at a time | Demos | Hand-built |
 | Screen-recording style | Auto-zoom to each tap, an enlarged, smoothed finger, cut to the beat | Honest walkthrough | `touch-indicator`, `gesture-tap` (no rings) |
 | Tap-led | A finger or tap dot causes every change | "It's this easy" | `touch-indicator` |
@@ -144,9 +147,13 @@ Inside any treatment, each change arrives on a grid slot and then holds (**Motio
 ### Framing and the read band
 
 - **Read band.** Words that must be read sit inside it ([promotion-contract.md](./promotion-contract.md) → **Frame sizes and safe zones**).
-- **Full frame.** The app or the old-way object fills most of the frame (a phone at ≥ ~60 % of the width, or full-bleed UI). It continues below the band (below y 1248 on the master), blurred, with no readable words, so the bottom third is never empty: start with an 18–40 px backdrop blur, its top edge feathered over ~26 px.
-- **Text floor.** Meaning-bearing text renders ≥ 28 px; aim for 29 px and up. Pick the app's scale so its smallest read string clears it: scale ≥ 29 ÷ that string's source px (a 390-wide mockup screen at 2.56× fills ~1000 px and renders 12 px text at 31 px).
+- **Full frame.** The app or the old-way object fills most of the frame (a phone at ≥ ~60 % of the width, or full-bleed UI), and the picture runs to the frame's bottom edge, sharp, as itself. Nothing below the read band must be read, so a viewer who loses it under the platform's overlay loses nothing, and a viewer who sees it sees a whole picture. Never blur, fade or empty the bottom of the frame.
+  - No small device or lone element on an empty ground, and no frame that is mostly ground with one strip on it: when the app leaves, a type or colour world takes the whole frame.
+  - A layout built for the paid zones (read band ending at y 1248) still fills below it with the picture, never with a blur.
+- **Frame edges.** A word never runs across the frame edge. A crop, a punch-in or a push lands its edges between elements, not through a line of text. A device fits inside the side margins, or is cropped on one side through a region with no text. A full-bleed old-way object (a spreadsheet, a notebook) may run off the edge as a whole; the line it is showing stays inside.
+- **Text floor.** Meaning-bearing text renders ≥ 28 px; aim for 29 px and up. Pick the app's scale so its smallest read string clears it: scale ≥ 29 ÷ that string's source px (a 390-wide mockup screen at 2.56× fills ~1000 px and renders 12 px text at 31 px; a 1440-wide desktop screen fills 1080 px at 0.75×, so its 14 px text reads only from a crop ≤ ~520 source px wide).
   - A string that can't clear it isn't read: a caption or a label carries its meaning.
+  - A whole desktop window, or a phone too small for the floor, is context: on screen ≤ 1 beat, then a crop or a push to the region that acts.
   - Text that reads as texture (rolling digits, blurred rows, chat floods) needs no floor.
 
 ### Type, sizes, colour, contrast
@@ -173,10 +180,10 @@ The seller's constants, from the Brief's **Brand kit** ([studying-product.md](./
 
 | Element | Use |
 | --- | --- |
-| Mark | A frame-0 cue or an early watermark, seen by ~3–5 s; never a logo card at the open. On the end card it lands on the track's final hit |
+| Mark | A frame-0 cue or an early watermark, seen by ~3–5 s; never a logo card at the open. On the end card it lands with the card, on a beat |
 | Colours | The seller's grounds, captions and end card; never inside the product's UI. Check each text-on-colour pair once against **Type, sizes, colour, contrast** |
 | Type | Every caption, title, label and the end card, in every world |
-| Sonic cue | An in-house sound with the mark's early touch, and on the end card after the track's final hit has rung, never on the hit; never a stock track's ending, since the Pixabay licence bars trademark use |
+| Sonic cue | An in-house sound with the mark's early touch, and with the mark on the end card, never on the track's own hit; never a stock track's ending, since the Pixabay licence bars trademark use |
 | End-card layout | One layout in every film (**End card**) |
 
 - How often the brand is seen and heard: [writing-script.md](./writing-script.md) → **Brand touches**.
@@ -202,10 +209,11 @@ What the disclosure says and where it goes: [promotion-contract.md](./promotion-
 
 ### End card
 
-1. The card enters through the last object (the result shrinks into place) or cuts in on the track's final hit, where the mark lands: scale 1.6 → 1 in ~0.28 s `expo.out`, starting ~60 ms early. The track's real ending plays under it, never a fade ([directing-sound.md](./directing-sound.md) → **Cutting**).
-2. Then, a beat or so apart: the offer, the button with the CTA line, the URL, and the disclosure line.
-3. ≤ 10 unvoiced words in all; words the voice says are free. Over budget → drop the URL first; the button carries the destination.
-4. Hold the card, dead still, until its words can be read ([writing-script.md](./writing-script.md) → **Voice, captions, picture**; `check` asks ≥ 2 s for the film's last line), and through the music after the last spoken word ([directing-voice.md](./directing-voice.md) → **Ending**).
+1. The ask plays over the last product shot: the offer and its reason as plates or captions in the read band, the app still on screen. The card arrives with the close ([directing-voice.md](./directing-voice.md) → **Ending**).
+2. The card enters through the last object (the result shrinks into place) or cuts in on a beat, where the mark lands: scale 1.6 → 1 in ~0.28 s `expo.out`, starting ~60 ms early.
+3. Then, a beat or so apart: the offer, the button with the CTA line, the URL, and the disclosure line. The card fills the frame on the seller's ground, its block centred in the read band.
+4. ≤ 10 unvoiced words in all; words the voice says are free. Over budget → drop the URL first; the button carries the destination.
+5. Hold the card, dead still, until its words can be read (`check` asks ≥ 2 s for the film's last line). It is on screen ≤ 4 s, and the film ends 1.0–1.5 s after the last spoken word, on the track's ending or a short fade ([directing-sound.md](./directing-sound.md) → **Cutting**).
 
 | Layout | Holds | Use |
 | --- | --- | --- |
@@ -228,6 +236,9 @@ What the disclosure says and where it goes: [promotion-contract.md](./promotion-
 | Glow, neon | `logo-outro` | The kit's end card |
 | Yellow word-by-word karaoke; word-by-word captions over UI | `caption-highlight` | Key-phrase captions |
 | A small whole phone on empty ground; one ease on everything; breathing loops | — | **Full frame**; **Motion in ten lines** 2 and 9 |
+| A blurred, faded or empty bottom third | — | The picture to the bottom edge, sharp (**Full frame**) |
+| A word sliced by the frame edge ("rew Payroll") | — | **Frame edges** |
+| A still card held over ~4 s while the voice and music run on | — | The ask over the product, a ≤ 4 s card (**End card**) |
 | A photoreal phone orbiting | `vfx-iphone-device` | The flat screen first |
 
 ### Building in HyperFrames
@@ -261,9 +272,10 @@ Follow the hyperframes and hyperframes-registry skills, found per [promotion-con
    - Voice clips carry no `data-at`; they're placed in seconds from measured onsets ([directing-voice.md](./directing-voice.md) → **Placement on the grid**).
 4. **Inside a scene,** time every tween from `window.GRID.at(bar, beat)` minus its host's start, so a grid change moves the picture with the sound.
 5. **Motion blur.** Put `data-motion-blur="on"` on the root composition of a fast film (it costs ~2–3× the render time), and `data-motion-blur="off"` on a subtree that carries its own blur.
-6. **Texture text** (rolling digits, blurred rows, chat floods) carries `data-layout-ignore`; the blur band below the read band carries `data-layout-allow-occlusion` and `data-layout-allow-caption-zone`.
+6. **Texture text** (rolling digits, blurred rows, chat floods) carries `data-layout-ignore`; the picture below the read band carries `data-layout-allow-caption-zone`.
 7. **Look at it.**
-   - `npx hyperframes check` runs lint, layout, motion and contrast; add `--snapshots` on the first full pass. Run `--caption-zone` once per unsafe zone; the master's are `x0=0;y0=0;x1=1;y1=.14`, `x0=0;y0=.65;x1=1;y1=1`, `x0=0;y0=0;x1=.06;y1=1` and `x0=.94;y0=0;x1=1;y1=1`.
+   - `npx hyperframes check` runs lint, layout, motion and contrast; add `--snapshots` on the first full pass. Run `--caption-zone` once per unsafe zone; the organic master's are `x0=0;y0=0;x1=1;y1=.14`, `x0=0;y0=.8;x1=1;y1=1`, `x0=0;y0=0;x1=.06;y1=1`, `x0=.94;y0=0;x1=1;y1=1` and `x0=.88;y0=.5;x1=1;y1=.8`; a paid master's bottom zone is `x0=0;y0=.65;x1=1;y1=1`.
+   - `npx hyperframes snapshot --frames <film seconds ÷ 2>` and read the sheet for **Full frame** and **Frame edges**.
    - `npx hyperframes snapshot --at <t,…>` at each scene's midpoint and each landing; read the PNGs. Judge in the preview with sound; the gates are in [checking-promotion.md](./checking-promotion.md).
 
 ## Related

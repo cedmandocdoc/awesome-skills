@@ -1,0 +1,4 @@
+interface:
+  display_name: "Tracking Promotions"
+  short_description: "Record each approved post or message of a promotion in Cloudflare D1, and see every promotion and delivery on a local board"
+  default_prompt: "Use $tracking-promotions only when the user names this skill or references a file under a marked tracking root."

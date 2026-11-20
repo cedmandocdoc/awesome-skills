@@ -1,0 +1,4 @@
+interface:
+  display_name: "Sending Messages"
+  short_description: "Queue approved emails and send them on a schedule (window, gaps, daily cap) from a Cloudflare Worker, optionally tracked in tracking-promotions"
+  default_prompt: "Use $sending-messages only when the user names this skill or references a file under a marked sending root."

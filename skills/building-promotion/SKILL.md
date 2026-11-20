@@ -2,8 +2,8 @@
 name: building-promotion
 id: 6c4545f9-8199-4a1b-bd79-56dc1ec4d9b0
 description: >-
-  Makes promotions for an app from its source (a mockup or a codebase) under
-  promotions/, as videos or stills: studies it into audiences, pains in their
+  Makes promotions for an app or a website from its source (a mockup or a
+  codebase) under promotions/, as videos or stills: studies it into audiences, pains in their
   own words, and a message. A video: 3 concepts built on different script
   structures from a catalog, sized to a length the user can fix, each dressed
   by a style preset and a voice mode; a message plan and a beat sheet the user
@@ -17,7 +17,7 @@ description: >-
   Changes any part of a promotion on request. Use only when the user names this skill (`/building-promotion`,
   `$building-promotion`, or "building-promotion"), or references a
   file under a marked promotions root (`@promotions/product.md`).
-version: 4.1.0
+version: 4.3.0
 ---
 
 # Building Promotion

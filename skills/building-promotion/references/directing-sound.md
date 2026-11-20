@@ -78,7 +78,7 @@ The user downloads the pick while logged in, per [promotion-contract.md](./promo
 - Cut only on bar lines (a downbeat or a phrase end), at repeating material, in the valley just before the beat. Each join gets a 12–50 ms crossfade; start at 12 ms.
 - For the hook, take the bars just before a lift (a breakdown's last 2–4 bars), so the cut lifts into the drop.
 - The music is audible from frame 0, with a 12 ms fade-in.
-- Join the body into the track's own ending on a bar line, and let its final hit or chord ring out. Never fade a cut out.
+- The film ends 1.0–1.5 s after the last spoken word ([directing-voice.md](./directing-voice.md) → **Ending**). Join the body into the track's own ending on a bar line when its final hit or chord lands there; when the track would ring on past that, fade its last 0.8–1.2 s with the music's volume automation. Never fade out mid-phrase under a moving picture, and never let the ending ring on under a still card.
 - To lengthen, repeat the last 2 bars before the ending; to shorten, remove whole phrases of repeating material.
 - To re-align after a grid nudge, move the source start by the nudge; the BPM, bars and length stay, so the picture timing holds.
 - The film's cut extends the style test's bars on the same grid. The ≤ 15 s cut is cut from the same grid; an artist's short cut-down helps.
@@ -101,7 +101,7 @@ UI sounds on meaningful moments. Take each from the bank first, then a free libr
 
 - Avoid big stock bass impacts, risers, whooshes, glitches and sparkles; let the music build instead.
 - Risk: a cash register on a sales or payroll payoff is a cliché; a soft swish on a panel slide drifts toward a stock whoosh.
-- The end card's hit is the track's ending; add no effect on it. The seller's sonic cue: [directing-picture.md](./directing-picture.md) → **Brand kit**.
+- When the card lands on the track's own hit, add no effect on it. The seller's sonic cue: [directing-picture.md](./directing-picture.md) → **Brand kit**.
 
 | Setting | Value |
 | --- | --- |

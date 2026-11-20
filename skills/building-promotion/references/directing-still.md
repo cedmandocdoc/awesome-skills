@@ -13,7 +13,7 @@ Each preset is one look around one focal device; every other choice stays plain.
 | # | Preset | Focal device | Structures | Look · type · UI | Fits |
 | --- | --- | --- | --- | --- | --- |
 | 1 | **Swiss Grid** | One large line of type on a strict grid, with hairlines and mono labels | Statement, Range, Listicle, How it works, Range tour | Flat brand planes; a carousel alternates the seller's grounds frame by frame · a heavy grotesk, tight tracking, mono labels · UI cropped into grid cells | The seller's own message; professional and SME audiences |
-| 2 | **Product Hero** | The app's key screen, large, its result standing out of it | Hero screen, Result shown, Anatomy | A flat ground in the seller's colour · grotesk · a phone ≥ 60 % of the frame's height, or full-bleed UI | A category known by name |
+| 2 | **Product Hero** | The app's key screen, large, its result standing out of it | Hero screen, Result shown, Anatomy | A flat ground in the seller's colour · grotesk · a phone ≥ 60 % of the frame's height, a browser crop, or full-bleed UI | A category known by name |
 | 3 | **Paper Desk** | The old-way artifact, top-down, full-bleed | Pain call-out, Before / After, Problem → Solution | A real paper world built in HTML/CSS · handwriting only inside the artifact, the seller's type outside it · the app enters as a phone laid on the desk | A pain kept on paper |
 | 4 | **Split** | A hard seam: the old way on one side, the app on the other, the same task in both | Before / After, Before / After per task | Paper against a flat plane · grotesk labels · on 9:16 the seam runs across | Fewer-steps stories |
 | 5 | **Data Hero** | A number from the viewer's own work as the picture | Result shown, Listicle | Flat planes · the number at 60–90 % of the width · the screen small, as its proof; a sample number keeps its "Sample" tag | Totals and counts the viewer already keeps |
@@ -24,7 +24,7 @@ Each preset is one look around one focal device; every other choice stays plain.
 
 ### What a still keeps from a video
 
-These sections of [directing-picture.md](./directing-picture.md) apply as written: **Looks and worlds** (≤ 2 worlds in a single, ≤ 3 in a carousel; the two-brands rule), **UI treatments** that hold still (phone, full-bleed UI, exploded, data-as-type, before / after split, card stack, macro close-up, tabletop stage), **Brand kit** and **Disclosure on screen**. Motion, camera, transitions and sound don't apply.
+These sections of [directing-picture.md](./directing-picture.md) apply as written: **Looks and worlds** (≤ 2 worlds in a single, ≤ 3 in a carousel; the two-brands rule), **UI treatments** that hold still (phone, full-bleed UI, browser window + crops, laptop + phone, exploded, data-as-type, before / after split, card stack, macro close-up, tabletop stage), **Brand kit** and **Disclosure on screen**. Motion, camera, transitions and sound don't apply.
 
 - **The UI is the app's own.** Each screen comes from the source's HTML and sample data, per [promotion-contract.md](./promotion-contract.md) → **Honesty rules**. A crop shows a real part of a real screen.
 - Carry one datum (a name, a number, an item) from the input to the result when a frame or a carousel shows both.
@@ -71,7 +71,7 @@ Each frame is one HTML page at its exact pixel size, in the still's folder per [
 | App | Each app screen's container carries `data-app`; the Sample chip inside it carries `data-chip`, or is found by its text "Sample" |
 | Shared look | `styles.css` holds the seller's tokens, type and shared pieces; the product's tokens stay inside its screens |
 | Fonts | `@font-face` from `assets/fonts/`, with their licences; never a system or a network font |
-| Screens | Each screen a frame shows is copied into `assets/screens/` with the files it reads, then shown in an `<iframe>` scaled and cropped in place, or rebuilt in the page from the same markup |
+| Screens | Each screen a frame shows is copied into `assets/screens/` with the files it reads, then shown in an `<iframe>` scaled and cropped in place (a website page scrolled to the section the frame shows, at its desktop or phone width), or rebuilt in the page from the same markup |
 | Offline | Every file the page reads is in the folder |
 | Ratio | A further ratio is its own page, `<NN>-<ratio>.html`, laid out for that frame |
 

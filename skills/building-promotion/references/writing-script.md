@@ -57,6 +57,7 @@ When the slots run out, cut per [choosing-structure.md](./choosing-structure.md)
 | --- | --- | --- | --- | --- |
 | The product | The product | — | — | The product |
 | A build (studio) | A sample app | "We'll build you an app like this." | "Sample app · built by <Seller>" | A build conversation |
+| A build (studio) | A sample website | "We'll build you a site like this." | "Sample website · built by <Seller>" | A build conversation |
 | A template | The template with sample data | "Start from this; make it yours." | "Template" | The template |
 | A platform or no-code tool | An app made with it | "Made with <Platform>." | "Made with <Platform>" | Sign-up |
 | A done-for-you service | The tool the service runs | "We run <task>; you see it here." | "<Seller> does this for you" | Contact |
